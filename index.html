@@ -583,6 +583,164 @@
     html[data-theme="light"] .logo-light { display: block; }
     html[data-theme="light"] .logo-dark  { display: none; }
 
+    /* ─── Solutions ─────────────────────────────────────────────── */
+    .solution-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 20px;
+      transition: border-color var(--t);
+    }
+    .solution-card:last-child { margin-bottom: 0; }
+
+    .solution-header {
+      padding: 32px 36px 28px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .solution-meta {}
+    .solution-number {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      opacity: 0.7;
+    }
+    .solution-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 5px;
+      letter-spacing: -0.01em;
+    }
+    .solution-tagline {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 380px;
+    }
+    .solution-primary-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.15);
+      font-size: 12px;
+      font-weight: 700;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .solution-primary-pill:hover { opacity: 0.75; }
+    .solution-primary-pill .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    html[data-theme="light"] .solution-primary-pill {
+      border-color: rgba(0,0,0,0.12);
+    }
+
+    .solution-body {
+      background: var(--bg-card);
+      padding: 28px 36px 32px;
+      transition: background var(--t);
+    }
+
+    .solution-row-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    /* Tonal swatches */
+    .solution-swatches {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+    .sol-swatch {
+      flex: 1;
+      height: 72px;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .sol-swatch:hover { transform: translateY(-3px); }
+    .sol-swatch .sh {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.32);
+      opacity: 0;
+      transition: opacity 0.15s;
+      gap: 2px;
+    }
+    .sol-swatch:hover .sh { opacity: 1; }
+    .sh-hex {
+      font-size: 10px;
+      font-weight: 700;
+      font-family: monospace;
+      color: #fff;
+      letter-spacing: 0.04em;
+    }
+    .sh-name {
+      font-size: 9px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.75);
+    }
+
+    /* Gradients */
+    .solution-gradients {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .sol-grad {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: transform 0.15s, border-color var(--t);
+    }
+    .sol-grad:hover { transform: translateY(-2px); }
+    .sol-grad-bar { height: 64px; width: 100%; }
+    .sol-grad-info {
+      padding: 10px 14px;
+      background: var(--bg);
+      transition: background var(--t);
+    }
+    .sol-grad-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .sol-grad-stops {
+      font-size: 10px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      color: var(--text-muted);
+    }
+
     /* ─── Toast ─────────────────────────────────────────────────── */
     #copy-toast {
       position: fixed;
@@ -670,6 +828,7 @@
         <li><a href="#typography">Typography</a></li>
         <li><a href="#voice">Voice &amp; Tone</a></li>
         <li><a href="#usage">Usage Rules</a></li>
+        <li><a href="#solutions">Solutions</a></li>
       </ul>
       <div class="nav-toggle-wrap">
         <button class="theme-toggle" id="nav-toggle" onclick="toggleTheme()">
@@ -1058,6 +1217,221 @@
               <div class="rule-content"><h4>Gradient Integrity</h4><p>The icon's gradient must always run from Cyan (#0CF4DF) to Deep Blue (#1F3395). Do not swap gradient directions or substitute colours.</p></div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <!-- ── SOLUTIONS ──────────────────────────────────────────── -->
+      <section id="solutions">
+        <div class="container">
+          <div class="section-label">07 — Solutions</div>
+          <h2 class="section-title">Solution Color Systems</h2>
+          <p class="section-desc">Each Momentify solution has its own distinct color identity — drawn from a shared palette to feel related but immediately distinguishable. Click any swatch or gradient to copy.</p>
+
+          <!-- 1. Trade Shows & Exhibits — Violet -->
+          <div class="solution-card">
+            <div class="solution-header" style="background:linear-gradient(135deg,#9B5FE820 0%,#3A207318 100%);">
+              <div class="solution-meta">
+                <div class="solution-number" style="color:#9B5FE8;">01 — Trade Shows &amp; Exhibits</div>
+                <div class="solution-name">Violet</div>
+                <div class="solution-tagline">Bold and commanding. Violet cuts through the noise of a busy show floor — premium, memorable, and unmistakably Momentify.</div>
+              </div>
+              <div class="solution-primary-pill" style="background:#6B21D420;color:#9B5FE8;" onclick="copyColor('#6B21D4')">
+                <div class="dot" style="background:#6B21D4;"></div>#6B21D4
+              </div>
+            </div>
+            <div class="solution-body">
+              <div class="solution-row-label">Tonal Scale</div>
+              <div class="solution-swatches">
+                <div class="sol-swatch" style="background:#C4A3F0;" onclick="copyColor('#C4A3F0')"><div class="sh"><div class="sh-hex">#C4A3F0</div><div class="sh-name">Lavender</div></div></div>
+                <div class="sol-swatch" style="background:#9B5FE8;" onclick="copyColor('#9B5FE8')"><div class="sh"><div class="sh-hex">#9B5FE8</div><div class="sh-name">Violet Light</div></div></div>
+                <div class="sol-swatch" style="background:#6B21D4;" onclick="copyColor('#6B21D4')"><div class="sh"><div class="sh-hex">#6B21D4</div><div class="sh-name">Violet</div></div></div>
+                <div class="sol-swatch" style="background:#4A0FA8;" onclick="copyColor('#4A0FA8')"><div class="sh"><div class="sh-hex">#4A0FA8</div><div class="sh-name">Violet Deep</div></div></div>
+                <div class="sol-swatch" style="background:#2D0770;" onclick="copyColor('#2D0770')"><div class="sh"><div class="sh-hex">#2D0770</div><div class="sh-name">Violet Dark</div></div></div>
+              </div>
+              <div class="solution-row-label">Gradients</div>
+              <div class="solution-gradients">
+                <div class="sol-grad" onclick="copyColor('linear-gradient(135deg, #9B5FE8 0%, #3A2073 100%)')">
+                  <div class="sol-grad-bar" style="background:linear-gradient(135deg,#9B5FE8 0%,#3A2073 100%);"></div>
+                  <div class="sol-grad-info">
+                    <div class="sol-grad-name">Violet → Midnight</div>
+                    <div class="sol-grad-stops">#9B5FE8 → #3A2073</div>
+                  </div>
+                </div>
+                <div class="sol-grad" onclick="copyColor('linear-gradient(135deg, #6B21D4 0%, #0CF4DF 100%)')">
+                  <div class="sol-grad-bar" style="background:linear-gradient(135deg,#6B21D4 0%,#0CF4DF 100%);"></div>
+                  <div class="sol-grad-info">
+                    <div class="sol-grad-name">Violet → Cyan</div>
+                    <div class="sol-grad-stops">#6B21D4 → #0CF4DF</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Technical Recruiting — Teal -->
+          <div class="solution-card">
+            <div class="solution-header" style="background:linear-gradient(135deg,#5FD9C220 0%,#1A8A7618 100%);">
+              <div class="solution-meta">
+                <div class="solution-number" style="color:#2DB8A0;">02 — Technical Recruiting</div>
+                <div class="solution-name">Teal</div>
+                <div class="solution-tagline">Clean, tech-forward, and trustworthy. Teal signals precision and modern thinking — the right signal for talent acquisition technology.</div>
+              </div>
+              <div class="solution-primary-pill" style="background:#5FD9C220;color:#2DB8A0;" onclick="copyColor('#5FD9C2')">
+                <div class="dot" style="background:#5FD9C2;"></div>#5FD9C2
+              </div>
+            </div>
+            <div class="solution-body">
+              <div class="solution-row-label">Tonal Scale</div>
+              <div class="solution-swatches">
+                <div class="sol-swatch" style="background:#A8EEE3;" onclick="copyColor('#A8EEE3')"><div class="sh"><div class="sh-hex">#A8EEE3</div><div class="sh-name">Mint</div></div></div>
+                <div class="sol-swatch" style="background:#5FD9C2;" onclick="copyColor('#5FD9C2')"><div class="sh"><div class="sh-hex">#5FD9C2</div><div class="sh-name">Teal Light</div></div></div>
+                <div class="sol-swatch" style="background:#2DB8A0;" onclick="copyColor('#2DB8A0')"><div class="sh"><div class="sh-hex">#2DB8A0</div><div class="sh-name">Teal</div></div></div>
+                <div class="sol-swatch" style="background:#1A8A76;" onclick="copyColor('#1A8A76')"><div class="sh"><div class="sh-hex">#1A8A76</div><div class="sh-name">Teal Deep</div></div></div>
+                <div class="sol-swatch" style="background:#0D5C4E;" onclick="copyColor('#0D5C4E')"><div class="sh"><div class="sh-hex">#0D5C4E</div><div class="sh-name">Teal Dark</div></div></div>
+              </div>
+              <div class="solution-row-label">Gradients</div>
+              <div class="solution-gradients">
+                <div class="sol-grad" onclick="copyColor('linear-gradient(135deg, #5FD9C2 0%, #1F3395 100%)')">
+                  <div class="sol-grad-bar" style="background:linear-gradient(135deg,#5FD9C2 0%,#1F3395 100%);"></div>
+                  <div class="sol-grad-info">
+                    <div class="sol-grad-name">Teal → Deep Blue</div>
+                    <div class="sol-grad-stops">#5FD9C2 → #1F3395</div>
+                  </div>
+                </div>
+                <div class="sol-grad" onclick="copyColor('linear-gradient(135deg, #0CF4DF 0%, #2DB8A0 100%)')">
+                  <div class="sol-grad-bar" style="background:linear-gradient(135deg,#0CF4DF 0%,#2DB8A0 100%);"></div>
+                  <div class="sol-grad-info">
+                    <div class="sol-grad-name">Brand Cyan → Teal</div>
+                    <div class="sol-grad-stops">#0CF4DF → #2DB8A0</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Field Sales Enablement — Amber -->
+          <div class="solution-card">
+            <div class="solution-header" style="background:linear-gradient(135deg,#F2B33D20 0%,#D9920A18 100%);">
+              <div class="solution-meta">
+                <div class="solution-number" style="color:#D9920A;">03 — Field Sales Enablement</div>
+                <div class="solution-name">Amber</div>
+                <div class="solution-tagline">Warm, driven, and high-energy. Amber evokes urgency and momentum — the colour of deals closing and targets exceeded.</div>
+              </div>
+              <div class="solution-primary-pill" style="background:#F2B33D20;color:#C07F10;" onclick="copyColor('#F2B33D')">
+                <div class="dot" style="background:#F2B33D;"></div>#F2B33D
+              </div>
+            </div>
+            <div class="solution-body">
+              <div class="solution-row-label">Tonal Scale</div>
+              <div class="solution-swatches">
+                <div class="sol-swatch" style="background:#FFE09E;" onclick="copyColor('#FFE09E')"><div class="sh" style="background:rgba(0,0,0,0.2);"><div class="sh-hex">#FFE09E</div><div class="sh-name">Pale Gold</div></div></div>
+                <div class="sol-swatch" style="background:#F2B33D;" onclick="copyColor('#F2B33D')"><div class="sh" style="background:rgba(0,0,0,0.25);"><div class="sh-hex">#F2B33D</div><div class="sh-name">Amber</div></div></div>
+                <div class="sol-swatch" style="background:#D9920A;" onclick="copyColor('#D9920A')"><div class="sh"><div class="sh-hex">#D9920A</div><div class="sh-name">Amber Deep</div></div></div>
+                <div class="sol-swatch" style="background:#A86B00;" onclick="copyColor('#A86B00')"><div class="sh"><div class="sh-hex">#A86B00</div><div class="sh-name">Burnt Gold</div></div></div>
+                <div class="sol-swatch" style="background:#6B4200;" onclick="copyColor('#6B4200')"><div class="sh"><div class="sh-hex">#6B4200</div><div class="sh-name">Dark Amber</div></div></div>
+              </div>
+              <div class="solution-row-label">Gradients</div>
+              <div class="solution-gradients">
+                <div class="sol-grad" onclick="copyColor('linear-gradient(135deg, #F2B33D 0%, #F25E3D 100%)')">
+                  <div class="sol-grad-bar" style="background:linear-gradient(135deg,#F2B33D 0%,#F25E3D 100%);"></div>
+                  <div class="sol-grad-info">
+                    <div class="sol-grad-name">Amber → Crimson</div>
+                    <div class="sol-grad-stops">#F2B33D → #F25E3D</div>
+                  </div>
+                </div>
+                <div class="sol-grad" onclick="copyColor('linear-gradient(135deg, #FFE09E 0%, #D9920A 100%)')">
+                  <div class="sol-grad-bar" style="background:linear-gradient(135deg,#FFE09E 0%,#D9920A 100%);"></div>
+                  <div class="sol-grad-info">
+                    <div class="sol-grad-name">Pale Gold → Deep Amber</div>
+                    <div class="sol-grad-stops">#FFE09E → #D9920A</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Facilities — Indigo -->
+          <div class="solution-card">
+            <div class="solution-header" style="background:linear-gradient(135deg,#3A207320 0%,#1F339518 100%);">
+              <div class="solution-meta">
+                <div class="solution-number" style="color:#7B6CB8;">04 — Facilities</div>
+                <div class="solution-name">Indigo</div>
+                <div class="solution-tagline">Grounded, reliable, and structured. Deep indigo signals infrastructure and permanence — the bedrock that everything else is built on.</div>
+              </div>
+              <div class="solution-primary-pill" style="background:#3A207320;color:#7B6CB8;" onclick="copyColor('#3A2073')">
+                <div class="dot" style="background:#3A2073;"></div>#3A2073
+              </div>
+            </div>
+            <div class="solution-body">
+              <div class="solution-row-label">Tonal Scale</div>
+              <div class="solution-swatches">
+                <div class="sol-swatch" style="background:#B8AEDC;" onclick="copyColor('#B8AEDC')"><div class="sh"><div class="sh-hex">#B8AEDC</div><div class="sh-name">Periwinkle</div></div></div>
+                <div class="sol-swatch" style="background:#7B6CB8;" onclick="copyColor('#7B6CB8')"><div class="sh"><div class="sh-hex">#7B6CB8</div><div class="sh-name">Indigo Light</div></div></div>
+                <div class="sol-swatch" style="background:#5B4499;" onclick="copyColor('#5B4499')"><div class="sh"><div class="sh-hex">#5B4499</div><div class="sh-name">Indigo</div></div></div>
+                <div class="sol-swatch" style="background:#3A2073;" onclick="copyColor('#3A2073')"><div class="sh"><div class="sh-hex">#3A2073</div><div class="sh-name">Indigo Deep</div></div></div>
+                <div class="sol-swatch" style="background:#1E0E42;" onclick="copyColor('#1E0E42')"><div class="sh"><div class="sh-hex">#1E0E42</div><div class="sh-name">Indigo Dark</div></div></div>
+              </div>
+              <div class="solution-row-label">Gradients</div>
+              <div class="solution-gradients">
+                <div class="sol-grad" onclick="copyColor('linear-gradient(135deg, #5B4499 0%, #1F3395 100%)')">
+                  <div class="sol-grad-bar" style="background:linear-gradient(135deg,#5B4499 0%,#1F3395 100%);"></div>
+                  <div class="sol-grad-info">
+                    <div class="sol-grad-name">Indigo → Deep Blue</div>
+                    <div class="sol-grad-stops">#5B4499 → #1F3395</div>
+                  </div>
+                </div>
+                <div class="sol-grad" onclick="copyColor('linear-gradient(135deg, #3A2073 0%, #254FE5 100%)')">
+                  <div class="sol-grad-bar" style="background:linear-gradient(135deg,#3A2073 0%,#254FE5 100%);"></div>
+                  <div class="sol-grad-info">
+                    <div class="sol-grad-name">Indigo → Electric Blue</div>
+                    <div class="sol-grad-stops">#3A2073 → #254FE5</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Events & Venues — Crimson -->
+          <div class="solution-card">
+            <div class="solution-header" style="background:linear-gradient(135deg,#F25E3D20 0%,#C93A1D18 100%);">
+              <div class="solution-meta">
+                <div class="solution-number" style="color:#F25E3D;">05 — Events &amp; Venues</div>
+                <div class="solution-name">Crimson</div>
+                <div class="solution-tagline">Live energy, urgency, and excitement. Crimson captures the pulse of a packed venue — the colour of moments that people remember.</div>
+              </div>
+              <div class="solution-primary-pill" style="background:#F25E3D20;color:#F25E3D;" onclick="copyColor('#F25E3D')">
+                <div class="dot" style="background:#F25E3D;"></div>#F25E3D
+              </div>
+            </div>
+            <div class="solution-body">
+              <div class="solution-row-label">Tonal Scale</div>
+              <div class="solution-swatches">
+                <div class="sol-swatch" style="background:#FFAA8F;" onclick="copyColor('#FFAA8F')"><div class="sh" style="background:rgba(0,0,0,0.25);"><div class="sh-hex">#FFAA8F</div><div class="sh-name">Coral</div></div></div>
+                <div class="sol-swatch" style="background:#F25E3D;" onclick="copyColor('#F25E3D')"><div class="sh"><div class="sh-hex">#F25E3D</div><div class="sh-name">Crimson</div></div></div>
+                <div class="sol-swatch" style="background:#C93A1D;" onclick="copyColor('#C93A1D')"><div class="sh"><div class="sh-hex">#C93A1D</div><div class="sh-name">Crimson Deep</div></div></div>
+                <div class="sol-swatch" style="background:#8F200A;" onclick="copyColor('#8F200A')"><div class="sh"><div class="sh-hex">#8F200A</div><div class="sh-name">Scarlet</div></div></div>
+                <div class="sol-swatch" style="background:#5C0F00;" onclick="copyColor('#5C0F00')"><div class="sh"><div class="sh-hex">#5C0F00</div><div class="sh-name">Crimson Dark</div></div></div>
+              </div>
+              <div class="solution-row-label">Gradients</div>
+              <div class="solution-gradients">
+                <div class="sol-grad" onclick="copyColor('linear-gradient(135deg, #F25E3D 0%, #F2B33D 100%)')">
+                  <div class="sol-grad-bar" style="background:linear-gradient(135deg,#F25E3D 0%,#F2B33D 100%);"></div>
+                  <div class="sol-grad-info">
+                    <div class="sol-grad-name">Crimson → Amber</div>
+                    <div class="sol-grad-stops">#F25E3D → #F2B33D</div>
+                  </div>
+                </div>
+                <div class="sol-grad" onclick="copyColor('linear-gradient(135deg, #F25E3D 0%, #7C316D 100%)')">
+                  <div class="sol-grad-bar" style="background:linear-gradient(135deg,#F25E3D 0%,#7C316D 100%);"></div>
+                  <div class="sol-grad-info">
+                    <div class="sol-grad-name">Crimson → Plum</div>
+                    <div class="sol-grad-stops">#F25E3D → #7C316D</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
