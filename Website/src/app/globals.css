@@ -115,21 +115,21 @@ body {
 /* Ambient floating glow animations */
 @keyframes ambientFloat1 {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-40px, 30px) scale(1.1); }
+  50% { transform: translate(-60px, 45px) scale(1.15); }
 }
 
 @keyframes ambientFloat2 {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(30px, -20px) scale(1.15); }
+  50% { transform: translate(50px, -35px) scale(1.2); }
 }
 
 @keyframes ambientFloat3 {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-25px, -35px) scale(1.05); }
+  50% { transform: translate(-40px, -50px) scale(1.1); }
 }
 
 /* ARC pattern subtle drift */
 @keyframes arcDrift {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(15px, -10px) scale(1.03); }
+  50% { transform: translate(25px, -18px) scale(1.05); }
 }

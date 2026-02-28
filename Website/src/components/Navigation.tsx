@@ -24,7 +24,6 @@ export default function Navigation() {
 
   // Colors flip when scrolled: transparent+white text → white bg+dark text
   const linkColor = scrolled ? "text-charcoal/50 hover:text-charcoal" : "text-white/60 hover:text-white";
-  const wordmarkColor = scrolled ? "text-charcoal" : "text-white";
   const hamburgerColor = scrolled ? "text-charcoal" : "text-white";
 
   return (
@@ -36,16 +35,12 @@ export default function Navigation() {
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
         <div className="flex h-[72px] items-center justify-between">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <svg width="28" height="24" viewBox="0 0 165 137" fill="none">
-              <path d="M18.1 94.945L52.9693 9.30142C54.5558 5.4049 59.761 4.67828 62.3539 7.9914L89.2188 40.2078C91.0252 42.5161 90.6939 45.8374 88.467 47.7433L26.7328 101.171C22.3709 104.904 15.935 100.263 18.1 94.945Z" fill="url(#ng1)" />
-              <path d="M144.078 104.749L118.647 74.4723C117.414 72.8031 115.107 71.7273 112.772 72.8031L60.3303 98.7056C54.5564 101.365 49.649 93.7043 54.4786 89.571L148.324 9.25522C152.167 5.96628 158.034 9.20015 157.304 14.2055L153.863 102.234C153.162 107.043 147.011 108.624 144.078 104.749Z" fill="url(#ng2)" />
-              <defs>
-                <linearGradient id="ng1" x1="44" y1="28" x2="73" y2="122" gradientUnits="userSpaceOnUse"><stop stopColor="#0CF4DF" /><stop offset="1" stopColor="#1F3395" /></linearGradient>
-                <linearGradient id="ng2" x1="90" y1="31" x2="112" y2="131" gradientUnits="userSpaceOnUse"><stop stopColor="#0CF4DF" /><stop offset="1" stopColor="#1F3395" /></linearGradient>
-              </defs>
-            </svg>
-            <span className={`text-[17px] font-semibold tracking-[-0.01em] transition-colors duration-300 ${wordmarkColor}`}>Momentify</span>
+          <a href="/" className="flex items-center flex-shrink-0">
+            <img
+              src={scrolled ? "/Momentify-Logo.svg" : "/Momentify-Logo_Reverse.svg"}
+              alt="Momentify"
+              className="h-6 w-auto transition-opacity duration-300"
+            />
           </a>
 
           {/* Desktop nav links */}

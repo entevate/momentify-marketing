@@ -16,12 +16,7 @@ const words = [
 
 const headline = { weight: 500, size: "clamp(36px,5.5vw,72px)", tracking: "-0.02em" };
 
-const subheadOptions = [
-  { label: "400 / 14px", weight: 400, size: "14px", leading: "1.5" },
-  { label: "300 / 14px", weight: 300, size: "14px", leading: "1.5" },
-  { label: "400 / 15px", weight: 400, size: "15px", leading: "1.5" },
-  { label: "300 / 15px", weight: 300, size: "15px", leading: "1.5" },
-];
+const subhead = { weight: 300, size: "15px", leading: "1.5" };
 
 const eyebrowOptions = [
   {
@@ -185,10 +180,8 @@ function TypewriterWord() {
 /* ── Hero ──────────────────────────────────────────────── */
 
 export default function Hero() {
-  const [subheadIdx, setSubheadIdx] = useState(3);
   const [eyebrowIdx, setEyebrowIdx] = useState(0);
 
-  const sh = subheadOptions[subheadIdx];
   const ey = eyebrowOptions[eyebrowIdx];
 
   return (
@@ -196,7 +189,7 @@ export default function Hero() {
       className="relative overflow-hidden"
       style={{
         backgroundSize: "200% 200%",
-        animation: "bgShift 20s ease-in-out infinite",
+        animation: "bgShift 16s ease-in-out infinite",
         backgroundImage:
           "linear-gradient(135deg, #7C316D 0%, #0B0B3C 30%, #1A2E73 60%, #0B0B3C 100%)",
       }}
@@ -252,11 +245,10 @@ export default function Hero() {
 
       {/* Style pickers — top right */}
       <div className="absolute top-20 right-6 lg:right-12 z-20 flex flex-col gap-2 items-end">
-        <OptionPicker label="Sub" options={subheadOptions} active={subheadIdx} onChange={setSubheadIdx} />
         <OptionPicker label="Eye" options={eyebrowOptions} active={eyebrowIdx} onChange={setEyebrowIdx} />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12 pt-32 pb-20 sm:pt-36 sm:pb-24 lg:pt-40 lg:pb-28">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12 pt-36 pb-28 sm:pt-44 sm:pb-32 lg:pt-48 lg:pb-36">
         <div className="max-w-3xl">
           {/* Eyebrow */}
           <motion.div
@@ -308,9 +300,9 @@ export default function Hero() {
             className="mt-8 text-white/60 max-w-xl"
             style={{
               fontFamily: "var(--font-inter)",
-              fontSize: sh.size,
-              fontWeight: sh.weight,
-              lineHeight: sh.leading,
+              fontSize: subhead.size,
+              fontWeight: subhead.weight,
+              lineHeight: subhead.leading,
             }}
           >
             The operating system for in-person engagement. Built to convert attention
