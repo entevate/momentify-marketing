@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "Momentify Brand Kit",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "5051", "--directory", "/Users/jakehamann/Documents/momentify"],
+      "runtimeExecutable": "ruby",
+      "runtimeArgs": ["-run", "-e", "httpd", "/tmp/momentify-preview", "-p", "5051"],
       "port": 5051
     }
   ]
