@@ -176,8 +176,10 @@ function TypewriterWord() {
         className="inline-block ml-0.5"
         style={{
           opacity: showCursor ? 1 : 0,
-          WebkitTextFillColor: "#0CF4DF",
-          color: "#0CF4DF",
+          WebkitTextFillColor: "#FFFFFF",
+          color: "#FFFFFF",
+          fontWeight: 100,
+          transform: "scaleX(0.5)",
         }}
       >
         |
