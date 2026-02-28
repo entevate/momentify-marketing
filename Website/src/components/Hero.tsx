@@ -5,10 +5,19 @@ import { motion } from "framer-motion";
 
 const words = [
   "Trade Show.",
+  "Exhibit.",
+  "Fan Engagement.",
+  "Demo.",
+  "Moment.",
   "Recruiting Event.",
+  "Job Fair.",
+  "Booth Conversation.",
+  "Handshake.",
+  "Moment.",
   "Field Interaction.",
   "Facility Visit.",
   "Live Experience.",
+  "Conversation.",
   "Moment.",
 ];
 
