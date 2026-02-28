@@ -14,12 +14,7 @@ const words = [
 
 /* ── Style option configs ──────────────────────────────── */
 
-const headlineOptions = [
-  { label: "600 / 72px", weight: 600, size: "clamp(36px,5.5vw,72px)", tracking: "-0.02em" },
-  { label: "500 / 72px", weight: 500, size: "clamp(36px,5.5vw,72px)", tracking: "-0.02em" },
-  { label: "600 / 64px", weight: 600, size: "clamp(32px,5vw,64px)", tracking: "-0.02em" },
-  { label: "400 / 72px", weight: 400, size: "clamp(36px,5.5vw,72px)", tracking: "-0.015em" },
-];
+const headline = { weight: 500, size: "clamp(36px,5.5vw,72px)", tracking: "-0.02em" };
 
 const subheadOptions = [
   { label: "400 / 14px", weight: 400, size: "14px", leading: "1.5" },
@@ -190,11 +185,9 @@ function TypewriterWord() {
 /* ── Hero ──────────────────────────────────────────────── */
 
 export default function Hero() {
-  const [headlineIdx, setHeadlineIdx] = useState(1);
   const [subheadIdx, setSubheadIdx] = useState(3);
   const [eyebrowIdx, setEyebrowIdx] = useState(0);
 
-  const hl = headlineOptions[headlineIdx];
   const sh = subheadOptions[subheadIdx];
   const ey = eyebrowOptions[eyebrowIdx];
 
@@ -241,7 +234,6 @@ export default function Hero() {
 
       {/* Style pickers — top right */}
       <div className="absolute top-20 right-6 lg:right-12 z-20 flex flex-col gap-2 items-end">
-        <OptionPicker label="H1" options={headlineOptions} active={headlineIdx} onChange={setHeadlineIdx} />
         <OptionPicker label="Sub" options={subheadOptions} active={subheadIdx} onChange={setSubheadIdx} />
         <OptionPicker label="Eye" options={eyebrowOptions} active={eyebrowIdx} onChange={setEyebrowIdx} />
       </div>
@@ -280,9 +272,9 @@ export default function Hero() {
             className="text-white leading-[1.08]"
             style={{
               fontFamily: "var(--font-inter)",
-              fontSize: hl.size,
-              fontWeight: hl.weight,
-              letterSpacing: hl.tracking,
+              fontSize: headline.size,
+              fontWeight: headline.weight,
+              letterSpacing: headline.tracking,
             }}
           >
             Empower Every
@@ -295,7 +287,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-6 text-white/60 max-w-md"
+            className="mt-6 text-white/60 max-w-xl"
             style={{
               fontFamily: "var(--font-inter)",
               fontSize: sh.size,
@@ -303,8 +295,8 @@ export default function Hero() {
               lineHeight: sh.leading,
             }}
           >
-            The operating system for in-person engagement. Built to convert
-            attention into outcomes your team can measure and prove.
+            The operating system for in-person engagement. Built to convert attention
+            into outcomes your team can measure&nbsp;and&nbsp;prove.
           </motion.p>
 
           {/* CTAs */}
