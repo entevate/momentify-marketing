@@ -886,6 +886,37 @@
     }
     .ht-3w-bold { font-size: clamp(28px, 6.5cqw, 52px); font-weight: 800; color: #ffffff; display: block; }
 
+    /* ─── Headline Treatments: Solution Pairs ───────────────────── */
+    .ht-sol-section { margin-top: 48px; }
+    .ht-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .ht-head-wrap { text-align: left; }
+    .ht-head-line1 {
+      display: block;
+      font-size: clamp(22px, 7.5cqw, 64px);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+    }
+    .ht-head-line2 {
+      display: block;
+      font-size: clamp(22px, 7.5cqw, 64px);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .ht-preview-bar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+    }
+
     /* ─── Mobile Nav ────────────────────────────────────────────── */
     .mobile-nav {
       display: none;
@@ -922,6 +953,8 @@
     .mobile-nav a.active { color: var(--accent); background: var(--accent-sec); border-color: var(--accent); }
 
     /* ─── Responsive ────────────────────────────────────────────── */
+    @media (max-width: 640px) { .ht-pair { grid-template-columns: 1fr; } }
+
     @media (max-width: 900px) {
       .mobile-nav { display: block; }
       .page-layout { grid-template-columns: 1fr; }
@@ -1021,7 +1054,7 @@
       <a href="#usage">Usage</a>
       <a href="#solutions">Solutions</a>
       <a href="#headlines">Headlines</a>
-      <a href="backgrounds.html" target="_blank">Backgrounds ↗</a>
+      <a href="backgrounds.html">Backgrounds</a>
     </div>
   </nav>
 
@@ -1046,7 +1079,7 @@
             <li><a href="#usage">Usage Rules</a></li>
             <li><a href="#solutions">Solutions</a></li>
             <li><a href="#headlines">Headlines</a></li>
-            <li><a href="backgrounds.html" target="_blank" style="display:flex;align-items:center;gap:5px;">Backgrounds <svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 11L11 1M11 1H5M11 1v6"/></svg></a></li>
+            <li><a href="backgrounds.html">Backgrounds</a></li>
           </ul>
         </div>
         <div class="nav-toggle-wrap">
@@ -1709,97 +1742,218 @@
         <div class="container">
           <div class="section-label">08 — Headlines</div>
           <h2 class="section-title">Headline Treatments</h2>
-          <p class="section-desc">Five Inter-based headline treatments using weight contrast and gradient for digital, presentations, and social. Inter 100 Thin is available throughout. Click Copy CSS to grab the snippet.</p>
+          <p class="section-desc">The "Empower Every Moment" headline across every brand context — dark and reverse. Each solution's gradient colours the accent word. Click Copy CSS to grab the gradient snippet.</p>
 
-          <div class="ht-grid">
-
-            <!-- Treatment 1: Thin + Heavy Split -->
-            <div class="ht-card">
-              <div class="ht-preview" style="align-items:flex-start; justify-content:flex-start;">
-                <div class="ht-ths">
-                  <div class="ht-ths-eye">Empower</div>
-                  <div class="ht-ths-thin">Every</div>
-                  <div class="ht-ths-bold">Moment.</div>
+          <!-- ── Main Brand ── -->
+          <div class="ht-sol-section">
+            <div class="section-header" style="margin-top:40px;">
+              <div class="section-dot" style="background:linear-gradient(135deg,#0CF4DF,#1F3395);"></div>
+              <span class="section-name">Main Brand</span>
+            </div>
+            <div class="ht-pair">
+              <div class="ht-card">
+                <div class="ht-preview" style="background:linear-gradient(135deg,#7C316D 0%,#0B0B3C 55%,#1A2E73 100%);align-items:flex-start;justify-content:flex-start;">
+                  <div class="ht-head-wrap">
+                    <span class="ht-head-line1" style="color:#fff;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#0CF4DF 0%,#254FE5 100%);">Moment.</span>
+                  </div>
+                </div>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Main Brand — Dark</div><div class="ht-card-desc">Depth gradient · Cyan-to-blue accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('main-dark')">Copy CSS</button>
                 </div>
               </div>
-              <div class="ht-card-footer">
-                <div>
-                  <div class="ht-card-name">Thin + Heavy Split</div>
-                  <div class="ht-card-desc">Weight 100 thin top, weight 800 bold bottom. Cyan accent punch.</div>
+              <div class="ht-card">
+                <div class="ht-preview" style="background:#FFFFFF;align-items:flex-start;justify-content:flex-start;position:relative;">
+                  <div class="ht-preview-bar" style="background:linear-gradient(90deg,#0CF4DF,#1F3395);"></div>
+                  <div class="ht-head-wrap" style="margin-top:14px;">
+                    <span class="ht-head-line1" style="color:#0B0B3C;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#0CF4DF 0%,#1F3395 100%);">Moment.</span>
+                  </div>
                 </div>
-                <button class="ht-copy-btn" onclick="copyCSS(1)">Copy CSS</button>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Main Brand — Reverse</div><div class="ht-card-desc">White · Cyan-to-deep-blue accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('main-light')">Copy CSS</button>
+                </div>
               </div>
             </div>
-
-            <!-- Treatment 2: Gradient Flood Thin -->
-            <div class="ht-card">
-              <div class="ht-preview">
-                <div class="ht-gft">Empower<br/>Every<br/>Moment.</div>
-              </div>
-              <div class="ht-card-footer">
-                <div>
-                  <div class="ht-card-name">Gradient Flood</div>
-                  <div class="ht-card-desc">Weight 100 at display scale. Full Action Gradient fill.</div>
-                </div>
-                <button class="ht-copy-btn" onclick="copyCSS(2)">Copy CSS</button>
-              </div>
-            </div>
-
-            <!-- Treatment 3: Weight Cascade -->
-            <div class="ht-card">
-              <div class="ht-preview" style="align-items:flex-start; justify-content:flex-start;">
-                <div class="ht-wc">
-                  <span class="ht-wc-100">Empower</span>
-                  <span class="ht-wc-300">Every</span>
-                  <span class="ht-wc-800">Moment.</span>
-                </div>
-              </div>
-              <div class="ht-card-footer">
-                <div>
-                  <div class="ht-card-name">Weight Cascade</div>
-                  <div class="ht-card-desc">Three weights descend: 100 → 300 → 800. No color needed.</div>
-                </div>
-                <button class="ht-copy-btn" onclick="copyCSS(3)">Copy CSS</button>
-              </div>
-            </div>
-
-            <!-- Treatment 4: Thin Rule Break -->
-            <div class="ht-card">
-              <div class="ht-preview" style="align-items:flex-start; justify-content:flex-start;">
-                <div class="ht-trb">
-                  <div class="ht-trb-thin">Empower Every</div>
-                  <div class="ht-trb-rule"></div>
-                  <div class="ht-trb-bold">Moment.</div>
-                </div>
-              </div>
-              <div class="ht-card-footer">
-                <div>
-                  <div class="ht-card-name">Thin Rule Break</div>
-                  <div class="ht-card-desc">Thin 100 phrase over a gradient rule, bold anchor below.</div>
-                </div>
-                <button class="ht-copy-btn" onclick="copyCSS(4)">Copy CSS</button>
-              </div>
-            </div>
-
-            <!-- Treatment 5: Three-Word Color -->
-            <div class="ht-card">
-              <div class="ht-preview">
-                <div class="ht-3w">
-                  <span class="ht-3w-mute">Empower</span>
-                  <span class="ht-3w-grad">Every</span>
-                  <span class="ht-3w-bold">Moment.</span>
-                </div>
-              </div>
-              <div class="ht-card-footer">
-                <div>
-                  <div class="ht-card-name">Three-Word Color</div>
-                  <div class="ht-card-desc">Muted thin → gradient thin → solid bold. One word per role.</div>
-                </div>
-                <button class="ht-copy-btn" onclick="copyCSS(5)">Copy CSS</button>
-              </div>
-            </div>
-
           </div>
+
+          <!-- ── Trade Shows — Violet ── -->
+          <div class="ht-sol-section">
+            <div class="section-header">
+              <div class="section-dot" style="background:#9B5FE8;"></div>
+              <span class="section-name">Trade Shows &amp; Exhibits — Violet</span>
+            </div>
+            <div class="ht-pair">
+              <div class="ht-card">
+                <div class="ht-preview" style="background:linear-gradient(135deg,#2D0770 0%,#4A0FA8 55%,#9B5FE8 100%);align-items:flex-start;justify-content:flex-start;">
+                  <div class="ht-head-wrap">
+                    <span class="ht-head-line1" style="color:#fff;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#C084FC 0%,#9B5FE8 100%);">Moment.</span>
+                  </div>
+                </div>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Trade Shows — Dark</div><div class="ht-card-desc">Violet gradient · Lilac-to-violet accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('violet-dark')">Copy CSS</button>
+                </div>
+              </div>
+              <div class="ht-card">
+                <div class="ht-preview" style="background:linear-gradient(145deg,#F8F4FF,#EDE6FF);align-items:flex-start;justify-content:flex-start;position:relative;">
+                  <div class="ht-preview-bar" style="background:linear-gradient(90deg,#9B5FE8,#6B21D4);"></div>
+                  <div class="ht-head-wrap" style="margin-top:14px;">
+                    <span class="ht-head-line1" style="color:#1A0040;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#7B3FD4 0%,#4A0FA8 100%);">Moment.</span>
+                  </div>
+                </div>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Trade Shows — Reverse</div><div class="ht-card-desc">Violet light · Deep violet accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('violet-light')">Copy CSS</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Technical Recruiting — Teal ── -->
+          <div class="ht-sol-section">
+            <div class="section-header">
+              <div class="section-dot" style="background:#5FD9C2;"></div>
+              <span class="section-name">Technical Recruiting — Teal</span>
+            </div>
+            <div class="ht-pair">
+              <div class="ht-card">
+                <div class="ht-preview" style="background:linear-gradient(135deg,#040E28 0%,#1A8A76 55%,#5FD9C2 100%);align-items:flex-start;justify-content:flex-start;">
+                  <div class="ht-head-wrap">
+                    <span class="ht-head-line1" style="color:#fff;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#5FD9C2 0%,#0CF4DF 100%);">Moment.</span>
+                  </div>
+                </div>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Technical Recruiting — Dark</div><div class="ht-card-desc">Teal gradient · Teal-to-cyan accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('teal-dark')">Copy CSS</button>
+                </div>
+              </div>
+              <div class="ht-card">
+                <div class="ht-preview" style="background:linear-gradient(145deg,#E8FDF8,#F0FFFC);align-items:flex-start;justify-content:flex-start;position:relative;">
+                  <div class="ht-preview-bar" style="background:linear-gradient(90deg,#00BBA5,#5FD9C2);"></div>
+                  <div class="ht-head-wrap" style="margin-top:14px;">
+                    <span class="ht-head-line1" style="color:#032B26;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#00BBA5 0%,#1A8A76 100%);">Moment.</span>
+                  </div>
+                </div>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Technical Recruiting — Reverse</div><div class="ht-card-desc">Teal light · Teal accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('teal-light')">Copy CSS</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Field Sales — Amber ── -->
+          <div class="ht-sol-section">
+            <div class="section-header">
+              <div class="section-dot" style="background:#F2B33D;"></div>
+              <span class="section-name">Field Sales Enablement — Amber</span>
+            </div>
+            <div class="ht-pair">
+              <div class="ht-card">
+                <div class="ht-preview" style="background:linear-gradient(135deg,#1A0A00 0%,#A86B00 55%,#F2B33D 100%);align-items:flex-start;justify-content:flex-start;">
+                  <div class="ht-head-wrap">
+                    <span class="ht-head-line1" style="color:#fff;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#FFDC85 0%,#F2B33D 100%);">Moment.</span>
+                  </div>
+                </div>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Field Sales — Dark</div><div class="ht-card-desc">Amber gradient · Gold accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('amber-dark')">Copy CSS</button>
+                </div>
+              </div>
+              <div class="ht-card">
+                <div class="ht-preview" style="background:linear-gradient(145deg,#FFF9E8,#FFFCF0);align-items:flex-start;justify-content:flex-start;position:relative;">
+                  <div class="ht-preview-bar" style="background:linear-gradient(90deg,#F2B33D,#E88C00);"></div>
+                  <div class="ht-head-wrap" style="margin-top:14px;">
+                    <span class="ht-head-line1" style="color:#3D2800;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#F2B33D 0%,#A86B00 100%);">Moment.</span>
+                  </div>
+                </div>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Field Sales — Reverse</div><div class="ht-card-desc">Amber light · Deep amber accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('amber-light')">Copy CSS</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Facilities — Indigo ── -->
+          <div class="ht-sol-section">
+            <div class="section-header">
+              <div class="section-dot" style="background:#5B4499;"></div>
+              <span class="section-name">Facilities — Indigo</span>
+            </div>
+            <div class="ht-pair">
+              <div class="ht-card">
+                <div class="ht-preview" style="background:linear-gradient(135deg,#0D0820 0%,#3A2073 55%,#5B4499 100%);align-items:flex-start;justify-content:flex-start;">
+                  <div class="ht-head-wrap">
+                    <span class="ht-head-line1" style="color:#fff;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#B8AEDC 0%,#7B6CB8 100%);">Moment.</span>
+                  </div>
+                </div>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Facilities — Dark</div><div class="ht-card-desc">Indigo gradient · Periwinkle accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('indigo-dark')">Copy CSS</button>
+                </div>
+              </div>
+              <div class="ht-card">
+                <div class="ht-preview" style="background:linear-gradient(145deg,#EEF0FF,#F4F5FF);align-items:flex-start;justify-content:flex-start;position:relative;">
+                  <div class="ht-preview-bar" style="background:linear-gradient(90deg,#5B4499,#3A2073);"></div>
+                  <div class="ht-head-wrap" style="margin-top:14px;">
+                    <span class="ht-head-line1" style="color:#1A0F38;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#5B4499 0%,#3A2073 100%);">Moment.</span>
+                  </div>
+                </div>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Facilities — Reverse</div><div class="ht-card-desc">Indigo light · Indigo accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('indigo-light')">Copy CSS</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Events & Venues — Crimson ── -->
+          <div class="ht-sol-section">
+            <div class="section-header">
+              <div class="section-dot" style="background:#F25E3D;"></div>
+              <span class="section-name">Events &amp; Venues — Crimson</span>
+            </div>
+            <div class="ht-pair">
+              <div class="ht-card">
+                <div class="ht-preview" style="background:linear-gradient(135deg,#1A0400 0%,#8F200A 55%,#F25E3D 100%);align-items:flex-start;justify-content:flex-start;">
+                  <div class="ht-head-wrap">
+                    <span class="ht-head-line1" style="color:#fff;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#FFAA8F 0%,#F25E3D 100%);">Moment.</span>
+                  </div>
+                </div>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Events &amp; Venues — Dark</div><div class="ht-card-desc">Crimson gradient · Coral accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('crimson-dark')">Copy CSS</button>
+                </div>
+              </div>
+              <div class="ht-card">
+                <div class="ht-preview" style="background:linear-gradient(145deg,#FFF2EE,#FFF7F5);align-items:flex-start;justify-content:flex-start;position:relative;">
+                  <div class="ht-preview-bar" style="background:linear-gradient(90deg,#F25E3D,#8F200A);"></div>
+                  <div class="ht-head-wrap" style="margin-top:14px;">
+                    <span class="ht-head-line1" style="color:#3D0A00;">Empower Every</span>
+                    <span class="ht-head-line2" style="background:linear-gradient(135deg,#F25E3D 0%,#8F200A 100%);">Moment.</span>
+                  </div>
+                </div>
+                <div class="ht-card-footer">
+                  <div><div class="ht-card-name">Events &amp; Venues — Reverse</div><div class="ht-card-desc">Crimson light · Scarlet accent</div></div>
+                  <button class="ht-copy-btn" onclick="copyCSS('crimson-light')">Copy CSS</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -1842,15 +1996,23 @@
     if (saved) setTheme(saved);
 
     // ── Copy CSS snippet ─────────────────────────────────────────
+    const ht = (c1, c2, base) => `.headline {\n  font-family: 'Inter', sans-serif;\n  font-size: clamp(28px, 8vw, 72px);\n  font-weight: 800;\n  line-height: 1.0;\n  letter-spacing: -0.03em;\n}\n.headline-base { display: block; color: ${base}; }\n.headline-accent {\n  display: block;\n  background: linear-gradient(135deg, ${c1} 0%, ${c2} 100%);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n}`;
     const cssSnippets = {
-      1: `.headline { font-size: clamp(28px, 4vw, 48px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.18; color: #FFFFFF; }\n.headline .accent {\n  background: linear-gradient(135deg, #0CF4DF 0%, #254FE5 100%);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n}`,
-      2: `.headline {\n  font-family: 'Inter', sans-serif;\n  font-size: clamp(24px, 3.5vw, 42px);\n  font-weight: 700;\n  letter-spacing: -0.02em;\n  line-height: 1.2;\n  color: #FFFFFF;\n  display: inline-block;\n  position: relative;\n  padding-bottom: 14px;\n}\n.headline::after {\n  content: '';\n  position: absolute;\n  left: 0; bottom: 0;\n  width: 100%; height: 3px;\n  background: linear-gradient(90deg, #0CF4DF, #1F3395);\n  border-radius: 2px;\n}`,
-      3: `.headline {\n  font-family: 'Inter', sans-serif;\n  font-size: clamp(24px, 3.5vw, 42px);\n  font-weight: 800;\n  letter-spacing: -0.02em;\n  line-height: 1.35;\n  color: #FFFFFF;\n}\n.headline .pill {\n  background: linear-gradient(135deg, rgba(12,244,223,0.18), rgba(37,79,229,0.24));\n  border-radius: 100px;\n  padding: 0 18px;\n  box-shadow: inset 0 0 0 1px rgba(12,244,223,0.4);\n}`,
-      4: `.headline {\n  font-family: 'Inter', sans-serif;\n  font-size: clamp(26px, 4vw, 44px);\n  letter-spacing: -0.02em;\n  line-height: 1.2;\n  color: #FFFFFF;\n}\n.headline .light { font-weight: 300; opacity: 0.5; }\n.headline .bold  { font-weight: 800; }`,
-      5: `.eyebrow {\n  font-family: 'Inter', sans-serif;\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.18em;\n  text-transform: uppercase;\n  background: linear-gradient(90deg, #0CF4DF, #254FE5);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n  margin-bottom: 10px;\n}\n.display {\n  font-family: 'Inter', sans-serif;\n  font-size: clamp(30px, 4vw, 54px);\n  font-weight: 800;\n  letter-spacing: -0.03em;\n  line-height: 1.05;\n  color: #FFFFFF;\n}`
+      'main-dark':    ht('#0CF4DF', '#254FE5', '#ffffff'),
+      'main-light':   ht('#0CF4DF', '#1F3395', '#0B0B3C'),
+      'violet-dark':  ht('#C084FC', '#9B5FE8', '#ffffff'),
+      'violet-light': ht('#7B3FD4', '#4A0FA8', '#1A0040'),
+      'teal-dark':    ht('#5FD9C2', '#0CF4DF', '#ffffff'),
+      'teal-light':   ht('#00BBA5', '#1A8A76', '#032B26'),
+      'amber-dark':   ht('#FFDC85', '#F2B33D', '#ffffff'),
+      'amber-light':  ht('#F2B33D', '#A86B00', '#3D2800'),
+      'indigo-dark':  ht('#B8AEDC', '#7B6CB8', '#ffffff'),
+      'indigo-light': ht('#5B4499', '#3A2073', '#1A0F38'),
+      'crimson-dark': ht('#FFAA8F', '#F25E3D', '#ffffff'),
+      'crimson-light':ht('#F25E3D', '#8F200A', '#3D0A00'),
     };
     function copyCSS(id) {
-      navigator.clipboard.writeText(cssSnippets[id]).then(() => {
+      navigator.clipboard.writeText(cssSnippets[id] || '').then(() => {
         const toast = document.getElementById('copy-toast');
         toast.textContent = 'CSS copied!';
         toast.classList.add('show');
