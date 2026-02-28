@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { motion } from "framer-motion";
 
 const words = [
@@ -27,103 +27,17 @@ const headline = { weight: 500, size: "clamp(36px,5.5vw,72px)", tracking: "-0.02
 
 const subhead = { weight: 300, size: "15px", leading: "1.5" };
 
-const eyebrowOptions = [
-  {
-    label: "Outlined Pill",
-    style: {
-      display: "inline-block" as const,
-      fontSize: "10px",
-      fontWeight: 600,
-      textTransform: "uppercase" as const,
-      letterSpacing: "0.10em",
-      color: "#0CF4DF",
-      border: "1px solid rgba(12,244,223,0.3)",
-      borderRadius: "999px",
-      padding: "5px 14px",
-    },
-  },
-  {
-    label: "Filled Pill",
-    style: {
-      display: "inline-block" as const,
-      fontSize: "10px",
-      fontWeight: 600,
-      textTransform: "uppercase" as const,
-      letterSpacing: "0.10em",
-      color: "#0B0B3C",
-      background: "linear-gradient(135deg, #0CF4DF, #5BA8F5)",
-      borderRadius: "999px",
-      padding: "5px 14px",
-    },
-  },
-  {
-    label: "Ghost Pill",
-    style: {
-      display: "inline-block" as const,
-      fontSize: "10px",
-      fontWeight: 500,
-      textTransform: "uppercase" as const,
-      letterSpacing: "0.10em",
-      color: "#0CF4DF",
-      background: "rgba(12,244,223,0.08)",
-      borderRadius: "999px",
-      padding: "5px 14px",
-    },
-  },
-  {
-    label: "Dot Pill",
-    style: {
-      display: "inline-flex" as const,
-      alignItems: "center" as const,
-      gap: "8px",
-      fontSize: "10px",
-      fontWeight: 600,
-      textTransform: "uppercase" as const,
-      letterSpacing: "0.10em",
-      color: "#0CF4DF",
-      border: "1px solid rgba(12,244,223,0.2)",
-      borderRadius: "999px",
-      padding: "5px 14px 5px 10px",
-    },
-  },
-];
-
-/* ── Picker pill component ─────────────────────────────── */
-
-function OptionPicker({
-  label,
-  options,
-  active,
-  onChange,
-}: {
-  label: string;
-  options: { label: string }[];
-  active: number;
-  onChange: (i: number) => void;
-}) {
-  return (
-    <div className="flex items-center gap-2">
-      <span className="text-[10px] text-white/30 uppercase tracking-wider font-medium shrink-0">
-        {label}
-      </span>
-      <div className="flex items-center gap-1 bg-white/[0.07] backdrop-blur-sm rounded-full p-0.5 border border-white/[0.1]">
-        {options.map((opt, i) => (
-          <button
-            key={opt.label}
-            onClick={() => onChange(i)}
-            className={`text-[10px] px-2.5 py-1 rounded-full transition-all whitespace-nowrap ${
-              active === i
-                ? "bg-white/15 text-white font-medium"
-                : "text-white/40 hover:text-white/70"
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
+const eyebrowStyle = {
+  display: "inline-block" as const,
+  fontSize: "10px",
+  fontWeight: 600,
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.10em",
+  color: "#0B0B3C",
+  background: "linear-gradient(135deg, #0CF4DF, #5BA8F5)",
+  borderRadius: "999px",
+  padding: "5px 14px",
+};
 
 /* ── Typewriter ────────────────────────────────────────── */
 
@@ -191,10 +105,6 @@ function TypewriterWord() {
 /* ── Hero ──────────────────────────────────────────────── */
 
 export default function Hero() {
-  const [eyebrowIdx, setEyebrowIdx] = useState(0);
-
-  const ey = eyebrowOptions[eyebrowIdx];
-
   return (
     <section
       className="relative overflow-hidden"
@@ -254,11 +164,6 @@ export default function Hero() {
         </svg>
       </div>
 
-      {/* Style pickers — top right */}
-      <div className="absolute top-20 right-6 lg:right-12 z-20 flex flex-col gap-2 items-end">
-        <OptionPicker label="Eye" options={eyebrowOptions} active={eyebrowIdx} onChange={setEyebrowIdx} />
-      </div>
-
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12 pt-36 pb-28 sm:pt-44 sm:pb-32 lg:pt-48 lg:pb-36">
         <div className="max-w-3xl">
           {/* Eyebrow */}
@@ -266,21 +171,9 @@ export default function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-7"
+            className="mb-8"
           >
-            <span style={ey.style}>
-              {ey.label === "Dot Pill" && (
-                <span
-                  style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: "50%",
-                    background: "#0CF4DF",
-                    display: "inline-block",
-                    flexShrink: 0,
-                  }}
-                />
-              )}
+            <span style={eyebrowStyle}>
               CONTACT. CONVERSATION. CONTEXT.
             </span>
           </motion.div>
@@ -308,7 +201,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-8 text-white/60 max-w-xl"
+            className="mt-10 text-white/60 max-w-xl"
             style={{
               fontFamily: "var(--font-inter)",
               fontSize: subhead.size,
@@ -325,7 +218,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.32 }}
-            className="mt-10 flex flex-wrap gap-3"
+            className="mt-12 flex flex-wrap gap-3"
           >
             <a
               href="#platform"
