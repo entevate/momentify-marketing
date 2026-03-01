@@ -66,7 +66,7 @@ export default function Problem() {
   return (
     <section
       className="relative py-16 sm:py-24 overflow-hidden"
-      style={{ background: "linear-gradient(to right, #FFFFFF 0%, #EEF2FF 50%, #F5F7FF 100%)" }}
+      style={{ background: "linear-gradient(135deg, #FFFFFF 0%, #EEF2FF 40%, #E8EDFF 70%, #F0F3FF 100%)" }}
     >
       {/* Brand geometric pattern (main-frost) */}
       <svg
@@ -80,12 +80,12 @@ export default function Problem() {
         <path
           d="M1440 900 L1440 324 L1008 0 L528 0 L1056 396 L1056 900 Z"
           fill="#254FE5"
-          fillOpacity="0.04"
+          fillOpacity="0.10"
         />
         <path
           d="M1440 900 L1440 540 L912 144 L432 144 L912 504 L912 900 Z"
           fill="#1F3395"
-          fillOpacity="0.03"
+          fillOpacity="0.07"
         />
       </svg>
 
