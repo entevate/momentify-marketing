@@ -103,7 +103,7 @@ function WebDashboardFrame({ color }: { color: string }) {
 /* Step 2: Momentify Explorer — iPad role selection + iPhone session list */
 function ExplorerFrame({ color }: { color: string }) {
   return (
-    <svg viewBox="0 0 420 280" fill="none" className="w-full">
+    <svg viewBox="30 42 350 218" fill="none" className="w-full">
       {/* iPad — landscape */}
       <rect x="40" y="50" width="260" height="180" rx="14" stroke="white" strokeOpacity="0.25" strokeWidth="1.5" />
       <circle cx="170" cy="57" r="2.5" fill="white" fillOpacity="0.12" />
@@ -265,14 +265,6 @@ export default function ProductShowcase() {
     <div className="relative w-full flex flex-col">
       {/* Fixed-height device area */}
       <div className="relative overflow-hidden" style={{ height: "280px" }}>
-        {/* Accent glow */}
-        <div
-          className="absolute inset-0 pointer-events-none transition-all duration-700"
-          style={{
-            background: `radial-gradient(ellipse at center 40%, ${product.color}18 0%, transparent 70%)`,
-          }}
-        />
-
         {/* Device + overlay container */}
         <AnimatePresence mode="wait">
           <motion.div
@@ -309,7 +301,7 @@ export default function ProductShowcase() {
               style={{ marginTop: product.textOffsetY }}
             >
               <div
-                className="text-center px-6 py-4 rounded-xl"
+                className="text-center px-4 py-2.5 rounded-lg"
                 style={{
                   background: "linear-gradient(135deg, rgba(11,11,60,0.7) 0%, rgba(11,11,60,0.5) 100%)",
                   backdropFilter: "blur(4px)",
@@ -317,9 +309,9 @@ export default function ProductShowcase() {
               >
                 {/* Step pill */}
                 <span
-                  className="inline-block rounded-full px-3 py-0.5 mb-2"
+                  className="inline-block rounded-full px-2.5 py-0.5 mb-1.5"
                   style={{
-                    fontSize: "10px",
+                    fontSize: "9px",
                     fontWeight: 700,
                     fontFamily: "var(--font-inter)",
                     letterSpacing: "0.08em",
@@ -335,9 +327,9 @@ export default function ProductShowcase() {
                   style={{
                     fontFamily: "var(--font-inter)",
                     fontWeight: 500,
-                    fontSize: "15px",
+                    fontSize: "13px",
                     color: "rgba(255,255,255,0.9)",
-                    marginTop: "4px",
+                    marginTop: "2px",
                   }}
                 >
                   {product.name}
@@ -347,10 +339,10 @@ export default function ProductShowcase() {
                   style={{
                     fontFamily: "var(--font-inter)",
                     fontWeight: 500,
-                    fontSize: "19px",
+                    fontSize: "16px",
                     letterSpacing: "-0.01em",
                     color: "white",
-                    marginTop: "4px",
+                    marginTop: "2px",
                   }}
                 >
                   {product.headline}
