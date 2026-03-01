@@ -2,6 +2,7 @@
 
 import { useEffect, useCallback, useState } from "react";
 import { motion } from "framer-motion";
+import ProductShowcase from "./ProductShowcase";
 
 const words = [
   "Trade Show.",
@@ -261,19 +262,14 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* ── Right column: How It Works animation ── */}
+          {/* ── Right column: Product showcase ── */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
             className="hidden lg:flex items-center justify-center w-[420px]"
           >
-            <object
-              data="/how-it-works.svg"
-              type="image/svg+xml"
-              aria-label="How Momentify works: Set up, Engage, Analyze"
-              className="w-full pointer-events-none"
-            />
+            <ProductShowcase />
           </motion.div>
         </div>
 

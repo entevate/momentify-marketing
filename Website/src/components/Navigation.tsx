@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 const solutions = [
   { name: "Trade Shows & Exhibits", color: "#6B21D4", href: "#", description: "Outcome-driven booth experiences" },
@@ -11,9 +12,15 @@ const solutions = [
   { name: "Events & Venues", color: "#F25E3D", href: "#", description: "Interactive branded experiences" },
 ];
 
+const platformLinks = [
+  { name: "Overview", href: "/#platform", description: "Platform capabilities at a glance", color: "#00BBA5" },
+  { name: "How It Works", href: "/platform/how-it-works", description: "The three-step Momentify workflow", color: "#0CF4DF", isRoute: true },
+];
+
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const [platformOpen, setPlatformOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
@@ -71,7 +78,40 @@ export default function Navigation() {
                 )}
               </AnimatePresence>
             </div>
-            <a href="#platform" className={`text-[13px] font-medium transition-colors duration-300 ${linkColor}`}>Platform</a>
+            <div className="relative" onMouseEnter={() => setPlatformOpen(true)} onMouseLeave={() => setPlatformOpen(false)}>
+              <button className={`text-[13px] font-medium transition-colors duration-300 ${linkColor}`}>Platform</button>
+              <AnimatePresence>
+                {platformOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 6 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-[300px] rounded-xl bg-white border border-black/[0.06] p-3 shadow-xl shadow-black/[0.04]"
+                  >
+                    {platformLinks.map((link) =>
+                      link.isRoute ? (
+                        <Link key={link.name} href={link.href} className="flex items-start gap-3 rounded-lg p-3 hover:bg-light-bg transition-colors">
+                          <div className="mt-1.5 h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: link.color }} />
+                          <div>
+                            <div className="text-charcoal text-[13px] font-medium">{link.name}</div>
+                            <div className="text-charcoal/40 text-[11px] mt-0.5 leading-snug">{link.description}</div>
+                          </div>
+                        </Link>
+                      ) : (
+                        <a key={link.name} href={link.href} className="flex items-start gap-3 rounded-lg p-3 hover:bg-light-bg transition-colors">
+                          <div className="mt-1.5 h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: link.color }} />
+                          <div>
+                            <div className="text-charcoal text-[13px] font-medium">{link.name}</div>
+                            <div className="text-charcoal/40 text-[11px] mt-0.5 leading-snug">{link.description}</div>
+                          </div>
+                        </a>
+                      )
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             <a href="#rox" className={`text-[13px] font-medium transition-colors duration-300 ${linkColor}`}>Case Studies</a>
             <a href="#" className={`text-[13px] font-medium transition-colors duration-300 ${linkColor}`}>Partners</a>
           </div>
@@ -122,8 +162,23 @@ export default function Navigation() {
                   </a>
                 ))}
               </div>
+              <div className="space-y-1">
+                <p className="text-charcoal/30 text-[10px] font-semibold uppercase tracking-[0.12em] mb-3">Platform</p>
+                {platformLinks.map((link) =>
+                  link.isRoute ? (
+                    <Link key={link.name} href={link.href} className="flex items-center gap-3 py-2 text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>
+                      <div className="h-2 w-2 rounded-full" style={{ backgroundColor: link.color }} />
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <a key={link.name} href={link.href} className="flex items-center gap-3 py-2 text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>
+                      <div className="h-2 w-2 rounded-full" style={{ backgroundColor: link.color }} />
+                      {link.name}
+                    </a>
+                  )
+                )}
+              </div>
               <div className="border-t border-black/[0.06] pt-4 space-y-3">
-                <a href="#platform" className="block text-charcoal/70 text-sm">Platform</a>
                 <a href="#rox" className="block text-charcoal/70 text-sm">Case Studies</a>
                 <a href="#" className="block text-charcoal/70 text-sm">Partners</a>
               </div>
