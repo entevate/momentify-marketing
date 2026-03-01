@@ -23,9 +23,9 @@ const solutions = [
     headline: "From branded space to outcome-driven experience.",
     body: "Most booths collect badge scans. Momentify captures what visitors actually cared about. Every conversation is contextualized, every lead is scored, and your team knows exactly who to follow up with before the show ends.",
     bullets: [
-      "Real-time lead capture with persona tagging",
-      "Engagement scoring by conversation depth and content interaction",
-      "Dealer and territory routing automated at the point of capture",
+      "Capture every conversation with role, interest, and intent attached",
+      "Know which leads are hot before the booth closes at the end of the day",
+      "Compare performance across every show in your calendar, not just this one",
     ],
     cta: "Explore Trade Shows and Exhibits",
     bg: "linear-gradient(135deg, #2D0770 0%, #4A0FA8 55%, #9B5FE8 100%)",
