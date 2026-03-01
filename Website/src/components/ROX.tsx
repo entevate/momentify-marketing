@@ -15,10 +15,55 @@ const tiers = [
 /* ── Stat card data with target values ───────────────── */
 
 const statCards = [
-  { label: "Lead Capture Efficiency", target: 78, suffix: "%" },
-  { label: "Engagement Quality", target: 65, suffix: "%" },
-  { label: "Follow-Up Speed", target: 71, suffix: "%" },
-  { label: "Conversion Effectiveness", target: 68, suffix: "%" },
+  {
+    label: "Lead Capture Efficiency",
+    description: "What percentage of visitors became leads.",
+    target: 78,
+    suffix: "%",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="7" height="7" rx="1" />
+        <rect x="14" y="3" width="7" height="7" rx="1" />
+        <rect x="3" y="14" width="7" height="7" rx="1" />
+        <rect x="14" y="14" width="7" height="7" rx="1" />
+      </svg>
+    ),
+  },
+  {
+    label: "Engagement Quality",
+    description: "How deeply each person interacted with your content.",
+    target: 65,
+    suffix: "%",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="2 12 5 9 8 14 11 8 14 13 17 6 20 11 22 9" />
+      </svg>
+    ),
+  },
+  {
+    label: "Follow-Up Speed",
+    description: "How quickly your team responded after the event.",
+    target: 71,
+    suffix: "%",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </svg>
+    ),
+  },
+  {
+    label: "Conversion Effectiveness",
+    description: "How many leads became meetings, hires, or deals.",
+    target: 68,
+    suffix: "%",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="12 2 2 22 22 22" />
+        <line x1="12" y1="10" x2="12" y2="15" />
+      </svg>
+    ),
+  },
 ];
 
 /* ── Category rows for body copy block ───────────────── */
@@ -269,7 +314,7 @@ export default function ROX() {
           <motion.p
             variants={fadeUp}
             className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4"
-            style={{ color: "#0CF4DF", fontFamily: "var(--font-inter)" }}
+            style={{ color: "#00BBA5", fontFamily: "var(--font-inter)" }}
           >
             Return on Experience
           </motion.p>
@@ -293,7 +338,7 @@ export default function ROX() {
               Your Events Have a Score.
             </span>
             <span
-              className="block text-gradient-hero"
+              className="block text-gradient-brand"
               style={{
                 fontWeight: 500,
                 fontSize: "clamp(22px, 3.5vw, 38px)",
@@ -315,7 +360,7 @@ export default function ROX() {
               color: "rgba(255, 255, 255, 0.6)",
             }}
           >
-            Return on Experience measures the quality of your engagement, not just the quantity. Four categories determine your score: lead capture efficiency, engagement quality, follow-up speed, and conversion effectiveness. Most teams have never seen the number. Momentify surfaces it in real time.
+            One score across four categories that tells you whether your events actually worked. Most teams have never seen this number.
           </motion.p>
         </motion.div>
 
@@ -326,14 +371,13 @@ export default function ROX() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
           variants={stagger}
-          className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
+          className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch"
         >
           {/* Left: Gauge dial */}
           <motion.div
             variants={fadeUp}
-            className="mx-auto lg:mx-0 w-full"
+            className="mx-auto lg:mx-0 w-full flex flex-col justify-center"
             style={{
-              maxWidth: "440px",
               background: "rgba(6, 19, 65, 0.5)",
               border: "2px solid rgba(12, 244, 223, 0.12)",
               borderRadius: "20px",
@@ -389,10 +433,11 @@ export default function ROX() {
           </motion.div>
 
           {/* Right: Stat cards */}
-          <motion.div variants={fadeUp} className="grid grid-cols-2 gap-3">
+          <motion.div variants={fadeUp} className="grid grid-cols-2 gap-3 h-full">
             {statCards.map((card, i) => (
               <div
                 key={card.label}
+                className="flex flex-col justify-between"
                 style={{
                   background: "rgba(6, 19, 65, 0.5)",
                   border: "1px solid rgba(255, 255, 255, 0.08)",
@@ -400,19 +445,35 @@ export default function ROX() {
                   padding: "24px",
                 }}
               >
-                <p
-                  className="uppercase"
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontWeight: 500,
-                    fontSize: "11px",
-                    color: "rgba(255, 255, 255, 0.45)",
-                    letterSpacing: "0.1em",
-                    marginBottom: "12px",
-                  }}
-                >
-                  {card.label}
-                </p>
+                <div>
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <div className="flex-shrink-0 opacity-70">{card.icon}</div>
+                    <p
+                      className="uppercase"
+                      style={{
+                        fontFamily: "var(--font-inter)",
+                        fontWeight: 500,
+                        fontSize: "11px",
+                        color: "rgba(255, 255, 255, 0.45)",
+                        letterSpacing: "0.1em",
+                      }}
+                    >
+                      {card.label}
+                    </p>
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: "var(--font-inter)",
+                      fontWeight: 300,
+                      fontSize: "12px",
+                      color: "rgba(255, 255, 255, 0.35)",
+                      lineHeight: "1.5",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    {card.description}
+                  </p>
+                </div>
                 <p
                   style={{
                     fontFamily: "var(--font-inter)",
@@ -488,7 +549,7 @@ export default function ROX() {
               className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4"
               style={{
                 fontFamily: "var(--font-inter)",
-                color: "#0CF4DF",
+                color: "#00BBA5",
               }}
             >
               What ROX Measures That ROI Misses
