@@ -309,8 +309,8 @@ export default function ROX() {
             intervalId = setInterval(() => {
               currentIndex = (currentIndex + 1) % scenarios.length;
               const next = scenarios[currentIndex];
-              animateTo(next.score, next.cards, 800);
-            }, 3500);
+              animateTo(next.score, next.cards, 1200);
+            }, 6000);
           });
           observer.disconnect();
         }
@@ -450,7 +450,7 @@ export default function ROX() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
           variants={stagger}
-          className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
+          className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch"
         >
           {/* Left: Gauge dial */}
           <motion.div
