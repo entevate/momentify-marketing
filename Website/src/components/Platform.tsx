@@ -179,7 +179,7 @@ export default function Platform() {
               color: "#061341",
             }}
           >
-            One platform. Every interaction.
+            One Platform. Every Interaction.
           </motion.h2>
 
           <motion.p
@@ -193,7 +193,7 @@ export default function Platform() {
               color: "rgba(6, 19, 65, 0.6)",
             }}
           >
-            Momentify works across every context where in-person engagement happens and measurement has been impossible.
+            Momentify works across every context where in-person engagement happens, but measurement has been missing.
           </motion.p>
         </motion.div>
 

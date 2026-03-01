@@ -127,7 +127,7 @@ export default function Problem() {
                     color: "#061341",
                   }}
                 >
-                  Billions spent on moments.
+                  Billions Spent on Moments.
                 </span>
                 <span
                   className="block text-gradient-brand"
@@ -137,7 +137,7 @@ export default function Problem() {
                     WebkitBackgroundClip: "text",
                   }}
                 >
-                  Most have no idea what worked.
+                  Most Have No Idea What Worked.
                 </span>
               </motion.h2>
             </motion.div>
