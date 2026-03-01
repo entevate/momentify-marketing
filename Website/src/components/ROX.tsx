@@ -12,6 +12,15 @@ const tiers = [
   { color: "#0CF4DF", name: "Elite ROX", description: "Highly optimized across every category." },
 ];
 
+/* ── Stat card data with target values ───────────────── */
+
+const statCards = [
+  { label: "Lead Capture Efficiency", target: 78, suffix: "%" },
+  { label: "Engagement Quality", target: 65, suffix: "%" },
+  { label: "Follow-Up Speed", target: 71, suffix: "%" },
+  { label: "Conversion Effectiveness", target: 68, suffix: "%" },
+];
+
 /* ── Category rows for body copy block ───────────────── */
 
 const categories = [
@@ -119,7 +128,6 @@ function ROXGauge({ animatedScore }: { animatedScore: number }) {
   const cy = 200;
   const r = 140;
 
-  // Arc helper: angle in degrees (0 = left of semicircle, 180 = right)
   const polarToCart = (angleDeg: number) => {
     const rad = (Math.PI * (180 - angleDeg)) / 180;
     return { x: cx + r * Math.cos(rad), y: cy - r * Math.sin(rad) };
@@ -132,7 +140,6 @@ function ROXGauge({ animatedScore }: { animatedScore: number }) {
     return `M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 1 ${e.x} ${e.y}`;
   };
 
-  // Zones mapped to 180-degree arc
   const zones = [
     { start: 0, end: 70.2, color: "#E5484D" },
     { start: 70.2, end: 124.2, color: "#F2B33D" },
@@ -140,19 +147,15 @@ function ROXGauge({ animatedScore }: { animatedScore: number }) {
     { start: 151.2, end: 180, color: "#0CF4DF" },
   ];
 
-  // Needle position
   const needleAngle = (animatedScore / 100) * 180;
   const needleEnd = polarToCart(needleAngle);
 
   return (
-    <svg viewBox="0 0 400 240" className="w-full max-w-[360px] mx-auto">
-      {/* Background track */}
+    <svg viewBox="0 0 400 240" className="w-full mx-auto">
       <path d={arcPath(0, 180)} stroke="rgba(255,255,255,0.08)" strokeWidth="12" fill="none" strokeLinecap="round" />
-      {/* Color zones */}
       {zones.map((z) => (
         <path key={z.color} d={arcPath(z.start, z.end)} stroke={z.color} strokeWidth="12" fill="none" strokeLinecap="round" />
       ))}
-      {/* Needle */}
       <line x1={cx} y1={cy} x2={needleEnd.x} y2={needleEnd.y} stroke="white" strokeWidth="2" />
       <circle cx={cx} cy={cy} r="4" fill="white" />
     </svg>
@@ -190,6 +193,8 @@ const stagger = {
 export default function ROX() {
   const gaugeRef = useRef<HTMLDivElement>(null);
   const [score, setScore] = useState(0);
+  const [cardValues, setCardValues] = useState([0, 0, 0, 0]);
+  const [animationStarted, setAnimationStarted] = useState(false);
 
   useEffect(() => {
     const el = gaugeRef.current;
@@ -197,12 +202,15 @@ export default function ROX() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          setAnimationStarted(true);
           const start = performance.now();
           const duration = 1200;
+          const targets = statCards.map((c) => c.target);
           const tick = (now: number) => {
             const t = Math.min((now - start) / duration, 1);
             const eased = 1 - Math.pow(1 - t, 3);
             setScore(Math.round(eased * 72));
+            setCardValues(targets.map((target) => Math.round(eased * target)));
             if (t < 1) requestAnimationFrame(tick);
           };
           requestAnimationFrame(tick);
@@ -220,14 +228,38 @@ export default function ROX() {
       id="rox"
       className="relative py-16 sm:py-24 overflow-hidden"
       style={{
-        background: "linear-gradient(180deg, #1A0533 0%, #070E2B 50%, #061341 100%)",
+        backgroundSize: "200% 200%",
+        animation: "bgShift 16s ease-in-out infinite",
+        backgroundImage:
+          "linear-gradient(135deg, #7C316D 0%, #0B0B3C 30%, #1A2E73 60%, #0B0B3C 100%)",
       }}
     >
       <style>{pulseCSS}</style>
 
-      <div className="mx-auto max-w-7xl px-6 lg:px-12">
+      {/* Geometric pattern overlay (main-minimal) */}
+      <svg
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        viewBox="0 0 1440 900"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMaxYMax slice"
+        aria-hidden="true"
+      >
+        <path
+          d="M1440 900 L1440 324 L1008 0 L528 0 L1056 396 L1056 900 Z"
+          fill="white"
+          fillOpacity="0.04"
+        />
+        <path
+          d="M1440 900 L1440 540 L912 144 L432 144 L912 504 L912 900 Z"
+          fill="white"
+          fillOpacity="0.03"
+        />
+      </svg>
 
-        {/* ── 1-3. Section header (eyebrow + headline + subhead) ── */}
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12">
+
+        {/* ── 1-3. Section header ─────────────────────── */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -247,13 +279,29 @@ export default function ROX() {
             className="leading-[1.1]"
             style={{
               fontFamily: "var(--font-inter)",
-              fontWeight: 500,
               letterSpacing: "-0.02em",
-              fontSize: "clamp(28px, 4.5vw, 52px)",
-              color: "#FFFFFF",
             }}
           >
-            Your events have a score. Do you know what it is?
+            <span
+              className="block"
+              style={{
+                fontWeight: 500,
+                fontSize: "clamp(28px, 4.5vw, 52px)",
+                color: "#FFFFFF",
+              }}
+            >
+              Your Events Have a Score.
+            </span>
+            <span
+              className="block text-gradient-hero"
+              style={{
+                fontWeight: 500,
+                fontSize: "clamp(22px, 3.5vw, 38px)",
+                WebkitBackgroundClip: "text",
+              }}
+            >
+              Do You Know What It Is?
+            </span>
           </motion.h2>
 
           <motion.p
@@ -271,115 +319,116 @@ export default function ROX() {
           </motion.p>
         </motion.div>
 
-        {/* ── 4. Score preview visual ────────────────── */}
+        {/* ── 4. Score preview visual (two-column) ──── */}
         <motion.div
           ref={gaugeRef}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
-          variants={fadeUp}
-          className="mt-12 mx-auto"
-          style={{
-            maxWidth: "520px",
-            background: "rgba(6, 19, 65, 0.6)",
-            border: "2px solid rgba(12, 244, 223, 0.15)",
-            borderRadius: "20px",
-            padding: "40px",
-          }}
+          variants={stagger}
+          className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
         >
-          {/* Gauge */}
-          <ROXGauge animatedScore={score} />
-
-          {/* Score number */}
-          <div className="text-center -mt-4">
-            <p
-              style={{
-                fontFamily: "var(--font-inter)",
-                fontWeight: 600,
-                fontSize: "56px",
-                color: "#FFFFFF",
-                lineHeight: 1,
-                letterSpacing: "-0.02em",
-              }}
-            >
-              {score}
-            </p>
-            <p
-              className="mt-2 uppercase font-semibold text-[12px] tracking-[0.14em]"
-              style={{
-                fontFamily: "var(--font-inter)",
-                color: "#0CF4DF",
-              }}
-            >
-              ROX SCORE
-            </p>
-            <p
-              className="mt-1"
-              style={{
-                fontFamily: "var(--font-inter)",
-                fontWeight: 500,
-                fontSize: "13px",
-                color: "#5FD9C2",
-              }}
-            >
-              HIGH ROX
-            </p>
-          </div>
-
-          {/* Four stat tiles */}
-          <div className="grid grid-cols-2 gap-3 mt-8">
-            {["Lead Capture Efficiency", "Engagement Quality", "Follow-Up Speed", "Conversion Effectiveness"].map(
-              (label) => (
-                <div
-                  key={label}
-                  style={{
-                    background: "#061341",
-                    border: "1px solid rgba(255, 255, 255, 0.08)",
-                    borderRadius: "10px",
-                    padding: "16px 20px",
-                  }}
-                >
-                  <p
-                    className="uppercase"
-                    style={{
-                      fontFamily: "var(--font-inter)",
-                      fontWeight: 500,
-                      fontSize: "11px",
-                      color: "rgba(255, 255, 255, 0.45)",
-                      letterSpacing: "0.1em",
-                      marginBottom: "6px",
-                    }}
-                  >
-                    {label}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-inter)",
-                      fontWeight: 600,
-                      fontSize: "22px",
-                      color: "#FFFFFF",
-                      animation: "roxPulse 1.5s ease-in-out infinite",
-                    }}
-                  >
-                    --
-                  </p>
-                </div>
-              )
-            )}
-          </div>
-
-          {/* Caption */}
-          <p
-            className="text-center mt-5"
+          {/* Left: Gauge dial */}
+          <motion.div
+            variants={fadeUp}
+            className="mx-auto lg:mx-0 w-full"
             style={{
-              fontFamily: "var(--font-inter)",
-              fontWeight: 300,
-              fontSize: "12px",
-              color: "rgba(255, 255, 255, 0.3)",
+              maxWidth: "440px",
+              background: "rgba(6, 19, 65, 0.5)",
+              border: "2px solid rgba(12, 244, 223, 0.12)",
+              borderRadius: "20px",
+              padding: "40px 32px 32px",
             }}
           >
-            Your numbers. Updated in real time.
-          </p>
+            <ROXGauge animatedScore={score} />
+            <div className="text-center -mt-4">
+              <p
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  fontWeight: 600,
+                  fontSize: "56px",
+                  color: "#FFFFFF",
+                  lineHeight: 1,
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                {score}
+              </p>
+              <p
+                className="mt-2 uppercase font-semibold text-[12px] tracking-[0.14em]"
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  color: "#0CF4DF",
+                }}
+              >
+                ROX SCORE
+              </p>
+              <p
+                className="mt-1"
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  fontWeight: 500,
+                  fontSize: "13px",
+                  color: "#5FD9C2",
+                }}
+              >
+                HIGH ROX
+              </p>
+            </div>
+            <p
+              className="text-center mt-4"
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontWeight: 300,
+                fontSize: "12px",
+                color: "rgba(255, 255, 255, 0.3)",
+              }}
+            >
+              Your numbers. Updated in real time.
+            </p>
+          </motion.div>
+
+          {/* Right: Stat cards */}
+          <motion.div variants={fadeUp} className="grid grid-cols-2 gap-3">
+            {statCards.map((card, i) => (
+              <div
+                key={card.label}
+                style={{
+                  background: "rgba(6, 19, 65, 0.5)",
+                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  borderRadius: "14px",
+                  padding: "24px",
+                }}
+              >
+                <p
+                  className="uppercase"
+                  style={{
+                    fontFamily: "var(--font-inter)",
+                    fontWeight: 500,
+                    fontSize: "11px",
+                    color: "rgba(255, 255, 255, 0.45)",
+                    letterSpacing: "0.1em",
+                    marginBottom: "12px",
+                  }}
+                >
+                  {card.label}
+                </p>
+                <p
+                  style={{
+                    fontFamily: "var(--font-inter)",
+                    fontWeight: 600,
+                    fontSize: "32px",
+                    color: "#FFFFFF",
+                    lineHeight: 1,
+                    letterSpacing: "-0.02em",
+                    ...((!animationStarted) ? { animation: "roxPulse 1.5s ease-in-out infinite" } : {}),
+                  }}
+                >
+                  {animationStarted ? `${cardValues[i]}${card.suffix}` : "--"}
+                </p>
+              </div>
+            ))}
+          </motion.div>
         </motion.div>
 
         {/* ── 5. Score range strip ───────────────────── */}
@@ -434,7 +483,6 @@ export default function ROX() {
           variants={stagger}
           className="mt-16 grid grid-cols-1 lg:grid-cols-[45%_55%] gap-12 lg:gap-16"
         >
-          {/* Left column */}
           <motion.div variants={fadeUp}>
             <p
               className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4"
@@ -470,7 +518,6 @@ export default function ROX() {
             </p>
           </motion.div>
 
-          {/* Right column */}
           <motion.div variants={fadeUp}>
             {categories.map((cat, i) => (
               <div
@@ -550,7 +597,6 @@ export default function ROX() {
             Run your numbers in under two minutes. No login required.
           </motion.p>
 
-          {/* Calculator cards */}
           <motion.div
             variants={stagger}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
@@ -561,7 +607,7 @@ export default function ROX() {
                 variants={fadeUp}
                 className="text-left transition-all duration-200 hover:-translate-y-[3px] cursor-pointer"
                 style={{
-                  background: "rgba(6, 19, 65, 0.6)",
+                  background: "rgba(6, 19, 65, 0.5)",
                   border: "1px solid rgba(12, 244, 223, 0.12)",
                   borderRadius: "14px",
                   padding: "28px 24px",
@@ -614,7 +660,6 @@ export default function ROX() {
             ))}
           </motion.div>
 
-          {/* Primary CTA */}
           <motion.div variants={fadeUp} className="mt-10">
             <a
               href="#"
@@ -629,7 +674,6 @@ export default function ROX() {
             </a>
           </motion.div>
 
-          {/* Secondary line */}
           <motion.p
             variants={fadeUp}
             className="mt-4"
