@@ -153,28 +153,72 @@ function ExplorerFrame({ color }: { color: string }) {
       {/* iPhone — portrait, overlapping iPad bottom-right */}
       <rect x="280" y="100" width="80" height="155" rx="16" stroke="white" strokeOpacity="0.3" strokeWidth="1.5" fill="rgba(11,11,60,0.85)" />
       <rect x="304" y="108" width="32" height="9" rx="4.5" fill="rgba(255,255,255,0.12)" />
-      {/* Phone screen — white bg with session list */}
-      <rect x="286" y="122" width="68" height="120" rx="3" fill="white" />
-      <rect x="290" y="125" width="16" height="2" rx="1" fill="#333" fillOpacity="0.3" />
-      <rect x="336" y="125" width="14" height="2" rx="1" fill="#333" fillOpacity="0.3" />
-      <rect x="290" y="132" width="36" height="3" rx="1.5" fill={color} fillOpacity="0.7" />
-      {/* Session cards */}
-      <rect x="290" y="140" width="60" height="28" rx="3" fill="#F3F4F6" />
-      <rect x="294" y="144" width="24" height="2.5" rx="1" fill="#333" fillOpacity="0.25" />
-      <rect x="294" y="150" width="40" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <rect x="294" y="156" width="32" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <circle cx="340" cy="152" r="5" fill={color} fillOpacity="0.15" />
-      <rect x="290" y="172" width="60" height="28" rx="3" fill="#F3F4F6" />
-      <rect x="294" y="176" width="28" height="2.5" rx="1" fill="#333" fillOpacity="0.25" />
-      <rect x="294" y="182" width="44" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <rect x="294" y="188" width="36" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <circle cx="340" cy="184" r="5" fill={color} fillOpacity="0.15" />
-      <rect x="290" y="204" width="60" height="28" rx="3" fill="#F3F4F6" />
-      <rect x="294" y="208" width="20" height="2.5" rx="1" fill="#333" fillOpacity="0.25" />
-      <rect x="294" y="214" width="38" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <rect x="294" y="220" width="30" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <circle cx="340" cy="216" r="5" fill={color} fillOpacity="0.15" />
-      <rect x="303" y="247" width="34" height="3" rx="1.5" fill="#333" fillOpacity="0.15" />
+      {/* Phone screen — dark gradient matching iPad */}
+      <defs>
+        <linearGradient id="phone-bg" x1="286" y1="122" x2="354" y2="242" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#2a6b5e" />
+          <stop offset="1" stopColor="#1a3a5c" />
+        </linearGradient>
+      </defs>
+      <rect x="286" y="122" width="68" height="120" rx="3" fill="url(#phone-bg)" />
+      {/* Logo + header text */}
+      <rect x="306" y="128" width="8" height="8" rx="2" fill={color} fillOpacity="0.4" />
+      <rect x="294" y="140" width="52" height="3" rx="1.5" fill="white" fillOpacity="0.5" />
+      <rect x="300" y="146" width="40" height="2" rx="1" fill="white" fillOpacity="0.2" />
+      {/* 4x4 trait selection grid */}
+      <rect x="290" y="154" width="14" height="14" rx="3" fill={color} fillOpacity="0.2" />
+      <rect x="291" y="157" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="293" y="163" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="306" y="154" width="14" height="14" rx="3" fill="white" fillOpacity="0.1" />
+      <rect x="307" y="157" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="309" y="163" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="322" y="154" width="14" height="14" rx="3" fill="white" fillOpacity="0.1" />
+      <rect x="323" y="157" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="325" y="163" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="338" y="154" width="14" height="14" rx="3" fill={color} fillOpacity="0.15" />
+      <rect x="339" y="157" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="341" y="163" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="290" y="170" width="14" height="14" rx="3" fill="white" fillOpacity="0.1" />
+      <rect x="291" y="173" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="293" y="179" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="306" y="170" width="14" height="14" rx="3" fill={color} fillOpacity="0.15" />
+      <rect x="307" y="173" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="309" y="179" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="322" y="170" width="14" height="14" rx="3" fill="white" fillOpacity="0.1" />
+      <rect x="323" y="173" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="325" y="179" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="338" y="170" width="14" height="14" rx="3" fill="white" fillOpacity="0.1" />
+      <rect x="339" y="173" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="341" y="179" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="290" y="186" width="14" height="14" rx="3" fill={color} fillOpacity="0.2" />
+      <rect x="291" y="189" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="293" y="195" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="306" y="186" width="14" height="14" rx="3" fill="white" fillOpacity="0.1" />
+      <rect x="307" y="189" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="309" y="195" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="322" y="186" width="14" height="14" rx="3" fill="white" fillOpacity="0.1" />
+      <rect x="323" y="189" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="325" y="195" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="338" y="186" width="14" height="14" rx="3" fill={color} fillOpacity="0.15" />
+      <rect x="339" y="189" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="341" y="195" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="290" y="202" width="14" height="14" rx="3" fill="white" fillOpacity="0.1" />
+      <rect x="291" y="205" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="293" y="211" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="306" y="202" width="14" height="14" rx="3" fill="white" fillOpacity="0.1" />
+      <rect x="307" y="205" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="309" y="211" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="322" y="202" width="14" height="14" rx="3" fill={color} fillOpacity="0.2" />
+      <rect x="323" y="205" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="325" y="211" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      <rect x="338" y="202" width="14" height="14" rx="3" fill="white" fillOpacity="0.1" />
+      <rect x="339" y="205" width="12" height="3" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="341" y="211" width="8" height="1.5" rx="0.75" fill="white" fillOpacity="0.3" />
+      {/* Next button */}
+      <rect x="300" y="222" width="40" height="10" rx="4" fill={color} fillOpacity="0.25" />
+      <rect x="310" y="225" width="20" height="3" rx="1.5" fill="white" fillOpacity="0.5" />
+      {/* Home indicator */}
+      <rect x="303" y="247" width="34" height="3" rx="1.5" fill="white" fillOpacity="0.15" />
     </svg>
   );
 }
@@ -185,91 +229,85 @@ function IntelligenceDashboardFrame({ color }: { color: string }) {
     <svg viewBox="0 0 420 280" fill="none" className="w-full">
       <rect x="50" y="20" width="320" height="195" rx="10" stroke="white" strokeOpacity="0.25" strokeWidth="1.5" />
       <path d="M182 20 h56 v8 a4 4 0 0 1 -4 4 h-48 a4 4 0 0 1 -4 -4 Z" fill="rgba(255,255,255,0.1)" />
-      {/* Screen — light background like Intelligence screenshot */}
-      <defs>
-        <linearGradient id="intel-bg" x1="56" y1="32" x2="364" y2="209" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#f8f4ff" />
-          <stop offset="1" stopColor="#fef3e2" />
-        </linearGradient>
-      </defs>
-      <rect x="56" y="32" width="308" height="177" rx="3" fill="url(#intel-bg)" />
+      {/* Screen — dark background matching Web dashboard */}
+      <rect x="56" y="32" width="308" height="177" rx="3" fill="#161638" />
+      {/* Top nav bar */}
+      <rect x="56" y="32" width="308" height="14" rx="3" fill="rgba(255,255,255,0.04)" />
+      <rect x="64" y="36" width="24" height="3" rx="1.5" fill={color} fillOpacity="0.6" />
+      <rect x="96" y="37" width="16" height="2" rx="1" fill="white" fillOpacity="0.2" />
+      <rect x="118" y="37" width="20" height="2" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="144" y="37" width="14" height="2" rx="1" fill="white" fillOpacity="0.15" />
+      <rect x="324" y="36" width="32" height="6" rx="3" fill={color} fillOpacity="0.15" />
       {/* Overview header */}
-      <rect x="64" y="40" width="36" height="4" rx="2" fill="#333" fillOpacity="0.3" />
-      <rect x="310" y="40" width="44" height="4" rx="2" fill={color} fillOpacity="0.2" />
+      <rect x="64" y="52" width="36" height="4" rx="2" fill="white" fillOpacity="0.4" />
+      <rect x="310" y="52" width="44" height="4" rx="2" fill={color} fillOpacity="0.2" />
       {/* Top stat cards row — 3 cards */}
-      <rect x="64" y="50" width="88" height="30" rx="5" fill="white" />
-      <rect x="64" y="50" width="88" height="30" rx="5" stroke="#e5e7eb" strokeWidth="0.5" fill="none" />
-      <circle cx="74" cy="58" r="4" fill="#3B82F6" fillOpacity="0.15" />
-      <rect x="82" y="56" width="30" height="2.5" rx="1" fill="#333" fillOpacity="0.2" />
-      <rect x="70" y="66" width="28" height="7" rx="1" fill="#333" fillOpacity="0.5" />
-      <rect x="120" y="66" width="24" height="5" rx="1" fill="#10B981" fillOpacity="0.3" />
-      <rect x="158" y="50" width="88" height="30" rx="5" fill="white" />
-      <rect x="158" y="50" width="88" height="30" rx="5" stroke="#e5e7eb" strokeWidth="0.5" fill="none" />
-      <circle cx="168" cy="58" r="4" fill={color} fillOpacity="0.2" />
-      <rect x="176" y="56" width="26" height="2.5" rx="1" fill="#333" fillOpacity="0.2" />
-      <rect x="164" y="66" width="22" height="7" rx="1" fill="#333" fillOpacity="0.5" />
-      <rect x="214" y="66" width="20" height="5" rx="1" fill="#EF4444" fillOpacity="0.25" />
-      <rect x="252" y="50" width="102" height="30" rx="5" fill="white" />
-      <rect x="252" y="50" width="102" height="30" rx="5" stroke="#e5e7eb" strokeWidth="0.5" fill="none" />
-      <circle cx="262" cy="58" r="4" fill="#8B5CF6" fillOpacity="0.15" />
-      <rect x="270" y="56" width="34" height="2.5" rx="1" fill="#333" fillOpacity="0.2" />
-      <rect x="258" y="66" width="32" height="7" rx="1" fill="#333" fillOpacity="0.5" />
-      <rect x="316" y="66" width="28" height="5" rx="1" fill={color} fillOpacity="0.3" />
+      <rect x="64" y="62" width="88" height="28" rx="5" fill="rgba(255,255,255,0.06)" />
+      <circle cx="74" cy="70" r="4" fill="#3B82F6" fillOpacity="0.25" />
+      <rect x="82" y="68" width="30" height="2.5" rx="1" fill="white" fillOpacity="0.25" />
+      <rect x="70" y="76" width="28" height="6" rx="1" fill="white" fillOpacity="0.6" />
+      <rect x="120" y="77" width="24" height="5" rx="1" fill="#10B981" fillOpacity="0.4" />
+      <rect x="158" y="62" width="88" height="28" rx="5" fill="rgba(255,255,255,0.06)" />
+      <circle cx="168" cy="70" r="4" fill={color} fillOpacity="0.3" />
+      <rect x="176" y="68" width="26" height="2.5" rx="1" fill="white" fillOpacity="0.25" />
+      <rect x="164" y="76" width="22" height="6" rx="1" fill="white" fillOpacity="0.6" />
+      <rect x="214" y="77" width="20" height="5" rx="1" fill="#EF4444" fillOpacity="0.35" />
+      <rect x="252" y="62" width="102" height="28" rx="5" fill="rgba(255,255,255,0.06)" />
+      <circle cx="262" cy="70" r="4" fill="#8B5CF6" fillOpacity="0.25" />
+      <rect x="270" y="68" width="34" height="2.5" rx="1" fill="white" fillOpacity="0.25" />
+      <rect x="258" y="76" width="32" height="6" rx="1" fill="white" fillOpacity="0.6" />
+      <rect x="316" y="77" width="28" height="5" rx="1" fill={color} fillOpacity="0.4" />
       {/* Lead Temperatures card with donut chart */}
-      <rect x="64" y="86" width="92" height="68" rx="5" fill="white" />
-      <rect x="64" y="86" width="92" height="68" rx="5" stroke="#e5e7eb" strokeWidth="0.5" fill="none" />
-      <rect x="72" y="92" width="44" height="3" rx="1.5" fill="#333" fillOpacity="0.2" />
-      <rect x="72" y="100" width="20" height="6" rx="1" fill="#333" fillOpacity="0.45" />
+      <rect x="64" y="96" width="92" height="66" rx="5" fill="rgba(255,255,255,0.05)" />
+      <rect x="72" y="102" width="44" height="3" rx="1.5" fill="white" fillOpacity="0.25" />
+      <rect x="72" y="110" width="20" height="5" rx="1" fill="white" fillOpacity="0.5" />
       {/* Donut chart */}
-      <circle cx="108" cy="128" r="16" stroke="#e5e7eb" strokeWidth="5" fill="none" />
-      <circle cx="108" cy="128" r="16" stroke={color} strokeWidth="5" fill="none" strokeDasharray="25 76" strokeDashoffset="0" />
-      <circle cx="108" cy="128" r="16" stroke="#EF4444" strokeWidth="5" fill="none" strokeDasharray="8 93" strokeDashoffset="-25" />
-      <circle cx="108" cy="128" r="16" stroke="#3B82F6" strokeWidth="5" fill="none" strokeDasharray="10 91" strokeDashoffset="-33" />
+      <circle cx="108" cy="136" r="16" stroke="rgba(255,255,255,0.08)" strokeWidth="5" fill="none" />
+      <circle cx="108" cy="136" r="16" stroke={color} strokeWidth="5" fill="none" strokeDasharray="25 76" strokeDashoffset="0" />
+      <circle cx="108" cy="136" r="16" stroke="#EF4444" strokeWidth="5" fill="none" strokeDasharray="8 93" strokeDashoffset="-25" />
+      <circle cx="108" cy="136" r="16" stroke="#3B82F6" strokeWidth="5" fill="none" strokeDasharray="10 91" strokeDashoffset="-33" />
       {/* Legend */}
-      <circle cx="72" cy="148" r="1.5" fill={color} />
-      <rect x="76" y="147" width="10" height="2" rx="1" fill="#333" fillOpacity="0.2" />
-      <circle cx="92" cy="148" r="1.5" fill="#EF4444" />
-      <rect x="96" y="147" width="8" height="2" rx="1" fill="#333" fillOpacity="0.2" />
-      <circle cx="110" cy="148" r="1.5" fill="#3B82F6" />
-      <rect x="114" y="147" width="12" height="2" rx="1" fill="#333" fillOpacity="0.2" />
+      <circle cx="72" cy="156" r="1.5" fill={color} />
+      <rect x="76" y="155" width="10" height="2" rx="1" fill="white" fillOpacity="0.2" />
+      <circle cx="92" cy="156" r="1.5" fill="#EF4444" />
+      <rect x="96" y="155" width="8" height="2" rx="1" fill="white" fillOpacity="0.2" />
+      <circle cx="110" cy="156" r="1.5" fill="#3B82F6" />
+      <rect x="114" y="155" width="12" height="2" rx="1" fill="white" fillOpacity="0.2" />
       {/* Lead Owner Assignments card with pie chart */}
-      <rect x="162" y="86" width="92" height="68" rx="5" fill="white" />
-      <rect x="162" y="86" width="92" height="68" rx="5" stroke="#e5e7eb" strokeWidth="0.5" fill="none" />
-      <rect x="170" y="92" width="52" height="3" rx="1.5" fill="#333" fillOpacity="0.2" />
-      <rect x="170" y="100" width="14" height="6" rx="1" fill="#333" fillOpacity="0.45" />
+      <rect x="162" y="96" width="92" height="66" rx="5" fill="rgba(255,255,255,0.05)" />
+      <rect x="170" y="102" width="52" height="3" rx="1.5" fill="white" fillOpacity="0.25" />
+      <rect x="170" y="110" width="14" height="5" rx="1" fill="white" fillOpacity="0.5" />
       {/* Pie chart */}
-      <circle cx="208" cy="128" r="16" fill="#3B82F6" fillOpacity="0.15" />
-      <path d="M208 112 A16 16 0 0 1 224 128 L208 128 Z" fill="#3B82F6" fillOpacity="0.5" />
-      <path d="M224 128 A16 16 0 0 1 208 144 L208 128 Z" fill={color} fillOpacity="0.5" />
-      <path d="M208 144 A16 16 0 0 1 192 128 L208 128 Z" fill="#8B5CF6" fillOpacity="0.4" />
-      <path d="M192 128 A16 16 0 0 1 208 112 L208 128 Z" fill="#10B981" fillOpacity="0.4" />
+      <circle cx="208" cy="136" r="16" fill="#3B82F6" fillOpacity="0.15" />
+      <path d="M208 120 A16 16 0 0 1 224 136 L208 136 Z" fill="#3B82F6" fillOpacity="0.5" />
+      <path d="M224 136 A16 16 0 0 1 208 152 L208 136 Z" fill={color} fillOpacity="0.5" />
+      <path d="M208 152 A16 16 0 0 1 192 136 L208 136 Z" fill="#8B5CF6" fillOpacity="0.4" />
+      <path d="M192 136 A16 16 0 0 1 208 120 L208 136 Z" fill="#10B981" fillOpacity="0.4" />
       {/* Conversion Funnel card with area chart */}
-      <rect x="260" y="86" width="94" height="68" rx="5" fill="white" />
-      <rect x="260" y="86" width="94" height="68" rx="5" stroke="#e5e7eb" strokeWidth="0.5" fill="none" />
-      <rect x="268" y="92" width="40" height="3" rx="1.5" fill="#333" fillOpacity="0.2" />
-      <rect x="268" y="100" width="18" height="6" rx="1" fill="#333" fillOpacity="0.45" />
+      <rect x="260" y="96" width="94" height="66" rx="5" fill="rgba(255,255,255,0.05)" />
+      <rect x="268" y="102" width="40" height="3" rx="1.5" fill="white" fillOpacity="0.25" />
+      <rect x="268" y="110" width="18" height="5" rx="1" fill="white" fillOpacity="0.5" />
       {/* Area chart */}
-      <path d="M268 144 L278 136 L290 140 L302 128 L314 124 L326 118 L338 114 L346 110" stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round" />
-      <path d="M268 144 L278 136 L290 140 L302 128 L314 124 L326 118 L338 114 L346 110 L346 148 L268 148 Z" fill={color} fillOpacity="0.08" />
-      <path d="M268 144 L284 138 L298 142 L312 134 L328 126 L346 130" stroke="#3B82F6" strokeWidth="1" fill="none" strokeOpacity="0.4" strokeLinecap="round" />
+      <path d="M268 152 L278 144 L290 148 L302 136 L314 132 L326 126 L338 122 L346 118" stroke={color} strokeWidth="1.5" fill="none" strokeLinecap="round" />
+      <path d="M268 152 L278 144 L290 148 L302 136 L314 132 L326 126 L338 122 L346 118 L346 156 L268 156 Z" fill={color} fillOpacity="0.1" />
+      <path d="M268 152 L284 146 L298 150 L312 142 L328 134 L346 138" stroke="#3B82F6" strokeWidth="1" fill="none" strokeOpacity="0.4" strokeLinecap="round" />
       {/* Grid lines */}
-      <line x1="268" y1="120" x2="346" y2="120" stroke="#e5e7eb" strokeWidth="0.3" />
-      <line x1="268" y1="132" x2="346" y2="132" stroke="#e5e7eb" strokeWidth="0.3" />
-      <line x1="268" y1="144" x2="346" y2="144" stroke="#e5e7eb" strokeWidth="0.3" />
+      <line x1="268" y1="128" x2="346" y2="128" stroke="white" strokeOpacity="0.06" strokeWidth="0.5" />
+      <line x1="268" y1="140" x2="346" y2="140" stroke="white" strokeOpacity="0.06" strokeWidth="0.5" />
+      <line x1="268" y1="152" x2="346" y2="152" stroke="white" strokeOpacity="0.06" strokeWidth="0.5" />
       {/* Average Session Duration — full-width bar chart */}
-      <rect x="64" y="160" width="290" height="44" rx="5" fill="white" />
-      <rect x="64" y="160" width="290" height="44" rx="5" stroke="#e5e7eb" strokeWidth="0.5" fill="none" />
-      <rect x="72" y="166" width="56" height="3" rx="1.5" fill="#333" fillOpacity="0.2" />
-      <rect x="72" y="174" width="24" height="5" rx="1" fill="#333" fillOpacity="0.45" />
+      <rect x="64" y="168" width="290" height="38" rx="5" fill="rgba(255,255,255,0.05)" />
+      <rect x="72" y="173" width="56" height="3" rx="1.5" fill="white" fillOpacity="0.25" />
+      <rect x="72" y="180" width="24" height="5" rx="1" fill="white" fillOpacity="0.5" />
       {/* Stacked bar rows */}
-      <rect x="72" y="184" width="70" height="6" rx="1.5" fill="#3B82F6" fillOpacity="0.4" />
-      <rect x="142" y="184" width="95" height="6" rx="1.5" fill={color} fillOpacity="0.5" />
-      <rect x="237" y="184" width="50" height="6" rx="1.5" fill="#8B5CF6" fillOpacity="0.35" />
-      <rect x="287" y="184" width="55" height="6" rx="1.5" fill="#10B981" fillOpacity="0.3" />
-      <rect x="72" y="194" width="55" height="6" rx="1.5" fill="#3B82F6" fillOpacity="0.3" />
-      <rect x="127" y="194" width="110" height="6" rx="1.5" fill={color} fillOpacity="0.4" />
-      <rect x="237" y="194" width="65" height="6" rx="1.5" fill="#8B5CF6" fillOpacity="0.25" />
-      <rect x="302" y="194" width="40" height="6" rx="1.5" fill="#10B981" fillOpacity="0.25" />
+      <rect x="72" y="190" width="70" height="5" rx="1.5" fill="#3B82F6" fillOpacity="0.5" />
+      <rect x="142" y="190" width="95" height="5" rx="1.5" fill={color} fillOpacity="0.6" />
+      <rect x="237" y="190" width="50" height="5" rx="1.5" fill="#8B5CF6" fillOpacity="0.45" />
+      <rect x="287" y="190" width="55" height="5" rx="1.5" fill="#10B981" fillOpacity="0.4" />
+      <rect x="72" y="198" width="55" height="5" rx="1.5" fill="#3B82F6" fillOpacity="0.4" />
+      <rect x="127" y="198" width="110" height="5" rx="1.5" fill={color} fillOpacity="0.5" />
+      <rect x="237" y="198" width="65" height="5" rx="1.5" fill="#8B5CF6" fillOpacity="0.35" />
+      <rect x="302" y="198" width="40" height="5" rx="1.5" fill="#10B981" fillOpacity="0.3" />
       {/* Base / hinge */}
       <path d="M30 220 Q30 215 36 215 L384 215 Q390 215 390 220 L398 232 Q400 236 396 236 L24 236 Q20 236 22 232 Z" stroke="white" strokeOpacity="0.18" strokeWidth="1" fill="none" />
     </svg>
