@@ -21,7 +21,7 @@ const statCards = [
     target: 78,
     suffix: "%",
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="7" height="7" rx="1" />
         <rect x="14" y="3" width="7" height="7" rx="1" />
         <rect x="3" y="14" width="7" height="7" rx="1" />
@@ -35,7 +35,7 @@ const statCards = [
     target: 65,
     suffix: "%",
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="2 12 5 9 8 14 11 8 14 13 17 6 20 11 22 9" />
       </svg>
     ),
@@ -46,7 +46,7 @@ const statCards = [
     target: 71,
     suffix: "%",
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" />
         <polyline points="12 6 12 12 16 14" />
       </svg>
@@ -58,7 +58,7 @@ const statCards = [
     target: 68,
     suffix: "%",
     icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="12 2 2 22 22 22" />
         <line x1="12" y1="10" x2="12" y2="15" />
       </svg>
@@ -95,7 +95,7 @@ const calculatorCards = [
     name: "Trade Shows and Exhibits",
     description: "Measure booth performance across lead capture, engagement, and conversion.",
     icon: (
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="4" y="10" width="28" height="18" rx="2" />
         <line x1="18" y1="4" x2="18" y2="10" />
         <line x1="10" y1="7" x2="18" y2="4" />
@@ -109,7 +109,7 @@ const calculatorCards = [
     name: "Technical Recruiting",
     description: "Score your recruiting events on candidate quality and follow-up speed.",
     icon: (
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="15" cy="12" r="6" />
         <path d="M5 30c0-5.523 4.477-10 10-10s10 4.477 10 10" />
         <polyline points="25 16 28 19 33 13" />
@@ -120,7 +120,7 @@ const calculatorCards = [
     name: "Field Sales",
     description: "Measure rep-level engagement across job sites, facilities, and customer visits.",
     icon: (
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="14" cy="14" r="4" />
         <path d="M14 18c-4 0-8 3-8 8" />
         <circle cx="26" cy="24" r="4" />
@@ -133,7 +133,7 @@ const calculatorCards = [
     name: "Facilities and Venues",
     description: "Track interaction depth across showrooms, demo floors, and training centers.",
     icon: (
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#0CF4DF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="6" y="14" width="24" height="18" rx="2" />
         <polyline points="6 14 18 6 30 14" />
         <rect x="14" y="22" width="8" height="10" />
@@ -303,12 +303,12 @@ export default function ROX() {
         <path
           d="M1440 900 L1440 324 L1008 0 L528 0 L1056 396 L1056 900 Z"
           fill="white"
-          fillOpacity="0.04"
+          fillOpacity="0.02"
         />
         <path
           d="M1440 900 L1440 540 L912 144 L432 144 L912 504 L912 900 Z"
           fill="white"
-          fillOpacity="0.03"
+          fillOpacity="0.015"
         />
       </svg>
 
@@ -327,7 +327,7 @@ export default function ROX() {
               className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4"
               style={{ color: "#00BBA5", fontFamily: "var(--font-inter)" }}
             >
-              Return on Experience
+              Return on Experience (ROX)
             </motion.p>
 
             <motion.h2
@@ -386,7 +386,7 @@ export default function ROX() {
               href="#"
               className="inline-flex items-center justify-center font-semibold text-[13px] py-3 px-6 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]"
               style={{
-                background: "linear-gradient(135deg, #0CF4DF, #1A56DB)",
+                background: "linear-gradient(135deg, #00BBA5, #1A56DB)",
                 color: "#FFFFFF",
                 fontFamily: "var(--font-inter)",
                 whiteSpace: "nowrap",
@@ -662,7 +662,7 @@ export default function ROX() {
                     fontFamily: "var(--font-inter)",
                     fontWeight: 500,
                     fontSize: "13px",
-                    color: "#0CF4DF",
+                    color: "#00BBA5",
                     textDecoration: "none",
                   }}
                 >
@@ -672,40 +672,37 @@ export default function ROX() {
             ))}
           </motion.div>
 
-          <motion.div variants={fadeUp} className="mt-10">
+          <motion.div variants={fadeUp} className="mt-10 flex items-center gap-6 flex-wrap">
             <a
               href="#"
               className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]"
               style={{
-                background: "linear-gradient(135deg, #0CF4DF, #1A56DB)",
+                background: "linear-gradient(135deg, #00BBA5, #1A56DB)",
                 color: "#FFFFFF",
                 fontFamily: "var(--font-inter)",
               }}
             >
               Calculate Your ROX
             </a>
-          </motion.div>
-
-          <motion.p
-            variants={fadeUp}
-            className="mt-4"
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontWeight: 300,
-              fontSize: "14px",
-              color: "rgba(255, 255, 255, 0.45)",
-            }}
-          >
-            Or{" "}
-            <a
-              href="#demo"
-              className="hover:underline"
-              style={{ color: "#0CF4DF", textDecoration: "none" }}
+            <p
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontWeight: 300,
+                fontSize: "14px",
+                color: "rgba(255, 255, 255, 0.45)",
+              }}
             >
-              schedule a demo
-            </a>{" "}
-            to see ROX dashboards live.
-          </motion.p>
+              Or{" "}
+              <a
+                href="#demo"
+                className="hover:underline"
+                style={{ color: "#00BBA5", textDecoration: "none" }}
+              >
+                schedule a demo
+              </a>{" "}
+              to see ROX dashboards live.
+            </p>
+          </motion.div>
         </motion.div>
       </div>
     </section>
