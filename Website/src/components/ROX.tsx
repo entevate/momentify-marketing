@@ -168,7 +168,12 @@ const pulseCSS = `
 }
 `;
 
-/* ── Animation variants ──────────────────────────────── */
+/* ── Animation variants (matching site pattern) ──────── */
+
+const headerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1 } },
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -213,83 +218,67 @@ export default function ROX() {
   return (
     <section
       id="rox"
-      className="relative overflow-hidden"
+      className="relative py-16 sm:py-24 overflow-hidden"
       style={{
         background: "linear-gradient(180deg, #1A0533 0%, #070E2B 50%, #061341 100%)",
-        minHeight: "900px",
-        paddingTop: "100px",
-        paddingBottom: "100px",
       }}
     >
       <style>{pulseCSS}</style>
 
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
 
-        {/* ── 1. Eyebrow ────────────────────────────── */}
-        <motion.p
+        {/* ── 1-3. Section header (eyebrow + headline + subhead) ── */}
+        <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          className="text-center mb-4"
-          style={{
-            fontFamily: "var(--font-inter)",
-            fontWeight: 600,
-            fontSize: "11px",
-            color: "#0CF4DF",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-          }}
+          viewport={{ once: true, amount: 0.15 }}
+          variants={headerVariants}
         >
-          RETURN ON EXPERIENCE
-        </motion.p>
+          <motion.p
+            variants={fadeUp}
+            className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4"
+            style={{ color: "#0CF4DF", fontFamily: "var(--font-inter)" }}
+          >
+            Return on Experience
+          </motion.p>
 
-        {/* ── 2. Headline ───────────────────────────── */}
-        <motion.h2
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          className="text-center mx-auto mb-5"
-          style={{
-            fontFamily: "var(--font-inter)",
-            fontWeight: 800,
-            fontSize: "clamp(32px, 4vw, 48px)",
-            color: "#FFFFFF",
-            lineHeight: 1.1,
-            maxWidth: "720px",
-          }}
-        >
-          Your events have a score. Do you know what it is?
-        </motion.h2>
+          <motion.h2
+            variants={fadeUp}
+            className="leading-[1.1]"
+            style={{
+              fontFamily: "var(--font-inter)",
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+              fontSize: "clamp(28px, 4.5vw, 52px)",
+              color: "#FFFFFF",
+            }}
+          >
+            Your events have a score. Do you know what it is?
+          </motion.h2>
 
-        {/* ── 3. Subhead ────────────────────────────── */}
-        <motion.p
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeUp}
-          className="text-center mx-auto mb-16"
-          style={{
-            fontFamily: "var(--font-inter)",
-            fontWeight: 400,
-            fontSize: "17px",
-            color: "rgba(255, 255, 255, 0.65)",
-            lineHeight: 1.7,
-            maxWidth: "640px",
-          }}
-        >
-          Return on Experience measures the quality of your engagement, not just the quantity. Four categories determine your score: lead capture efficiency, engagement quality, follow-up speed, and conversion effectiveness. Most teams have never seen the number. Momentify surfaces it in real time.
-        </motion.p>
+          <motion.p
+            variants={fadeUp}
+            className="mt-4 max-w-[640px]"
+            style={{
+              fontFamily: "var(--font-inter)",
+              fontSize: "15px",
+              fontWeight: 300,
+              lineHeight: "1.5",
+              color: "rgba(255, 255, 255, 0.6)",
+            }}
+          >
+            Return on Experience measures the quality of your engagement, not just the quantity. Four categories determine your score: lead capture efficiency, engagement quality, follow-up speed, and conversion effectiveness. Most teams have never seen the number. Momentify surfaces it in real time.
+          </motion.p>
+        </motion.div>
 
         {/* ── 4. Score preview visual ────────────────── */}
         <motion.div
           ref={gaugeRef}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.15 }}
           variants={fadeUp}
-          className="mx-auto"
+          className="mt-12 mx-auto"
           style={{
             maxWidth: "520px",
             background: "rgba(6, 19, 65, 0.6)",
@@ -306,22 +295,20 @@ export default function ROX() {
             <p
               style={{
                 fontFamily: "var(--font-inter)",
-                fontWeight: 800,
-                fontSize: "64px",
+                fontWeight: 600,
+                fontSize: "56px",
                 color: "#FFFFFF",
                 lineHeight: 1,
+                letterSpacing: "-0.02em",
               }}
             >
               {score}
             </p>
             <p
-              className="mt-2"
+              className="mt-2 uppercase font-semibold text-[12px] tracking-[0.14em]"
               style={{
                 fontFamily: "var(--font-inter)",
-                fontWeight: 600,
-                fontSize: "11px",
                 color: "#0CF4DF",
-                letterSpacing: "0.14em",
               }}
             >
               ROX SCORE
@@ -330,7 +317,7 @@ export default function ROX() {
               className="mt-1"
               style={{
                 fontFamily: "var(--font-inter)",
-                fontWeight: 600,
+                fontWeight: 500,
                 fontSize: "13px",
                 color: "#5FD9C2",
               }}
@@ -353,12 +340,12 @@ export default function ROX() {
                   }}
                 >
                   <p
+                    className="uppercase"
                     style={{
                       fontFamily: "var(--font-inter)",
                       fontWeight: 500,
                       fontSize: "11px",
                       color: "rgba(255, 255, 255, 0.45)",
-                      textTransform: "uppercase",
                       letterSpacing: "0.1em",
                       marginBottom: "6px",
                     }}
@@ -368,7 +355,7 @@ export default function ROX() {
                   <p
                     style={{
                       fontFamily: "var(--font-inter)",
-                      fontWeight: 700,
+                      fontWeight: 600,
                       fontSize: "22px",
                       color: "#FFFFFF",
                       animation: "roxPulse 1.5s ease-in-out infinite",
@@ -386,7 +373,7 @@ export default function ROX() {
             className="text-center mt-5"
             style={{
               fontFamily: "var(--font-inter)",
-              fontWeight: 400,
+              fontWeight: 300,
               fontSize: "12px",
               color: "rgba(255, 255, 255, 0.3)",
             }}
@@ -416,7 +403,7 @@ export default function ROX() {
               <p
                 style={{
                   fontFamily: "var(--font-inter)",
-                  fontWeight: 700,
+                  fontWeight: 500,
                   fontSize: "14px",
                   color: "#FFFFFF",
                   marginBottom: "4px",
@@ -427,9 +414,10 @@ export default function ROX() {
               <p
                 style={{
                   fontFamily: "var(--font-inter)",
-                  fontWeight: 400,
+                  fontWeight: 300,
                   fontSize: "13px",
                   color: "rgba(255, 255, 255, 0.5)",
+                  lineHeight: "1.5",
                 }}
               >
                 {tier.description}
@@ -444,32 +432,27 @@ export default function ROX() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
           variants={stagger}
-          className="mt-20 grid grid-cols-1 lg:grid-cols-[45%_55%] gap-16 mx-auto"
-          style={{ maxWidth: "1100px" }}
+          className="mt-16 grid grid-cols-1 lg:grid-cols-[45%_55%] gap-12 lg:gap-16"
         >
           {/* Left column */}
           <motion.div variants={fadeUp}>
             <p
-              className="mb-4"
+              className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4"
               style={{
                 fontFamily: "var(--font-inter)",
-                fontWeight: 600,
-                fontSize: "10px",
                 color: "#0CF4DF",
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
               }}
             >
-              WHAT ROX MEASURES THAT ROI MISSES
+              What ROX Measures That ROI Misses
             </p>
             <p
               className="mb-4"
               style={{
                 fontFamily: "var(--font-inter)",
-                fontWeight: 400,
-                fontSize: "16px",
-                color: "rgba(255, 255, 255, 0.65)",
-                lineHeight: 1.75,
+                fontWeight: 300,
+                fontSize: "15px",
+                color: "rgba(255, 255, 255, 0.6)",
+                lineHeight: "1.5",
               }}
             >
               ROI tells you what you spent. ROX tells you whether it worked. Most event teams walk away with badge scan counts and a rough sense of booth traffic. They have no visibility into how deeply people engaged, which conversations revealed real intent, or how fast their team followed up. Those gaps are exactly where deals are lost and hiring pipelines stall.
@@ -477,10 +460,10 @@ export default function ROX() {
             <p
               style={{
                 fontFamily: "var(--font-inter)",
-                fontWeight: 400,
-                fontSize: "16px",
-                color: "rgba(255, 255, 255, 0.65)",
-                lineHeight: 1.75,
+                fontWeight: 300,
+                fontSize: "15px",
+                color: "rgba(255, 255, 255, 0.6)",
+                lineHeight: "1.5",
               }}
             >
               ROX fills that gap with a scored, comparable number your team can actually act on.
@@ -506,7 +489,7 @@ export default function ROX() {
                   <p
                     style={{
                       fontFamily: "var(--font-inter)",
-                      fontWeight: 600,
+                      fontWeight: 500,
                       fontSize: "14px",
                       color: "#FFFFFF",
                       marginBottom: "2px",
@@ -517,9 +500,10 @@ export default function ROX() {
                   <p
                     style={{
                       fontFamily: "var(--font-inter)",
-                      fontWeight: 400,
+                      fontWeight: 300,
                       fontSize: "13px",
                       color: "rgba(255, 255, 255, 0.5)",
+                      lineHeight: "1.5",
                     }}
                   >
                     {cat.description}
@@ -535,16 +519,17 @@ export default function ROX() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
-          variants={stagger}
-          className="mt-20 text-center"
+          variants={headerVariants}
+          className="mt-16"
         >
           <motion.h3
             variants={fadeUp}
-            className="mb-3"
+            className="leading-[1.1] mb-3"
             style={{
               fontFamily: "var(--font-inter)",
-              fontWeight: 700,
-              fontSize: "32px",
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+              fontSize: "clamp(22px, 3.5vw, 36px)",
               color: "#FFFFFF",
             }}
           >
@@ -553,11 +538,12 @@ export default function ROX() {
 
           <motion.p
             variants={fadeUp}
-            className="mb-10"
+            className="mb-10 max-w-[480px]"
             style={{
               fontFamily: "var(--font-inter)",
-              fontWeight: 400,
-              fontSize: "16px",
+              fontSize: "15px",
+              fontWeight: 300,
+              lineHeight: "1.5",
               color: "rgba(255, 255, 255, 0.6)",
             }}
           >
@@ -567,8 +553,7 @@ export default function ROX() {
           {/* Calculator cards */}
           <motion.div
             variants={stagger}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto"
-            style={{ maxWidth: "960px" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
           >
             {calculatorCards.map((card) => (
               <motion.div
@@ -576,7 +561,7 @@ export default function ROX() {
                 variants={fadeUp}
                 className="text-left transition-all duration-200 hover:-translate-y-[3px] cursor-pointer"
                 style={{
-                  background: "#061341",
+                  background: "rgba(6, 19, 65, 0.6)",
                   border: "1px solid rgba(12, 244, 223, 0.12)",
                   borderRadius: "14px",
                   padding: "28px 24px",
@@ -593,8 +578,8 @@ export default function ROX() {
                   className="mb-2"
                   style={{
                     fontFamily: "var(--font-inter)",
-                    fontWeight: 700,
-                    fontSize: "16px",
+                    fontWeight: 500,
+                    fontSize: "15px",
                     color: "#FFFFFF",
                   }}
                 >
@@ -604,10 +589,10 @@ export default function ROX() {
                   className="mb-5"
                   style={{
                     fontFamily: "var(--font-inter)",
-                    fontWeight: 400,
+                    fontWeight: 300,
                     fontSize: "13px",
                     color: "rgba(255, 255, 255, 0.55)",
-                    lineHeight: 1.5,
+                    lineHeight: "1.5",
                   }}
                 >
                   {card.description}
@@ -617,7 +602,7 @@ export default function ROX() {
                   className="hover:underline"
                   style={{
                     fontFamily: "var(--font-inter)",
-                    fontWeight: 600,
+                    fontWeight: 500,
                     fontSize: "13px",
                     color: "#0CF4DF",
                     textDecoration: "none",
@@ -633,15 +618,11 @@ export default function ROX() {
           <motion.div variants={fadeUp} className="mt-10">
             <a
               href="#"
-              className="inline-block transition-all duration-200 hover:opacity-90 hover:-translate-y-[1px]"
+              className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]"
               style={{
                 background: "linear-gradient(135deg, #0CF4DF, #1A56DB)",
                 color: "#FFFFFF",
                 fontFamily: "var(--font-inter)",
-                fontWeight: 700,
-                fontSize: "16px",
-                padding: "16px 40px",
-                borderRadius: "8px",
               }}
             >
               Calculate Your ROX
@@ -654,7 +635,7 @@ export default function ROX() {
             className="mt-4"
             style={{
               fontFamily: "var(--font-inter)",
-              fontWeight: 400,
+              fontWeight: 300,
               fontSize: "14px",
               color: "rgba(255, 255, 255, 0.45)",
             }}

@@ -249,7 +249,7 @@ export default function Hero() {
                 See How It Works
               </a>
               <a
-                href="#demo"
+                href="#rox"
                 className="inline-flex items-center justify-center font-semibold text-[14px] text-white py-3.5 px-7 rounded-lg transition-all duration-200 hover:bg-white/[0.08]"
                 style={{
                   border: "1.5px solid rgba(255, 255, 255, 0.25)",
@@ -257,7 +257,7 @@ export default function Hero() {
                 onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.5)")}
                 onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.25)")}
               >
-                Schedule a Demo
+                Calculate Your ROX
               </a>
             </motion.div>
           </div>
