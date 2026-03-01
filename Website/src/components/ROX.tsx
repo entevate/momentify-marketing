@@ -427,21 +427,21 @@ export default function ROX() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
           variants={stagger}
-          className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch"
+          className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
         >
           {/* Left: Gauge dial */}
           <motion.div
             variants={fadeUp}
-            className="mx-auto lg:mx-0 w-full flex flex-col justify-center"
+            className="mx-auto lg:mx-0 w-full flex flex-col items-center justify-center"
             style={{
               background: "rgba(6, 19, 65, 0.5)",
               border: "2px solid rgba(12, 244, 223, 0.12)",
               borderRadius: "20px",
-              padding: "40px 32px 32px",
+              padding: "28px 32px 24px",
             }}
           >
             <ROXGauge animatedScore={score} />
-            <div className="text-center -mt-4">
+            <div className="text-center -mt-6">
               <p
                 style={{
                   fontFamily: "var(--font-inter)",
@@ -456,7 +456,7 @@ export default function ROX() {
                 {score}
               </p>
               <p
-                className="mt-3 uppercase font-semibold text-[13px] tracking-[0.14em]"
+                className="mt-2 uppercase font-semibold text-[13px] tracking-[0.14em]"
                 style={{
                   fontFamily: "var(--font-inter)",
                   color: "rgba(255, 255, 255, 0.5)",
@@ -465,7 +465,7 @@ export default function ROX() {
                 ROX SCORE
               </p>
               <p
-                className="mt-1"
+                className="mt-0.5"
                 style={{
                   fontFamily: "var(--font-inter)",
                   fontWeight: 600,
@@ -479,7 +479,7 @@ export default function ROX() {
               </p>
             </div>
             <p
-              className="text-center mt-4"
+              className="text-center mt-3"
               style={{
                 fontFamily: "var(--font-inter)",
                 fontWeight: 300,
@@ -492,16 +492,16 @@ export default function ROX() {
           </motion.div>
 
           {/* Right: Stat cards */}
-          <motion.div variants={fadeUp} className="grid grid-cols-2 gap-3 h-full">
+          <motion.div variants={fadeUp} className="grid grid-cols-2 gap-3">
             {statCards.map((card, i) => (
               <div
                 key={card.label}
-                className="flex flex-col justify-between"
+                className="flex flex-col"
                 style={{
                   background: "rgba(6, 19, 65, 0.5)",
                   border: "1px solid rgba(255, 255, 255, 0.08)",
                   borderRadius: "14px",
-                  padding: "24px",
+                  padding: "20px",
                 }}
               >
                 <div>
@@ -524,9 +524,10 @@ export default function ROX() {
                     style={{
                       fontFamily: "var(--font-inter)",
                       fontWeight: 300,
-                      fontSize: "13px",
+                      fontSize: "14px",
                       color: "rgba(255, 255, 255, 0.4)",
                       lineHeight: "1.5",
+                      marginBottom: "10px",
                     }}
                   >
                     {card.description}
