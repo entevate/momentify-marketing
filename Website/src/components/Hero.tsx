@@ -278,17 +278,9 @@ export default function Hero() {
               Trusted by
             </span>
 
-            {/* Ticker wrapper */}
-            <div className="overflow-hidden flex-1">
-              <div
-                className="flex items-center gap-16"
-                style={{ animation: "tickerScroll 40s linear infinite", width: "max-content" }}
-              >
-                {/* First set */}
-                {logoSet}
-                {/* Duplicate set for seamless loop */}
-                {logoSet}
-              </div>
+            {/* Static logo row */}
+            <div className="flex items-center gap-16 flex-1">
+              {logoSet}
             </div>
           </div>
         </motion.div>
