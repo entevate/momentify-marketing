@@ -27,7 +27,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Momentify | Turn Every Interaction Into Intelligence",
+  title: "Momentify | Empower Every Moment",
   description:
     "Stop paying for moments you cannot measure. Momentify captures engagement at trade shows, recruiting events, field sales, and more.",
 };
