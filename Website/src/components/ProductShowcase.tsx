@@ -10,7 +10,7 @@ const products = [
     headline: "Set up. Configure. Deploy.",
     color: "#5FD9C2",
     device: "macbook" as const,
-    perspective: "perspective(1200px) rotateY(-5deg) rotateX(2deg)",
+    perspective: "none",
     shadow: "drop-shadow(0 8px 24px rgba(95,217,194,0.15))",
   },
   {
@@ -19,8 +19,8 @@ const products = [
     headline: "Engage. Capture. Contextualize.",
     color: "#6B21D4",
     device: "ipad-iphone" as const,
-    perspective: "perspective(900px) rotateY(-12deg) rotateX(4deg)",
-    shadow: "drop-shadow(0 8px 24px rgba(107,33,212,0.2))",
+    perspective: "perspective(600px) rotateY(-16deg) rotateX(5deg)",
+    shadow: "drop-shadow(0 12px 32px rgba(107,33,212,0.25))",
   },
   {
     name: "Momentify Intelligence",
@@ -28,7 +28,7 @@ const products = [
     headline: "Analyze. Score. Prove.",
     color: "#F2B33D",
     device: "macbook" as const,
-    perspective: "perspective(1200px) rotateY(5deg) rotateX(2deg)",
+    perspective: "none",
     shadow: "drop-shadow(0 8px 24px rgba(242,179,61,0.15))",
   },
 ];
