@@ -30,7 +30,7 @@ const roles = [
   { text: "Recruiters engage.", color: "#3BBFA8" },
   { text: "Field reps show up.", color: "#D49A1F" },
   { text: "Facility teams open the doors.", color: "#3A2073" },
-  { text: "Venue teams fill the seats.", color: "#F25E3D" },
+  { text: "Teams fill the seats.", color: "#F25E3D" },
 ];
 
 /* ── Animation variants ───────────────────────────────── */
