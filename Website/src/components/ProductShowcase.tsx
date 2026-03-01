@@ -40,89 +40,98 @@ const products = [
 ];
 
 function MacBookFrame({ color, screenshot }: { color: string; screenshot: string }) {
+  // Screen area in viewBox (420x280): x=56 y=32 w=308 h=177
+  // As percentages: left=13.33% top=11.43% width=73.33% height=63.21%
   return (
-    <svg viewBox="0 0 420 280" fill="none" className="w-full">
-      {/* Lid / display shell */}
-      <rect x="50" y="20" width="320" height="195" rx="10" stroke="white" strokeOpacity="0.25" strokeWidth="1.5" />
-      {/* Camera notch */}
-      <path d="M182 20 h56 v8 a4 4 0 0 1 -4 4 h-48 a4 4 0 0 1 -4 -4 Z" fill="rgba(255,255,255,0.1)" />
-      {/* Screen area with screenshot */}
-      <defs>
-        <clipPath id={`mac-screen-${color.slice(1)}`}>
-          <rect x="56" y="32" width="308" height="177" rx="3" />
-        </clipPath>
-      </defs>
-      <image
-        href={screenshot}
-        x="56" y="32" width="308" height="177"
-        clipPath={`url(#mac-screen-${color.slice(1)})`}
-        preserveAspectRatio="xMidYMid slice"
+    <div className="relative w-full">
+      <svg viewBox="0 0 420 280" fill="none" className="w-full">
+        {/* Lid / display shell */}
+        <rect x="50" y="20" width="320" height="195" rx="10" stroke="white" strokeOpacity="0.25" strokeWidth="1.5" />
+        {/* Camera notch */}
+        <path d="M182 20 h56 v8 a4 4 0 0 1 -4 4 h-48 a4 4 0 0 1 -4 -4 Z" fill="rgba(255,255,255,0.1)" />
+        {/* Screen background */}
+        <rect x="56" y="32" width="308" height="177" rx="3" fill="rgba(0,0,0,0.3)" />
+        {/* Base / hinge */}
+        <path d="M30 220 Q30 215 36 215 L384 215 Q390 215 390 220 L398 232 Q400 236 396 236 L24 236 Q20 236 22 232 Z" stroke="white" strokeOpacity="0.18" strokeWidth="1" fill="none" />
+      </svg>
+      {/* Screenshot positioned over the screen area */}
+      <img
+        src={screenshot}
+        alt=""
+        className="absolute rounded-[1px] pointer-events-none"
+        style={{
+          left: "13.33%",
+          top: "11.43%",
+          width: "73.33%",
+          height: "63.21%",
+          objectFit: "cover",
+        }}
       />
-      {/* Base / hinge */}
-      <path d="M30 220 Q30 215 36 215 L384 215 Q390 215 390 220 L398 232 Q400 236 396 236 L24 236 Q20 236 22 232 Z" stroke="white" strokeOpacity="0.18" strokeWidth="1" fill="none" />
-    </svg>
+    </div>
   );
 }
 
 function TabletPhoneFrame({ color, screenshot }: { color: string; screenshot: string }) {
+  // iPad screen in viewBox (420x280): x=50 y=62 w=240 h=156
+  // As percentages: left=11.9% top=22.14% width=57.14% height=55.71%
   return (
-    <svg viewBox="0 0 420 280" fill="none" className="w-full">
-      {/* iPad — landscape orientation */}
-      <rect x="40" y="50" width="260" height="180" rx="14" stroke="white" strokeOpacity="0.25" strokeWidth="1.5" />
-      {/* Camera dot */}
-      <circle cx="170" cy="57" r="2.5" fill="white" fillOpacity="0.12" />
-      {/* iPad screen with screenshot */}
-      <defs>
-        <clipPath id={`ipad-screen-${color.slice(1)}`}>
-          <rect x="50" y="62" width="240" height="156" rx="4" />
-        </clipPath>
-      </defs>
-      <image
-        href={screenshot}
-        x="50" y="62" width="240" height="156"
-        clipPath={`url(#ipad-screen-${color.slice(1)})`}
-        preserveAspectRatio="xMidYMid slice"
-      />
-      {/* Home indicator */}
-      <rect x="138" y="224" width="64" height="3.5" rx="1.75" fill="white" fillOpacity="0.12" />
+    <div className="relative w-full">
+      <svg viewBox="0 0 420 280" fill="none" className="w-full">
+        {/* iPad — landscape orientation */}
+        <rect x="40" y="50" width="260" height="180" rx="14" stroke="white" strokeOpacity="0.25" strokeWidth="1.5" />
+        {/* Camera dot */}
+        <circle cx="170" cy="57" r="2.5" fill="white" fillOpacity="0.12" />
+        {/* iPad screen background */}
+        <rect x="50" y="62" width="240" height="156" rx="4" fill="rgba(0,0,0,0.3)" />
+        {/* Home indicator */}
+        <rect x="138" y="224" width="64" height="3.5" rx="1.75" fill="white" fillOpacity="0.12" />
 
-      {/* iPhone — portrait, overlapping iPad bottom-right */}
-      <rect x="280" y="100" width="80" height="155" rx="16" stroke="white" strokeOpacity="0.3" strokeWidth="1.5" fill="rgba(11,11,60,0.85)" />
-      {/* Dynamic island */}
-      <rect x="304" y="108" width="32" height="9" rx="4.5" fill="rgba(255,255,255,0.12)" />
-      {/* Phone screen — white background with UI elements */}
-      <defs>
-        <clipPath id={`iphone-screen-${color.slice(1)}`}>
-          <rect x="286" y="122" width="68" height="120" rx="3" />
-        </clipPath>
-      </defs>
-      <rect x="286" y="122" width="68" height="120" rx="3" fill="white" clipPath={`url(#iphone-screen-${color.slice(1)})`} />
-      {/* Status bar */}
-      <rect x="290" y="125" width="16" height="2" rx="1" fill="#333" fillOpacity="0.3" />
-      <rect x="336" y="125" width="14" height="2" rx="1" fill="#333" fillOpacity="0.3" />
-      {/* App header */}
-      <rect x="290" y="132" width="36" height="3" rx="1.5" fill={color} fillOpacity="0.7" />
-      {/* Card 1 */}
-      <rect x="290" y="140" width="60" height="28" rx="3" fill="#F3F4F6" />
-      <rect x="294" y="144" width="24" height="2.5" rx="1" fill="#333" fillOpacity="0.25" />
-      <rect x="294" y="150" width="40" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <rect x="294" y="156" width="32" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <circle cx="340" cy="152" r="5" fill={color} fillOpacity="0.15" />
-      {/* Card 2 */}
-      <rect x="290" y="172" width="60" height="28" rx="3" fill="#F3F4F6" />
-      <rect x="294" y="176" width="28" height="2.5" rx="1" fill="#333" fillOpacity="0.25" />
-      <rect x="294" y="182" width="44" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <rect x="294" y="188" width="36" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <circle cx="340" cy="184" r="5" fill={color} fillOpacity="0.15" />
-      {/* Card 3 */}
-      <rect x="290" y="204" width="60" height="28" rx="3" fill="#F3F4F6" />
-      <rect x="294" y="208" width="20" height="2.5" rx="1" fill="#333" fillOpacity="0.25" />
-      <rect x="294" y="214" width="38" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <rect x="294" y="220" width="30" height="2" rx="1" fill="#333" fillOpacity="0.12" />
-      <circle cx="340" cy="216" r="5" fill={color} fillOpacity="0.15" />
-      {/* Home indicator */}
-      <rect x="303" y="247" width="34" height="3" rx="1.5" fill="#333" fillOpacity="0.15" />
-    </svg>
+        {/* iPhone — portrait, overlapping iPad bottom-right */}
+        <rect x="280" y="100" width="80" height="155" rx="16" stroke="white" strokeOpacity="0.3" strokeWidth="1.5" fill="rgba(11,11,60,0.85)" />
+        {/* Dynamic island */}
+        <rect x="304" y="108" width="32" height="9" rx="4.5" fill="rgba(255,255,255,0.12)" />
+        {/* Phone screen — white background with UI elements */}
+        <rect x="286" y="122" width="68" height="120" rx="3" fill="white" />
+        {/* Status bar */}
+        <rect x="290" y="125" width="16" height="2" rx="1" fill="#333" fillOpacity="0.3" />
+        <rect x="336" y="125" width="14" height="2" rx="1" fill="#333" fillOpacity="0.3" />
+        {/* App header */}
+        <rect x="290" y="132" width="36" height="3" rx="1.5" fill={color} fillOpacity="0.7" />
+        {/* Card 1 */}
+        <rect x="290" y="140" width="60" height="28" rx="3" fill="#F3F4F6" />
+        <rect x="294" y="144" width="24" height="2.5" rx="1" fill="#333" fillOpacity="0.25" />
+        <rect x="294" y="150" width="40" height="2" rx="1" fill="#333" fillOpacity="0.12" />
+        <rect x="294" y="156" width="32" height="2" rx="1" fill="#333" fillOpacity="0.12" />
+        <circle cx="340" cy="152" r="5" fill={color} fillOpacity="0.15" />
+        {/* Card 2 */}
+        <rect x="290" y="172" width="60" height="28" rx="3" fill="#F3F4F6" />
+        <rect x="294" y="176" width="28" height="2.5" rx="1" fill="#333" fillOpacity="0.25" />
+        <rect x="294" y="182" width="44" height="2" rx="1" fill="#333" fillOpacity="0.12" />
+        <rect x="294" y="188" width="36" height="2" rx="1" fill="#333" fillOpacity="0.12" />
+        <circle cx="340" cy="184" r="5" fill={color} fillOpacity="0.15" />
+        {/* Card 3 */}
+        <rect x="290" y="204" width="60" height="28" rx="3" fill="#F3F4F6" />
+        <rect x="294" y="208" width="20" height="2.5" rx="1" fill="#333" fillOpacity="0.25" />
+        <rect x="294" y="214" width="38" height="2" rx="1" fill="#333" fillOpacity="0.12" />
+        <rect x="294" y="220" width="30" height="2" rx="1" fill="#333" fillOpacity="0.12" />
+        <circle cx="340" cy="216" r="5" fill={color} fillOpacity="0.15" />
+        {/* Home indicator */}
+        <rect x="303" y="247" width="34" height="3" rx="1.5" fill="#333" fillOpacity="0.15" />
+      </svg>
+      {/* iPad screenshot positioned over screen area */}
+      <img
+        src={screenshot}
+        alt=""
+        className="absolute rounded-[1px] pointer-events-none"
+        style={{
+          left: "11.9%",
+          top: "22.14%",
+          width: "57.14%",
+          height: "55.71%",
+          objectFit: "cover",
+        }}
+      />
+    </div>
   );
 }
 
