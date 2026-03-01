@@ -450,7 +450,7 @@ export default function ROX() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
           variants={stagger}
-          className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-stretch"
+          className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch"
         >
           {/* Left: Gauge dial */}
           <motion.div
@@ -492,7 +492,7 @@ export default function ROX() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   fontWeight: 600,
-                  fontSize: "14px",
+                  fontSize: "17px",
                   color: getTierColor(score),
                   letterSpacing: "0.05em",
                   transition: "color 0.3s ease",
@@ -597,7 +597,7 @@ export default function ROX() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   fontWeight: 500,
-                  fontSize: "14px",
+                  fontSize: "17px",
                   color: "#FFFFFF",
                   marginBottom: "4px",
                 }}
