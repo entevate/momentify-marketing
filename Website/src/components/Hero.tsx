@@ -102,6 +102,25 @@ function TypewriterWord() {
   );
 }
 
+/* ── Client logos ─────────────────────────────────────── */
+
+const logos = [
+  { src: "/logos/caterpillar.png", alt: "Caterpillar" },
+  { src: "/logos/mustang-cat.png", alt: "Mustang Cat" },
+  { src: "/logos/thompson-tractor.png", alt: "Thompson Tractor" },
+  { src: "/logos/blanchard-machinery.png", alt: "Blanchard Machinery" },
+];
+
+const logoSet = logos.map((logo) => (
+  <img
+    key={logo.alt}
+    src={logo.src}
+    alt={logo.alt}
+    className="flex-shrink-0 opacity-50 hover:opacity-90 transition-opacity duration-200"
+    style={{ height: "28px", width: "auto" }}
+  />
+));
+
 /* ── Hero ──────────────────────────────────────────────── */
 
 export default function Hero() {
@@ -266,23 +285,9 @@ export default function Hero() {
                 style={{ animation: "tickerScroll 40s linear infinite", width: "max-content" }}
               >
                 {/* First set */}
-                {/* ASSET NEEDED: Caterpillar logo, white SVG or PNG with transparent background */}
-                <span className="text-white/50 hover:text-white/90 transition-opacity duration-200 font-bold text-[14px] flex-shrink-0 h-7 flex items-center" style={{ fontFamily: "var(--font-inter)", maxWidth: "120px" }}>Caterpillar</span>
-                {/* ASSET NEEDED: Mustang Cat logo, white SVG or PNG with transparent background */}
-                <span className="text-white/50 hover:text-white/90 transition-opacity duration-200 font-bold text-[14px] flex-shrink-0 h-7 flex items-center" style={{ fontFamily: "var(--font-inter)", maxWidth: "120px" }}>Mustang Cat</span>
-                {/* ASSET NEEDED: Thompson Tractor logo, white SVG or PNG with transparent background */}
-                <span className="text-white/50 hover:text-white/90 transition-opacity duration-200 font-bold text-[14px] flex-shrink-0 h-7 flex items-center" style={{ fontFamily: "var(--font-inter)", maxWidth: "120px" }}>Thompson Tractor</span>
-                {/* ASSET NEEDED: Blanchard Machinery logo, white SVG or PNG with transparent background */}
-                <span className="text-white/50 hover:text-white/90 transition-opacity duration-200 font-bold text-[14px] flex-shrink-0 h-7 flex items-center" style={{ fontFamily: "var(--font-inter)", maxWidth: "120px" }}>Blanchard Machinery</span>
-                {/* ASSET NEEDED: Carter Machinery logo, white SVG or PNG with transparent background */}
-                <span className="text-white/50 hover:text-white/90 transition-opacity duration-200 font-bold text-[14px] flex-shrink-0 h-7 flex items-center" style={{ fontFamily: "var(--font-inter)", maxWidth: "120px" }}>Carter Machinery</span>
-
+                {logoSet}
                 {/* Duplicate set for seamless loop */}
-                <span className="text-white/50 hover:text-white/90 transition-opacity duration-200 font-bold text-[14px] flex-shrink-0 h-7 flex items-center" style={{ fontFamily: "var(--font-inter)", maxWidth: "120px" }}>Caterpillar</span>
-                <span className="text-white/50 hover:text-white/90 transition-opacity duration-200 font-bold text-[14px] flex-shrink-0 h-7 flex items-center" style={{ fontFamily: "var(--font-inter)", maxWidth: "120px" }}>Mustang Cat</span>
-                <span className="text-white/50 hover:text-white/90 transition-opacity duration-200 font-bold text-[14px] flex-shrink-0 h-7 flex items-center" style={{ fontFamily: "var(--font-inter)", maxWidth: "120px" }}>Thompson Tractor</span>
-                <span className="text-white/50 hover:text-white/90 transition-opacity duration-200 font-bold text-[14px] flex-shrink-0 h-7 flex items-center" style={{ fontFamily: "var(--font-inter)", maxWidth: "120px" }}>Blanchard Machinery</span>
-                <span className="text-white/50 hover:text-white/90 transition-opacity duration-200 font-bold text-[14px] flex-shrink-0 h-7 flex items-center" style={{ fontFamily: "var(--font-inter)", maxWidth: "120px" }}>Carter Machinery</span>
+                {logoSet}
               </div>
             </div>
           </div>
