@@ -309,7 +309,7 @@ export default function Problem() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="mt-6 italic text-[18px] leading-[1.6] max-w-[600px]"
+          className="mt-6 italic text-[15px] leading-[1.6] max-w-[600px]"
           style={{
             fontFamily: "var(--font-inter)",
             fontWeight: 500,
