@@ -142,7 +142,11 @@ export default function Platform() {
   const sol = solutions[activeTab];
 
   return (
-    <section id="platform" className="bg-white py-16 sm:py-20 lg:py-24">
+    <section
+      id="platform"
+      className="py-16 sm:py-20 lg:py-24"
+      style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F5F6F8 100%)" }}
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-12">
 
         {/* ── Section header ──────────────────────── */}
@@ -158,7 +162,7 @@ export default function Platform() {
             style={{
               fontFamily: "var(--font-inter)",
               fontWeight: 600,
-              color: "#0CF4DF",
+              color: "#00BBA5",
             }}
           >
             Our Solutions
@@ -180,10 +184,12 @@ export default function Platform() {
 
           <motion.p
             variants={fadeUp}
-            className="mt-4 text-[18px] leading-[1.7] max-w-[600px]"
+            className="mt-4 max-w-[600px]"
             style={{
               fontFamily: "var(--font-inter)",
-              fontWeight: 400,
+              fontSize: "15px",
+              fontWeight: 300,
+              lineHeight: "1.5",
               color: "rgba(6, 19, 65, 0.6)",
             }}
           >
@@ -222,7 +228,7 @@ export default function Platform() {
                       fontFamily: "var(--font-inter)",
                       color: textColor,
                       backgroundColor: isActive ? s.color : "transparent",
-                      border: isActive ? `1.5px solid ${s.color}` : "1.5px solid transparent",
+                      border: isActive ? `1.5px solid ${s.color}` : "1.5px solid rgba(6, 19, 65, 0.12)",
                     }}
                     onMouseEnter={(e) => {
                       if (!isActive) e.currentTarget.style.color = "rgba(6, 19, 65, 0.7)";
@@ -299,12 +305,12 @@ export default function Platform() {
 
                   {/* Headline */}
                   <h3
-                    className="leading-[1.15] mb-5"
+                    className="leading-[1.05] mb-5"
                     style={{
                       fontFamily: "var(--font-inter)",
-                      fontWeight: 500,
+                      fontWeight: 800,
                       letterSpacing: "-0.02em",
-                      fontSize: "clamp(24px, 3vw, 36px)",
+                      fontSize: "clamp(24px, 3.5vw, 40px)",
                       color: "#FFFFFF",
                     }}
                   >
@@ -313,11 +319,11 @@ export default function Platform() {
 
                   {/* Body */}
                   <p
-                    className="text-[16px] leading-[1.75] max-w-[480px] mb-8"
+                    className="text-[14px] leading-[1.7] max-w-[480px] mb-8"
                     style={{
                       fontFamily: "var(--font-inter)",
                       fontWeight: 400,
-                      color: "rgba(255, 255, 255, 0.7)",
+                      color: "rgba(255, 255, 255, 0.65)",
                     }}
                   >
                     {sol.body}
@@ -332,7 +338,7 @@ export default function Platform() {
                           style={{ backgroundColor: sol.bulletDotColor }}
                         />
                         <span
-                          className="text-[15px] leading-[1.6]"
+                          className="text-[13px] leading-[1.6]"
                           style={{
                             fontFamily: "var(--font-inter)",
                             fontWeight: 400,
@@ -348,7 +354,7 @@ export default function Platform() {
                   {/* CTA link */}
                   <a
                     href="#"
-                    className="inline-flex items-center gap-2 text-[15px] font-semibold hover:underline transition-all duration-150"
+                    className="inline-flex items-center gap-2 text-[14px] font-semibold hover:underline transition-all duration-150"
                     style={{
                       fontFamily: "var(--font-inter)",
                       color: sol.ctaColor,
