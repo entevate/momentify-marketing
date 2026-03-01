@@ -7,19 +7,19 @@ import { motion } from "framer-motion";
 const quotes = [
   {
     color: "#6B21D4",
-    text: "We leave events with a pile of business cards and no idea which leads matter.",
+    text: "We leave every event with a stack of cards and no idea which conversations actually matter.",
   },
   {
     color: "#00BBA5",
-    text: "Our booth is busy, but we cannot tie engagement to outcomes.",
+    text: "Our booth looks busy. But we cannot tie a single conversation back to a closed deal.",
   },
   {
     color: "#F25E3D",
-    text: "Our suites are full, but our data is empty. Zero follow-up clarity.",
+    text: "Our suites are full, but our data is empty. Nobody can say what worked or why.",
   },
   {
     color: "#F2B33D",
-    text: "Facilities tours and recruiting events are black holes. No tracking, no insight.",
+    text: "Facility tours and recruiting events are complete black holes. No tracking, no insight, no proof.",
   },
 ];
 
@@ -29,7 +29,7 @@ const roles = [
   { text: "Event managers plan.", color: "#6B21D4" },
   { text: "Recruiters engage.", color: "#3BBFA8" },
   { text: "Field reps show up.", color: "#D49A1F" },
-  { text: "Facility teams open the doors.", color: "#3A2073" },
+  { text: "Facility teams host.", color: "#3A2073" },
   { text: "Teams fill the seats.", color: "#F25E3D" },
 ];
 
