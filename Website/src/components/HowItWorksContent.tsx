@@ -76,56 +76,59 @@ export default function HowItWorksContent() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12 pt-36 pb-16 sm:pt-44 sm:pb-20">
-        {/* Page title */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mb-6"
-        >
-          <span style={eyebrowStyle}>PLATFORM</span>
-        </motion.div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          {/* Left column: text */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-6"
+            >
+              <span style={eyebrowStyle}>PLATFORM</span>
+            </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.08 }}
-          className="text-white leading-[1.08]"
-          style={{
-            fontFamily: "var(--font-inter)",
-            fontSize: "clamp(36px, 5.5vw, 72px)",
-            fontWeight: 500,
-            letterSpacing: "-0.02em",
-          }}
-        >
-          How It Works
-        </motion.h1>
+            <motion.h1
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.08 }}
+              className="text-white leading-[1.08]"
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontSize: "clamp(36px, 5.5vw, 56px)",
+                fontWeight: 500,
+                letterSpacing: "-0.02em",
+              }}
+            >
+              How It Works
+            </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-6 text-white/60 max-w-xl"
-          style={{
-            fontFamily: "var(--font-inter)",
-            fontSize: "15px",
-            fontWeight: 300,
-            lineHeight: "1.5",
-          }}
-        >
-          Three steps from setup to intelligence. One platform that captures,
-          contextualizes, and proves the value of every in-person interaction.
-        </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mt-6 text-white/60 max-w-md"
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontSize: "15px",
+                fontWeight: 300,
+                lineHeight: "1.5",
+              }}
+            >
+              Three steps from setup to intelligence. One platform that captures,
+              contextualizes, and proves the value of every in-person interaction.
+            </motion.p>
+          </div>
 
-        {/* Product showcase animation */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-          className="mt-16 w-full"
-        >
-          <ProductShowcase />
-        </motion.div>
+          {/* Right column: product showcase */}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+          >
+            <ProductShowcase />
+          </motion.div>
+        </div>
       </div>
     </section>
   );
