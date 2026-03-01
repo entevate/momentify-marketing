@@ -12,6 +12,7 @@ const products = [
     device: "macbook" as const,
     perspective: "none",
     shadow: "drop-shadow(0 8px 24px rgba(95,217,194,0.15))",
+    textOffsetY: -20,
   },
   {
     name: "Momentify Explorer",
@@ -21,6 +22,7 @@ const products = [
     device: "ipad-iphone" as const,
     perspective: "perspective(600px) rotateY(-16deg) rotateX(5deg)",
     shadow: "drop-shadow(0 12px 32px rgba(107,33,212,0.25))",
+    textOffsetY: 0,
   },
   {
     name: "Momentify Intelligence",
@@ -30,6 +32,7 @@ const products = [
     device: "macbook" as const,
     perspective: "none",
     shadow: "drop-shadow(0 8px 24px rgba(242,179,61,0.15))",
+    textOffsetY: -20,
   },
 ];
 
@@ -132,7 +135,7 @@ export default function ProductShowcase() {
           >
             {/* Device frame with perspective */}
             <div
-              className="w-[92%] mx-auto"
+              className="w-full"
               style={{
                 transform: product.perspective,
                 filter: product.shadow,
@@ -146,8 +149,11 @@ export default function ProductShowcase() {
               )}
             </div>
 
-            {/* Text overlay */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            {/* Text overlay — offset to center on screen, not full device */}
+            <div
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+              style={{ marginTop: product.textOffsetY }}
+            >
               <div
                 className="text-center px-6 py-4 rounded-xl"
                 style={{
