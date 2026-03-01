@@ -361,64 +361,87 @@ export default function ROX() {
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12">
 
         {/* ── 1-3. Section header ─────────────────────── */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          variants={headerVariants}
-        >
-          <motion.p
-            variants={fadeUp}
-            className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4"
-            style={{ color: "#00BBA5", fontFamily: "var(--font-inter)" }}
+        <div className="flex items-start justify-between gap-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.15 }}
+            variants={headerVariants}
           >
-            Return on Experience
-          </motion.p>
+            <motion.p
+              variants={fadeUp}
+              className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4"
+              style={{ color: "#00BBA5", fontFamily: "var(--font-inter)" }}
+            >
+              Return on Experience
+            </motion.p>
 
-          <motion.h2
-            variants={fadeUp}
-            className="leading-[1.1]"
-            style={{
-              fontFamily: "var(--font-inter)",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            <span
-              className="block"
+            <motion.h2
+              variants={fadeUp}
+              className="leading-[1.1]"
               style={{
-                fontWeight: 500,
-                fontSize: "clamp(28px, 4.5vw, 52px)",
+                fontFamily: "var(--font-inter)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              <span
+                className="block"
+                style={{
+                  fontWeight: 500,
+                  fontSize: "clamp(28px, 4.5vw, 52px)",
+                  color: "#FFFFFF",
+                }}
+              >
+                Your Events Have a Score.
+              </span>
+              <span
+                className="block text-gradient-brand"
+                style={{
+                  fontWeight: 500,
+                  fontSize: "clamp(22px, 3.5vw, 38px)",
+                  WebkitBackgroundClip: "text",
+                }}
+              >
+                Do You Know What It Is?
+              </span>
+            </motion.h2>
+
+            <motion.p
+              variants={fadeUp}
+              className="mt-4 max-w-[640px]"
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontSize: "15px",
+                fontWeight: 300,
+                lineHeight: "1.5",
+                color: "rgba(255, 255, 255, 0.6)",
+              }}
+            >
+              One score across four categories that tells you whether your events actually worked. Most teams have never seen this number.
+            </motion.p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="hidden md:block flex-shrink-0 pt-1"
+          >
+            <a
+              href="#"
+              className="inline-flex items-center justify-center font-semibold text-[13px] py-3 px-6 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]"
+              style={{
+                background: "linear-gradient(135deg, #0CF4DF, #1A56DB)",
                 color: "#FFFFFF",
+                fontFamily: "var(--font-inter)",
+                whiteSpace: "nowrap",
               }}
             >
-              Your Events Have a Score.
-            </span>
-            <span
-              className="block text-gradient-brand"
-              style={{
-                fontWeight: 500,
-                fontSize: "clamp(22px, 3.5vw, 38px)",
-                WebkitBackgroundClip: "text",
-              }}
-            >
-              Do You Know What It Is?
-            </span>
-          </motion.h2>
-
-          <motion.p
-            variants={fadeUp}
-            className="mt-4 max-w-[640px]"
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontSize: "15px",
-              fontWeight: 300,
-              lineHeight: "1.5",
-              color: "rgba(255, 255, 255, 0.6)",
-            }}
-          >
-            One score across four categories that tells you whether your events actually worked. Most teams have never seen this number.
-          </motion.p>
-        </motion.div>
+              Calculate Your ROX
+            </a>
+          </motion.div>
+        </div>
 
         {/* ── 4. Score preview visual (two-column) ──── */}
         <motion.div
