@@ -354,11 +354,12 @@ export default function Platform() {
                   {/* CTA button */}
                   <a
                     href="#"
-                    className="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-[14px] font-semibold transition-all duration-150 hover:brightness-110"
+                    className="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-[14px] font-semibold transition-all duration-150 hover:bg-white/10"
                     style={{
                       fontFamily: "var(--font-inter)",
                       color: "#FFFFFF",
-                      background: sol.bg,
+                      background: "transparent",
+                      border: "1.5px solid rgba(255, 255, 255, 0.5)",
                     }}
                   >
                     {sol.cta}
