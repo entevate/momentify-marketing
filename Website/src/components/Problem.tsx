@@ -95,7 +95,7 @@ export default function Problem() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
 
           {/* ── Left column ──────────────────────────── */}
-          <div className="order-2 lg:order-1">
+          <div className="order-1 lg:order-1">
             {/* Section label + headline */}
             <motion.div
               initial="hidden"
@@ -213,21 +213,6 @@ export default function Problem() {
               </motion.div>
             </motion.div>
 
-            {/* Payoff lead-in */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="mt-12 italic text-[20px] leading-[1.6]"
-              style={{
-                fontFamily: "var(--font-inter)",
-                fontWeight: 500,
-                color: "#061341",
-              }}
-            >
-              The problem is not effort. It never is.
-            </motion.p>
           </div>
 
           {/* ── Right column: quote cards ─────────────── */}
@@ -236,7 +221,7 @@ export default function Problem() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.15 }}
             variants={cardContainerVariants}
-            className="flex flex-col gap-4 lg:pt-10 order-1 lg:order-2"
+            className="flex flex-col gap-4 lg:pt-10 order-2 lg:order-2"
           >
             {quotes.map((quote) => (
               <motion.div
@@ -275,6 +260,22 @@ export default function Problem() {
             ))}
           </motion.div>
 
+          {/* ── "The problem" sentence ─────────────── */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="order-3 lg:order-3 lg:col-start-1 mt-0 lg:mt-0 text-[20px] leading-[1.6]"
+            style={{
+              fontFamily: "var(--font-inter)",
+              fontWeight: 500,
+              color: "#061341",
+            }}
+          >
+            The problem is not effort. It never is.
+          </motion.p>
+
         </div>
 
         {/* ── Role sentences (full-width, below the grid) ─── */}
@@ -308,7 +309,7 @@ export default function Problem() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-          className="mt-6 italic text-[20px] leading-[1.6] max-w-[600px]"
+          className="mt-6 italic text-[18px] leading-[1.6] max-w-[600px]"
           style={{
             fontFamily: "var(--font-inter)",
             fontWeight: 500,
