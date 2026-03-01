@@ -105,10 +105,10 @@ function TypewriterWord() {
 /* ── Client logos ─────────────────────────────────────── */
 
 const logos = [
-  { src: "/logos/caterpillar.png", alt: "Caterpillar" },
-  { src: "/logos/mustang-cat.png", alt: "Mustang Cat" },
-  { src: "/logos/thompson-tractor.png", alt: "Thompson Tractor" },
-  { src: "/logos/blanchard-machinery.png", alt: "Blanchard Machinery" },
+  { src: "/logos/caterpillar.png", alt: "Caterpillar", height: "22px" },
+  { src: "/logos/mustang-cat.png", alt: "Mustang Cat", height: "28px" },
+  { src: "/logos/thompson-tractor.png", alt: "Thompson Tractor", height: "28px" },
+  { src: "/logos/blanchard-machinery.png", alt: "Blanchard Machinery", height: "28px" },
 ];
 
 const logoSet = logos.map((logo) => (
@@ -117,7 +117,7 @@ const logoSet = logos.map((logo) => (
     src={logo.src}
     alt={logo.alt}
     className="flex-shrink-0 opacity-50 hover:opacity-90 transition-opacity duration-200"
-    style={{ height: "28px", width: "auto" }}
+    style={{ height: logo.height, width: "auto" }}
   />
 ));
 
@@ -269,7 +269,7 @@ export default function Hero() {
           {/* Divider */}
           <div className="w-full h-px bg-white/[0.12]" />
 
-          <div className="flex items-center gap-8 pt-8">
+          <div className="flex items-center gap-16 pt-8">
             {/* Static label */}
             <span
               className="flex-shrink-0 text-white/40 font-semibold text-[11px] tracking-[0.12em] uppercase"
@@ -279,9 +279,7 @@ export default function Hero() {
             </span>
 
             {/* Static logo row */}
-            <div className="flex items-center gap-16 flex-1">
-              {logoSet}
-            </div>
+            {logoSet}
           </div>
         </motion.div>
       </div>
