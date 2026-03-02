@@ -368,14 +368,14 @@ export default function Platform() {
                 </div>
 
                 {/* ── Right column: mockup placeholders (desktop) */}
-                <div className="hidden lg:flex items-center justify-center min-h-[320px]">
+                <div className="hidden lg:flex items-center justify-center">
                   <div className="relative">
                     {/* Primary mockup */}
                     <div
                       className="rounded-2xl shadow-lg flex items-center justify-center p-6"
                       style={{
-                        width: 420,
-                        height: 280,
+                        width: 380,
+                        height: 260,
                         backgroundColor: "rgba(255, 255, 255, 0.08)",
                         border: "1.5px dashed rgba(255, 255, 255, 0.25)",
                       }}
@@ -396,10 +396,10 @@ export default function Platform() {
                     <div
                       className="absolute rounded-xl shadow-xl flex items-center justify-center p-5"
                       style={{
-                        width: 320,
-                        height: 210,
-                        top: 110,
-                        left: 140,
+                        width: 290,
+                        height: 190,
+                        top: 100,
+                        left: 100,
                         backgroundColor: "rgba(255, 255, 255, 0.12)",
                         border: "1px solid rgba(255, 255, 255, 0.2)",
                         backdropFilter: "blur(8px)",
