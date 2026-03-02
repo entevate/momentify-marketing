@@ -162,11 +162,11 @@ export default function SocialProof() {
               )}
               <div>
                 <p
+                  className="text-gradient-brand"
                   style={{
                     fontFamily: "var(--font-inter)",
                     fontWeight: 500,
                     fontSize: "clamp(36px, 4vw, 48px)",
-                    color: "#061341",
                     lineHeight: 1,
                     letterSpacing: "-0.02em",
                     marginBottom: "6px",
