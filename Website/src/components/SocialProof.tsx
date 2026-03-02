@@ -23,7 +23,7 @@ const stagger = {
 
 const stats = [
   { number: "10,000+", label: "Leads generated across 50 events in 18 months" },
-  { number: "40%", label: "Lead qualification improvement across active clients" },
+  { number: "65%+", label: "Of captured leads qualified for follow-up, versus an industry average below 20%" },
   { number: "$411M", label: "Potential pipeline value delivered to customers and dealers" },
 ];
 
@@ -32,14 +32,14 @@ const stats = [
 const outcomes = [
   {
     logo: "/logos/caterpillar.png",
-    logoAlt: "Caterpillar",
+    logoAlt: "Fortune 75 Manufacturer",
     headline: "Dealer network engagement measured across 6 business units.",
-    body: "Caterpillar deployed Momentify across multiple dealer groups to capture field interaction data that had never been tracked at scale. Engagement patterns surfaced across job sites, facilities, and recruiting events with consistent scoring across every touchpoint.",
+    body: "A Fortune 75 manufacturer deployed Momentify across multiple dealer groups to capture field interaction data that had never been tracked at scale. Engagement patterns surfaced across job sites, facilities, and recruiting events with consistent scoring across every touchpoint.",
     tags: ["Field Sales", "Facilities"],
   },
   {
     logo: "/logos/mustang-cat-color.png",
-    logoAlt: "Mustang Cat",
+    logoAlt: "Mustang CAT",
     headline: "Recruiting events scored for the first time with qualified candidate data.",
     body: "Mustang Cat used Momentify at technical recruiting events to capture candidate intent, role fit, and engagement depth. The team identified high-fit candidates before the event closed instead of reviewing spreadsheets after the fact.",
     tags: ["Technical Recruiting"],
