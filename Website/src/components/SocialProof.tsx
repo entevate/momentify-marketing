@@ -14,7 +14,7 @@ const fadeUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
 };
 
-const cardContainerVariants = {
+const stagger = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.08 } },
 };
@@ -68,63 +68,70 @@ export default function SocialProof() {
   return (
     <section
       id="proof"
-      style={{ background: "#FFFFFF", paddingTop: "100px", paddingBottom: "100px" }}
+      className="relative py-16 sm:py-24 overflow-hidden"
+      style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F5F6F8 100%)" }}
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-12">
+      {/* Brand geometric pattern (match Problem/Platform) */}
+      <svg
+        className="pointer-events-none absolute inset-0 h-full w-full"
+        viewBox="0 0 1440 900"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMaxYMax slice"
+        aria-hidden="true"
+      >
+        <path
+          d="M1440 900 L1440 324 L1008 0 L528 0 L1056 396 L1056 900 Z"
+          fill="#254FE5"
+          fillOpacity="0.04"
+        />
+        <path
+          d="M1440 900 L1440 540 L912 144 L432 144 L912 504 L912 900 Z"
+          fill="#1F3395"
+          fillOpacity="0.03"
+        />
+      </svg>
 
-        {/* ── Header ───────────────────────────────── */}
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-12">
+
+        {/* ── Section header (left-aligned) ────────── */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
           variants={headerVariants}
-          className="text-center"
         >
-          {/* Eyebrow */}
           <motion.p
             variants={fadeUp}
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontWeight: 600,
-              fontSize: "11px",
-              color: "#0CF4DF",
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              marginBottom: "16px",
-            }}
+            className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4"
+            style={{ color: "#00BBA5", fontFamily: "var(--font-inter)" }}
           >
             Results
           </motion.p>
 
-          {/* Headline */}
           <motion.h2
             variants={fadeUp}
-            className="mx-auto"
+            className="leading-[1.1]"
             style={{
               fontFamily: "var(--font-inter)",
-              fontWeight: 800,
-              fontSize: "clamp(32px, 4.5vw, 48px)",
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+              fontSize: "clamp(28px, 4.5vw, 52px)",
               color: "#061341",
-              lineHeight: 1.1,
-              maxWidth: "720px",
-              marginBottom: "20px",
             }}
           >
             Real teams. Real interactions. Real outcomes.
           </motion.h2>
 
-          {/* Subhead */}
           <motion.p
             variants={fadeUp}
-            className="mx-auto"
+            className="mt-4 max-w-[600px]"
             style={{
               fontFamily: "var(--font-inter)",
-              fontWeight: 400,
-              fontSize: "17px",
-              color: "rgba(6, 19, 65, 0.55)",
-              lineHeight: 1.7,
-              maxWidth: "600px",
-              marginBottom: "64px",
+              fontSize: "15px",
+              fontWeight: 300,
+              lineHeight: "1.5",
+              color: "rgba(6, 19, 65, 0.6)",
             }}
           >
             Momentify is active across trade shows, recruiting events, field visits, and facilities. Here is what teams are actually seeing.
@@ -137,8 +144,7 @@ export default function SocialProof() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
           variants={fadeUp}
-          className="mx-auto flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-0"
-          style={{ maxWidth: "900px", marginBottom: "72px" }}
+          className="mt-16 flex flex-col sm:flex-row items-start sm:items-center gap-8 sm:gap-0"
         >
           {stats.map((stat, i) => (
             <div key={stat.number} className="flex items-center">
@@ -147,22 +153,23 @@ export default function SocialProof() {
                   className="hidden sm:block"
                   style={{
                     width: "1px",
-                    height: "56px",
+                    height: "48px",
                     background: "rgba(6, 19, 65, 0.10)",
-                    marginLeft: "40px",
-                    marginRight: "40px",
+                    marginLeft: "36px",
+                    marginRight: "36px",
                   }}
                 />
               )}
-              <div className="text-center">
+              <div>
                 <p
                   style={{
                     fontFamily: "var(--font-inter)",
-                    fontWeight: 800,
-                    fontSize: "56px",
+                    fontWeight: 500,
+                    fontSize: "clamp(36px, 4vw, 48px)",
                     color: "#061341",
                     lineHeight: 1,
-                    marginBottom: "8px",
+                    letterSpacing: "-0.02em",
+                    marginBottom: "6px",
                   }}
                 >
                   {stat.number}
@@ -170,8 +177,8 @@ export default function SocialProof() {
                 <p
                   style={{
                     fontFamily: "var(--font-inter)",
-                    fontWeight: 500,
-                    fontSize: "14px",
+                    fontWeight: 300,
+                    fontSize: "13px",
                     color: "rgba(6, 19, 65, 0.50)",
                     lineHeight: 1.4,
                     maxWidth: "200px",
@@ -189,26 +196,19 @@ export default function SocialProof() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
-          variants={cardContainerVariants}
-          className="mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6"
-          style={{ maxWidth: "1100px", marginBottom: "72px" }}
+          variants={stagger}
+          className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-6"
         >
           {outcomes.map((card) => (
             <motion.div
               key={card.headline}
               variants={fadeUp}
-              className="group flex flex-col"
+              className="group flex flex-col rounded-2xl transition-all duration-200 hover:-translate-y-1"
               style={{
                 background: "#FFFFFF",
                 border: "1px solid rgba(6, 19, 65, 0.08)",
-                borderRadius: "16px",
-                padding: "36px 32px",
-                boxShadow: "0 2px 12px rgba(6, 19, 65, 0.06)",
-                transition: "box-shadow 200ms ease, transform 200ms ease",
-              }}
-              whileHover={{
-                y: -4,
-                boxShadow: "0 8px 32px rgba(6, 19, 65, 0.12)",
+                padding: "32px 28px",
+                boxShadow: "0 2px 12px rgba(6, 19, 65, 0.04)",
               }}
             >
               {/* Logo or tag */}
@@ -217,8 +217,8 @@ export default function SocialProof() {
                   <img
                     src={card.logo}
                     alt={card.logoAlt}
-                    className="group-hover:opacity-100 transition-opacity duration-200"
-                    style={{ maxHeight: "28px", width: "auto", opacity: 0.7 }}
+                    className="opacity-50 group-hover:opacity-80 transition-opacity duration-200"
+                    style={{ maxHeight: "28px", width: "auto" }}
                   />
                 ) : (
                   <span
@@ -251,10 +251,11 @@ export default function SocialProof() {
               <h3
                 style={{
                   fontFamily: "var(--font-inter)",
-                  fontWeight: 700,
-                  fontSize: "20px",
+                  fontWeight: 500,
+                  fontSize: "18px",
                   color: "#061341",
                   lineHeight: 1.25,
+                  letterSpacing: "-0.01em",
                   marginBottom: "12px",
                 }}
               >
@@ -265,7 +266,7 @@ export default function SocialProof() {
               <p
                 style={{
                   fontFamily: "var(--font-inter)",
-                  fontWeight: 400,
+                  fontWeight: 300,
                   fontSize: "14px",
                   color: "rgba(6, 19, 65, 0.55)",
                   lineHeight: 1.65,
@@ -284,10 +285,10 @@ export default function SocialProof() {
                     style={{
                       fontFamily: "var(--font-inter)",
                       fontWeight: 600,
-                      fontSize: "11px",
+                      fontSize: "10px",
                       letterSpacing: "0.08em",
-                      color: "#0AA891",
-                      background: "rgba(12, 244, 223, 0.10)",
+                      color: "#00BBA5",
+                      background: "rgba(0, 187, 165, 0.08)",
                       borderRadius: "20px",
                       padding: "4px 10px",
                     }}
@@ -306,25 +307,19 @@ export default function SocialProof() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
           variants={fadeUp}
-          className="text-center"
+          className="mt-20"
         >
-          {/* Logo eyebrow */}
           <p
+            className="uppercase font-semibold text-[10px] tracking-[0.14em] mb-6"
             style={{
               fontFamily: "var(--font-inter)",
-              fontWeight: 600,
-              fontSize: "10px",
               color: "rgba(6, 19, 65, 0.30)",
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              marginBottom: "24px",
             }}
           >
             Trusted By
           </p>
 
-          {/* Logos */}
-          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-12">
+          <div className="flex flex-wrap items-center gap-6 sm:gap-12">
             {logos.map((logo) => (
               <img
                 key={logo.alt}
