@@ -44,7 +44,7 @@ const solutions = [
     headline: "Give your recruiters the tools the role demands.",
     body: "Technical recruiting events move fast. Momentify gives your team mobile-first capture, role-specific content delivery, and engagement analytics that tell you who is worth the follow-up call and who was just picking up swag.",
     bullets: [
-      "Mobile lead capture built for fast-moving recruiting floors",
+      "Mobile QR-enabled lead capture built for fast-moving recruiting environments",
       "Persona-based content paths by role, program, and interest level",
       "Cross-event consistency across job fairs, hiring events, and campus visits",
     ],
