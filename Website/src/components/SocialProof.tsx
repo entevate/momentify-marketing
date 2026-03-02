@@ -38,7 +38,7 @@ const outcomes = [
     tags: ["Field Sales", "Facilities"],
   },
   {
-    logo: "/logos/mustang-cat.png",
+    logo: "/logos/mustang-cat-color.png",
     logoAlt: "Mustang Cat",
     headline: "Recruiting events scored for the first time with qualified candidate data.",
     body: "Mustang Cat used Momentify at technical recruiting events to capture candidate intent, role fit, and engagement depth. The team identified high-fit candidates before the event closed instead of reviewing spreadsheets after the fact.",
@@ -53,14 +53,6 @@ const outcomes = [
   },
 ];
 
-/* ── Logo bar data ─────────────────────────────────── */
-
-const logos = [
-  { src: "/logos/caterpillar.png", alt: "Caterpillar", height: "28px" },
-  { src: "/logos/mustang-cat.png", alt: "Mustang Cat", height: "28px" },
-  { src: "/logos/thompson-tractor.png", alt: "Thompson Tractor", height: "28px" },
-  { src: "/logos/blanchard-machinery.png", alt: "Blanchard Machinery", height: "28px" },
-];
 
 /* ── Social Proof Section ──────────────────────────── */
 
@@ -297,40 +289,26 @@ export default function SocialProof() {
                   </span>
                 ))}
               </div>
+
+              {/* Learn More */}
+              <a
+                href="#"
+                className="inline-flex items-center gap-1 mt-5 group/link"
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  fontWeight: 500,
+                  fontSize: "13px",
+                  color: "#00BBA5",
+                  textDecoration: "none",
+                }}
+              >
+                Learn More
+                <span className="inline-block transition-transform duration-200 group-hover/link:translate-x-1">→</span>
+              </a>
             </motion.div>
           ))}
         </motion.div>
 
-        {/* ── Logo bar ─────────────────────────────── */}
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.15 }}
-          variants={fadeUp}
-          className="mt-20"
-        >
-          <p
-            className="uppercase font-semibold text-[10px] tracking-[0.14em] mb-6"
-            style={{
-              fontFamily: "var(--font-inter)",
-              color: "rgba(6, 19, 65, 0.30)",
-            }}
-          >
-            Trusted By
-          </p>
-
-          <div className="flex flex-wrap items-center gap-6 sm:gap-12">
-            {logos.map((logo) => (
-              <img
-                key={logo.alt}
-                src={logo.src}
-                alt={logo.alt}
-                className="flex-shrink-0 grayscale hover:grayscale-0 hover:opacity-80 transition-all duration-200"
-                style={{ maxHeight: logo.height, width: "auto", opacity: 0.4 }}
-              />
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   );
