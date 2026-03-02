@@ -59,8 +59,10 @@ const statCards = [
     suffix: "%",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="12 2 2 22 22 22" />
-        <line x1="12" y1="10" x2="12" y2="15" />
+        <path d="M11 17l-1.5 1.5a2.12 2.12 0 0 1-3 0L4 16" />
+        <path d="M2 10l4-2 4 3 5-4 5 3" />
+        <path d="M13 17l1.5 1.5a2.12 2.12 0 0 0 3 0L20 16" />
+        <path d="M10 13l4-3" />
       </svg>
     ),
   },
