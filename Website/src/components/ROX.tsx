@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 /* ── Score tiers ─────────────────────────────────────── */
 
 const tiers = [
-  { color: "#E5484D", name: "Critical Gap", description: "Events are costing more than they're delivering." },
+  { color: "#E5484D", name: "Critical Gap", description: "Moments are costing more than they're delivering." },
   { color: "#F2B33D", name: "Needs Optimization", description: "You're capturing some value, but leaving ROI on the table." },
   { color: "#5FD9C2", name: "High ROX", description: "Above average performance with room to fine-tune." },
   { color: "#0CF4DF", name: "Elite ROX", description: "Highly optimized across every category." },
@@ -348,7 +348,7 @@ export default function ROX() {
                   color: "#FFFFFF",
                 }}
               >
-                Your Events Have a Score.
+                Your Moments Have a Score.
               </span>
               <span
                 className="block text-gradient-brand"
@@ -373,7 +373,7 @@ export default function ROX() {
                 color: "rgba(255, 255, 255, 0.6)",
               }}
             >
-              One score across four categories that tells you whether your events actually worked. Most teams have never seen this number.
+              One score across four categories that tells you whether your moments actually worked. Most teams have never seen this number.
             </motion.p>
           </motion.div>
 
