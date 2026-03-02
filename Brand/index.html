@@ -434,7 +434,7 @@
       margin-bottom: 16px;
       transition: color var(--t);
     }
-    .type-sample-h1 { font-size: clamp(36px, 5vw, 72px); font-weight: 700; line-height: 1.05; letter-spacing: -0.025em; color: var(--text); }
+    .type-sample-h1 { font-size: clamp(36px, 5vw, 72px); font-weight: 500; line-height: 1.05; letter-spacing: -0.025em; color: var(--text); }
     .type-sample-thin { font-size: clamp(36px, 5vw, 72px); font-weight: 100; line-height: 1.05; letter-spacing: -0.025em; color: var(--text); }
     .type-sample-body { font-size: 16px; font-weight: 400; line-height: 1.7; color: var(--text-body); }
     .type-meta {
@@ -966,14 +966,14 @@
     .ht-head-line1 {
       display: block;
       font-size: clamp(22px, 7.5cqw, 64px);
-      font-weight: 600;
+      font-weight: 500;
       line-height: 1.0;
       letter-spacing: -0.02em;
     }
     .ht-head-line2 {
       display: inline-block;
       font-size: clamp(22px, 7.5cqw, 64px);
-      font-weight: 600;
+      font-weight: 500;
       line-height: 1.0;
       letter-spacing: -0.02em;
     }
@@ -1395,7 +1395,7 @@
                 </div>
               </div>
               <div class="ht-card-footer">
-                <div><div class="ht-card-name">Display — Bold</div><div class="ht-card-desc">72px · 700 · −0.025em tracking</div></div>
+                <div><div class="ht-card-name">Display — Medium</div><div class="ht-card-desc">72px · 500 · −0.025em tracking</div></div>
               </div>
             </div>
             <div class="ht-card">
@@ -1407,7 +1407,7 @@
                 </div>
               </div>
               <div class="ht-card-footer">
-                <div><div class="ht-card-name">Display — Reverse</div><div class="ht-card-desc">White · 700 · Cyan-to-blue accent</div></div>
+                <div><div class="ht-card-name">Display — Reverse</div><div class="ht-card-desc">White · 500 · Cyan-to-blue accent</div></div>
               </div>
             </div>
             <div class="ht-card" style="grid-column: 1 / -1;">
@@ -1427,9 +1427,9 @@
             <div class="type-scale-row">
               <span class="type-scale-name">Display</span>
               <span class="type-scale-size">56px</span>
-              <span class="type-scale-weight">800</span>
+              <span class="type-scale-weight">500</span>
               <span class="type-scale-lh">1.05</span>
-              <span style="font-size:22px;font-weight:800;letter-spacing:-0.02em;">Momentify</span>
+              <span style="font-size:22px;font-weight:500;letter-spacing:-0.02em;">Momentify</span>
             </div>
             <div class="type-scale-row">
               <span class="type-scale-name">Heading 1</span>
@@ -2091,7 +2091,7 @@
     if (saved) setTheme(saved);
 
     // ── Copy CSS snippet ─────────────────────────────────────────
-    const ht = (c1, c2, base) => `.headline {\n  font-family: 'Inter', sans-serif;\n  font-size: clamp(28px, 8vw, 72px);\n  font-weight: 800;\n  line-height: 1.0;\n  letter-spacing: -0.03em;\n}\n.headline-base { display: block; color: ${base}; }\n.headline-accent {\n  display: block;\n  background: linear-gradient(135deg, ${c1} 0%, ${c2} 100%);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n}`;
+    const ht = (c1, c2, base) => `.headline {\n  font-family: 'Inter', sans-serif;\n  font-size: clamp(28px, 8vw, 72px);\n  font-weight: 500;\n  line-height: 1.0;\n  letter-spacing: -0.03em;\n}\n.headline-base { display: block; color: ${base}; }\n.headline-accent {\n  display: block;\n  background: linear-gradient(135deg, ${c1} 0%, ${c2} 100%);\n  -webkit-background-clip: text;\n  -webkit-text-fill-color: transparent;\n  background-clip: text;\n}`;
     const cssSnippets = {
       'main-dark':    ht('#0CF4DF', '#254FE5', '#ffffff'),
       'main-light':   ht('#0CF4DF', '#1F3395', '#0B0B3C'),
