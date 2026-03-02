@@ -59,10 +59,10 @@ const statCards = [
     suffix: "%",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M11 17l-1.5 1.5a2.12 2.12 0 0 1-3 0L4 16" />
-        <path d="M2 10l4-2 4 3 5-4 5 3" />
-        <path d="M13 17l1.5 1.5a2.12 2.12 0 0 0 3 0L20 16" />
-        <path d="M10 13l4-3" />
+        <circle cx="12" cy="12" r="10" />
+        <circle cx="12" cy="12" r="6" />
+        <circle cx="12" cy="12" r="2" />
+        <line x1="22" y1="12" x2="18" y2="12" />
       </svg>
     ),
   },
@@ -475,7 +475,7 @@ export default function ROX() {
             {statCards.map((card, i) => (
               <div
                 key={card.label}
-                className="flex flex-col"
+                className="flex flex-col justify-between"
                 style={{
                   background: "rgba(6, 19, 65, 0.5)",
                   border: "1px solid rgba(255, 255, 255, 0.08)",
@@ -506,7 +506,6 @@ export default function ROX() {
                       fontSize: "14px",
                       color: "rgba(255, 255, 255, 0.4)",
                       lineHeight: "1.5",
-                      marginBottom: "10px",
                     }}
                   >
                     {card.description}
@@ -516,11 +515,12 @@ export default function ROX() {
                   style={{
                     fontFamily: "var(--font-inter)",
                     fontWeight: 600,
-                    fontSize: "48px",
+                    fontSize: "56px",
                     color: animationStarted ? getTierColor(cardValues[i]) : "rgba(255, 255, 255, 0.3)",
                     lineHeight: 1,
                     letterSpacing: "-0.02em",
                     transition: "color 0.3s ease",
+                    marginTop: "auto",
                     ...((!animationStarted) ? { animation: "roxPulse 1.5s ease-in-out infinite" } : {}),
                   }}
                 >
