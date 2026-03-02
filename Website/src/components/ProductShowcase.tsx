@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const products = [
@@ -284,13 +284,24 @@ function IntelligenceDashboardFrame({ color }: { color: string }) {
 
 export default function ProductShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startAutoPlay = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % products.length);
+    }, 7000);
+  }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % products.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+    startAutoPlay();
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [startAutoPlay]);
+
+  const goToStep = (i: number) => {
+    setActiveIndex(i);
+    startAutoPlay(); // reset timer so it doesn't immediately override
+  };
 
   const product = products[activeIndex];
 
@@ -399,17 +410,18 @@ export default function ProductShowcase() {
               />
             )}
             <button
-              onClick={() => setActiveIndex(i)}
-              className="relative flex items-center justify-center w-6 h-6 rounded-full transition-all duration-400"
+              onClick={() => goToStep(i)}
+              className="relative flex items-center justify-center w-9 h-9 rounded-full transition-all duration-400 cursor-pointer"
               style={{
                 background: i === activeIndex ? "linear-gradient(135deg, #0CF4DF, #5BA8F5)" : "transparent",
                 border: `1.5px solid ${i <= activeIndex ? "#0CF4DF" : "rgba(255,255,255,0.2)"}`,
               }}
-              aria-label={p.name}
+              aria-label={`Go to step ${p.step}: ${p.name}`}
             >
               <span
-                className="text-[10px] font-bold transition-colors duration-300"
+                className="font-bold transition-colors duration-300"
                 style={{
+                  fontSize: "13px",
                   fontFamily: "var(--font-inter)",
                   color: i === activeIndex ? "#0B0B3C" : i < activeIndex ? "#0CF4DF" : "rgba(255,255,255,0.3)",
                 }}
