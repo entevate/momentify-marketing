@@ -31,25 +31,25 @@ const stats = [
 
 const outcomes = [
   {
-    logo: "/logos/caterpillar.png",
+    logo: null,
     logoAlt: "Fortune 75 Manufacturer",
-    headline: "Dealer network engagement measured across 6 business units.",
-    body: "A Fortune 75 manufacturer deployed Momentify across multiple dealer groups to capture field interaction data that had never been tracked at scale. Engagement patterns surfaced across job sites, facilities, and recruiting events with consistent scoring across every touchpoint.",
-    tags: ["Field Sales", "Facilities"],
+    headline: "92% more leads in three years at the same event.",
+    body: "The Electric Power Division used Momentify across three consecutive years at DistribuTECH. Same show. Better data every time. Engagement depth, opt-in rates, and follow-up speed all improved year over year. The results didn't happen by accident. They compounded because the team could finally see what was working.",
+    tags: ["Trade Shows and Exhibits", "Electric Power"],
   },
   {
-    logo: "/logos/mustang-cat-color.png",
+    logo: "/logos/mustang-cat.png",
     logoAlt: "Mustang CAT",
-    headline: "Recruiting events scored for the first time with qualified candidate data.",
-    body: "Mustang Cat used Momentify at technical recruiting events to capture candidate intent, role fit, and engagement depth. The team identified high-fit candidates before the event closed instead of reviewing spreadsheets after the fact.",
+    headline: "7 hires traced back to a digital-first recruiting process they didn't have a year ago.",
+    body: "Mustang Cat had no digital recruiting process before Momentify. Every candidate interaction used to leave on paper or not at all. Now every student and advisor engagement is captured through iPad and mobile, scored by fit, and followed up with context attached. The pipeline built itself because the data was finally there to build it with.",
     tags: ["Technical Recruiting"],
   },
   {
     logo: null,
-    logoAlt: "Trade Show Exhibitor",
-    headline: "40% improvement in lead qualification at trade show events.",
-    body: "Across active clients using Momentify at trade shows, lead qualification rates improved by 40% compared to prior events using traditional badge scan methods. Follow-up speed dropped from days to hours.",
-    tags: ["Trade Shows and Exhibits"],
+    logoAlt: "Fortune 75 Manufacturer",
+    headline: "40 dealers received matched candidates from a single national program.",
+    body: "The Global Dealer Learning group used Momentify at national student events to identify technician candidates and route them directly to the right dealers. Students were matched by interest and fit before anyone left the floor. What used to end with a stack of business cards ended with 40 dealers receiving qualified candidates automatically.",
+    tags: ["Technical Recruiting", "Dealer Network"],
   },
 ];
 
