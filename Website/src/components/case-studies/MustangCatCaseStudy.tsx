@@ -66,17 +66,17 @@ const challengeCards = [
 const solutionTiles = [
   {
     headline: "Digital capture on and offline",
-    body: "iPad and mobile QR codes gave every candidate a way to enter their information on the spot. When schools restricted phones, Sarah passed the iPad. When there was no Wi-Fi, Momentify worked offline and synced later.",
+    body: "iPad and mobile QR registration gave every candidate a way to enter their information on the spot. When schools restricted phones, Sarah passed the iPad. When there was no Wi-Fi, Momentify worked offline and synced later.",
     icon: "ipad",
   },
   {
-    headline: "Two pipelines from one event",
+    headline: "Double the output from every event",
     body: "Students went into one pipeline toward Mustang CAT's Think BIG program. Advisors and instructors went into a second pipeline for ongoing school relationships. One event, two fully tracked candidate outcomes.",
     icon: "people",
   },
   {
     headline: "Same-day candidate follow-up",
-    body: "Candidates are scored by temperature, notes are attached to names, and follow-up goes out the same day the event ends. Those who showed real intent no longer wait days or weeks to hear back from the team.",
+    body: "Candidates are scored by temperature, notes are attached to names, and follow-up goes out the same day the event ends. Those who showed real intent no longer wait days or weeks to hear back.",
     icon: "clock",
   },
 ];
