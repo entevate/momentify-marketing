@@ -426,7 +426,7 @@ export default function MustangCatCaseStudy() {
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            opacity: 0.04,
+            opacity: 0.12,
             backgroundImage: `repeating-linear-gradient(
               -45deg,
               transparent,
@@ -583,7 +583,7 @@ export default function MustangCatCaseStudy() {
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            opacity: 0.035,
+            opacity: 0.12,
             backgroundImage: `repeating-linear-gradient(
               -45deg,
               transparent,
