@@ -702,24 +702,18 @@ export default function MustangCatCaseStudy() {
               {/* Photo placeholder */}
               {/* <!-- Replace with Sarah Bell headshot when available --> */}
               <div
-                className="flex items-center justify-center rounded-full flex-shrink-0"
+                className="rounded-full flex-shrink-0 overflow-hidden"
                 style={{
                   width: "56px",
                   height: "56px",
-                  background: "rgba(95, 217, 194, 0.15)",
                   border: "2px solid rgba(95, 217, 194, 0.3)",
                 }}
               >
-                <span
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontWeight: 700,
-                    fontSize: "18px",
-                    color: "#5FD9C2",
-                  }}
-                >
-                  SB
-                </span>
+                <img
+                  src="/sarahbell.jpeg"
+                  alt="Sarah Bell"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
               </div>
               <div className="text-left">
                 <p
@@ -995,24 +989,18 @@ export default function MustangCatCaseStudy() {
             >
               {/* <!-- Replace with Sarah Bell headshot when available --> */}
               <div
-                className="flex items-center justify-center rounded-full flex-shrink-0"
+                className="rounded-full flex-shrink-0 overflow-hidden"
                 style={{
                   width: "56px",
                   height: "56px",
-                  background: "rgba(6, 19, 65, 0.08)",
                   border: "2px solid rgba(6, 19, 65, 0.15)",
                 }}
               >
-                <span
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontWeight: 700,
-                    fontSize: "18px",
-                    color: "rgba(6, 19, 65, 0.40)",
-                  }}
-                >
-                  SB
-                </span>
+                <img
+                  src="/sarahbell.jpeg"
+                  alt="Sarah Bell"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
               </div>
               <div className="text-left">
                 <p
