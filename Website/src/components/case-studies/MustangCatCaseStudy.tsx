@@ -271,58 +271,6 @@ export default function MustangCatCaseStudy() {
           </svg>
         </div>
 
-        {/* Hero photo — Sarah at the booth */}
-        <div
-          className="absolute inset-0 z-[2] pointer-events-none hidden lg:block"
-        >
-          <div
-            className="absolute"
-            style={{
-              right: 0,
-              top: 0,
-              bottom: 0,
-              width: "45%",
-              overflow: "hidden",
-            }}
-          >
-            <img
-              src="/mustang1.png"
-              alt="Sarah Bell at the Mustang CAT booth"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center top",
-                filter: "grayscale(100%)",
-                opacity: 0.18,
-                mixBlendMode: "luminosity",
-              }}
-            />
-            {/* Teal monochromatic overlay */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(135deg, rgba(26, 138, 118, 0.4), rgba(4, 14, 40, 0.6))",
-                mixBlendMode: "multiply",
-              }}
-            />
-            {/* Left fade into gradient */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(to right, #040E28 0%, transparent 40%)",
-              }}
-            />
-            {/* Bottom fade */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background: "linear-gradient(to top, #040E28 0%, transparent 30%)",
-              }}
-            />
-          </div>
-        </div>
-
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12" style={{ paddingTop: "140px", paddingBottom: "100px" }}>
           {/* Eyebrow */}
           <motion.p
@@ -745,9 +693,26 @@ export default function MustangCatCaseStudy() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.6 }}
-          className="grid grid-cols-1 md:grid-cols-2"
+          className="grid grid-cols-1 md:grid-cols-3"
           style={{ maxHeight: "360px" }}
         >
+          {/* Sarah at the booth with tablet */}
+          <div className="relative overflow-hidden" style={{ height: "360px" }}>
+            <img
+              src="/mustang1.png"
+              alt="Sarah Bell at the Mustang CAT booth"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center 30%",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: "rgba(4, 14, 40, 0.15)" }}
+            />
+          </div>
           {/* Students engaging at the booth */}
           <div className="relative overflow-hidden" style={{ height: "360px" }}>
             <img
@@ -774,7 +739,7 @@ export default function MustangCatCaseStudy() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                objectPosition: "center 20%",
+                objectPosition: "center 45%",
               }}
             />
             <div
