@@ -38,8 +38,8 @@ const outcomes = [
     tags: ["Trade Shows and Exhibits", "Electric Power"],
   },
   {
-    logo: "/logos/mustang-cat.png",
-    logoAlt: "Mustang CAT",
+    logo: null,
+    logoAlt: "Fortune 75 Dealer",
     headline: "7 hires traced back to a digital-first recruiting process they didn't have a year ago.",
     body: "Mustang Cat had no digital recruiting process before Momentify. Every candidate interaction used to leave on paper or not at all. Now every student and advisor engagement is captured through iPad and mobile, scored by fit, and followed up with context attached. The pipeline built itself because the data was finally there to build it with.",
     tags: ["Technical Recruiting"],
@@ -203,31 +203,23 @@ export default function SocialProof() {
                 boxShadow: "0 2px 12px rgba(6, 19, 65, 0.04)",
               }}
             >
-              {/* Logo or tag */}
-              <div style={{ minHeight: "28px" }}>
-                {card.logo ? (
-                  <img
-                    src={card.logo}
-                    alt={card.logoAlt}
-                    className="opacity-50 group-hover:opacity-80 transition-opacity duration-200"
-                    style={{ maxHeight: "28px", width: "auto" }}
-                  />
-                ) : (
-                  <span
-                    style={{
-                      display: "inline-block",
-                      fontFamily: "var(--font-inter)",
-                      fontWeight: 500,
-                      fontSize: "11px",
-                      color: "rgba(6, 19, 65, 0.40)",
-                      background: "rgba(6, 19, 65, 0.06)",
-                      borderRadius: "20px",
-                      padding: "4px 12px",
-                    }}
-                  >
-                    {card.logoAlt}
-                  </span>
-                )}
+              {/* Pill tag */}
+              <div style={{ minHeight: "32px" }}>
+                <span
+                  style={{
+                    display: "inline-block",
+                    fontFamily: "var(--font-inter)",
+                    fontWeight: 600,
+                    fontSize: "13px",
+                    letterSpacing: "0.02em",
+                    color: "#061341",
+                    background: "rgba(6, 19, 65, 0.08)",
+                    borderRadius: "20px",
+                    padding: "6px 16px",
+                  }}
+                >
+                  {card.logoAlt}
+                </span>
               </div>
 
               {/* Divider */}
