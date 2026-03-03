@@ -22,7 +22,7 @@ const stagger = {
 /* ── Stats data ────────────────────────────────────── */
 
 const stats = [
-  { number: "10,000+", label: "Leads generated across 50 events in 18 months" },
+  { number: "10,000+", label: "Leads captured (with more than just a badge scan) across 50 events in 18 months" },
   { number: "65%+", label: "Of captured leads qualified for follow-up, versus an industry average below 20%" },
   { number: "$411M", label: "Potential pipeline value delivered to customers and dealers" },
 ];
