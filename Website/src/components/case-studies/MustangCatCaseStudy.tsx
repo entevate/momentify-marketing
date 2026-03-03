@@ -285,9 +285,10 @@ export default function MustangCatCaseStudy() {
             style={{
               fontFamily: "var(--font-inter)",
               fontWeight: 500,
-              fontSize: "clamp(32px, 4.5vw, 48px)",
+              fontSize: "clamp(36px, 5.5vw, 72px)",
               color: "#FFFFFF",
-              lineHeight: 1.1,
+              lineHeight: 1.08,
+              letterSpacing: "-0.02em",
               maxWidth: "820px",
               marginBottom: "24px",
             }}
@@ -302,10 +303,10 @@ export default function MustangCatCaseStudy() {
             transition={{ duration: 0.5, delay: 0.18 }}
             style={{
               fontFamily: "var(--font-inter)",
-              fontWeight: 400,
-              fontSize: "18px",
-              color: "rgba(255, 255, 255, 0.65)",
-              lineHeight: 1.65,
+              fontWeight: 300,
+              fontSize: "15px",
+              color: "rgba(255, 255, 255, 0.60)",
+              lineHeight: 1.5,
               maxWidth: "640px",
               marginBottom: "48px",
             }}
