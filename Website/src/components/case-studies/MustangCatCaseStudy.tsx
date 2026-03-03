@@ -271,6 +271,58 @@ export default function MustangCatCaseStudy() {
           </svg>
         </div>
 
+        {/* Hero photo — Sarah at the booth */}
+        <div
+          className="absolute inset-0 z-[2] pointer-events-none hidden lg:block"
+        >
+          <div
+            className="absolute"
+            style={{
+              right: 0,
+              top: 0,
+              bottom: 0,
+              width: "45%",
+              overflow: "hidden",
+            }}
+          >
+            <img
+              src="/mustang1.png"
+              alt="Sarah Bell at the Mustang CAT booth"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center top",
+                filter: "grayscale(100%)",
+                opacity: 0.18,
+                mixBlendMode: "luminosity",
+              }}
+            />
+            {/* Teal monochromatic overlay */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "linear-gradient(135deg, rgba(26, 138, 118, 0.4), rgba(4, 14, 40, 0.6))",
+                mixBlendMode: "multiply",
+              }}
+            />
+            {/* Left fade into gradient */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "linear-gradient(to right, #040E28 0%, transparent 40%)",
+              }}
+            />
+            {/* Bottom fade */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "linear-gradient(to top, #040E28 0%, transparent 30%)",
+              }}
+            />
+          </div>
+        </div>
+
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12" style={{ paddingTop: "140px", paddingBottom: "100px" }}>
           {/* Eyebrow */}
           <motion.p
@@ -684,6 +736,53 @@ export default function MustangCatCaseStudy() {
             })}
           </motion.div>
         </div>
+      </section>
+
+      {/* ═══════════════════ PHOTO STRIP ═════════════════ */}
+      <section style={{ padding: 0, overflow: "hidden" }}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{ duration: 0.6 }}
+          className="grid grid-cols-1 md:grid-cols-2"
+          style={{ maxHeight: "360px" }}
+        >
+          {/* Students engaging at the booth */}
+          <div className="relative overflow-hidden" style={{ height: "360px" }}>
+            <img
+              src="/mustang2.png"
+              alt="FFA students engaging with Momentify at the Mustang CAT booth"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center 30%",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: "rgba(4, 14, 40, 0.15)" }}
+            />
+          </div>
+          {/* Sarah and the Think BIG banner */}
+          <div className="relative overflow-hidden" style={{ height: "360px" }}>
+            <img
+              src="/mustang3.png"
+              alt="Sarah Bell with the Mustang CAT Think BIG banner"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center 20%",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{ background: "rgba(4, 14, 40, 0.15)" }}
+            />
+          </div>
+        </motion.div>
       </section>
 
       {/* ═══════════════════ 4. SARAH QUOTE 1 ══════════ */}
