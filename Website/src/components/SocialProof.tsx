@@ -183,7 +183,7 @@ export default function SocialProof() {
                     fontSize: "13px",
                     color: "rgba(6, 19, 65, 0.50)",
                     lineHeight: 1.4,
-                    maxWidth: "200px",
+                    maxWidth: "280px",
                   }}
                 >
                   {stat.label}
