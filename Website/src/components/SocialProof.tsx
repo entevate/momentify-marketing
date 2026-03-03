@@ -31,15 +31,15 @@ const stats = [
 
 const outcomes = [
   {
-    logo: null,
-    logoAlt: "Fortune 75 Manufacturer",
+    logo: "/logos/caterpillar-logo_black.png",
+    logoAlt: "Caterpillar",
     headline: "92% more leads across three consecutive years at the same industry event.",
     body: "The Electric Power Division used Momentify across three consecutive years at DistribuTECH. Same booth. Same show. Better data every time. Engagement depth, opt-in rates, and follow-up speed all improved year over year. The results compounded because the team could finally see what was working and what was not.",
     tags: ["Trade Shows and Exhibits"],
   },
   {
-    logo: null,
-    logoAlt: "Fortune 75 Dealer",
+    logo: "/logos/mustang-cat-color.png",
+    logoAlt: "Mustang CAT",
     headline: "7 hires traced back to a digital recruiting process that did not exist a year ago.",
     body: "This dealer had no digital recruiting process before Momentify. Every candidate interaction left on paper or not at all. Now every student and advisor engagement is captured on iPad and mobile, scored by fit, and followed up with context attached. The pipeline built itself because the data was finally there.",
     tags: ["Technical Recruiting"],
@@ -213,23 +213,32 @@ export default function SocialProof() {
                 boxShadow: "0 2px 12px rgba(6, 19, 65, 0.04)",
               }}
             >
-              {/* Pill tag */}
-              <div style={{ minHeight: "32px" }}>
-                <span
-                  style={{
-                    display: "inline-block",
-                    fontFamily: "var(--font-inter)",
-                    fontWeight: 600,
-                    fontSize: "13px",
-                    letterSpacing: "0.02em",
-                    color: "#061341",
-                    background: "rgba(6, 19, 65, 0.08)",
-                    borderRadius: "20px",
-                    padding: "6px 16px",
-                  }}
-                >
-                  {card.logoAlt}
-                </span>
+              {/* Logo or pill tag */}
+              <div style={{ minHeight: "32px", display: "flex", alignItems: "center" }}>
+                {card.logo ? (
+                  <img
+                    src={card.logo}
+                    alt={card.logoAlt}
+                    className="opacity-60 group-hover:opacity-90 transition-opacity duration-200"
+                    style={{ maxHeight: "32px", width: "auto" }}
+                  />
+                ) : (
+                  <span
+                    style={{
+                      display: "inline-block",
+                      fontFamily: "var(--font-inter)",
+                      fontWeight: 600,
+                      fontSize: "13px",
+                      letterSpacing: "0.02em",
+                      color: "#061341",
+                      background: "rgba(6, 19, 65, 0.08)",
+                      borderRadius: "20px",
+                      padding: "6px 16px",
+                    }}
+                  >
+                    {card.logoAlt}
+                  </span>
+                )}
               </div>
 
               {/* Divider */}
