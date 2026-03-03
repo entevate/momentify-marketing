@@ -837,7 +837,7 @@ export default function MustangCatCaseStudy() {
                 marginBottom: "64px",
               }}
             >
-              <span className="text-gradient-brand" style={{ fontWeight: 600 }}>600+</span> candidate engagements. <span className="text-gradient-brand" style={{ fontWeight: 600 }}>7</span> hired. <span className="text-gradient-brand" style={{ fontWeight: 600 }}>0</span> clipboards.
+              <span className="text-gradient-brand" style={{ fontWeight: 600 }}>600+</span> candidate engagements.<br /><span className="text-gradient-brand" style={{ fontWeight: 600 }}>7</span> hired. <span className="text-gradient-brand" style={{ fontWeight: 600 }}>0</span> clipboards.
             </motion.h2>
           </motion.div>
 
