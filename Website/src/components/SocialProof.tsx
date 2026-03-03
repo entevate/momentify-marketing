@@ -36,6 +36,7 @@ const outcomes = [
     headline: "92% more leads across three consecutive years at the same industry event.",
     body: "The Electric Power Division used Momentify across three consecutive years at DistribuTECH. Same booth. Same show. Better data every time. Engagement depth, opt-in rates, and follow-up speed all improved year over year. The results compounded because the team could finally see what was working and what was not.",
     tags: ["Trade Shows and Exhibits"],
+    link: "#",
   },
   {
     logo: "/logos/mustang-cat-color.png",
@@ -43,6 +44,7 @@ const outcomes = [
     headline: "7 hires traced back to a digital recruiting process that did not exist a year ago.",
     body: "This dealer had no digital recruiting process before Momentify. Every candidate interaction left on paper or not at all. Now every student and advisor engagement is captured on iPad and mobile, scored by fit, and followed up with context attached. The pipeline built itself because the data was finally there.",
     tags: ["Technical Recruiting"],
+    link: "/case-studies/mustang-cat",
   },
   {
     logo: "/logos/caterpillar-logo_black.png",
@@ -50,6 +52,7 @@ const outcomes = [
     headline: "40 dealers received matched candidates from a single national recruiting program.",
     body: "The Global Dealer Learning group used Momentify at national student events to identify technician candidates and route them to the right dealers. Students were matched by interest and fit before anyone left the floor. What used to end with a stack of business cards ended with qualified candidates delivered automatically.",
     tags: ["Technical Recruiting", "Trade Shows and Exhibits"],
+    link: "#",
   },
 ];
 
@@ -303,7 +306,7 @@ export default function SocialProof() {
 
               {/* Learn More */}
               <a
-                href="#"
+                href={item.link}
                 className="inline-flex items-center gap-1 mt-5 group/link"
                 style={{
                   fontFamily: "var(--font-inter)",
