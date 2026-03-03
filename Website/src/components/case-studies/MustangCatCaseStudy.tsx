@@ -121,16 +121,16 @@ function IconIpad() {
         width="22"
         height="26"
         rx="3"
-        stroke="#0CF4DF"
+        stroke="#5FD9C2"
         strokeWidth="1.8"
       />
-      <circle cx="16" cy="25" r="1.2" fill="#0CF4DF" />
+      <circle cx="16" cy="25" r="1.2" fill="#5FD9C2" />
       <line
         x1="9"
         y1="6"
         x2="23"
         y2="6"
-        stroke="#0CF4DF"
+        stroke="#5FD9C2"
         strokeWidth="1"
         strokeOpacity="0.3"
       />
@@ -147,17 +147,17 @@ function IconPeople() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="11" cy="10" r="4" stroke="#0CF4DF" strokeWidth="1.8" />
+      <circle cx="11" cy="10" r="4" stroke="#5FD9C2" strokeWidth="1.8" />
       <path
         d="M3 24c0-4.418 3.582-7 8-7s8 2.582 8 7"
-        stroke="#0CF4DF"
+        stroke="#5FD9C2"
         strokeWidth="1.8"
         strokeLinecap="round"
       />
-      <circle cx="22" cy="11" r="3" stroke="#0CF4DF" strokeWidth="1.5" strokeOpacity="0.6" />
+      <circle cx="22" cy="11" r="3" stroke="#5FD9C2" strokeWidth="1.5" strokeOpacity="0.6" />
       <path
         d="M25 24c0-3.314-2.239-5.5-5-6"
-        stroke="#0CF4DF"
+        stroke="#5FD9C2"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeOpacity="0.6"
@@ -175,17 +175,17 @@ function IconClock() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="16" cy="16" r="11" stroke="#0CF4DF" strokeWidth="1.8" />
+      <circle cx="16" cy="16" r="11" stroke="#5FD9C2" strokeWidth="1.8" />
       <polyline
         points="16,9 16,16 22,16"
-        stroke="#0CF4DF"
+        stroke="#5FD9C2"
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <path
         d="M25 7l3-3M28 7l-3 0M25 4l0 3"
-        stroke="#0CF4DF"
+        stroke="#5FD9C2"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeOpacity="0.5"
@@ -214,7 +214,7 @@ export default function MustangCatCaseStudy() {
           backgroundSize: "200% 200%",
           animation: "bgShift 16s ease-in-out infinite",
           backgroundImage:
-            "linear-gradient(135deg, #7C316D 0%, #0B0B3C 30%, #1A2E73 60%, #0B0B3C 100%)",
+            "linear-gradient(135deg, #040E28 0%, #0B0B3C 30%, #1A8A76 60%, #040E28 100%)",
           minHeight: "560px",
         }}
       >
@@ -286,7 +286,7 @@ export default function MustangCatCaseStudy() {
               fontFamily: "var(--font-inter)",
               fontWeight: 600,
               fontSize: "11px",
-              color: "#0CF4DF",
+              color: "#5FD9C2",
               letterSpacing: "0.14em",
               textTransform: "uppercase",
               marginBottom: "16px",
@@ -428,7 +428,7 @@ export default function MustangCatCaseStudy() {
                   fontFamily: "var(--font-inter)",
                   fontWeight: 600,
                   fontSize: "10px",
-                  color: "#0CF4DF",
+                  color: "#5FD9C2",
                   letterSpacing: "0.14em",
                   textTransform: "uppercase",
                   marginBottom: "16px",
@@ -551,7 +551,7 @@ export default function MustangCatCaseStudy() {
                 fontFamily: "var(--font-inter)",
                 fontWeight: 600,
                 fontSize: "10px",
-                color: "#0CF4DF",
+                color: "#5FD9C2",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
                 marginBottom: "16px",
@@ -653,7 +653,7 @@ export default function MustangCatCaseStudy() {
           backgroundSize: "200% 200%",
           animation: "bgShift 16s ease-in-out infinite",
           backgroundImage:
-            "linear-gradient(135deg, #7C316D 0%, #0B0B3C 30%, #1A2E73 60%, #0B0B3C 100%)",
+            "linear-gradient(135deg, #040E28 0%, #0B0B3C 30%, #1A8A76 60%, #040E28 100%)",
           padding: "80px 0",
         }}
       >
@@ -685,7 +685,7 @@ export default function MustangCatCaseStudy() {
                 fontFamily: "var(--font-inter)",
                 fontWeight: 500,
                 fontSize: "96px",
-                color: "#0CF4DF",
+                color: "#5FD9C2",
                 opacity: 0.4,
                 lineHeight: 0.8,
                 marginBottom: "8px",
@@ -722,8 +722,8 @@ export default function MustangCatCaseStudy() {
                 style={{
                   width: "56px",
                   height: "56px",
-                  background: "rgba(12, 244, 223, 0.15)",
-                  border: "2px solid rgba(12, 244, 223, 0.3)",
+                  background: "rgba(95, 217, 194, 0.15)",
+                  border: "2px solid rgba(95, 217, 194, 0.3)",
                 }}
               >
                 <span
@@ -731,7 +731,7 @@ export default function MustangCatCaseStudy() {
                     fontFamily: "var(--font-inter)",
                     fontWeight: 700,
                     fontSize: "18px",
-                    color: "#0CF4DF",
+                    color: "#5FD9C2",
                   }}
                 >
                   SB
@@ -780,7 +780,7 @@ export default function MustangCatCaseStudy() {
                 fontFamily: "var(--font-inter)",
                 fontWeight: 600,
                 fontSize: "10px",
-                color: "#0CF4DF",
+                color: "#5FD9C2",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
                 marginBottom: "16px",
@@ -917,8 +917,8 @@ export default function MustangCatCaseStudy() {
                     fontWeight: 600,
                     fontSize: "10px",
                     letterSpacing: "0.08em",
-                    color: "#0CF4DF",
-                    background: "rgba(12, 244, 223, 0.08)",
+                    color: "#5FD9C2",
+                    background: "rgba(95, 217, 194, 0.10)",
                     borderRadius: "20px",
                     padding: "4px 10px",
                   }}
@@ -938,8 +938,8 @@ export default function MustangCatCaseStudy() {
             style={{
               marginTop: "48px",
               maxWidth: "820px",
-              background: "rgba(12, 244, 223, 0.06)",
-              border: "1px solid rgba(12, 244, 223, 0.15)",
+              background: "rgba(95, 217, 194, 0.08)",
+              border: "1px solid rgba(95, 217, 194, 0.15)",
               borderRadius: "12px",
               padding: "28px 32px",
             }}
@@ -949,7 +949,7 @@ export default function MustangCatCaseStudy() {
                 fontFamily: "var(--font-inter)",
                 fontWeight: 600,
                 fontSize: "10px",
-                color: "#0CF4DF",
+                color: "#5FD9C2",
                 letterSpacing: "0.12em",
                 textTransform: "uppercase",
                 marginBottom: "12px",
@@ -1075,7 +1075,7 @@ export default function MustangCatCaseStudy() {
                   fontFamily: "var(--font-inter)",
                   fontWeight: 600,
                   fontSize: "10px",
-                  color: "#0CF4DF",
+                  color: "#5FD9C2",
                   letterSpacing: "0.14em",
                   textTransform: "uppercase",
                   marginBottom: "16px",
@@ -1119,7 +1119,7 @@ export default function MustangCatCaseStudy() {
                   fontFamily: "var(--font-inter)",
                   fontWeight: 600,
                   fontSize: "15px",
-                  color: "#0CF4DF",
+                  color: "#5FD9C2",
                   textDecoration: "none",
                 }}
               >
@@ -1145,8 +1145,8 @@ export default function MustangCatCaseStudy() {
                   fontFamily: "var(--font-inter)",
                   fontWeight: 600,
                   fontSize: "11px",
-                  color: "#0CF4DF",
-                  background: "rgba(12, 244, 223, 0.08)",
+                  color: "#5FD9C2",
+                  background: "rgba(95, 217, 194, 0.10)",
                   borderRadius: "20px",
                   padding: "4px 12px",
                   marginBottom: "16px",
@@ -1222,7 +1222,7 @@ export default function MustangCatCaseStudy() {
           backgroundSize: "200% 200%",
           animation: "bgShift 16s ease-in-out infinite",
           backgroundImage:
-            "linear-gradient(135deg, #7C316D 0%, #0B0B3C 30%, #1A2E73 60%, #0B0B3C 100%)",
+            "linear-gradient(135deg, #040E28 0%, #0B0B3C 30%, #1A8A76 60%, #040E28 100%)",
           padding: "120px 0",
         }}
       >
@@ -1254,7 +1254,7 @@ export default function MustangCatCaseStudy() {
                 fontFamily: "var(--font-inter)",
                 fontWeight: 600,
                 fontSize: "11px",
-                color: "#0CF4DF",
+                color: "#5FD9C2",
                 letterSpacing: "0.14em",
                 textTransform: "uppercase",
                 marginBottom: "16px",
