@@ -65,8 +65,8 @@ const challengeCards = [
 
 const solutionTiles = [
   {
-    headline: "Digital capture at the booth",
-    body: "iPad and mobile QR registration gave every candidate a way to enter their information on the spot. When schools restricted phones, Sarah passed the iPad. When there was no Wi-Fi, Momentify worked offline and synced later.",
+    headline: "Digital capture on and offline",
+    body: "iPad and mobile QR codes gave every candidate a way to enter their information on the spot. When schools restricted phones, Sarah passed the iPad. When there was no Wi-Fi, Momentify worked offline and synced later.",
     icon: "ipad",
   },
   {
