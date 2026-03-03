@@ -78,7 +78,9 @@ export default function FinalCTA() {
               color: "#FFFFFF",
             }}
           >
-            Stop guessing. Start measuring.
+            Stop guessing.
+            <br />
+            <span className="text-gradient-brand">Start measuring.</span>
           </motion.h2>
 
           {/* Subhead */}
@@ -93,7 +95,7 @@ export default function FinalCTA() {
               color: "rgba(255, 255, 255, 0.6)",
             }}
           >
-            Every interaction your team has is worth something. Momentify makes sure you know what.
+            Your team is already creating moments that matter. Momentify turns them into measurable outcomes you can prove, repeat, and scale.
           </motion.p>
 
           {/* CTA pair */}
@@ -144,20 +146,6 @@ export default function FinalCTA() {
             </a>
           </motion.div>
 
-          {/* Trust line */}
-          <motion.p
-            variants={fadeUp}
-            className="mt-8"
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontWeight: 300,
-              fontSize: "13px",
-              color: "rgba(255, 255, 255, 0.35)",
-              letterSpacing: "0.02em",
-            }}
-          >
-            No contracts. No IT procurement. Deploy in days.
-          </motion.p>
         </motion.div>
       </div>
     </section>
