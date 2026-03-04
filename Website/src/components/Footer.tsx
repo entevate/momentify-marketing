@@ -1,5 +1,5 @@
 const solutionLinks = [
-  { label: "Trade Shows & Exhibits", href: "#" },
+  { label: "Trade Shows & Exhibits", href: "/solutions/trade-shows" },
   { label: "Technical Recruiting", href: "#" },
   { label: "Field Sales Enablement", href: "#" },
   { label: "Facilities", href: "#" },

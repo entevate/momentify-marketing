@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 const solutions = [
-  { name: "Trade Shows & Exhibits", color: "#6B21D4", href: "#", description: "Outcome-driven booth experiences" },
+  { name: "Trade Shows & Exhibits", color: "#6B21D4", href: "/solutions/trade-shows", description: "Outcome-driven booth experiences" },
   { name: "Technical Recruiting", color: "#5FD9C2", href: "#", description: "Capture and engage top talent" },
   { name: "Field Sales Enablement", color: "#F2B33D", href: "#", description: "Smart content at the job site" },
   { name: "Facilities", color: "#3A2073", href: "#", description: "Showrooms, training centers, and more" },

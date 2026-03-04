@@ -28,6 +28,7 @@ const solutions = [
       "Compare performance across every show in your calendar, not just this one",
     ],
     cta: "Explore Trade Shows and Exhibits",
+    href: "/solutions/trade-shows",
     bg: "linear-gradient(135deg, #2D0770 0%, #4A0FA8 55%, #9B5FE8 100%)",
     geoFill1: "white",
     geoOpacity1: 0.05,
@@ -353,7 +354,7 @@ export default function Platform() {
 
                   {/* CTA button */}
                   <a
-                    href="#"
+                    href={sol.href || "#"}
                     className="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-[14px] font-semibold transition-all duration-150 hover:bg-white/10"
                     style={{
                       fontFamily: "var(--font-inter)",
