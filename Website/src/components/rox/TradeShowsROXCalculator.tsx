@@ -685,8 +685,88 @@ export default function TradeShowsROXCalculator() {
     const tierColor = getTierColor(displayScore);
     const interp = tierInterpretations[tierName];
 
+    const handleDownloadPDF = async () => {
+      const el = document.getElementById("rox-results");
+      if (!el) return;
+      const html2canvas = (await import("html2canvas")).default;
+      const jsPDF = (await import("jspdf")).default;
+      // Clone element at fixed 900px width for consistent PDF layout
+      const clone = el.cloneNode(true) as HTMLElement;
+      clone.style.width = "900px";
+      clone.style.minWidth = "900px";
+      clone.style.maxWidth = "900px";
+      clone.style.padding = "48px 40px";
+      clone.style.background = "linear-gradient(135deg, #2D0770 0%, #4A0FA8 55%, #9B5FE8 100%)";
+      clone.style.borderRadius = "0";
+      clone.style.position = "fixed";
+      clone.style.left = "-10000px";
+      clone.style.top = "0";
+      clone.style.zIndex = "-1";
+      document.body.appendChild(clone);
+      const canvas = await html2canvas(clone, { scale: 2, backgroundColor: "#2D0770", useCORS: true });
+      document.body.removeChild(clone);
+      const imgData = canvas.toDataURL("image/png");
+      const pdfWidth = 595; // A4 width in points
+      const pdfHeight = (canvas.height / canvas.width) * pdfWidth;
+      const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: [pdfWidth, pdfHeight + 80] });
+      // Header
+      pdf.setFillColor(45, 7, 112);
+      pdf.rect(0, 0, pdfWidth, 40, "F");
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(11);
+      pdf.setTextColor(255, 255, 255);
+      pdf.text("MOMENTIFY  |  Trade Show ROX Scorecard", 24, 26);
+      pdf.setFontSize(9);
+      pdf.setTextColor(180, 180, 220);
+      pdf.text("momentify.com/rox/trade-shows", pdfWidth - 24, 26, { align: "right" });
+      pdf.addImage(imgData, "PNG", 0, 40, pdfWidth, pdfHeight);
+      pdf.save(`Momentify-Trade-Show-ROX-Score-${displayScore}.pdf`);
+    };
+
+    const handleEmailResults = () => {
+      const subject = encodeURIComponent(`My Trade Show ROX Score: ${displayScore} (${tierName})`);
+      const body = encodeURIComponent(
+        `My Trade Show ROX Score: ${displayScore} / 100\nTier: ${tierName}\n\n` +
+        categoryNames.map((name, i) => `${name}: ${categoryScores[i] !== null ? Math.round(categoryScores[i]!) : "--"}`).join("\n") +
+        (bonusValue ? `\n\nPotential Value Generated: $${bonusValue.toLocaleString()}` : "") +
+        `\n\nCalculate your own ROX score: ${typeof window !== "undefined" ? window.location.href : ""}`
+      );
+      window.open(`mailto:?subject=${subject}&body=${body}`, "_self");
+    };
+
     return (
-      <div style={{ maxWidth: "900px", margin: "0 auto", padding: "80px 0 120px" }}>
+      <div style={{ maxWidth: "900px", margin: "0 auto", padding: "48px 0 64px" }}>
+        {/* Results header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "11px", color: "rgba(255,255,255,0.5)", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: "8px" }}>
+              YOUR RESULTS
+            </p>
+            <h2 style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "clamp(26px, 3.5vw, 40px)", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
+              <span style={{ color: "#FFFFFF" }}>Trade Show</span>{" "}
+              <span style={{ background: "linear-gradient(135deg, #0CF4DF, #254FE5)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>ROX Scorecard</span>
+            </h2>
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleDownloadPDF}
+              className="flex items-center gap-2 transition-all duration-200 hover:opacity-80 cursor-pointer"
+              style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#FFFFFF", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "10px 16px" }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+              Download PDF
+            </button>
+            <button
+              onClick={handleEmailResults}
+              className="flex items-center gap-2 transition-all duration-200 hover:opacity-80 cursor-pointer"
+              style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#FFFFFF", background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: "8px", padding: "10px 16px" }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+              Email Results
+            </button>
+          </div>
+        </div>
+
         {/* Back link */}
         <button
           onClick={handleRecalculate}
@@ -694,61 +774,64 @@ export default function TradeShowsROXCalculator() {
             fontFamily: "var(--font-inter)",
             fontWeight: 500,
             fontSize: "13px",
-            color: "#6B21D4",
+            color: "rgba(255,255,255,0.6)",
             background: "none",
             border: "none",
             cursor: "pointer",
             padding: 0,
-            marginBottom: "48px",
+            marginBottom: "24px",
             display: "flex",
             alignItems: "center",
             gap: "6px",
           }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6B21D4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
           Recalculate
         </button>
 
+        <div id="rox-results">
         {/* Score display */}
-        <div style={{ textAlign: "center", maxWidth: "480px", margin: "0 auto 64px" }}>
-          <CalcGauge score={displayScore} size="large" />
-          <p
-            className="-mt-4"
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontWeight: 600,
-              fontSize: "11px",
-              color: "rgba(6,19,65,0.4)",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              marginBottom: "8px",
-            }}
-          >
-            YOUR ROX TIER
-          </p>
-          <p
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontWeight: 600,
-              fontSize: "80px",
-              color: tierColor,
-              lineHeight: 1,
-              letterSpacing: "-0.03em",
-            }}
-          >
-            {displayScore}
-          </p>
-          <p
-            style={{
-              fontFamily: "var(--font-inter)",
-              fontWeight: 700,
-              fontSize: "20px",
-              color: tierColor,
-              marginTop: "8px",
-            }}
-          >
-            {tierName}
-          </p>
+        <div className="mb-8" style={{ background: "rgba(255,255,255,0.9)", borderRadius: "20px", padding: "48px 32px", border: "1px solid rgba(107,33,212,0.1)", boxShadow: "0 1px 3px rgba(107,33,212,0.04)" }}>
+          <div style={{ textAlign: "center", maxWidth: "480px", margin: "0 auto" }}>
+            <CalcGauge score={displayScore} size="large" />
+            <p
+              className="-mt-4"
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontWeight: 600,
+                fontSize: "11px",
+                color: "rgba(6,19,65,0.4)",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                marginBottom: "8px",
+              }}
+            >
+              YOUR ROX TIER
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontWeight: 600,
+                fontSize: "80px",
+                color: tierColor,
+                lineHeight: 1,
+                letterSpacing: "-0.03em",
+              }}
+            >
+              {displayScore}
+            </p>
+            <p
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontWeight: 700,
+                fontSize: "20px",
+                color: tierColor,
+                marginTop: "8px",
+              }}
+            >
+              {tierName}
+            </p>
+          </div>
         </div>
 
         {/* Score breakdown 2x2 grid */}
@@ -769,7 +852,7 @@ export default function TradeShowsROXCalculator() {
               <div
                 key={name}
                 style={{
-                  background: "#FFFFFF",
+                  background: "rgba(255,255,255,0.9)",
                   border: "1px solid rgba(107,33,212,0.1)",
                   borderRadius: "14px",
                   padding: "24px 28px",
@@ -798,35 +881,29 @@ export default function TradeShowsROXCalculator() {
           <div
             className="mb-8"
             style={{
-              background: "rgba(242,179,61,0.06)",
+              background: "rgba(255,255,255,0.9)",
               border: "1px solid rgba(242,179,61,0.2)",
               borderRadius: "16px",
-              padding: "32px 40px",
+              padding: "24px 28px",
             }}
           >
-            <div className="grid grid-cols-1 lg:grid-cols-[60%_40%] gap-10">
-              <div>
-                <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "10px", color: "#F2B33D", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: "12px" }}>
-                  POTENTIAL VALUE GENERATED
-                </p>
-                <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "56px", color: "#F2B33D", lineHeight: 1, marginBottom: "8px" }}>
-                  ${bonusValue.toLocaleString()}
-                </p>
-                <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "14px", color: "rgba(6,19,65,0.5)" }}>
-                  Based on {bonus_qualifiedLeads.value} qualified leads at ${parseFloat(bonus_valuePerLead.value).toLocaleString()} per lead.
-                </p>
-              </div>
-              <div>
-                <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "14px", color: "rgba(6,19,65,0.55)", lineHeight: 1.7 }}>
-                  This is the estimated pipeline value sitting inside your captured leads. Your ROX score tells you how effectively your process converts that opportunity. A Critical Gap score with high potential value means the pipeline is there. The process to capture it is not.
-                </p>
-                {totalScore !== null && totalScore < 70 && (
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "14px", color: "rgba(242,179,61,0.9)", lineHeight: 1.7, marginTop: "12px" }}>
-                    Improving your lowest-scoring categories directly increases the share of this value your team actually closes.
-                  </p>
-                )}
-              </div>
-            </div>
+            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "10px", color: "#F2B33D", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: "12px" }}>
+              POTENTIAL VALUE GENERATED
+            </p>
+            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "56px", color: "#F2B33D", lineHeight: 1, marginBottom: "8px" }}>
+              ${bonusValue.toLocaleString()}
+            </p>
+            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "14px", color: "rgba(6,19,65,0.5)", marginBottom: "16px" }}>
+              Based on {bonus_qualifiedLeads.value} qualified leads at ${parseFloat(bonus_valuePerLead.value).toLocaleString()} per lead.
+            </p>
+            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "14px", color: "rgba(6,19,65,0.55)", lineHeight: 1.7 }}>
+              This is the estimated pipeline value sitting inside your captured leads. Your ROX score tells you how effectively your process converts that opportunity. A Critical Gap score with high potential value means the pipeline is there. The process to capture it is not.
+            </p>
+            {totalScore !== null && totalScore < 70 && (
+              <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "14px", color: "rgba(242,179,61,0.9)", lineHeight: 1.7, marginTop: "12px" }}>
+                Improving your lowest-scoring categories directly increases the share of this value your team actually closes.
+              </p>
+            )}
           </div>
         )}
 
@@ -835,7 +912,7 @@ export default function TradeShowsROXCalculator() {
           <div
             className="mb-8"
             style={{
-              background: "rgba(107,33,212,0.03)",
+              background: "rgba(255,255,255,0.9)",
               borderLeft: `3px solid ${tierColor}`,
               borderRadius: "0 14px 14px 0",
               padding: "28px 32px",
@@ -852,31 +929,35 @@ export default function TradeShowsROXCalculator() {
 
         {/* Momentify impact block */}
         {lowestCategories.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12">
-            {lowestCategories.map((cat) => {
-              const impact = impactLines[cat.name];
-              if (!impact) return null;
-              return (
-                <div key={cat.name}>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "11px", color: "#6B21D4", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>
-                    {cat.name}
-                  </p>
-                  <h4 style={{ fontFamily: "var(--font-inter)", fontWeight: 700, fontSize: "16px", color: "#061341", marginBottom: "6px", lineHeight: 1.4 }}>
-                    {impact.headline}
-                  </h4>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.5)", lineHeight: 1.5 }}>
-                    {impact.body}
-                  </p>
-                </div>
-              );
-            })}
+          <div className="mb-12" style={{ background: "rgba(255,255,255,0.9)", borderRadius: "16px", padding: "32px", border: "1px solid rgba(107,33,212,0.1)", boxShadow: "0 1px 3px rgba(107,33,212,0.04)" }}>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {lowestCategories.map((cat) => {
+                const impact = impactLines[cat.name];
+                if (!impact) return null;
+                return (
+                  <div key={cat.name}>
+                    <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "11px", color: "#6B21D4", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>
+                      {cat.name}
+                    </p>
+                    <h4 style={{ fontFamily: "var(--font-inter)", fontWeight: 700, fontSize: "16px", color: "#061341", marginBottom: "6px", lineHeight: 1.4 }}>
+                      {impact.headline}
+                    </h4>
+                    <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.5)", lineHeight: 1.5 }}>
+                      {impact.body}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
+
+        </div>
 
         {/* Consultation form */}
         <div
           style={{
-            background: "#FFFFFF",
+            background: "rgba(255,255,255,0.9)",
             border: "1px solid rgba(107,33,212,0.1)",
             borderRadius: "20px",
             padding: "40px 48px",
@@ -890,7 +971,8 @@ export default function TradeShowsROXCalculator() {
                   FREE 30-MINUTE CONSULTATION
                 </p>
                 <h3 style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "28px", color: "#061341", marginBottom: "8px" }}>
-                  See what your score looks like with Momentify.
+                  See how much your score could improve with{" "}
+                  <span style={{ background: "linear-gradient(135deg, #0CF4DF, #254FE5)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>Momentify</span>.
                 </h3>
                 <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "15px", color: "rgba(6,19,65,0.55)", lineHeight: 1.65, marginBottom: "32px", maxWidth: "600px" }}>
                   We&apos;ll walk through your results and show you exactly where Momentify moves the needle on your lowest-scoring categories.
@@ -1076,13 +1158,17 @@ export default function TradeShowsROXCalculator() {
                         style={{
                           fontFamily: "var(--font-inter)",
                           fontWeight: 500,
-                          fontSize: "clamp(24px, 3vw, 34px)",
+                          fontSize: "clamp(28px, 4vw, 42px)",
                           color: "#FFFFFF",
-                          lineHeight: 1.2,
+                          lineHeight: 1.15,
                           marginBottom: "24px",
                         }}
                       >
-                        You&apos;re spending thousands on events, but do you actually know what&apos;s working?
+                        You&apos;re spending thousands
+                        <br />
+                        (if not more) on events, do you
+                        <br />
+                        know what&apos;s working?
                       </motion.h2>
                       <motion.p
                         variants={fadeUp}
@@ -1095,7 +1181,7 @@ export default function TradeShowsROXCalculator() {
                           marginBottom: "36px",
                         }}
                       >
-                        Prove the value. Justify the investment.<br />Optimize every interaction.
+                        Prove the value. Justify the investment. Optimize every interaction.
                       </motion.p>
                       <motion.p
                         variants={fadeUp}
@@ -1154,6 +1240,34 @@ export default function TradeShowsROXCalculator() {
                     {/* Score panel on mobile (before inputs) */}
                     <div className="lg:hidden mb-8">
                       <LiveScorePanel totalScore={totalScore} categoryNames={categoryNames} categoryScores={categoryScores} skippedCount={skippedCount} bonusValue={bonusValue} />
+                    </div>
+
+                    {/* Reset button */}
+                    <div className="flex justify-end mb-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setC1Visitors({ value: "", skipped: false });
+                          setC1Leads({ value: "", skipped: false });
+                          setC2aAvgTime({ value: "", skipped: false });
+                          setC2aTargetTime({ value: "", skipped: false });
+                          setC2bMeaningful({ value: "", skipped: false });
+                          setC2bTotalLeads({ value: "", skipped: false });
+                          setC3Days({ value: "", skipped: false });
+                          setC4Conversions({ value: "", skipped: false });
+                          setC4TotalLeads({ value: "", skipped: false });
+                          setBonusQualifiedLeads({ value: "", skipped: false });
+                          setBonusValuePerLead({ value: "", skipped: false });
+                          setEngagementOptionA(false);
+                          lastAutoC2b.current = "";
+                          lastAutoC4.current = "";
+                        }}
+                        className="flex items-center gap-1.5 transition-all duration-200 hover:opacity-80 cursor-pointer"
+                        style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "rgba(255,255,255,0.5)", background: "none", border: "none", padding: 0 }}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 2v6h6" /><path d="M2.5 8a10 10 0 1 1 2.3 5.5" /></svg>
+                        Reset Fields
+                      </button>
                     </div>
 
                     {/* Calculator inputs */}

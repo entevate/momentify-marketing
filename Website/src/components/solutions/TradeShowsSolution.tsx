@@ -269,9 +269,13 @@ export default function TradeShowsSolution() {
             className="leading-[1.08]"
             style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "clamp(34px, 5.5vw, 52px)", color: "#FFFFFF", letterSpacing: "-0.02em", maxWidth: "820px", marginBottom: "20px" }}
           >
-            Your booth deserves more
-            <br />
-            than just badge scans
+            Your booth deserves
+            <br className="sm:hidden" />
+            {" "}more
+            <br className="hidden sm:block" />
+            {" "}than just
+            <br className="sm:hidden" />
+            {" "}badge scans
           </motion.h1>
 
           <motion.p
@@ -280,7 +284,9 @@ export default function TradeShowsSolution() {
             transition={{ duration: 0.5, delay: 0.18 }}
             style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "clamp(16px, 2vw, 20px)", color: "rgba(255, 255, 255, 0.85)", letterSpacing: "-0.01em", maxWidth: "660px", marginBottom: "16px" }}
           >
-            The engagement platform between &ldquo;Hello&rdquo; and CRM.
+            The engagement platform between
+            <br className="sm:hidden" />
+            {" "}&ldquo;Hello&rdquo; and CRM.
           </motion.p>
 
           <motion.p
@@ -296,7 +302,7 @@ export default function TradeShowsSolution() {
 
           {/* CTA pair */}
           <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.30 }} className="flex flex-col sm:flex-row items-start gap-4" style={{ marginTop: "48px" }}>
-            <a href="#rox" className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]" style={{ fontFamily: "var(--font-inter)", color: "#FFFFFF", background: "linear-gradient(135deg, rgba(155, 95, 232, 0.5), rgba(196, 165, 240, 0.4))", border: "1.5px solid rgba(196, 165, 240, 0.35)" }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(196, 165, 240, 0.6)"; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(196, 165, 240, 0.35)"; }}>
+            <a href="/rox/trade-shows" className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]" style={{ fontFamily: "var(--font-inter)", color: "#FFFFFF", background: "linear-gradient(135deg, rgba(155, 95, 232, 0.5), rgba(196, 165, 240, 0.4))", border: "1.5px solid rgba(196, 165, 240, 0.35)" }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(196, 165, 240, 0.6)"; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(196, 165, 240, 0.35)"; }}>
               Calculate Your Trade Show ROX
             </a>
             <a href="#demo" className="inline-flex items-center justify-center font-semibold text-[14px] text-white py-3.5 px-7 rounded-lg transition-all duration-200 hover:bg-white/[0.08]" style={{ fontFamily: "var(--font-inter)", border: "1.5px solid rgba(255, 255, 255, 0.35)", background: "transparent" }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.6)"; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.35)"; }}>
@@ -518,7 +524,7 @@ export default function TradeShowsSolution() {
             transition={{ duration: 0.5 }}
             style={{ textAlign: "center", marginBottom: "80px" }}
           >
-            <a href="#rox" className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]" style={{ fontFamily: "var(--font-inter)", color: "#FFFFFF", background: "linear-gradient(135deg, rgba(155, 95, 232, 0.6), rgba(196, 165, 240, 0.5))", border: "1.5px solid rgba(196, 165, 240, 0.35)" }}>
+            <a href="/rox/trade-shows" className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]" style={{ fontFamily: "var(--font-inter)", color: "#FFFFFF", background: "linear-gradient(135deg, rgba(155, 95, 232, 0.6), rgba(196, 165, 240, 0.5))", border: "1.5px solid rgba(196, 165, 240, 0.35)" }}>
               Calculate Your Trade Show ROX
             </a>
             <p className="mt-3" style={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "13px", color: "rgba(255, 255, 255, 0.40)" }}>
@@ -684,7 +690,7 @@ export default function TradeShowsSolution() {
               Discover how Momentify turns trade show and exhibit chaos into clarity, with better tools, better data, and better outcomes.
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-start gap-4">
-              <a href="#rox" className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]" style={{ fontFamily: "var(--font-inter)", color: "#FFFFFF", background: "linear-gradient(135deg, rgba(155, 95, 232, 0.5), rgba(196, 165, 240, 0.4))", border: "1.5px solid rgba(196, 165, 240, 0.35)" }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(196, 165, 240, 0.6)"; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(196, 165, 240, 0.35)"; }}>
+              <a href="/rox/trade-shows" className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]" style={{ fontFamily: "var(--font-inter)", color: "#FFFFFF", background: "linear-gradient(135deg, rgba(155, 95, 232, 0.5), rgba(196, 165, 240, 0.4))", border: "1.5px solid rgba(196, 165, 240, 0.35)" }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(196, 165, 240, 0.6)"; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(196, 165, 240, 0.35)"; }}>
                 Calculate Your Trade Show ROX
               </a>
               <a href="#demo" className="inline-flex items-center justify-center font-semibold text-[14px] text-white py-3.5 px-7 rounded-lg transition-all duration-200 hover:bg-white/[0.08]" style={{ fontFamily: "var(--font-inter)", border: "1.5px solid rgba(255, 255, 255, 0.35)", background: "transparent" }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.6)"; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.35)"; }}>
