@@ -94,8 +94,9 @@ function getTierName(value: number): string {
 
 const calculatorCards = [
   {
-    name: "Trade Shows and Exhibits",
-    description: "Measure booth performance across lead capture, engagement, and conversion.",
+    name: "Trade Show & Exhibits",
+    description: "Score booth results on lead capture, engagement, and conversion rate.",
+    href: "/rox/trade-shows",
     icon: (
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="4" y="10" width="28" height="18" rx="2" />
@@ -110,6 +111,7 @@ const calculatorCards = [
   {
     name: "Technical Recruiting",
     description: "Score your recruiting events on candidate quality and follow-up speed.",
+    href: "/rox/recruiting",
     icon: (
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="15" cy="12" r="6" />
@@ -120,7 +122,8 @@ const calculatorCards = [
   },
   {
     name: "Field Sales",
-    description: "Measure rep-level engagement across job sites, facilities, and customer visits.",
+    description: "Track rep engagement across job sites, facilities, and customer visits.",
+    href: "/rox/field-sales",
     icon: (
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="14" cy="14" r="4" />
@@ -132,13 +135,27 @@ const calculatorCards = [
     ),
   },
   {
-    name: "Facilities and Venues",
-    description: "Track interaction depth across showrooms, demo floors, and training centers.",
+    name: "Facilities",
+    description: "Measure interaction depth across showrooms, demos, and training centers.",
+    href: "/rox/facilities",
     icon: (
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="6" y="14" width="24" height="18" rx="2" />
         <polyline points="6 14 18 6 30 14" />
         <rect x="14" y="22" width="8" height="10" />
+      </svg>
+    ),
+  },
+  {
+    name: "Venues",
+    description: "Score event spaces on visitor engagement, interaction, and conversion.",
+    href: "/rox/events",
+    icon: (
+      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4 28h28" />
+        <path d="M8 28V16l10-8 10 8v12" />
+        <path d="M14 28v-8h8v8" />
+        <circle cx="18" cy="16" r="2" />
       </svg>
     ),
   },
@@ -387,7 +404,7 @@ export default function ROX() {
             className="hidden md:block flex-shrink-0"
           >
             <a
-              href="#"
+              href="/what-is-rox"
               className="inline-flex items-center justify-center font-semibold text-[13px] py-3 px-6 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]"
               style={{
                 background: "linear-gradient(135deg, #00BBA5, #1A56DB)",
@@ -615,7 +632,7 @@ export default function ROX() {
 
           <motion.div
             variants={stagger}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4"
           >
             {calculatorCards.map((card) => (
               <motion.div
@@ -637,22 +654,21 @@ export default function ROX() {
               >
                 <div className="mb-4">{card.icon}</div>
                 <p
-                  className="mb-2"
+                  className="mb-2 text-[17px] lg:text-[14px]"
                   style={{
                     fontFamily: "var(--font-inter)",
                     fontWeight: 500,
-                    fontSize: "15px",
                     color: "#FFFFFF",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {card.name}
                 </p>
                 <p
-                  className="mb-5"
+                  className="mb-5 text-[15px] lg:text-[13px]"
                   style={{
                     fontFamily: "var(--font-inter)",
                     fontWeight: 300,
-                    fontSize: "13px",
                     color: "rgba(255, 255, 255, 0.55)",
                     lineHeight: "1.5",
                   }}
@@ -660,7 +676,7 @@ export default function ROX() {
                   {card.description}
                 </p>
                 <a
-                  href="#"
+                  href={card.href}
                   className="hover:underline"
                   style={{
                     fontFamily: "var(--font-inter)",
@@ -678,7 +694,7 @@ export default function ROX() {
 
           <motion.div variants={fadeUp} className="mt-10 flex items-center gap-6 flex-wrap">
             <a
-              href="#"
+              href="/what-is-rox"
               className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]"
               style={{
                 background: "linear-gradient(135deg, #00BBA5, #1A56DB)",

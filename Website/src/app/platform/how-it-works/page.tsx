@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Navigation from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import HowItWorksContent from "@/components/HowItWorksContent";
 
 export const metadata: Metadata = {
@@ -14,7 +13,6 @@ export default function HowItWorksPage() {
     <main>
       <Navigation />
       <HowItWorksContent />
-      <Footer />
     </main>
   );
 }

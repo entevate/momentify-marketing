@@ -39,10 +39,10 @@ const AMBER = "#F2B33D";
 /* ── Step colors (from brand palette) ──────────────── */
 
 const STEP_COLORS = {
-  web: "#1A56DB",       // Blue
-  explorer: "#00BBA5",  // Teal
-  intelligence: "#9B5FE8", // Violet
-  engage: "#F2B33D",    // Amber
+  web: "#00BBA5",
+  explorer: "#00BBA5",
+  intelligence: "#00BBA5",
+  engage: "#00BBA5",
 };
 
 /* ── Main-Minimal SVG overlay ──────────────────────── */
@@ -408,7 +408,9 @@ export default function HowItWorksContent() {
               marginBottom: "24px",
             }}
           >
-            Four steps. One platform.
+            Four steps.
+            <br className="sm:hidden" />{" "}
+            One platform.
             <br />
             Every interaction measured.
           </motion.h1>
@@ -430,7 +432,9 @@ export default function HowItWorksContent() {
           >
             Momentify runs before, during, and after every moment. Setup happens in <strong>Web</strong>.
             <br className="hidden sm:block" />{" "}
-            Engagement happens through <strong>Explorer</strong>. Insight comes from <strong>Intelligence</strong>. Follow-up closes the loop with <strong>Engage</strong>.
+            Engagement happens through <strong>Explorer</strong>. Insight comes from <strong>Intelligence</strong>.
+            <br className="hidden sm:block" />{" "}
+            Follow-up closes the loop with <strong>Engage</strong>.
           </motion.p>
 
           {/* Step nav pills */}
@@ -438,7 +442,7 @@ export default function HowItWorksContent() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.32 }}
-            className="flex flex-wrap gap-3"
+            className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3"
           >
             {stepNav.map((step) => {
               const isActive = activeStep === step.id;
@@ -482,12 +486,10 @@ export default function HowItWorksContent() {
               key={col.label}
               variants={fadeUp}
               style={{
-                paddingRight: i < 3 ? "32px" : "0",
-                paddingLeft: i > 0 ? "32px" : "0",
                 borderRight:
                   i < 3 ? "1px solid rgba(6,19,65,0.08)" : "none",
               }}
-              className="py-4 lg:py-0 border-b lg:border-b-0 border-b-[rgba(6,19,65,0.06)] last:border-b-0"
+              className={`py-4 lg:py-0 border-b lg:border-b-0 border-b-[rgba(6,19,65,0.06)] last:border-b-0 ${i < 3 ? "lg:pr-8" : ""} ${i > 0 ? "lg:pl-8" : ""}`}
             >
               <div style={{ width: "24px", height: "3px", background: col.color, borderRadius: "2px", marginBottom: "12px" }} />
               <p
@@ -895,7 +897,9 @@ export default function HowItWorksContent() {
                   marginBottom: "8px",
                 }}
               >
-                Follow up. Convert. Close the loop.
+                Follow up. Convert.
+                <br className="sm:hidden" />{" "}
+                Close the loop.
               </motion.h2>
               <motion.p
                 variants={fadeUp}
@@ -1402,19 +1406,17 @@ export default function HowItWorksContent() {
             {/* CTA pair */}
             <motion.div
               variants={fadeUp}
-              className="flex flex-col sm:flex-row items-start gap-4"
+              className="flex flex-row gap-3 sm:gap-4"
             >
               {/* Primary */}
               <a
                 href="#demo"
-                className="inline-block transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[14px] py-2.5 sm:py-3.5 px-3 sm:px-7 transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
                 style={{
                   fontFamily: "var(--font-inter)",
                   fontWeight: 600,
-                  fontSize: "14px",
                   color: "#FFFFFF",
                   background: "linear-gradient(135deg, #00BBA5, #1A56DB)",
-                  padding: "16px 36px",
                   borderRadius: "8px",
                   letterSpacing: "-0.01em",
                 }}
@@ -1425,14 +1427,12 @@ export default function HowItWorksContent() {
               {/* Secondary */}
               <a
                 href="/what-is-rox"
-                className="inline-block transition-all duration-200"
+                className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[14px] py-2.5 sm:py-3.5 px-3 sm:px-7 transition-all duration-200"
                 style={{
                   fontFamily: "var(--font-inter)",
                   fontWeight: 500,
-                  fontSize: "14px",
                   color: "#FFFFFF",
                   background: "transparent",
-                  padding: "15px 32px",
                   borderRadius: "8px",
                   border: "1.5px solid rgba(255, 255, 255, 0.20)",
                 }}

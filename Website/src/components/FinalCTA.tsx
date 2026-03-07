@@ -74,7 +74,7 @@ export default function FinalCTA() {
               fontFamily: "var(--font-inter)",
               fontWeight: 500,
               letterSpacing: "-0.02em",
-              fontSize: "clamp(28px, 4.5vw, 52px)",
+              fontSize: "clamp(34px, 5vw, 60px)",
               color: "#FFFFFF",
             }}
           >
@@ -101,19 +101,17 @@ export default function FinalCTA() {
           {/* CTA pair */}
           <motion.div
             variants={fadeUp}
-            className="mt-10 flex flex-col sm:flex-row items-start gap-4"
+            className="mt-10 flex flex-row gap-3 sm:gap-4"
           >
             {/* Primary */}
             <a
               href="#demo"
-              className="inline-block transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[14px] py-2.5 sm:py-3.5 px-3 sm:px-7 transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
               style={{
                 fontFamily: "var(--font-inter)",
                 fontWeight: 600,
-                fontSize: "14px",
                 color: "#FFFFFF",
                 background: "linear-gradient(135deg, #00BBA5, #1A56DB)",
-                padding: "14px 32px",
                 borderRadius: "8px",
                 letterSpacing: "-0.01em",
               }}
@@ -123,15 +121,13 @@ export default function FinalCTA() {
 
             {/* Secondary */}
             <a
-              href="#rox"
-              className="inline-block transition-all duration-200"
+              href="/what-is-rox"
+              className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[14px] py-2.5 sm:py-3.5 px-3 sm:px-7 transition-all duration-200"
               style={{
                 fontFamily: "var(--font-inter)",
                 fontWeight: 500,
-                fontSize: "14px",
                 color: "#FFFFFF",
                 background: "transparent",
-                padding: "13px 28px",
                 borderRadius: "8px",
                 border: "1.5px solid rgba(255, 255, 255, 0.20)",
               }}

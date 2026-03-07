@@ -34,14 +34,14 @@ const stagger = {
 function VioletBracket() {
   return (
     <>
-      {/* Top color bar */}
+      {/* Top color bar — hidden on mobile */}
       <div
-        className="absolute top-0 left-0 right-0 z-[1]"
+        className="absolute top-0 left-0 right-0 z-[1] hidden sm:block"
         style={{ height: "3px", background: "linear-gradient(90deg, #9B5FE8, #6B21D4)" }}
       />
-      {/* L-shaped corner brackets */}
+      {/* L-shaped corner brackets — hidden on mobile */}
       <svg
-        className="pointer-events-none absolute inset-0 w-full h-full"
+        className="pointer-events-none absolute inset-0 w-full h-full hidden sm:block"
         viewBox="0 0 1440 900"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -262,6 +262,22 @@ export default function TradeShowsSolution() {
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12" style={{ paddingTop: "140px", paddingBottom: "100px" }}>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.05 }}
+            style={{
+              fontFamily: "var(--font-inter)",
+              fontWeight: 600,
+              fontSize: "11px",
+              color: "#00BBA5",
+              letterSpacing: "0.14em",
+              textTransform: "uppercase" as const,
+              marginBottom: "16px",
+            }}
+          >
+            Trade Shows &amp; Exhibits
+          </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -296,7 +312,7 @@ export default function TradeShowsSolution() {
             style={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "15px", color: "rgba(255, 255, 255, 0.55)", lineHeight: 1.5, maxWidth: "560px", marginBottom: "48px" }}
           >
             Enrich every in-person moment with meaningful engagement data.
-            <br />
+            <br className="hidden sm:block" />{" "}
             Score leads by intent. Follow up before the competition does.
           </motion.p>
 
@@ -370,8 +386,8 @@ export default function TradeShowsSolution() {
       {/* ═══════════════════ 2. WHY MOMENTIFY + FEATURES ════════ */}
       {/* VIOLET-BRACKET background from brand kit */}
       <section
-        className="relative py-16 sm:py-24 overflow-hidden"
-        style={{ background: "linear-gradient(145deg, #FCFAFF 0%, #F5F0FC 100%)" }}
+        className="relative py-16 sm:py-24 overflow-hidden sm:mt-0"
+        style={{ background: "linear-gradient(145deg, #FCFAFF 0%, #F5F0FC 100%)", marginTop: "-2px" }}
       >
         <VioletBracket />
 
@@ -449,7 +465,9 @@ export default function TradeShowsSolution() {
           {/* ROX header */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }} variants={headerVariants} style={{ textAlign: "center", marginBottom: "48px" }}>
             <motion.p variants={fadeUp} className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4" style={{ color: "rgba(255, 255, 255, 0.6)", fontFamily: "var(--font-inter)" }}>
-              Trade Shows &amp; Exhibits Return on Experience (ROX)™
+              Trade Shows &amp; Exhibits
+              <br className="sm:hidden" />{" "}
+              Return on Experience (ROX)™
             </motion.p>
             <motion.h2 variants={fadeUp} className="leading-[1.1] mx-auto" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, letterSpacing: "-0.02em", fontSize: "clamp(31px, 5vw, 46px)", color: "#FFFFFF", maxWidth: "770px" }}>
               Do you know your

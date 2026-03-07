@@ -98,7 +98,7 @@ const verticals = [
     linkText: "Calculate Trade Show ROX",
     href: "/rox/trade-shows",
     active: true,
-    color: "#6B21D4",
+    color: "#A855F7",
     bgTint: "rgba(107, 33, 212, 0.06)",
     borderColor: "rgba(107, 33, 212, 0.15)",
   },
@@ -128,7 +128,7 @@ const verticals = [
     linkText: "Calculate Facilities ROX",
     href: "/rox/facilities",
     active: false,
-    color: "#3A2073",
+    color: "#8B5CF6",
     bgTint: "rgba(58, 32, 115, 0.06)",
     borderColor: "rgba(58, 32, 115, 0.15)",
   },
@@ -196,7 +196,7 @@ export default function WhatIsROX() {
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12" style={{ paddingTop: "160px", paddingBottom: "120px" }}>
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between lg:gap-12">
 
             {/* Left column: text + buttons */}
             <div className="flex-1 min-w-0">
@@ -227,7 +227,7 @@ export default function WhatIsROX() {
                 style={{
                   fontFamily: "var(--font-inter)",
                   fontWeight: 500,
-                  fontSize: "clamp(34px, 5vw, 52px)",
+                  fontSize: "clamp(28px, 5vw, 52px)",
                   color: "#FFFFFF",
                   letterSpacing: "-0.02em",
                   maxWidth: "860px",
@@ -235,7 +235,7 @@ export default function WhatIsROX() {
                 }}
               >
                 ROI tells you what you spent.
-                <br />
+                <br className="hidden sm:block" />{" "}
                 ROX tells you whether it worked.
               </motion.h1>
 
@@ -251,13 +251,71 @@ export default function WhatIsROX() {
                   color: "rgba(255, 255, 255, 0.55)",
                   lineHeight: 1.5,
                   maxWidth: "660px",
-                  marginBottom: "56px",
+                  marginBottom: "32px",
                 }}
               >
-                Return on Experience (ROX)™ is our proprietary measurement standard for in-person engagement. It scores the quality of every interaction, not just the count.
-                <br /><br />
-                Momentify built ROX because badge scans were never enough.
+                Return on Experience (ROX)™ is our proprietary measurement standard for in-person engagement. It scores the quality of every interaction, not just the count. <strong style={{ fontWeight: 600, color: "rgba(255,255,255,0.75)" }}>Momentify built ROX because badge scans were never enough.</strong>
               </motion.p>
+
+              {/* Mobile-only gauge (between subhead and calculate buttons) */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.28 }}
+                className="flex lg:hidden flex-col items-center my-8 mx-auto w-full"
+              >
+                <svg viewBox="0 0 400 270" className="w-full">
+                  {(() => {
+                    const cx = 200; const cy = 210; const r = 150;
+                    const rnd = (n: number) => Math.round(n * 1000) / 1000;
+                    const polarToCart = (angleDeg: number) => {
+                      const rad = (Math.PI * (180 - angleDeg)) / 180;
+                      return { x: rnd(cx + r * Math.cos(rad)), y: rnd(cy - r * Math.sin(rad)) };
+                    };
+                    const arcPath = (startDeg: number, endDeg: number) => {
+                      const s = polarToCart(startDeg);
+                      const e = polarToCart(endDeg);
+                      const large = endDeg - startDeg > 180 ? 1 : 0;
+                      return `M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 1 ${e.x} ${e.y}`;
+                    };
+                    const zones = [
+                      { start: 0, end: 70.2, color: "#E5484D" },
+                      { start: 70.2, end: 124.2, color: "#F2B33D" },
+                      { start: 124.2, end: 151.2, color: "#5FD9C2" },
+                      { start: 151.2, end: 180, color: "#00BBA5" },
+                    ];
+                    const needleAngle = (78 / 100) * 180;
+                    const needleEnd = polarToCart(needleAngle);
+                    return (
+                      <>
+                        <path d={arcPath(0, 180)} stroke="rgba(255,255,255,0.08)" strokeWidth="18" fill="none" strokeLinecap="round" />
+                        {zones.map((z) => (
+                          <path key={z.color} d={arcPath(z.start, z.end)} stroke={z.color} strokeWidth="18" fill="none" strokeLinecap="round" />
+                        ))}
+                        <line x1={cx} y1={cy} x2={needleEnd.x} y2={needleEnd.y} stroke="white" strokeWidth="3" opacity="0.35" />
+                        <circle cx={cx} cy={cy} r="6" fill="white" opacity="0.35" />
+                        <text x={cx} y={cy - 40} textAnchor="middle" style={{ fontFamily: "var(--font-inter)", fontWeight: 800, fontSize: "56px", fill: "#FFFFFF" }}>78</text>
+                        <text x={cx} y={cy - 12} textAnchor="middle" style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "12px", fill: "#5FD9C2", letterSpacing: "0.12em" }}>HIGH ROX</text>
+                      </>
+                    );
+                  })()}
+                </svg>
+                <div className="grid grid-cols-2 gap-x-6 gap-y-2 mt-2 justify-items-center w-full" style={{ maxWidth: "320px" }}>
+                  {[
+                    { range: "0-39", color: "#E5484D", label: "Critical" },
+                    { range: "40-69", color: "#F2B33D", label: "Optimize" },
+                    { range: "70-84", color: "#5FD9C2", label: "High ROX" },
+                    { range: "85-100", color: "#00BBA5", label: "Elite" },
+                  ].map((t) => (
+                    <div key={t.range} className="flex items-center gap-2">
+                      <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: t.color, flexShrink: 0 }} />
+                      <span style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "11px", color: "rgba(255,255,255,0.55)" }}>
+                        {t.range} {t.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
 
               {/* CTA line + 5 vertical quick-links */}
               <motion.p
@@ -280,20 +338,30 @@ export default function WhatIsROX() {
                 transition={{ duration: 0.5, delay: 0.34 }}
                 className="flex flex-col gap-3"
               >
-                <div className="flex flex-wrap items-center gap-3">
+                {/* Desktop: row 1 (3 buttons) + row 2 (2 buttons) */}
+                <div className="hidden sm:flex flex-wrap items-center gap-3">
                   {verticals.slice(0, 3).map((v) => (
                     <a
                       key={v.name}
                       href={v.active ? v.href : "#verticals"}
-                      className="inline-flex items-center gap-2 transition-all duration-200 hover:opacity-85 hover:-translate-y-0.5"
+                      className="inline-flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5"
                       style={{
                         fontFamily: "var(--font-inter)",
                         fontWeight: 600,
                         fontSize: "13px",
-                        color: "#FFFFFF",
-                        padding: "10px 18px",
+                        color: "rgba(255,255,255,0.7)",
+                        padding: "9px 18px",
                         borderRadius: "8px",
-                        background: v.color,
+                        background: "transparent",
+                        border: "1.5px solid rgba(255,255,255,0.25)",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = v.color;
+                        e.currentTarget.style.color = v.color;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+                        e.currentTarget.style.color = "rgba(255,255,255,0.7)";
                       }}
                     >
                       {v.name}
@@ -301,75 +369,132 @@ export default function WhatIsROX() {
                     </a>
                   ))}
                 </div>
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="hidden sm:flex flex-wrap items-center gap-3">
                   {verticals.slice(3).map((v) => (
                     <a
                       key={v.name}
                       href={v.active ? v.href : "#verticals"}
-                      className="inline-flex items-center gap-2 transition-all duration-200 hover:opacity-85 hover:-translate-y-0.5"
+                      className="inline-flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5"
                       style={{
                         fontFamily: "var(--font-inter)",
                         fontWeight: 600,
                         fontSize: "13px",
-                        color: "#FFFFFF",
-                        padding: "10px 18px",
+                        color: "rgba(255,255,255,0.7)",
+                        padding: "9px 18px",
                         borderRadius: "8px",
-                        background: v.color,
+                        background: "transparent",
+                        border: "1.5px solid rgba(255,255,255,0.25)",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = v.color;
+                        e.currentTarget.style.color = v.color;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)";
+                        e.currentTarget.style.color = "rgba(255,255,255,0.7)";
                       }}
                     >
                       {v.name}
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M12 5l7 7-7 7" /></svg>
+                    </a>
+                  ))}
+                </div>
+                {/* Mobile: 2-col grid, 5th item spans full width */}
+                <div className="grid sm:hidden grid-cols-2 gap-2">
+                  {verticals.map((v, i) => (
+                    <a
+                      key={v.name}
+                      href={v.active ? v.href : "#verticals"}
+                      className="inline-flex items-center justify-center gap-1.5 transition-all duration-200 text-center"
+                      style={{
+                        fontFamily: "var(--font-inter)",
+                        fontWeight: 600,
+                        fontSize: "11px",
+                        color: "rgba(255,255,255,0.7)",
+                        padding: "8px 10px",
+                        borderRadius: "6px",
+                        background: "transparent",
+                        border: "1.5px solid rgba(255,255,255,0.25)",
+                      }}
+                    >
+                      {v.name}
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M12 5l7 7-7 7" /></svg>
                     </a>
                   ))}
                 </div>
               </motion.div>
             </div>
 
-            {/* Right column: Video placeholder */}
+            {/* Right column: Static ROX gauge (matches Trade Shows gauge) */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="hidden lg:flex items-center justify-center cursor-pointer group mt-12 lg:mt-0"
-              style={{ width: "380px", flexShrink: 0 }}
+              className="hidden lg:flex items-center justify-center mt-12 lg:mt-0 overflow-visible"
+              style={{ width: "360px", flexShrink: 0, marginTop: "-50px" }}
             >
-              <div
-                className="relative w-full"
-                style={{
-                  aspectRatio: "1 / 1",
-                  background: "rgba(6, 19, 65, 0.4)",
-                  border: "1px solid rgba(196, 165, 240, 0.15)",
-                  borderRadius: "16px",
-                  overflow: "hidden",
-                  backdropFilter: "blur(12px)",
-                }}
-              >
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                  <div
-                    className="flex items-center justify-center transition-transform duration-200 group-hover:scale-110"
-                    style={{
-                      width: "64px",
-                      height: "64px",
-                      borderRadius: "50%",
-                      background: "rgba(255, 255, 255, 0.12)",
-                      border: "1.5px solid rgba(255, 255, 255, 0.20)",
-                    }}
-                  >
-                    <svg width="24" height="28" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M4 2L22 14L4 26V2Z" fill="white" fillOpacity="0.9" />
-                    </svg>
-                  </div>
-                  <p
-                    style={{
-                      fontFamily: "var(--font-inter)",
-                      fontWeight: 500,
-                      fontSize: "13px",
-                      color: "rgba(255, 255, 255, 0.60)",
-                      letterSpacing: "0.02em",
-                    }}
-                  >
-                    What is ROX? Video
-                  </p>
+              <div className="flex flex-col items-center overflow-visible" style={{ width: "440px" }}>
+                {/* Gauge SVG — scaled larger than column, overflow visible */}
+                <svg viewBox="0 0 400 240" style={{ width: "440px", height: "auto" }}>
+                  {(() => {
+                    const cx = 200;
+                    const cy = 200;
+                    const r = 140;
+                    const rnd = (n: number) => Math.round(n * 1000) / 1000;
+                    const polarToCart = (angleDeg: number) => {
+                      const rad = (Math.PI * (180 - angleDeg)) / 180;
+                      return { x: rnd(cx + r * Math.cos(rad)), y: rnd(cy - r * Math.sin(rad)) };
+                    };
+                    const arcPath = (startDeg: number, endDeg: number) => {
+                      const s = polarToCart(startDeg);
+                      const e = polarToCart(endDeg);
+                      const large = endDeg - startDeg > 180 ? 1 : 0;
+                      return `M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 1 ${e.x} ${e.y}`;
+                    };
+                    const zones = [
+                      { start: 0, end: 70.2, color: "#E5484D" },
+                      { start: 70.2, end: 124.2, color: "#F2B33D" },
+                      { start: 124.2, end: 151.2, color: "#5FD9C2" },
+                      { start: 151.2, end: 180, color: "#00BBA5" },
+                    ];
+                    const needleAngle = (78 / 100) * 180;
+                    const needleEnd = polarToCart(needleAngle);
+                    return (
+                      <>
+                        <path d={arcPath(0, 180)} stroke="rgba(255,255,255,0.08)" strokeWidth="18" fill="none" strokeLinecap="round" />
+                        {zones.map((z) => (
+                          <path key={z.color} d={arcPath(z.start, z.end)} stroke={z.color} strokeWidth="18" fill="none" strokeLinecap="round" />
+                        ))}
+                        {/* Needle — less opaque, behind score */}
+                        <line x1={cx} y1={cy} x2={needleEnd.x} y2={needleEnd.y} stroke="white" strokeWidth="3" opacity="0.35" />
+                        <circle cx={cx} cy={cy} r="6" fill="white" opacity="0.35" />
+                        {/* Score — on top */}
+                        <text x={cx} y={cy - 40} textAnchor="middle" style={{ fontFamily: "var(--font-inter)", fontWeight: 800, fontSize: "56px", fill: "#FFFFFF" }}>
+                          78
+                        </text>
+                        <text x={cx} y={cy - 12} textAnchor="middle" style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "12px", fill: "#5FD9C2", letterSpacing: "0.12em" }}>
+                          HIGH ROX
+                        </text>
+                      </>
+                    );
+                  })()}
+                </svg>
+
+                {/* Score range legend — 2x2 grid */}
+                <div className="grid grid-cols-2 gap-x-8 gap-y-3 mt-4 w-full max-w-[320px]">
+                  {[
+                    { range: "0-39", color: "#E5484D", label: "Critical" },
+                    { range: "40-69", color: "#F2B33D", label: "Optimize" },
+                    { range: "70-84", color: "#5FD9C2", label: "High ROX" },
+                    { range: "85-100", color: "#00BBA5", label: "Elite" },
+                  ].map((t) => (
+                    <div key={t.range} className="flex items-center gap-2">
+                      <span style={{ width: "9px", height: "9px", borderRadius: "50%", background: t.color, flexShrink: 0 }} />
+                      <span style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "rgba(255,255,255,0.55)" }}>
+                        {t.range} {t.label}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </motion.div>
@@ -404,11 +529,7 @@ export default function WhatIsROX() {
                 marginBottom: "48px",
               }}
             >
-              Most teams measure what they spent.
-              <br />
-              Almost none measure what happened
-              <br />
-              after they paid for it.
+              Most teams measure what they spent. Almost none measure what happened after they paid for it.
             </motion.h2>
           </motion.div>
 
@@ -594,7 +715,7 @@ export default function WhatIsROX() {
               lineHeight: 1.65,
               gridColumn: "1 / -1",
             }}>
-              Do not have all four numbers? That is the point. Most teams do not. Run the calculator with what you have and see where the gaps are.
+              Don&apos;t have all four numbers? That is the point. Most teams don&apos;t. Run the calculator with what you have and see where the gaps are.
             </p>
           </motion.div>
         </div>
@@ -814,13 +935,15 @@ export default function WhatIsROX() {
               style={{
                 fontFamily: "var(--font-inter)",
                 fontWeight: 500,
-                fontSize: "clamp(32px, 4.5vw, 44px)",
+                fontSize: "clamp(26px, 4.5vw, 44px)",
                 color: "#FFFFFF",
                 letterSpacing: "-0.02em",
                 marginBottom: "20px",
               }}
             >
-              Your next event has a score. Find out what it is.
+              Your next moment has a score.
+              <br className="sm:hidden" />{" "}
+              Find out what it is.
             </motion.h2>
 
             <motion.p
@@ -838,18 +961,16 @@ export default function WhatIsROX() {
               Run your numbers in under two minutes. Or schedule a demo to see ROX dashboards live with your team&apos;s data.
             </motion.p>
 
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-start gap-4">
+            <motion.div variants={fadeUp} className="flex flex-row gap-3 sm:gap-4">
               {/* Primary: Schedule a Demo */}
               <a
                 href="#demo"
-                className="inline-block transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
+                className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[16px] py-2.5 sm:py-4 px-3 sm:px-9 transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
                 style={{
                   fontFamily: "var(--font-inter)",
                   fontWeight: 600,
-                  fontSize: "16px",
                   color: "#FFFFFF",
                   background: "linear-gradient(135deg, #00BBA5, #1A56DB)",
-                  padding: "16px 36px",
                   borderRadius: "8px",
                   letterSpacing: "-0.01em",
                 }}
@@ -860,14 +981,12 @@ export default function WhatIsROX() {
               {/* Secondary: Calculate Your ROX */}
               <a
                 href="/rox/trade-shows"
-                className="inline-block transition-all duration-200"
+                className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[16px] py-2.5 sm:py-4 px-3 sm:px-9 transition-all duration-200"
                 style={{
                   fontFamily: "var(--font-inter)",
                   fontWeight: 500,
-                  fontSize: "16px",
                   color: "#FFFFFF",
                   background: "transparent",
-                  padding: "15px 32px",
                   borderRadius: "8px",
                   border: "1.5px solid rgba(255, 255, 255, 0.25)",
                 }}

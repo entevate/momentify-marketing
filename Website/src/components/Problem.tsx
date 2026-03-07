@@ -284,13 +284,13 @@ export default function Problem() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.15 }}
           variants={roleContainerVariants}
-          className="mt-5 flex flex-wrap gap-3"
+          className="mt-5 grid grid-cols-1 sm:flex sm:flex-wrap gap-2 sm:gap-3"
         >
           {roles.map((role) => (
             <motion.span
               key={role.text}
               variants={fadeIn}
-              className="inline-flex items-center rounded-lg px-4 py-2 text-[14px] font-medium"
+              className="flex items-center justify-center sm:inline-flex sm:justify-start rounded-lg px-4 py-2 text-[14px] font-medium"
               style={{
                 fontFamily: "var(--font-inter)",
                 color: role.color,

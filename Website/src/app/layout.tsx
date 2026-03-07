@@ -42,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${archivo.variable} ${manrope.variable} ${spaceGrotesk.variable}`} style={{ zoom: "80%" }}>
+    <html lang="en" className={`${inter.variable} ${archivo.variable} ${manrope.variable} ${spaceGrotesk.variable}`}>
       <body className="font-[family-name:var(--font-inter)] antialiased">
         {children}
       </body>

@@ -13,12 +13,44 @@ const solutions = [
 ];
 
 const platformLinks = [
-  { name: "How It Works", href: "/platform/how-it-works", description: "The four-step Momentify workflow", color: "#0CF4DF", isRoute: true },
-  { name: "Integrations", href: "/platform/integrations", description: "Connect with your existing tools", color: "#5BA8F5", isRoute: true },
-  { name: "Security", href: "#", description: "Enterprise-grade data protection", color: "#F2B33D", isRoute: false },
-  { name: "Help Center", href: "/platform/help-center", description: "Guides, FAQs, and support resources", color: "#00BBA5", isRoute: true },
-  { name: "System Status", href: "/platform/system-status", description: "Real-time platform availability", color: "#5FD9C2", isRoute: true },
+  { name: "How It Works", href: "/platform/how-it-works", description: "The four-step Momentify workflow", isRoute: true, icon: "workflow" as const },
+  { name: "Integrations", href: "/platform/integrations", description: "Connect with your existing tools", isRoute: true, icon: "integrations" as const },
+  { name: "Security", href: "#", description: "Enterprise-grade data protection", isRoute: false, icon: "security" as const },
+  { name: "Help Center", href: "/platform/help-center", description: "Guides, FAQs, and support resources", isRoute: true, icon: "help" as const },
+  { name: "System Status", href: "/platform/system-status", description: "Real-time platform availability", isRoute: true, icon: "status" as const },
 ];
+
+const ICON_COLOR = "rgba(6,19,65,0.45)";
+
+const platformIcons: Record<string, React.ReactNode> = {
+  workflow: (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 4h4M2 8h4M2 12h4M10 4h4M10 8h4M10 12h4M6 4l4 4M6 12l4-4" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  integrations: (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 2v2.5a1.5 1.5 0 003 0V2M2 6h2.5a1.5 1.5 0 000 3H2M14 6h-2.5a1.5 1.5 0 000 3H14M6 14v-2.5a1.5 1.5 0 013 0V14" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  security: (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 1.5L3 4v3.5c0 3.5 2.1 5.8 5 6.5 2.9-.7 5-3 5-6.5V4L8 1.5z" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6 8l1.5 1.5L10 7" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  help: (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="8" cy="8" r="6" stroke={ICON_COLOR} strokeWidth="1.3" />
+      <path d="M6.5 6.5a1.5 1.5 0 012.8.8c0 1-1.3 1.2-1.3 2.2M8 12h.01" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  status: (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M1 8h3l1.5-4 3 8L10 6l1.5 2H15" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+};
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -95,7 +127,7 @@ export default function Navigation() {
                     {platformLinks.map((link) =>
                       link.isRoute ? (
                         <Link key={link.name} href={link.href} className="flex items-start gap-3 rounded-lg p-3 hover:bg-light-bg transition-colors">
-                          <div className="mt-1.5 h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: link.color }} />
+                          <div className="mt-0.5 flex-shrink-0">{platformIcons[link.icon]}</div>
                           <div>
                             <div className="text-charcoal text-[13px] font-medium">{link.name}</div>
                             <div className="text-charcoal/40 text-[11px] mt-0.5 leading-snug">{link.description}</div>
@@ -103,7 +135,7 @@ export default function Navigation() {
                         </Link>
                       ) : (
                         <a key={link.name} href={link.href} className="flex items-start gap-3 rounded-lg p-3 hover:bg-light-bg transition-colors">
-                          <div className="mt-1.5 h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: link.color }} />
+                          <div className="mt-0.5 flex-shrink-0">{platformIcons[link.icon]}</div>
                           <div>
                             <div className="text-charcoal text-[13px] font-medium">{link.name}</div>
                             <div className="text-charcoal/40 text-[11px] mt-0.5 leading-snug">{link.description}</div>
@@ -170,12 +202,12 @@ export default function Navigation() {
                 {platformLinks.map((link) =>
                   link.isRoute ? (
                     <Link key={link.name} href={link.href} className="flex items-center gap-3 py-2 text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>
-                      <div className="h-2 w-2 rounded-full" style={{ backgroundColor: link.color }} />
+                      <div className="flex-shrink-0">{platformIcons[link.icon]}</div>
                       {link.name}
                     </Link>
                   ) : (
                     <a key={link.name} href={link.href} className="flex items-center gap-3 py-2 text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>
-                      <div className="h-2 w-2 rounded-full" style={{ backgroundColor: link.color }} />
+                      <div className="flex-shrink-0">{platformIcons[link.icon]}</div>
                       {link.name}
                     </a>
                   )
