@@ -50,6 +50,7 @@ const solutions = [
       "Cross-event consistency across job fairs, hiring events, and campus visits",
     ],
     cta: "Explore Technical Recruiting",
+    href: "/solutions/technical-recruiting",
     bg: "linear-gradient(135deg, #040E28 0%, #1A8A76 55%, #5FD9C2 100%)",
     geoFill1: "white",
     geoOpacity1: 0.06,

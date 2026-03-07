@@ -23,7 +23,7 @@ const words = [
 
 /* ── Style option configs ──────────────────────────────── */
 
-const headline = { weight: 500, size: "clamp(36px,5.5vw,72px)", tracking: "-0.02em" };
+const headline = { weight: 500, size: "clamp(42px,5.5vw,72px)", tracking: "-0.02em" };
 
 const subhead = { weight: 400, size: "15px", leading: "1.5" };
 
@@ -183,22 +183,10 @@ export default function Hero() {
         </svg>
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12 pt-36 pb-16 sm:pt-44 sm:pb-20 lg:pt-48 lg:pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-12 lg:gap-16 items-center">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12 pt-36 pb-16 sm:pt-44 sm:pb-20 lg:pt-40 lg:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-12 lg:gap-16 items-start">
           {/* ── Left column: copy ──────────────────── */}
           <div>
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="mb-8"
-            >
-              <span style={eyebrowStyle}>
-                CONTACT. CONVERSATION. CONTEXT.
-              </span>
-            </motion.div>
-
             {/* Headline */}
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
@@ -239,17 +227,17 @@ export default function Hero() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.32 }}
-              className="mt-12 flex flex-col sm:flex-row gap-4"
+              className="mt-12 grid grid-cols-2 sm:flex sm:flex-row gap-4"
             >
               <a
                 href="#platform"
-                className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg bg-white text-midnight transition-all duration-200 hover:bg-white/90 hover:scale-[1.02]"
+                className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg bg-white text-midnight transition-all duration-200 hover:bg-white/90 hover:scale-[1.02] sm:min-w-[200px]"
               >
                 See How It Works
               </a>
               <a
                 href="#rox"
-                className="inline-flex items-center justify-center font-semibold text-[14px] text-white py-3.5 px-7 rounded-lg transition-all duration-200 hover:bg-white/[0.08]"
+                className="inline-flex items-center justify-center font-semibold text-[14px] text-white py-3.5 px-7 rounded-lg transition-all duration-200 hover:bg-white/[0.08] sm:min-w-[200px]"
                 style={{
                   border: "1.5px solid rgba(255, 255, 255, 0.25)",
                 }}
@@ -259,6 +247,24 @@ export default function Hero() {
                 Calculate Your ROX™
               </a>
             </motion.div>
+
+            {/* Video walkthrough — mobile: inline after CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.36 }}
+              className="lg:hidden cursor-pointer group w-full"
+              style={{ marginTop: "32px" }}
+            >
+              <div className="relative w-full" style={{ aspectRatio: "1 / 1", background: "rgba(6, 19, 65, 0.4)", border: "1px solid rgba(196, 165, 240, 0.15)", borderRadius: "16px", overflow: "hidden", backdropFilter: "blur(12px)" }}>
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                  <div className="flex items-center justify-center transition-transform duration-200 group-hover:scale-110" style={{ width: "56px", height: "56px", borderRadius: "50%", background: "rgba(255, 255, 255, 0.12)", border: "1.5px solid rgba(255, 255, 255, 0.20)" }}>
+                    <svg width="20" height="24" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 2L22 14L4 26V2Z" fill="white" fillOpacity="0.9" /></svg>
+                  </div>
+                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "12px", color: "rgba(255, 255, 255, 0.60)", letterSpacing: "0.02em" }}>Platform Video Walk-Thru</p>
+                </div>
+              </div>
+            </motion.div>
           </div>
 
           {/* ── Right column: Video walk-thru placeholder ── */}
@@ -266,10 +272,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="hidden lg:flex items-center justify-center cursor-pointer group"
+            className="hidden lg:flex items-stretch justify-center cursor-pointer group self-stretch"
             style={{ width: "380px" }}
           >
-            <div className="relative w-full" style={{ aspectRatio: "1 / 1", background: "rgba(6, 19, 65, 0.4)", border: "1px solid rgba(196, 165, 240, 0.15)", borderRadius: "16px", overflow: "hidden", backdropFilter: "blur(12px)" }}>
+            <div className="relative w-full" style={{ background: "rgba(6, 19, 65, 0.4)", border: "1px solid rgba(196, 165, 240, 0.15)", borderRadius: "16px", overflow: "hidden", backdropFilter: "blur(12px)" }}>
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
                 <div className="flex items-center justify-center transition-transform duration-200 group-hover:scale-110" style={{ width: "64px", height: "64px", borderRadius: "50%", background: "rgba(255, 255, 255, 0.12)", border: "1.5px solid rgba(255, 255, 255, 0.20)" }}>
                   <svg width="24" height="28" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 2L22 14L4 26V2Z" fill="white" fillOpacity="0.9" /></svg>
@@ -290,7 +296,7 @@ export default function Hero() {
           {/* Divider */}
           <div className="w-full h-px bg-white/[0.12]" />
 
-          <div className="flex flex-wrap items-center gap-6 sm:gap-16 pt-8">
+          <div className="flex items-center gap-6 sm:gap-16 pt-8">
             {/* Static label */}
             <span
               className="flex-shrink-0 text-white/40 font-semibold text-[11px] tracking-[0.12em] uppercase"
@@ -299,8 +305,16 @@ export default function Hero() {
               TRUSTED BY:
             </span>
 
-            {/* Static logo row */}
-            {logoSet}
+            {/* Scrolling logos on mobile, static on sm+ */}
+            <div className="sm:hidden overflow-hidden flex-1">
+              <div className="flex items-center gap-10" style={{ animation: "tickerScroll 12s linear infinite", width: "max-content" }}>
+                {logoSet}
+                {logoSet}
+              </div>
+            </div>
+            <div className="hidden sm:flex items-center gap-16">
+              {logoSet}
+            </div>
           </div>
         </motion.div>
       </div>
