@@ -17,7 +17,7 @@ const platformLinks = [
 const companyLinks = [
   { label: "What is ROX?", href: "/what-is-rox" },
   { label: "Case Studies", href: "/case-studies" },
-  { label: "About", href: "#" },
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
   { label: "Schedule a Demo", href: "/demo" },
 ];

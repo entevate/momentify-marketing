@@ -22,45 +22,46 @@ const MainMinimalOverlay = () => (
   </svg>
 );
 
-const contactCards = [
+const teamMembers = [
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={TEAL} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-        <polyline points="22,6 12,13 2,6" />
-      </svg>
-    ),
-    title: "Email Us",
-    description: "Inquiries, partnerships, or support.",
-    action: "hello@entevate.com",
-    href: "mailto:hello@entevate.com",
+    name: "Jake Hamann",
+    title: "Founder & CEO",
+    location: "Dallas",
+    photo: "/about/jake.png",
   },
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={TEAL} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-      </svg>
-    ),
-    title: "Call Us",
-    description: "Monday through Friday, 9am to 5pm CT.",
-    action: "1 (972) 200-3445",
-    href: "tel:19722003445",
+    name: "Harsh Shah",
+    title: "Co-Founder & COO",
+    location: "New York City",
+    photo: "/about/harsh.jpg",
   },
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={TEAL} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-        <circle cx="12" cy="10" r="3" />
-      </svg>
-    ),
-    title: "Visit Us",
-    description: "ENTEVATE, INC. headquarters.",
-    action: "5 Cowboys Way, Frisco, TX 75034",
-    href: "https://maps.google.com/?q=5+Cowboys+Way+Frisco+TX+75034",
+    name: "Grant Lonie",
+    title: "Dir. of Engineering",
+    location: "Edmonton",
+    photo: "/about/grant.jpg",
+  },
+  {
+    name: "Hanah Zachariah",
+    title: "Front-End Developer",
+    location: "Dallas",
+    photo: "/about/hanah.jpg",
+  },
+  {
+    name: "Sam Thibault",
+    title: "Designer",
+    location: "Colorado Springs",
+    photo: "/about/sam.jpeg",
+  },
+  {
+    name: "Steven Shaffer",
+    title: "Industry Advisor",
+    location: "Dallas",
+    photo: "/about/steven.jpeg",
   },
 ];
 
-export default function ContactContent() {
+export default function AboutContent() {
   return (
     <>
       <Navigation />
@@ -89,7 +90,7 @@ export default function ContactContent() {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "11px", color: TEAL, letterSpacing: "0.14em", textTransform: "uppercase" as const, marginBottom: "16px" }}
               >
-                Get in Touch
+                About Momentify
               </motion.p>
               <motion.h1
                 initial={{ opacity: 0, y: 16 }}
@@ -98,7 +99,7 @@ export default function ContactContent() {
                 className="leading-[1.05]"
                 style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "clamp(34px, 5vw, 52px)", color: "#FFFFFF", letterSpacing: "-0.02em", marginBottom: "24px" }}
               >
-                Contact Us
+                Meet The Team
               </motion.h1>
               <motion.p
                 initial={{ opacity: 0, y: 12 }}
@@ -106,49 +107,50 @@ export default function ContactContent() {
                 transition={{ duration: 0.5, delay: 0.24 }}
                 style={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "15px", color: "rgba(255, 255, 255, 0.55)", lineHeight: 1.5, maxWidth: "680px" }}
               >
-                <span className="md:block">Have a question about the Momentify platform?</span>{" "}Want to see it in action?<br className="md:hidden" /> We&apos;re here to help.
+                With 70+ years of combined experience working with Fortune 100 companies across various industries and verticals, we know how to navigate complexity and drive real results.
               </motion.p>
             </div>
           </div>
         </section>
 
-        {/* Contact Cards */}
+        {/* Team Grid */}
         <section style={{ padding: "80px 0" }}>
           <div className="mx-auto max-w-7xl px-6 lg:px-12">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {contactCards.map((card) => (
-                <motion.a
-                  key={card.title}
-                  href={card.href}
-                  target={card.href.startsWith("http") ? "_blank" : undefined}
-                  rel={card.href.startsWith("http") ? "noopener noreferrer" : undefined}
+            <div className="grid grid-cols-2 lg:grid-cols-6 gap-6 lg:gap-5">
+              {teamMembers.map((member, i) => (
+                <motion.div
+                  key={member.name}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5 }}
-                  className="group"
-                  style={{
-                    display: "block",
-                    background: "#F8F9FC",
-                    border: "1px solid rgba(6,19,65,0.08)",
-                    borderRadius: "16px",
-                    padding: "36px 32px",
-                    textDecoration: "none",
-                    transition: "all 0.2s ease",
-                  }}
-                  whileHover={{ y: -4, boxShadow: "0 8px 32px rgba(6,19,65,0.08)" }}
+                  transition={{ duration: 0.5, delay: i * 0.08 }}
                 >
-                  <div style={{ marginBottom: "20px" }}>{card.icon}</div>
-                  <h3 style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "20px", color: DEEP_NAVY, marginBottom: "8px" }}>
-                    {card.title}
+                  <div
+                    className="aspect-square overflow-hidden rounded-lg"
+                    style={{ marginBottom: "16px" }}
+                  >
+                    <img
+                      src={member.photo}
+                      alt={member.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <h3 style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "18px", color: DEEP_NAVY, marginBottom: "4px" }}>
+                    {member.name}
                   </h3>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "14px", color: "rgba(6,19,65,0.55)", lineHeight: 1.6, marginBottom: "16px" }}>
-                    {card.description}
+                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "14px", color: "rgba(6,19,65,0.55)", marginBottom: "6px" }}>
+                    {member.title}
                   </p>
-                  <span style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "14px", color: TEAL }}>
-                    {card.action}
-                  </span>
-                </motion.a>
+                  <div className="flex items-center gap-1.5">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" fill={TEAL} fillOpacity="0.8" />
+                      <circle cx="12" cy="10" r="3" fill="white" />
+                    </svg>
+                    <span style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.45)" }}>
+                      {member.location}
+                    </span>
+                  </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -176,7 +178,7 @@ export default function ContactContent() {
                 Schedule a personalized demo and learn how ROX scoring can transform your in-person interactions into measurable outcomes.
               </p>
               <a
-                href="/demo?source=contact"
+                href="/demo?source=about"
                 className="inline-flex items-center justify-center text-[14px] py-3.5 px-8 transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
                 style={{
                   fontFamily: "var(--font-inter)",
