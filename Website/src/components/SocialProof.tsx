@@ -64,7 +64,7 @@ const tagColors: Record<string, { color: string; bg: string }> = {
   "Technical Recruiting": { color: "#1A8A76", bg: "rgba(95, 217, 194, 0.10)" },
   "Field Sales Enablement": { color: "#A86B00", bg: "rgba(242, 179, 61, 0.10)" },
   "Facilities": { color: "#3A2073", bg: "rgba(58, 32, 115, 0.08)" },
-  "Events and Venues": { color: "#C4391E", bg: "rgba(242, 94, 61, 0.08)" },
+  "Venues and Events": { color: "#C4391E", bg: "rgba(242, 94, 61, 0.08)" },
 };
 
 /* ── Social Proof Section ──────────────────────────── */

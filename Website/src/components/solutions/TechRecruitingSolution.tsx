@@ -33,14 +33,14 @@ const stagger = {
 function TealBracket() {
   return (
     <>
-      {/* Top color bar */}
+      {/* Top color bar — hidden on mobile */}
       <div
-        className="absolute top-0 left-0 right-0 z-[1]"
+        className="absolute top-0 left-0 right-0 z-[1] hidden sm:block"
         style={{ height: "3px", background: "linear-gradient(90deg, #5FD9C2, #1A8A76)" }}
       />
-      {/* L-shaped corner brackets */}
+      {/* L-shaped corner brackets — hidden on mobile */}
       <svg
-        className="pointer-events-none absolute inset-0 w-full h-full"
+        className="pointer-events-none absolute inset-0 w-full h-full hidden sm:block"
         viewBox="0 0 1440 900"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -57,25 +57,22 @@ function TealBracket() {
 }
 
 /**
- * TEAL-DOTS — dark teal bg with dot grid pattern
- * From design pattern doc: Dot Grid Pattern for teal
+ * TEAL-LINES — dark teal bg with diagonal line pattern
  */
-function TealDots() {
+function TealLines() {
   return (
     <svg
       className="pointer-events-none absolute inset-0 w-full h-full"
-      viewBox="0 0 600 500"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      preserveAspectRatio="xMidYMid slice"
       aria-hidden="true"
     >
       <defs>
-        <pattern id="dots" patternUnits="userSpaceOnUse" width="36" height="36">
-          <circle cx="18" cy="18" r="1.4" fill="white" fillOpacity="0.15" />
+        <pattern id="diag-lines" patternUnits="userSpaceOnUse" width="40" height="40" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="40" stroke="white" strokeOpacity="0.06" strokeWidth="1" />
         </pattern>
       </defs>
-      <rect width="600" height="500" fill="url(#dots)" />
+      <rect width="100%" height="100%" fill="url(#diag-lines)" />
     </svg>
   );
 }
@@ -113,8 +110,8 @@ const keyFeatures = [
   {
     headline: "Candidate Capture & Scoring",
     bullets: [
-      "Capture candidate info, role interest, and experience level at the booth or campus event",
-      "Score candidates by engagement depth and fit, not just resume drops",
+      "Capture candidate info, role interest, and experience level",
+      "Score by engagement depth and fit, not just resume volume",
       "Sync qualified candidates to your ATS or CRM automatically",
     ],
     icon: "capture",
@@ -122,18 +119,18 @@ const keyFeatures = [
   {
     headline: "Role-Specific Content Delivery",
     bullets: [
-      "Deliver personalized content paths based on role, program, and interest level",
-      "Replace paper handouts with interactive digital experiences candidates actually engage with",
-      "Track which roles, programs, and benefits resonate most with top candidates",
+      "Deliver personalized content paths based on role and interest",
+      "Replace paper handouts with interactive digital experiences",
+      "Track which roles and benefits resonate most with candidates",
     ],
     icon: "content",
   },
   {
     headline: "Engagement Analytics",
     bullets: [
-      "See which candidates engaged, what they explored, and how long they spent in real time",
-      "Identify high-intent candidates before they leave the event floor",
-      "Export engagement data directly into your recruiting recap and ROI reports",
+      "See who engaged, what they explored, and for how long",
+      "Identify high-intent candidates before they leave the floor",
+      "Export engagement data into your recruiting recap and ROI reports",
     ],
     icon: "analytics",
   },
@@ -141,8 +138,8 @@ const keyFeatures = [
     headline: "ATS & Workflow Integrations",
     bullets: [
       "Connects with your existing ATS, HRIS, and recruiting tools",
-      "Route top candidates to the right recruiter before the event ends",
-      "Follow-up workflows triggered automatically from engagement data",
+      "Route top candidates to the right recruiter before event ends",
+      "Trigger follow-up workflows automatically from engagement data",
     ],
     icon: "integrations",
   },
@@ -262,16 +259,30 @@ export default function TechRecruitingSolution() {
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12" style={{ paddingTop: "140px", paddingBottom: "100px" }}>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.05 }}
+            style={{
+              fontFamily: "var(--font-inter)",
+              fontWeight: 600,
+              fontSize: "11px",
+              color: "#5FD9C2",
+              letterSpacing: "0.14em",
+              textTransform: "uppercase" as const,
+              marginBottom: "16px",
+            }}
+          >
+            Technical Recruiting
+          </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.1 }}
             className="leading-[1.08]"
-            style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "clamp(34px, 5.5vw, 52px)", color: "#FFFFFF", letterSpacing: "-0.02em", maxWidth: "820px", marginBottom: "20px" }}
+            style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "clamp(32px, 5.5vw, 52px)", color: "#FFFFFF", letterSpacing: "-0.02em", maxWidth: "820px", marginBottom: "20px" }}
           >
-            Your recruiting events
-            <br />
-            deserve more than resumes
+            Your recruiting events deserve more than resumes.
           </motion.h1>
 
           <motion.p
@@ -280,9 +291,7 @@ export default function TechRecruitingSolution() {
             transition={{ duration: 0.5, delay: 0.18 }}
             style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "clamp(16px, 2vw, 20px)", color: "rgba(255, 255, 255, 0.85)", letterSpacing: "-0.01em", maxWidth: "660px", marginBottom: "16px" }}
           >
-            The engagement platform between
-            <br className="sm:hidden" />
-            {" "}&ldquo;Hello&rdquo; and ATS.
+            The engagement platform between<br className="sm:hidden" /> &ldquo;Hello&rdquo; and ATS.
           </motion.p>
 
           <motion.p
@@ -291,9 +300,7 @@ export default function TechRecruitingSolution() {
             transition={{ duration: 0.5, delay: 0.24 }}
             style={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "15px", color: "rgba(255, 255, 255, 0.55)", lineHeight: 1.5, maxWidth: "560px", marginBottom: "48px" }}
           >
-            Capture candidate intent at the event. Score by fit, not just interest.
-            <br />
-            Follow up before the best talent accepts somewhere else.
+            Capture candidate intent at the event. Score by fit, not just interest. Follow up before the best talent accepts somewhere else.
           </motion.p>
 
           {/* CTA pair */}
@@ -375,7 +382,7 @@ export default function TechRecruitingSolution() {
           {/* Two-column: copy left, iPad right */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center" style={{ marginBottom: "64px" }}>
             <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }} variants={headerVariants}>
-              <motion.p variants={fadeUp} className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4" style={{ color: "#00BBA5", fontFamily: "var(--font-inter)" }}>
+              <motion.p variants={fadeUp} className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4" style={{ color: "#1A8A76", fontFamily: "var(--font-inter)" }}>
                 Why Momentify for Technical Recruiting
               </motion.p>
               <motion.h2 variants={fadeUp} className="leading-[1.1]" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, letterSpacing: "-0.02em", fontSize: "clamp(28px, 4.5vw, 42px)", color: "#061341", marginBottom: "20px" }}>
@@ -388,7 +395,7 @@ export default function TechRecruitingSolution() {
                 {[
                   "Deliver personalized content paths based on role, program, and interest level",
                   "Score candidates by engagement depth and fit, not just resume volume",
-                  "Track engagement instantly: who interacted, what they explored, and for how long",
+                  "Track who engaged, what they explored, and for how long",
                   "Cross-event consistency across job fairs, hiring events, and campus visits",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
@@ -439,13 +446,15 @@ export default function TechRecruitingSolution() {
         className="relative overflow-hidden"
         style={{ background: "linear-gradient(135deg, #040E28 0%, #1A8A76 55%, #5FD9C2 100%)", padding: "100px 0" }}
       >
-        <TealDots />
+        <TealLines />
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12">
           {/* ROX header */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }} variants={headerVariants} style={{ textAlign: "center", marginBottom: "48px" }}>
             <motion.p variants={fadeUp} className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4" style={{ color: "rgba(255, 255, 255, 0.6)", fontFamily: "var(--font-inter)" }}>
-              Technical Recruiting Return on Experience (ROX)™
+              Technical Recruiting
+              <br />
+              Return on Experience (ROX)™
             </motion.p>
             <motion.h2 variants={fadeUp} className="leading-[1.1] mx-auto" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, letterSpacing: "-0.02em", fontSize: "clamp(31px, 5vw, 46px)", color: "#FFFFFF", maxWidth: "770px" }}>
               Do you know your
@@ -533,7 +542,7 @@ export default function TechRecruitingSolution() {
             <motion.p variants={fadeUp} className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4" style={{ color: "rgba(255, 255, 255, 0.6)", fontFamily: "var(--font-inter)" }}>
               Built for Recruiting Teams on the Ground
             </motion.p>
-            <motion.h2 variants={fadeUp} className="leading-[1.1]" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, letterSpacing: "-0.02em", fontSize: "clamp(24px, 3.5vw, 36px)", color: "#FFFFFF", maxWidth: "500px", marginBottom: "40px" }}>
+            <motion.h2 variants={fadeUp} className="leading-[1.1]" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, letterSpacing: "-0.02em", fontSize: "clamp(24px, 3.5vw, 36px)", color: "#FFFFFF", marginBottom: "40px", whiteSpace: "nowrap" as const }}>
               Show up.{" "}
               <span style={{ background: "linear-gradient(135deg, #A3EBD8, #FFFFFF)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
                 Stand out.
@@ -617,7 +626,7 @@ export default function TechRecruitingSolution() {
 
           {/* Case Study */}
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }} variants={headerVariants}>
-            <motion.p variants={fadeUp} className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4" style={{ color: "#00BBA5", fontFamily: "var(--font-inter)" }}>In the Field</motion.p>
+            <motion.p variants={fadeUp} className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4" style={{ color: "#1A8A76", fontFamily: "var(--font-inter)" }}>In the Field</motion.p>
             <motion.h2 variants={fadeUp} className="leading-[1.1]" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, letterSpacing: "-0.02em", fontSize: "clamp(28px, 4.5vw, 42px)", color: "#061341", maxWidth: "700px", marginBottom: "40px" }}>
               7 hires traced back to a digital recruiting process that did not exist a year ago.
             </motion.h2>
@@ -626,8 +635,8 @@ export default function TechRecruitingSolution() {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={fadeUp} style={{ background: "#F8F9FC", border: "1px solid rgba(6, 19, 65, 0.08)", borderRadius: "20px", padding: "48px" }}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
               <div>
-                <Image src="/logos/caterpillar-logo_black.png" alt="Caterpillar" width={200} height={40} style={{ height: "32px", width: "auto", marginBottom: "20px", objectFit: "contain" }} />
-                <h3 style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "22px", color: "#061341", marginBottom: "16px" }}>Mustang Cat, Technical Recruiting Program</h3>
+                <Image src="/logos/mustang-cat-color.png" alt="Mustang CAT" width={200} height={40} style={{ height: "32px", width: "auto", marginBottom: "20px", objectFit: "contain" }} />
+                <h3 style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "22px", color: "#061341", marginBottom: "16px" }}>Mustang CAT, Technical Recruiting Program</h3>
                 <ul className="space-y-2" style={{ marginBottom: "24px" }}>
                   {[
                     "Deployed Momentify across campus recruiting events and career fairs",

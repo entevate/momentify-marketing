@@ -1,9 +1,9 @@
 const solutionLinks = [
   { label: "Trade Shows & Exhibits", href: "/solutions/trade-shows" },
   { label: "Technical Recruiting", href: "/solutions/technical-recruiting" },
-  { label: "Field Sales Enablement", href: "#" },
-  { label: "Facilities", href: "#" },
-  { label: "Events & Venues", href: "#" },
+  { label: "Field Sales Enablement", href: "/solutions/field-sales" },
+  { label: "Facilities", href: "/solutions/facilities" },
+  { label: "Venues & Events", href: "#" },
 ];
 
 const platformLinks = [

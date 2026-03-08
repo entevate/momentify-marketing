@@ -103,9 +103,9 @@ const solutions = [
     ctaColor: "#B8A0D8",
   },
   {
-    tab: "Events and Venues",
+    tab: "Venues and Events",
     color: "#F25E3D",
-    label: "EVENTS AND VENUES",
+    label: "VENUES AND EVENTS",
     headline: "A full suite is not a strategy. Knowing what it produced is.",
     body: "Ticket sales and attendance numbers tell you who showed up. Momentify tells you what happened after they walked in. Sponsor accountability, guest engagement, and follow-up clarity in one platform.",
     bullets: [
@@ -113,7 +113,7 @@ const solutions = [
       "Sponsor-specific tracking with exportable ROX reports",
       "Persona-based content and experiences by section, suite, and guest type",
     ],
-    cta: "Explore Events and Venues",
+    cta: "Explore Venues and Events",
     bg: "linear-gradient(135deg, #1A0400 0%, #8F200A 55%, #F25E3D 100%)",
     geoFill1: "white",
     geoOpacity1: 0.06,

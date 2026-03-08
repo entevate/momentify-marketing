@@ -149,7 +149,7 @@ const calculatorCards = [
   {
     name: "Venues",
     description: "Score event spaces on visitor engagement, interaction, and conversion.",
-    href: "/rox/events",
+    href: "/rox/venues",
     icon: (
       <svg width="36" height="36" viewBox="0 0 36 36" fill="none" stroke="#00BBA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 28h28" />

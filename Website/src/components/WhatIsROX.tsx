@@ -107,7 +107,7 @@ const verticals = [
     context: "Candidate capture rate, engagement quality by role, time to first contact, and conversion to interview or hire.",
     linkText: "Calculate Recruiting ROX",
     href: "/rox/recruiting",
-    active: false,
+    active: true,
     color: "#5FD9C2",
     bgTint: "rgba(95, 217, 194, 0.06)",
     borderColor: "rgba(95, 217, 194, 0.15)",
@@ -117,7 +117,7 @@ const verticals = [
     context: "Interaction capture rate at job sites and facilities, content engagement, follow-up speed, and deal progression.",
     linkText: "Calculate Field Sales ROX",
     href: "/rox/field-sales",
-    active: false,
+    active: true,
     color: "#F2B33D",
     bgTint: "rgba(242, 179, 61, 0.06)",
     borderColor: "rgba(242, 179, 61, 0.15)",
@@ -127,17 +127,17 @@ const verticals = [
     context: "Visitor capture across showrooms and demo floors, content depth, engagement duration, and intent signals.",
     linkText: "Calculate Facilities ROX",
     href: "/rox/facilities",
-    active: false,
+    active: true,
     color: "#8B5CF6",
     bgTint: "rgba(58, 32, 115, 0.06)",
     borderColor: "rgba(58, 32, 115, 0.15)",
   },
   {
-    name: "Events & Venues",
+    name: "Venues & Events",
     context: "Attendee engagement beyond ticket scans, content interaction, sponsor ROX, and post-event conversion.",
     linkText: "Calculate Events ROX",
-    href: "/rox/events",
-    active: false,
+    href: "/rox/venues",
+    active: true,
     color: "#F25E3D",
     bgTint: "rgba(242, 94, 61, 0.06)",
     borderColor: "rgba(242, 94, 61, 0.15)",
@@ -561,7 +561,7 @@ export default function WhatIsROX() {
               </div>
               <div style={{ borderTop: "1px solid rgba(6,19,65,0.06)", paddingTop: "16px" }}>
                 <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "14px", color: "rgba(6,19,65,0.5)", fontStyle: "italic", lineHeight: 1.6 }}>
-                  What is missing: depth of engagement, lead intent, follow-up speed, and whether any of it converted.
+                  What is missing: depth of engagement, lead intent, follow-up speed, and whether any of it converted. No visibility into what actually happened across your moments and experiences.
                 </p>
               </div>
             </motion.div>

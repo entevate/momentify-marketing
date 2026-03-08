@@ -87,7 +87,7 @@ function HeroGauge() {
   const cx = 200, cy = 200, r = 140;
   const polarToCart = (angleDeg: number) => {
     const rad = (Math.PI * (180 - angleDeg)) / 180;
-    return { x: Math.round((cx + r * Math.cos(rad)) * 100) / 100, y: Math.round((cy - r * Math.sin(rad)) * 100) / 100 };
+    return { x: cx + r * Math.cos(rad), y: cy - r * Math.sin(rad) };
   };
   const arcPath = (startDeg: number, endDeg: number) => {
     const s = polarToCart(startDeg);
@@ -156,7 +156,7 @@ const fadeUp = {
 
 const inputStyle: React.CSSProperties = {
   background: "#FFFFFF",
-  border: "1px solid rgba(107,33,212,0.15)",
+  border: "1px solid rgba(26,138,118,0.15)",
   borderRadius: "8px",
   padding: "12px 16px",
   fontFamily: "var(--font-inter)",
@@ -168,7 +168,7 @@ const inputStyle: React.CSSProperties = {
   transition: "border-color 200ms ease, box-shadow 200ms ease",
 };
 
-const inputFocusStyle = "focus:border-[#9B5FE8] focus:shadow-[0_0_0_3px_rgba(155,95,232,0.15)]";
+const inputFocusStyle = "focus:border-[#5FD9C2] focus:shadow-[0_0_0_3px_rgba(95,217,194,0.15)]";
 
 /* ── Category card (hoisted) ─────────────────────────── */
 
@@ -186,16 +186,16 @@ function CategoryCard({
   children: React.ReactNode;
 }) {
   const barWidth = score !== null ? `${Math.min(score, 100)}%` : "0%";
-  const barColor = score !== null ? getTierColor(score) : "rgba(196,165,240,0.12)";
+  const barColor = score !== null ? getTierColor(score) : "rgba(163,235,216,0.12)";
 
   return (
     <div
       style={{
         background: "rgba(255,255,255,0.9)",
-        border: "1px solid rgba(107,33,212,0.1)",
+        border: "1px solid rgba(26,138,118,0.1)",
         borderRadius: "16px",
         padding: "32px",
-        boxShadow: "0 1px 3px rgba(107,33,212,0.04)",
+        boxShadow: "0 1px 3px rgba(26,138,118,0.04)",
       }}
     >
       <span
@@ -204,8 +204,8 @@ function CategoryCard({
           fontFamily: "var(--font-inter)",
           fontWeight: 700,
           fontSize: "11px",
-          color: "#6B21D4",
-          background: "rgba(107,33,212,0.08)",
+          color: "#1A8A76",
+          background: "rgba(26,138,118,0.08)",
           borderRadius: "20px",
           padding: "4px 10px",
           marginBottom: "8px",
@@ -228,7 +228,7 @@ function CategoryCard({
             {score !== null ? Math.round(score) : "--"}
           </span>
         </div>
-        <div style={{ height: "4px", borderRadius: "2px", background: "rgba(107,33,212,0.08)", overflow: "hidden" }}>
+        <div style={{ height: "4px", borderRadius: "2px", background: "rgba(26,138,118,0.08)", overflow: "hidden" }}>
           <div
             style={{
               height: "100%",
@@ -266,10 +266,10 @@ function LiveScorePanel({
     <div
       style={{
         background: "rgba(255,255,255,0.9)",
-        border: "1px solid rgba(107,33,212,0.1)",
+        border: "1px solid rgba(26,138,118,0.1)",
         borderRadius: "20px",
         padding: "32px",
-        boxShadow: "0 2px 8px rgba(107,33,212,0.06)",
+        boxShadow: "0 2px 8px rgba(26,138,118,0.06)",
       }}
     >
       <CalcGauge score={hasData ? displayScore : 0} />
@@ -380,7 +380,7 @@ interface FormData {
   company: string;
   jobTitle: string;
   phone: string;
-  showsPerYear: string;
+  eventsPerYear: string;
 }
 
 /* ── Score calculation ───────────────────────────────── */
@@ -393,56 +393,56 @@ function clamp(val: number, min: number, max: number) {
 
 const tierInterpretations: Record<string, { headline: string; body: string }> = {
   "Critical Gap": {
-    headline: "Your events are costing more than they're delivering.",
-    body: "Lead capture is inconsistent, engagement depth is low, follow-up is slow, and conversions are not tracking. You likely lack the visibility and tools to identify and act on your best opportunities. Every category has room to improve, and improvement in any one of them compounds across the others.",
+    headline: "Your recruiting events are costing more than they deliver.",
+    body: "Candidate capture is inconsistent, engagement depth is low, follow-up is slow, and you cannot tie event spend to hires. You likely lack the visibility and tools to identify and act on your best candidates. Every category has room to improve, and improvement in any one of them compounds across the others.",
   },
   "Needs Optimization": {
-    headline: "You're capturing some value, but leaving ROX on the table.",
-    body: "You are getting results from your events, but there are clear inefficiencies. Engagement quality or follow-up speed is likely dragging your score down. High-intent leads are slipping away in the gap between the floor and the inbox. Closing those gaps compounds quickly.",
+    headline: "You are capturing some talent, but leaving strong candidates on the table.",
+    body: "Your recruiting events are producing results, but there are clear inefficiencies. Engagement quality or follow-up speed is likely dragging your score down. High-intent candidates are slipping away in the gap between the booth and the first outreach. Closing those gaps compounds quickly.",
   },
   "High ROX": {
-    headline: "Your events are performing above average. Now prove it with real data.",
+    headline: "Your recruiting events are performing above average. Now prove it with real data.",
     body: "Strong capture, good engagement, and timely follow-up. Some of your scores may be based on estimates rather than actual tracked behavior. Momentify can validate your assumptions, surface the gaps you cannot see yet, and push you into the Elite tier.",
   },
   "Elite ROX": {
     headline: "Highly optimized across every category. Keep it that way.",
-    body: "You are in the top-performing tier. This level requires constant visibility and quick reaction to maintain. Momentify provides the ongoing analytics, trend tracking, and multi-event scalability that keeps Elite performance from slipping.",
+    body: "You are in the top-performing tier. This level requires constant visibility and quick reaction to maintain. Momentify provides the ongoing analytics, candidate tracking, and multi-event scalability that keeps Elite performance from slipping.",
   },
 };
 
 /* ── Impact lines per category ───────────────────────── */
 
 const impactLines: Record<string, { headline: string; body: string }> = {
-  "Lead Capture Efficiency": {
-    headline: "Momentify captures every interaction, not just the scans.",
-    body: "Zone tracking, check-in flows, and persona tagging give you a true capture rate.",
+  "Candidate Capture Rate": {
+    headline: "Momentify captures every interaction, not just the resume drops.",
+    body: "Check-in flows, QR scanning, and role-interest tagging give you a true capture rate across every touchpoint.",
   },
   "Engagement Quality": {
-    headline: "See exactly what each visitor cared about.",
-    body: "Content selections, demo attendance, and conversation notes are all tracked in real time.",
+    headline: "See exactly which roles and content each candidate engaged with.",
+    body: "Tech talk attendance, coding challenge completions, and 1:1 conversation notes are all tracked in real time.",
   },
   "Follow-Up Speed": {
-    headline: "Leads route to the right rep before the show ends.",
-    body: "Smart Columns score and assign leads automatically. Same-day follow-up becomes the default.",
+    headline: "Candidates route to the right recruiter before the event ends.",
+    body: "Smart Columns score and assign candidates automatically. Same-day outreach becomes the default.",
   },
-  "Conversion Effectiveness": {
-    headline: "Score leads by intent, not just contact info.",
-    body: "Engagement-based scoring surfaces your highest-intent leads so your team focuses where it counts.",
+  "Conversion to Hire": {
+    headline: "Score candidates by fit and intent, not just interest.",
+    body: "Engagement-based scoring surfaces your highest-intent candidates so your team focuses where it counts.",
   },
 };
 
 /* ── Follow-up context messages ──────────────────────── */
 
 function getFollowUpContext(days: number): { text: string; color: string } {
-  if (days === 0) return { text: "Same-day follow-up. Elite performance.", color: "#0CF4DF" };
-  if (days <= 3) return { text: "Strong. Most teams average 5-7 days.", color: "#5FD9C2" };
-  if (days <= 7) return { text: "Room to improve. Intent fades fast after an event.", color: "#F2B33D" };
-  return { text: "High risk of lost leads. Speed is the biggest gap for most exhibitors.", color: "#E5484D" };
+  if (days === 0) return { text: "Same-day outreach. Elite performance.", color: "#0CF4DF" };
+  if (days <= 3) return { text: "Strong. Most recruiting teams average 5-7 days.", color: "#5FD9C2" };
+  if (days <= 7) return { text: "Room to improve. Top candidates move fast after events.", color: "#F2B33D" };
+  return { text: "High risk of lost candidates. Speed is the biggest gap for most recruiting teams.", color: "#E5484D" };
 }
 
 /* ── Main component ──────────────────────────────────── */
 
-export default function TradeShowsROXCalculator() {
+export default function RecruitingROXCalculator() {
   // Calculator vs Results state
   const [showResults, setShowResults] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -481,7 +481,7 @@ export default function TradeShowsROXCalculator() {
     company: "",
     jobTitle: "",
     phone: "",
-    showsPerYear: "",
+    eventsPerYear: "",
   });
 
   // Auto-populate total leads from Category 1 to Category 2B and 4
@@ -547,7 +547,7 @@ export default function TradeShowsROXCalculator() {
     return [calcCategory1(), calcCategory2(), calcCategory3(), calcCategory4()];
   }, [calcCategory1, calcCategory2, calcCategory3, calcCategory4]);
 
-  const categoryNames = ["Lead Capture Efficiency", "Engagement Quality", "Follow-Up Speed", "Conversion Effectiveness"];
+  const categoryNames = ["Candidate Capture Rate", "Engagement Quality", "Follow-Up Speed", "Conversion to Hire"];
 
   const totalScore = useMemo(() => {
     const valid = categoryScores.filter((s) => s !== null) as number[];
@@ -590,7 +590,7 @@ export default function TradeShowsROXCalculator() {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // <!-- On submit: POST to HubSpot Forms API. Also trigger booking link redirect or modal (Superhuman or Google Calendar). Replace action URL when HubSpot form ID is available. -->
+    // <!-- On submit: POST to HubSpot Forms API. Replace action URL when HubSpot form ID is available. -->
     setFormSubmitted(true);
   };
 
@@ -690,43 +690,41 @@ export default function TradeShowsROXCalculator() {
       if (!el) return;
       const html2canvas = (await import("html2canvas")).default;
       const jsPDF = (await import("jspdf")).default;
-      // Clone element at fixed 900px width for consistent PDF layout
       const clone = el.cloneNode(true) as HTMLElement;
       clone.style.width = "900px";
       clone.style.minWidth = "900px";
       clone.style.maxWidth = "900px";
       clone.style.padding = "48px 40px";
-      clone.style.background = "linear-gradient(135deg, #2D0770 0%, #4A0FA8 55%, #9B5FE8 100%)";
+      clone.style.background = "linear-gradient(135deg, #040E28 0%, #1A8A76 55%, #5FD9C2 100%)";
       clone.style.borderRadius = "0";
       clone.style.position = "fixed";
       clone.style.left = "-10000px";
       clone.style.top = "0";
       clone.style.zIndex = "-1";
       document.body.appendChild(clone);
-      const canvas = await html2canvas(clone, { scale: 2, backgroundColor: "#2D0770", useCORS: true });
+      const canvas = await html2canvas(clone, { scale: 2, backgroundColor: "#040E28", useCORS: true });
       document.body.removeChild(clone);
       const imgData = canvas.toDataURL("image/png");
-      const pdfWidth = 595; // A4 width in points
+      const pdfWidth = 595;
       const pdfHeight = (canvas.height / canvas.width) * pdfWidth;
       const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: [pdfWidth, pdfHeight + 80] });
-      // Header
-      pdf.setFillColor(45, 7, 112);
+      pdf.setFillColor(4, 14, 40);
       pdf.rect(0, 0, pdfWidth, 40, "F");
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(11);
       pdf.setTextColor(255, 255, 255);
-      pdf.text("MOMENTIFY  |  Trade Show ROX\u2122 Scorecard", 24, 26);
+      pdf.text("MOMENTIFY  |  Technical Recruiting ROX\u2122 Scorecard", 24, 26);
       pdf.setFontSize(9);
-      pdf.setTextColor(180, 180, 220);
-      pdf.text("momentify.com/rox/trade-shows", pdfWidth - 24, 26, { align: "right" });
+      pdf.setTextColor(163, 235, 216);
+      pdf.text("momentify.com/rox/recruiting", pdfWidth - 24, 26, { align: "right" });
       pdf.addImage(imgData, "PNG", 0, 40, pdfWidth, pdfHeight);
-      pdf.save(`Momentify-Trade-Show-ROX-Score-${displayScore}.pdf`);
+      pdf.save(`Momentify-Recruiting-ROX-Score-${displayScore}.pdf`);
     };
 
     const handleEmailResults = () => {
-      const subject = encodeURIComponent(`My Trade Show ROX Score: ${displayScore} (${tierName})`);
+      const subject = encodeURIComponent(`My Recruiting ROX Score: ${displayScore} (${tierName})`);
       const body = encodeURIComponent(
-        `My Trade Show ROX Score: ${displayScore} / 100\nTier: ${tierName}\n\n` +
+        `My Technical Recruiting ROX Score: ${displayScore} / 100\nTier: ${tierName}\n\n` +
         categoryNames.map((name, i) => `${name}: ${categoryScores[i] !== null ? Math.round(categoryScores[i]!) : "--"}`).join("\n") +
         (bonusValue ? `\n\nPotential Value Generated: $${bonusValue.toLocaleString()}` : "") +
         `\n\nCalculate your own ROX score: ${typeof window !== "undefined" ? window.location.href : ""}`
@@ -743,8 +741,8 @@ export default function TradeShowsROXCalculator() {
               YOUR RESULTS
             </p>
             <h2 style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "clamp(32px, 3.5vw, 46px)", lineHeight: 1.15, letterSpacing: "-0.02em" }}>
-              <span style={{ color: "#FFFFFF" }}>Trade Show</span><br />
-              <span style={{ background: "linear-gradient(135deg, #9B5FE8, #C4A5F0)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>ROX™ Scorecard</span>
+              <span style={{ color: "#FFFFFF" }}>Technical Recruiting</span><br />
+              <span style={{ background: "linear-gradient(135deg, #5FD9C2, #A3EBD8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>ROX&#8482; Scorecard</span>
             </h2>
           </div>
           <div className="flex items-center gap-3">
@@ -791,7 +789,7 @@ export default function TradeShowsROXCalculator() {
 
         <div id="rox-results">
         {/* Score display */}
-        <div className="mb-8" style={{ background: "rgba(255,255,255,0.9)", borderRadius: "20px", padding: "48px 32px", border: "1px solid rgba(107,33,212,0.1)", boxShadow: "0 1px 3px rgba(107,33,212,0.04)" }}>
+        <div className="mb-8" style={{ background: "rgba(255,255,255,0.9)", borderRadius: "20px", padding: "48px 32px", border: "1px solid rgba(26,138,118,0.1)", boxShadow: "0 1px 3px rgba(26,138,118,0.04)" }}>
           <div style={{ textAlign: "center", maxWidth: "480px", margin: "0 auto" }}>
             <CalcGauge score={displayScore} size="large" />
             <p
@@ -842,10 +840,10 @@ export default function TradeShowsROXCalculator() {
             const catTier = getTierName(val);
             const catColor = getTierColor(val);
             const interpretations: Record<string, string> = {
-              "Lead Capture Efficiency": s !== null && s >= 70 ? "Strong capture rate relative to booth traffic." : "Too many visitors are leaving without being captured.",
-              "Engagement Quality": s !== null && s >= 70 ? "Visitors are spending meaningful time at your booth." : "Interactions are shallow. Visitors are not engaging deeply.",
-              "Follow-Up Speed": s !== null && s >= 70 ? "Your team is following up quickly after the event." : "Leads are going cold before your team reaches out.",
-              "Conversion Effectiveness": s !== null && s >= 70 ? "Strong post-event conversion from leads to pipeline." : "Captured leads are not converting to meetings or deals.",
+              "Candidate Capture Rate": s !== null && s >= 70 ? "Strong capture rate relative to event attendance." : "Too many candidates are leaving without being captured.",
+              "Engagement Quality": s !== null && s >= 70 ? "Candidates are spending meaningful time with your team." : "Interactions are shallow. Candidates are not engaging deeply with your roles.",
+              "Follow-Up Speed": s !== null && s >= 70 ? "Your team is reaching out quickly after the event." : "Candidates are going cold before your team reaches out.",
+              "Conversion to Hire": s !== null && s >= 70 ? "Strong post-event conversion from candidates to pipeline or hires." : "Captured candidates are not converting to screens, interviews, or offers.",
             };
 
             return (
@@ -853,10 +851,10 @@ export default function TradeShowsROXCalculator() {
                 key={name}
                 style={{
                   background: "rgba(255,255,255,0.9)",
-                  border: "1px solid rgba(107,33,212,0.1)",
+                  border: "1px solid rgba(26,138,118,0.1)",
                   borderRadius: "14px",
                   padding: "24px 28px",
-                  boxShadow: "0 1px 3px rgba(107,33,212,0.04)",
+                  boxShadow: "0 1px 3px rgba(26,138,118,0.04)",
                 }}
               >
                 <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "13px", color: "rgba(6,19,65,0.45)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "8px" }}>
@@ -894,14 +892,14 @@ export default function TradeShowsROXCalculator() {
               ${bonusValue.toLocaleString()}
             </p>
             <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "14px", color: "rgba(6,19,65,0.5)", marginBottom: "16px" }}>
-              Based on {bonus_qualifiedLeads.value} qualified leads at ${parseFloat(bonus_valuePerLead.value).toLocaleString()} per lead.
+              Based on {bonus_qualifiedLeads.value} qualified candidates at ${parseFloat(bonus_valuePerLead.value).toLocaleString()} per hire.
             </p>
             <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "14px", color: "rgba(6,19,65,0.55)", lineHeight: 1.7 }}>
-              This is the estimated pipeline value sitting inside your captured leads. Your ROX score tells you how effectively your process converts that opportunity. A Critical Gap score with high potential value means the pipeline is there. The process to capture it is not.
+              This is the estimated talent value sitting inside your captured candidates. Your ROX score tells you how effectively your process converts that opportunity. A Critical Gap score with high potential value means the talent pipeline is there. The process to capture it is not.
             </p>
             {totalScore !== null && totalScore < 70 && (
               <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "14px", color: "rgba(242,179,61,0.9)", lineHeight: 1.7, marginTop: "12px" }}>
-                Improving your lowest-scoring categories directly increases the share of this value your team actually closes.
+                Improving your lowest-scoring categories directly increases the share of this talent your team actually hires.
               </p>
             )}
           </div>
@@ -929,14 +927,14 @@ export default function TradeShowsROXCalculator() {
 
         {/* Momentify impact block */}
         {lowestCategories.length > 0 && (
-          <div className="mb-12" style={{ background: "rgba(255,255,255,0.9)", borderRadius: "16px", padding: "32px", border: "1px solid rgba(107,33,212,0.1)", boxShadow: "0 1px 3px rgba(107,33,212,0.04)" }}>
+          <div className="mb-12" style={{ background: "rgba(255,255,255,0.9)", borderRadius: "16px", padding: "32px", border: "1px solid rgba(26,138,118,0.1)", boxShadow: "0 1px 3px rgba(26,138,118,0.04)" }}>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {lowestCategories.map((cat) => {
                 const impact = impactLines[cat.name];
                 if (!impact) return null;
                 return (
                   <div key={cat.name}>
-                    <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "11px", color: "#6B21D4", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>
+                    <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "11px", color: "#1A8A76", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "8px" }}>
                       {cat.name}
                     </p>
                     <h4 style={{ fontFamily: "var(--font-inter)", fontWeight: 700, fontSize: "16px", color: "#061341", marginBottom: "6px", lineHeight: 1.4 }}>
@@ -958,16 +956,16 @@ export default function TradeShowsROXCalculator() {
         <div
           style={{
             background: "rgba(255,255,255,0.9)",
-            border: "1px solid rgba(107,33,212,0.1)",
+            border: "1px solid rgba(26,138,118,0.1)",
             borderRadius: "20px",
             padding: "40px 48px",
-            boxShadow: "0 2px 8px rgba(107,33,212,0.06)",
+            boxShadow: "0 2px 8px rgba(26,138,118,0.06)",
           }}
         >
           <AnimatePresence mode="wait">
             {!formSubmitted ? (
               <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-                <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "11px", color: "#6B21D4", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: "12px" }}>
+                <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "11px", color: "#1A8A76", letterSpacing: "0.14em", textTransform: "uppercase", marginBottom: "12px" }}>
                   FREE 30-MINUTE CONSULTATION
                 </p>
                 <h3 style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "28px", color: "#061341", marginBottom: "8px" }}>
@@ -978,13 +976,7 @@ export default function TradeShowsROXCalculator() {
                   We&apos;ll walk through your results and show you exactly where Momentify moves the needle on your lowest-scoring categories.
                 </p>
 
-                {/* Hidden fields: passes ROX Score to HubSpot on form submission */}
-                {/* Hidden field: passes ROX Tier to HubSpot on form submission */}
-                {/* Hidden field: passes Category 1 Score to HubSpot on form submission */}
-                {/* Hidden field: passes Category 2 Score to HubSpot on form submission */}
-                {/* Hidden field: passes Category 3 Score to HubSpot on form submission */}
-                {/* Hidden field: passes Category 4 Score to HubSpot on form submission */}
-                {/* Hidden field: passes Source Page to HubSpot on form submission */}
+                {/* Hidden fields for HubSpot */}
 
                 <form onSubmit={handleFormSubmit}>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
@@ -998,7 +990,7 @@ export default function TradeShowsROXCalculator() {
                     ].map((field) => (
                       <div key={field.key}>
                         <label style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "rgba(6,19,65,0.6)", marginBottom: "6px", display: "block" }}>
-                          {field.label}{field.required && <span style={{ color: "#6B21D4" }}> *</span>}
+                          {field.label}{field.required && <span style={{ color: "#1A8A76" }}> *</span>}
                         </label>
                         <input
                           type={field.type}
@@ -1013,11 +1005,11 @@ export default function TradeShowsROXCalculator() {
                   </div>
                   <div className="mb-6">
                     <label style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "rgba(6,19,65,0.6)", marginBottom: "6px", display: "block" }}>
-                      How many trade shows does your team attend per year?
+                      How many recruiting events does your team attend per year?
                     </label>
                     <select
-                      value={formData.showsPerYear}
-                      onChange={(e) => setFormData((prev) => ({ ...prev, showsPerYear: e.target.value }))}
+                      value={formData.eventsPerYear}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, eventsPerYear: e.target.value }))}
                       className={inputFocusStyle}
                       style={{ ...inputStyle, appearance: "none" }}
                     >
@@ -1033,7 +1025,7 @@ export default function TradeShowsROXCalculator() {
                     type="submit"
                     className="w-full transition-all duration-200 hover:opacity-90 hover:-translate-y-[1px] cursor-pointer"
                     style={{
-                      background: "linear-gradient(135deg, #6B21D4, #9B5FE8)",
+                      background: "linear-gradient(135deg, #1A8A76, #5FD9C2)",
                       color: "#FFFFFF",
                       fontFamily: "var(--font-inter)",
                       fontWeight: 700,
@@ -1045,7 +1037,6 @@ export default function TradeShowsROXCalculator() {
                   >
                     Book My Free Consultation
                   </button>
-                  {/* On submit: POST to HubSpot Forms API. Also trigger booking link redirect or modal (Superhuman or Google Calendar). Replace action URL when HubSpot form ID is available. */}
                   <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "12px", color: "rgba(6,19,65,0.35)", marginTop: "12px", textAlign: "center" }}>
                     No commitment. No sales pressure. Just your data and a conversation.
                   </p>
@@ -1058,14 +1049,14 @@ export default function TradeShowsROXCalculator() {
                     width: "48px",
                     height: "48px",
                     borderRadius: "50%",
-                    border: "2px solid #6B21D4",
+                    border: "2px solid #1A8A76",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     margin: "0 auto 20px",
                   }}
                 >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6B21D4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A8A76" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
@@ -1073,15 +1064,15 @@ export default function TradeShowsROXCalculator() {
                   You&apos;re on the calendar.
                 </h3>
                 <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "15px", color: "rgba(6,19,65,0.55)", lineHeight: 1.6, maxWidth: "480px", margin: "0 auto" }}>
-                  We will be in touch shortly to confirm your consultation time. In the meantime, explore how Momentify works for trade show teams.
+                  We will be in touch shortly to confirm your consultation time. In the meantime, explore how Momentify works for recruiting teams.
                 </p>
                 <a
-                  href="/solutions/trade-shows"
+                  href="/solutions/technical-recruiting"
                   style={{
                     fontFamily: "var(--font-inter)",
                     fontWeight: 500,
                     fontSize: "14px",
-                    color: "#6B21D4",
+                    color: "#1A8A76",
                     textDecoration: "none",
                     marginTop: "16px",
                     display: "inline-block",
@@ -1102,24 +1093,24 @@ export default function TradeShowsROXCalculator() {
 
   return (
     <>
-      {/* ═══════════════════ FULL-PAGE LAYOUT ═══════════════════ */}
+      {/* Full-page layout */}
       <section
         style={{
           position: "relative",
-          backgroundImage: "linear-gradient(135deg, #2D0770 0%, #4A0FA8 55%, #9B5FE8 100%)",
+          backgroundImage: "linear-gradient(135deg, #040E28 0%, #1A8A76 55%, #5FD9C2 100%)",
           paddingTop: "140px",
           paddingBottom: "120px",
         }}
       >
-        {/* Decorative background layer (clipped to prevent horizontal scroll) */}
+        {/* Decorative background layer */}
         <div style={{ position: "absolute", inset: 0, overflow: "hidden", pointerEvents: "none" }}>
           <svg viewBox="0 0 1440 900" preserveAspectRatio="xMaxYMax slice" style={{ width: "100%", height: "100%" }}>
             <path d="M1440 900 L1440 270 L960 0 L480 0 L1008 360 L1008 900 Z" fill="white" fillOpacity="0.05" />
             <path d="M1440 900 L1440 468 L864 108 L384 108 L864 468 L864 900 Z" fill="white" fillOpacity="0.04" />
           </svg>
           {/* Ambient glow orbs */}
-          <div style={{ position: "absolute", top: "20%", right: "-10%", width: "600px", height: "600px", borderRadius: "50%", background: "#C4A5F0", opacity: 0.07, filter: "blur(120px)" }} />
-          <div style={{ position: "absolute", bottom: "-20%", left: "10%", width: "500px", height: "500px", borderRadius: "50%", background: "#6B21D4", opacity: 0.05, filter: "blur(100px)" }} />
+          <div style={{ position: "absolute", top: "20%", right: "-10%", width: "600px", height: "600px", borderRadius: "50%", background: "#A3EBD8", opacity: 0.07, filter: "blur(120px)" }} />
+          <div style={{ position: "absolute", bottom: "-20%", left: "10%", width: "500px", height: "500px", borderRadius: "50%", background: "#1A8A76", opacity: 0.05, filter: "blur(100px)" }} />
         </div>
 
         <div className="mx-auto max-w-7xl px-6 lg:px-12" style={{ position: "relative", zIndex: 1 }}>
@@ -1132,7 +1123,7 @@ export default function TradeShowsROXCalculator() {
                 transition={{ duration: 0.4 }}
               >
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10">
-                  {/* ── Left column: hero copy + calculator inputs ── */}
+                  {/* Left column: hero copy + calculator inputs */}
                   <div>
                     <motion.div initial="hidden" animate="visible" variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}>
                       {/* Eyebrow */}
@@ -1148,7 +1139,7 @@ export default function TradeShowsROXCalculator() {
                           marginBottom: "24px",
                         }}
                       >
-                        Trade Show &amp; Exhibits ROX Calculator
+                        Technical Recruiting ROX Calculator
                       </motion.p>
 
                       <motion.h2
@@ -1156,18 +1147,13 @@ export default function TradeShowsROXCalculator() {
                         style={{
                           fontFamily: "var(--font-inter)",
                           fontWeight: 500,
-                          fontSize: "clamp(28px, 4vw, 42px)",
+                          fontSize: "clamp(24px, 4vw, 42px)",
                           color: "#FFFFFF",
                           lineHeight: 1.15,
                           marginBottom: "24px",
                         }}
                       >
-                        You&apos;re spending thousands
-                        <br className="hidden sm:block" />
-                        <br className="sm:hidden" />{" "}
-                        (if not more) on events,
-                        <br />
-                        do you know what&apos;s working?
+                        You&apos;re investing thousands in recruiting events, do you<br className="hidden lg:block" /> know what&apos;s working?
                       </motion.h2>
                       <motion.p
                         variants={fadeUp}
@@ -1180,7 +1166,7 @@ export default function TradeShowsROXCalculator() {
                           marginBottom: "36px",
                         }}
                       >
-                        Prove the value. Justify the investment. Optimize every interaction.
+                        Prove the value. Justify the investment. Optimize every candidate interaction.
                       </motion.p>
                       <motion.p
                         variants={fadeUp}
@@ -1193,16 +1179,16 @@ export default function TradeShowsROXCalculator() {
                           marginBottom: "28px",
                         }}
                       >
-                        Use our free Trade Show ROX™ Calculator to measure the true return on your event investments. Go beyond cost-per-lead and measure Return on Experience™ with data points that reflect real impact:
+                        Use our free Technical Recruiting ROX Calculator to measure the true return on your recruiting events. Go beyond cost-per-hire and score what actually drives results:
                       </motion.p>
 
-                      {/* Bullet points — 2×2 grid */}
+                      {/* Bullet points */}
                       <motion.div variants={fadeUp} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "48px" }}>
                         {[
-                          { icon: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75", label: "Leads captured vs. qualified" },
-                          { icon: "M13 2L3 14h9l-1 8 10-12h-9l1-8", label: "Engagement depth and duration" },
-                          { icon: "M18 20V10M12 20V4M6 20v-6", label: "Conversion to meetings or pipeline" },
-                          { icon: "M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83", label: "Time-to-follow-up" },
+                          { icon: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75", label: "Candidates captured vs. qualified" },
+                          { icon: "M13 2L3 14h9l-1 8 10-12h-9l1-8", label: "Engagement depth by role" },
+                          { icon: "M18 20V10M12 20V4M6 20v-6", label: "Conversion to interviews and hires" },
+                          { icon: "M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83", label: "Time-to-first-contact speed" },
                         ].map((item) => (
                           <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                             <div
@@ -1210,14 +1196,14 @@ export default function TradeShowsROXCalculator() {
                                 width: "32px",
                                 height: "32px",
                                 borderRadius: "8px",
-                                background: "rgba(196,165,240,0.12)",
+                                background: "rgba(163,235,216,0.12)",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 flexShrink: 0,
                               }}
                             >
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C4A5F0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A3EBD8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d={item.icon} />
                               </svg>
                             </div>
@@ -1272,9 +1258,9 @@ export default function TradeShowsROXCalculator() {
                     {/* Calculator inputs */}
                     <div className="space-y-6">
                     {/* Category 1 */}
-                    <CategoryCard num="01" name="Lead Capture Efficiency" weight="Worth 25% of your total score" score={categoryScores[0]}>
-                      {renderField("Total Booth Visitors", "Estimated total number of people who stopped at or walked through your booth. Use event organizer traffic count if available.", c1_visitors, setC1Visitors, "e.g. 500")}
-                      {renderField("Total Leads Captured", "Total contacts captured via badge scan, form entry, or any other method.", c1_leads, setC1Leads, "e.g. 150")}
+                    <CategoryCard num="01" name="Candidate Capture Rate" weight="Worth 25% of your total score" score={categoryScores[0]}>
+                      {renderField("Total Event Attendees", "Estimated total number of candidates who visited your booth or attended your recruiting session. Use event organizer attendance counts if available.", c1_visitors, setC1Visitors, "e.g. 300")}
+                      {renderField("Candidates Captured", "Total candidate profiles collected via badge scan, QR code, sign-up form, or resume drop.", c1_leads, setC1Leads, "e.g. 75")}
                       {categoryScores[0] !== null && (
                         <div className="mt-2">
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
@@ -1290,7 +1276,7 @@ export default function TradeShowsROXCalculator() {
                     {/* Category 2 */}
                     <CategoryCard num="02" name="Engagement Quality" weight="Worth 25% of your total score" score={categoryScores[1]}>
                       {/* Toggle */}
-                      <div className="flex items-center gap-1 mb-6" style={{ background: "rgba(107,33,212,0.06)", borderRadius: "24px", padding: "3px", width: "fit-content" }}>
+                      <div className="flex items-center gap-1 mb-6" style={{ background: "rgba(26,138,118,0.06)", borderRadius: "24px", padding: "3px", width: "fit-content" }}>
                         <button
                           type="button"
                           onClick={() => setEngagementOptionA(false)}
@@ -1302,7 +1288,7 @@ export default function TradeShowsROXCalculator() {
                             padding: "6px 14px",
                             borderRadius: "20px",
                             border: "none",
-                            background: !engagementOptionA ? "#6B21D4" : "transparent",
+                            background: !engagementOptionA ? "#1A8A76" : "transparent",
                             color: !engagementOptionA ? "#FFFFFF" : "rgba(6,19,65,0.45)",
                           }}
                         >
@@ -1319,7 +1305,7 @@ export default function TradeShowsROXCalculator() {
                             padding: "6px 14px",
                             borderRadius: "20px",
                             border: "none",
-                            background: engagementOptionA ? "#6B21D4" : "transparent",
+                            background: engagementOptionA ? "#1A8A76" : "transparent",
                             color: engagementOptionA ? "#FFFFFF" : "rgba(6,19,65,0.45)",
                           }}
                         >
@@ -1328,13 +1314,13 @@ export default function TradeShowsROXCalculator() {
                       </div>
                       {engagementOptionA ? (
                         <>
-                          {renderField("Average Time Engaged (minutes)", "How long did the average visitor spend interacting at your booth?", c2a_avgTime, setC2aAvgTime, "e.g. 8")}
-                          {renderField("Target Engagement Time (minutes)", "What is your ideal engagement duration for a qualified conversation?", c2a_targetTime, setC2aTargetTime, "e.g. 10")}
+                          {renderField("Average Time Engaged (minutes)", "How long did the average candidate spend interacting at your booth or session?", c2a_avgTime, setC2aAvgTime, "e.g. 12")}
+                          {renderField("Target Engagement Time (minutes)", "What is your ideal engagement duration for a qualified candidate conversation?", c2a_targetTime, setC2aTargetTime, "e.g. 15")}
                         </>
                       ) : (
                         <>
-                          {renderField("Leads with a Meaningful Interaction", "How many leads attended a demo, downloaded content, or had a recorded conversation?", c2b_meaningful, setC2bMeaningful, "e.g. 60")}
-                          {renderField("Total Leads Captured", "Same number from Category 1. Auto-populated if already entered above.", c2b_totalLeads, setC2bTotalLeads, "e.g. 150")}
+                          {renderField("Candidates with a Meaningful Interaction", "How many candidates attended a tech talk, completed a coding challenge, had a 1:1 with an engineer, or engaged with role-specific content?", c2b_meaningful, setC2bMeaningful, "e.g. 35")}
+                          {renderField("Total Candidates Captured", "Same number from Category 1. Auto-populated if already entered above.", c2b_totalLeads, setC2bTotalLeads, "e.g. 75")}
                         </>
                       )}
                     </CategoryCard>
@@ -1342,11 +1328,11 @@ export default function TradeShowsROXCalculator() {
                     {/* Category 3 */}
                     <CategoryCard num="03" name="Follow-Up Speed" weight="Worth 25% of your total score" score={categoryScores[2]}>
                       {renderField(
-                        "Average Days to First Follow-Up",
-                        "How many days on average before your team sent the first follow-up after the event ended?",
+                        "Average Days to First Contact",
+                        "How many days on average before your team sent the first outreach after the event ended?",
                         c3_days,
                         setC3Days,
-                        "e.g. 3",
+                        "e.g. 5",
                         undefined,
                         20,
                         "Scores above 20 days are capped at 0 points for this category."
@@ -1371,16 +1357,16 @@ export default function TradeShowsROXCalculator() {
                     </CategoryCard>
 
                     {/* Category 4 */}
-                    <CategoryCard num="04" name="Conversion Effectiveness" weight="Worth 25% of your total score" score={categoryScores[3]}>
-                      {renderField("Post-Event Conversions", "How many leads converted to a meeting booked, qualified opportunity, or closed deal after the event?", c4_conversions, setC4Conversions, "e.g. 15")}
-                      {renderField("Total Leads Captured", "Same number from Category 1. Auto-populated if already entered above.", c4_totalLeads, setC4TotalLeads, "e.g. 150")}
+                    <CategoryCard num="04" name="Conversion to Hire" weight="Worth 25% of your total score" score={categoryScores[3]}>
+                      {renderField("Post-Event Hires or Advances", "How many candidates moved to a phone screen, on-site interview, or accepted offer as a direct result of the event?", c4_conversions, setC4Conversions, "e.g. 8")}
+                      {renderField("Total Candidates Captured", "Same number from Category 1. Auto-populated if already entered above.", c4_totalLeads, setC4TotalLeads, "e.g. 75")}
                       {categoryScores[3] !== null && (
                         <div className="mt-2">
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
                             Conversion Rate: {Math.round(categoryScores[3])}%
                           </p>
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
-                            Industry average: ~5-10% post-event conversion
+                            Industry average: ~5-12% post-event conversion to next stage
                           </p>
                         </div>
                       )}
@@ -1390,11 +1376,11 @@ export default function TradeShowsROXCalculator() {
                     <div
                       style={{
                         background: "rgba(255,255,255,0.9)",
-                        border: "1px solid rgba(107,33,212,0.1)",
+                        border: "1px solid rgba(26,138,118,0.1)",
                         borderLeft: "3px solid #F2B33D",
                         borderRadius: "16px",
                         padding: "32px",
-                        boxShadow: "0 1px 3px rgba(107,33,212,0.04)",
+                        boxShadow: "0 1px 3px rgba(26,138,118,0.04)",
                       }}
                     >
                       <span
@@ -1418,8 +1404,8 @@ export default function TradeShowsROXCalculator() {
                       <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "12px", color: "rgba(6,19,65,0.45)", marginBottom: "24px" }}>
                         Optional. Does not affect your ROX score.
                       </p>
-                      {renderField("Qualified Leads", "How many of your captured leads were qualified for follow-up? A qualified lead had a meaningful interaction and fits your target buyer profile.", bonus_qualifiedLeads, setBonusQualifiedLeads, "e.g. 45")}
-                      {renderField("Estimated Value Per Qualified Lead", "What is the average deal value, contract size, or revenue opportunity associated with a qualified lead from a trade show? Use your best estimate if exact figures are unavailable.", bonus_valuePerLead, setBonusValuePerLead, "e.g. 5000", "$")}
+                      {renderField("Qualified Candidates", "How many of your captured candidates were qualified for your open roles? A qualified candidate had a meaningful interaction and matches your technical requirements.", bonus_qualifiedLeads, setBonusQualifiedLeads, "e.g. 25")}
+                      {renderField("Estimated Value Per Qualified Hire", "What is the average cost-of-vacancy, recruiter agency fee saved, or lifetime value of a hire sourced from a recruiting event? Use your best estimate if exact figures are unavailable.", bonus_valuePerLead, setBonusValuePerLead, "e.g. 15000", "$")}
                       <div style={{ marginTop: "16px" }}>
                         {bonusValue ? (
                           <>
@@ -1427,7 +1413,7 @@ export default function TradeShowsROXCalculator() {
                               Potential Value: ${bonusValue.toLocaleString()}
                             </p>
                             <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "12px", color: "rgba(6,19,65,0.45)", marginTop: "4px" }}>
-                              Based on {bonus_qualifiedLeads.value} qualified leads at ${parseFloat(bonus_valuePerLead.value).toLocaleString()} each.
+                              Based on {bonus_qualifiedLeads.value} qualified candidates at ${parseFloat(bonus_valuePerLead.value).toLocaleString()} each.
                             </p>
                           </>
                         ) : (
@@ -1445,7 +1431,7 @@ export default function TradeShowsROXCalculator() {
                         disabled={totalScore === null}
                         className="w-full transition-all duration-200 hover:opacity-90 hover:-translate-y-[1px] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
                         style={{
-                          background: "linear-gradient(135deg, #6B21D4, #9B5FE8)",
+                          background: "linear-gradient(135deg, #1A8A76, #5FD9C2)",
                           color: "#FFFFFF",
                           fontFamily: "var(--font-inter)",
                           fontWeight: 700,
@@ -1465,7 +1451,7 @@ export default function TradeShowsROXCalculator() {
                   </div>
                   </div>
 
-                  {/* ── Right column: sticky score panel (desktop) ── */}
+                  {/* Right column: sticky score panel (desktop) */}
                   <div className="hidden lg:block">
                     <div className="sticky top-[100px]">
                       <LiveScorePanel totalScore={totalScore} categoryNames={categoryNames} categoryScores={categoryScores} skippedCount={skippedCount} bonusValue={bonusValue} />

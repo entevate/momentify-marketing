@@ -6,17 +6,15 @@ import { motion } from "framer-motion";
 const words = [
   "Trade Show.",
   "Exhibit.",
-  "Fan Engagement.",
   "Demo.",
   "Moment.",
-  "Recruiting Event.",
+  "Career Fair.",
   "Job Fair.",
-  "Booth Conversation.",
   "Handshake.",
   "Moment.",
-  "Field Interaction.",
-  "Facility Visit.",
-  "Live Experience.",
+  "Field Visit.",
+  "Facility Tour.",
+  "Experience.",
   "Conversation.",
   "Moment.",
 ];
@@ -230,14 +228,14 @@ export default function Hero() {
               className="mt-12 grid grid-cols-2 sm:flex sm:flex-row gap-4"
             >
               <a
-                href="#platform"
-                className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg bg-white text-midnight transition-all duration-200 hover:bg-white/90 hover:scale-[1.02] sm:min-w-[200px]"
+                href="/platform/how-it-works"
+                className="inline-flex items-center justify-center font-semibold text-[11px] sm:text-[14px] py-3.5 px-4 sm:px-7 rounded-lg bg-white text-midnight transition-all duration-200 hover:bg-white/90 hover:scale-[1.02] sm:min-w-[200px]"
               >
                 See How It Works
               </a>
               <a
-                href="#rox"
-                className="inline-flex items-center justify-center font-semibold text-[14px] text-white py-3.5 px-7 rounded-lg transition-all duration-200 hover:bg-white/[0.08] sm:min-w-[200px]"
+                href="/what-is-rox"
+                className="inline-flex items-center justify-center font-semibold text-[11px] sm:text-[14px] text-white py-3.5 px-4 sm:px-7 rounded-lg transition-all duration-200 hover:bg-white/[0.08] sm:min-w-[200px]"
                 style={{
                   border: "1.5px solid rgba(255, 255, 255, 0.25)",
                 }}
