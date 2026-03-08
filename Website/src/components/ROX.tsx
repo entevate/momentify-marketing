@@ -714,7 +714,7 @@ export default function ROX() {
             >
               Or{" "}
               <a
-                href="#demo"
+                href="/demo?source=rox"
                 className="hover:underline"
                 style={{ color: "#00BBA5", textDecoration: "none" }}
               >

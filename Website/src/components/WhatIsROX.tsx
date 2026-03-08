@@ -135,7 +135,7 @@ const verticals = [
   {
     name: "Venues & Events",
     context: "Attendee engagement beyond ticket scans, content interaction, sponsor ROX, and post-event conversion.",
-    linkText: "Calculate Events ROX",
+    linkText: "Calculate Venue ROX",
     href: "/rox/venues",
     active: true,
     color: "#F25E3D",
@@ -964,7 +964,7 @@ export default function WhatIsROX() {
             <motion.div variants={fadeUp} className="flex flex-row gap-3 sm:gap-4">
               {/* Primary: Schedule a Demo */}
               <a
-                href="#demo"
+                href="/demo?source=what-is-rox"
                 className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[16px] py-2.5 sm:py-4 px-3 sm:px-9 transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
                 style={{
                   fontFamily: "var(--font-inter)",

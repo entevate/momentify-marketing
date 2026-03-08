@@ -1250,7 +1250,7 @@ export default function RecruitingROXCalculator() {
                         className="flex items-center gap-1.5 transition-all duration-200 hover:opacity-80 cursor-pointer"
                         style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "rgba(255,255,255,0.5)", background: "none", border: "none", padding: 0 }}
                       >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 2v6h6" /><path d="M2.5 8a10 10 0 1 1 2.3 5.5" /></svg>
+                        <svg width="14" height="14" viewBox="-2 -5 29 29" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 2v6h6" /><path d="M2.5 8a10 10 0 1 1 2.3 5.5" /></svg>
                         Reset Fields
                       </button>
                     </div>

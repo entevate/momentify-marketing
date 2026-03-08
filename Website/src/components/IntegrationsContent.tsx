@@ -331,7 +331,7 @@ export default function IntegrationsContent() {
                 style={{ marginTop: "32px" }}
               >
                 <a
-                  href="#demo"
+                  href="/demo?source=integrations"
                   className="inline-flex items-center justify-center flex-1 sm:flex-initial sm:min-w-[200px] text-[12px] sm:text-[14px] py-2.5 sm:py-3.5 px-3 sm:px-7 transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
                   style={{
                     fontFamily: "var(--font-inter)",

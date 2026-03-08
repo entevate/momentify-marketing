@@ -1410,7 +1410,7 @@ export default function HowItWorksContent() {
             >
               {/* Primary */}
               <a
-                href="#demo"
+                href="/demo?source=how-it-works"
                 className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[14px] py-2.5 sm:py-3.5 px-3 sm:px-7 transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
                 style={{
                   fontFamily: "var(--font-inter)",

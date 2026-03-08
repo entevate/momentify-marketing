@@ -16,8 +16,8 @@ const platformLinks = [
   { name: "How It Works", href: "/platform/how-it-works", description: "The four-step Momentify workflow", isRoute: true, icon: "workflow" as const },
   { name: "Integrations", href: "/platform/integrations", description: "Connect with your existing tools", isRoute: true, icon: "integrations" as const },
   { name: "Security", href: "#", description: "Enterprise-grade data protection", isRoute: false, icon: "security" as const },
-  { name: "Help Center", href: "/platform/help-center", description: "Guides, FAQs, and support resources", isRoute: true, icon: "help" as const },
-  { name: "System Status", href: "/platform/system-status", description: "Real-time platform availability", isRoute: true, icon: "status" as const },
+  { name: "Help Center", href: "https://intercom.help/momentifyapp/en/", description: "Guides, FAQs, and support resources", isRoute: false, icon: "help" as const },
+  { name: "System Status", href: "https://status.momentifyapp.com/", description: "Real-time platform availability", isRoute: false, icon: "status" as const },
 ];
 
 const ICON_COLOR = "rgba(6,19,65,0.45)";
@@ -134,7 +134,7 @@ export default function Navigation() {
                           </div>
                         </Link>
                       ) : (
-                        <a key={link.name} href={link.href} className="flex items-start gap-3 rounded-lg p-3 hover:bg-light-bg transition-colors">
+                        <a key={link.name} href={link.href} {...(link.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})} className="flex items-start gap-3 rounded-lg p-3 hover:bg-light-bg transition-colors">
                           <div className="mt-0.5 flex-shrink-0">{platformIcons[link.icon]}</div>
                           <div>
                             <div className="text-charcoal text-[13px] font-medium">{link.name}</div>
@@ -148,13 +148,13 @@ export default function Navigation() {
               </AnimatePresence>
             </div>
             <a href="/what-is-rox" className={`text-[13px] font-medium transition-colors duration-300 leading-none ${linkColor}`}>What is ROX?</a>
-            <a href="#rox" className={`text-[13px] font-medium transition-colors duration-300 leading-none ${linkColor}`}>Case Studies</a>
+            <a href="/case-studies" className={`text-[13px] font-medium transition-colors duration-300 leading-none ${linkColor}`}>Case Studies</a>
           </div>
 
           {/* Desktop CTA */}
           <div className="hidden md:block">
             <a
-              href="#demo"
+              href="/demo"
               className={`text-[13px] font-medium px-5 py-2 rounded-md transition-all duration-300 ${
                 scrolled
                   ? "bg-charcoal text-white hover:bg-charcoal/85"
@@ -206,7 +206,7 @@ export default function Navigation() {
                       {link.name}
                     </Link>
                   ) : (
-                    <a key={link.name} href={link.href} className="flex items-center gap-3 py-2 text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>
+                    <a key={link.name} href={link.href} {...(link.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})} className="flex items-center gap-3 py-2 text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>
                       <div className="flex-shrink-0">{platformIcons[link.icon]}</div>
                       {link.name}
                     </a>
@@ -215,9 +215,9 @@ export default function Navigation() {
               </div>
               <div className="border-t border-black/[0.06] pt-4 space-y-3">
                 <a href="/what-is-rox" className="block text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>What is ROX?</a>
-                <a href="#rox" className="block text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>Case Studies</a>
+                <a href="/case-studies" className="block text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>Case Studies</a>
               </div>
-              <a href="#demo" className="block text-center bg-charcoal text-white text-sm font-medium px-6 py-3 rounded-md">
+              <a href="/demo" className="block text-center bg-charcoal text-white text-sm font-medium px-6 py-3 rounded-md">
                 Schedule a Demo
               </a>
             </div>

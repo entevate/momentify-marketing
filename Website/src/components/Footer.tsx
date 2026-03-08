@@ -10,16 +10,16 @@ const platformLinks = [
   { label: "How It Works", href: "/platform/how-it-works" },
   { label: "Integrations", href: "/platform/integrations" },
   { label: "Security", href: "#" },
-  { label: "Help Center", href: "/platform/help-center" },
-  { label: "System Status", href: "/platform/system-status" },
+  { label: "Help Center", href: "https://intercom.help/momentifyapp/en/" },
+  { label: "System Status", href: "https://status.momentifyapp.com/" },
 ];
 
 const companyLinks = [
   { label: "What is ROX?", href: "/what-is-rox" },
-  { label: "Case Studies", href: "#rox" },
+  { label: "Case Studies", href: "/case-studies" },
   { label: "About", href: "#" },
   { label: "Contact", href: "#" },
-  { label: "Schedule a Demo", href: "#demo" },
+  { label: "Schedule a Demo", href: "/demo" },
 ];
 
 export default function Footer() {
@@ -55,6 +55,11 @@ export default function Footer() {
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                 </svg>
               </a>
+            </div>
+            <div className="flex items-center gap-4 mt-4">
+              <a href="https://apps.apple.com/us/app/momentify-explorer/id6504941480" target="_blank" rel="noopener noreferrer" className="text-charcoal/25 hover:text-charcoal/50 text-[12px] transition-colors">Download (iOS)</a>
+              <span className="text-charcoal/15">|</span>
+              <a href="https://downloads.momentifyapp.com/app/explorer" target="_blank" rel="noopener noreferrer" className="text-charcoal/25 hover:text-charcoal/50 text-[12px] transition-colors">Download (Windows)</a>
             </div>
           </div>
 

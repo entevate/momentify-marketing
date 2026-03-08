@@ -42,6 +42,12 @@ body {
   color: var(--color-charcoal);
 }
 
+p, h1, h2, h3, h4, h5, h6, span, li {
+  text-wrap: pretty;
+  widows: 2;
+  orphans: 2;
+}
+
 /* Gradient text utility */
 .text-gradient-action {
   background: linear-gradient(135deg, #0CF4DF 0%, #254FE5 100%);

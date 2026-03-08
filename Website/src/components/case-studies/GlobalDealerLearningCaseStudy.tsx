@@ -1,19 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import ListenToPage from "@/components/ListenToPage";
-
-/* ── Narration text ─────────────────────────────────── */
-
-const NARRATION_TEXT = `This is the story of how Mustang CAT, a Caterpillar dealer in Southeast Texas, transformed their technical recruiting process with Momentify.
-
-Before Momentify, senior recruiter Sarah Bell attended career fairs and school visits with no digital infrastructure. Candidate information was captured on paper sign-up sheets, or not at all. There was no system for follow-up, no way to score candidates by interest level, and no analytics to measure which events were producing results.
-
-Momentify changed that by giving Sarah a digital capture system that works at the booth. Using iPad registration and mobile QR codes, every candidate now enters their information directly. The platform creates two separate pipelines from each event: one for students interested in Mustang CAT's Think BIG technician training program, and another for school advisors and instructors who help build long-term recruiting relationships.
-
-The results speak for themselves. Since launching in June 2025, Mustang CAT has captured over 600 candidates across their events. 321 students and 243 advisors now sit in tracked, scored pipelines. Nine candidates were interviewed, and seven received offers, all directly attributed to Momentify touchpoints. Sarah rated her likelihood to recommend Momentify a ten out of ten.
-
-The follow-up that used to depend on memory now happens before the event floor closes. Candidates are scored by temperature, notes are attached to names, and outreach goes out the same day.`;
 
 /* ── Animation variants (match existing site pattern) ── */
 
@@ -39,25 +26,25 @@ const stagger = {
 /* ── Stats data ──────────────────────────────────────── */
 
 const heroStats = [
-  { number: "600+", label: "Candidates captured since June 2025" },
-  { number: "7", label: "Hires directly attributed to Momentify" },
-  { number: "2", label: "Separate candidate pipelines built from every event" },
+  { number: "5,400+", label: "Opt-ins from students, advisors, and teachers" },
+  { number: "40", label: "Dealers receiving matched candidates" },
+  { number: "0", label: "Lost candidates across all events" },
 ];
 
 /* ── Challenge cards ─────────────────────────────────── */
 
 const challengeCards = [
   {
-    label: "No digital capture",
-    body: "Every candidate interaction left the event on paper or not at all. Contact information was scattered, unreliable, and hard to share with the team.",
+    label: "No candidate routing",
+    body: "Students met Caterpillar at national events but had no direct connection to the local dealer who could offer them a job. Intent was captured but never delivered.",
   },
   {
-    label: "No follow-up infrastructure",
-    body: "Without a system, follow-up depended on memory. Candidates who showed real intent were falling through the gap between the booth and the inbox.",
+    label: "Inconsistent capture across events",
+    body: "Each event operated differently. Some captured data on paper, some on spreadsheets. There was no single system connecting SkillsUSA, FFA, and dealer pilot events.",
   },
   {
-    label: "No way to measure what worked",
-    body: "Mustang CAT attended recurring events every year with no data to tell them which ones were producing results and which ones were not.",
+    label: "No visibility for dealers",
+    body: "Dealers had no way to see which candidates were interested in their region. Qualified students were invisible until someone manually forwarded a list.",
   },
 ];
 
@@ -65,19 +52,19 @@ const challengeCards = [
 
 const solutionTiles = [
   {
-    headline: "Digital capture on and offline",
-    body: "iPad and mobile QR registration gave every candidate a way to enter their information on the spot. When schools restricted phones, Sarah passed the iPad. When there was no Wi-Fi, Momentify worked offline and synced later.",
-    icon: "ipad",
+    headline: "Unified event capture",
+    body: "One consistent experience across SkillsUSA, FFA, and dealer pilot events. Every candidate interaction captured digitally with the same platform, the same data structure, the same quality.",
+    icon: "unified",
   },
   {
-    headline: "Two pipelines from one event",
-    body: "Students went into one pipeline toward Mustang CAT's Think BIG program. Advisors and instructors went into a second pipeline for ongoing school relationships. One event, two fully tracked candidate outcomes.",
-    icon: "people",
+    headline: "Persona-driven qualification",
+    body: "Students were profiled by interest area, program fit, and geographic preference. The platform sorted candidates by who they were and where they wanted to work.",
+    icon: "persona",
   },
   {
-    headline: "Same-day candidate follow-up",
-    body: "Candidates are scored by temperature, notes are attached to names, and follow-up goes out the same day the event ends. Those who showed real intent no longer wait days or weeks to hear back from the team.",
-    icon: "clock",
+    headline: "Automatic dealer routing",
+    body: "Qualified candidates were matched to the nearest participating dealer and delivered with context attached. No manual handoffs. No spreadsheet forwarding. No lost names.",
+    icon: "routing",
   },
 ];
 
@@ -86,40 +73,37 @@ const solutionTiles = [
 const resultsCells = [
   {
     type: "single" as const,
-    number: "600+",
+    number: "5,400+",
     label:
-      "Total candidates captured via iPad and mobile QR code since June 2025",
+      "Opt-ins captured from students, advisors, and teachers across SkillsUSA, FFA, and dealer pilot events.",
     tag: "Candidate Capture",
   },
   {
-    type: "dual" as const,
-    number1: "321",
-    number2: "243",
-    sub1: "Students",
-    sub2: "Advisors and instructors",
-    label: "Two distinct pipelines from the same events.",
-    tag: "Dual Pipeline",
+    type: "single" as const,
+    number: "40",
+    label:
+      "Dealers receiving qualified, matched candidates from a single national recruiting program.",
+    tag: "Dealer Network",
   },
   {
     type: "single" as const,
-    number: "7",
+    number: "0",
     label:
-      "Hires directly attributed to Momentify touchpoints. 9 candidates interviewed, 7 offers extended.",
-    tag: "Hiring Outcomes",
+      "Lost candidates. Every student engagement was captured, scored, and routed to the right dealer automatically.",
+    tag: "Zero Drop-off",
   },
   {
     type: "single" as const,
-    number: "10 / 10",
-    numberSize: "42px",
+    number: "1",
     label:
-      "Likelihood to recommend Momentify to other dealers, per Sarah's pilot survey response.",
-    tag: "NPS",
+      "Platform connecting events, schools, and dealers through one consistent recruiting experience.",
+    tag: "Unified System",
   },
 ];
 
 /* ── Icon components ─────────────────────────────────── */
 
-function IconIpad() {
+function IconUnified() {
   return (
     <svg
       width="32"
@@ -128,30 +112,56 @@ function IconIpad() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
+      {/* Top-left square */}
       <rect
-        x="5"
-        y="3"
-        width="22"
-        height="26"
-        rx="3"
+        x="4"
+        y="4"
+        width="10"
+        height="10"
+        rx="2"
         stroke="#5FD9C2"
         strokeWidth="1.8"
       />
-      <circle cx="16" cy="25" r="1.2" fill="#5FD9C2" />
-      <line
-        x1="9"
-        y1="6"
-        x2="23"
-        y2="6"
+      {/* Top-right square */}
+      <rect
+        x="18"
+        y="4"
+        width="10"
+        height="10"
+        rx="2"
         stroke="#5FD9C2"
-        strokeWidth="1"
-        strokeOpacity="0.3"
+        strokeWidth="1.8"
       />
+      {/* Bottom-left square */}
+      <rect
+        x="4"
+        y="18"
+        width="10"
+        height="10"
+        rx="2"
+        stroke="#5FD9C2"
+        strokeWidth="1.8"
+      />
+      {/* Bottom-right square */}
+      <rect
+        x="18"
+        y="18"
+        width="10"
+        height="10"
+        rx="2"
+        stroke="#5FD9C2"
+        strokeWidth="1.8"
+      />
+      {/* Connecting lines */}
+      <line x1="14" y1="9" x2="18" y2="9" stroke="#5FD9C2" strokeWidth="1.2" strokeOpacity="0.5" />
+      <line x1="14" y1="23" x2="18" y2="23" stroke="#5FD9C2" strokeWidth="1.2" strokeOpacity="0.5" />
+      <line x1="9" y1="14" x2="9" y2="18" stroke="#5FD9C2" strokeWidth="1.2" strokeOpacity="0.5" />
+      <line x1="23" y1="14" x2="23" y2="18" stroke="#5FD9C2" strokeWidth="1.2" strokeOpacity="0.5" />
     </svg>
   );
 }
 
-function IconPeople() {
+function IconPersona() {
   return (
     <svg
       width="32"
@@ -160,26 +170,35 @@ function IconPeople() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="11" cy="10" r="4" stroke="#5FD9C2" strokeWidth="1.8" />
+      {/* Person head */}
+      <circle cx="13" cy="10" r="4" stroke="#5FD9C2" strokeWidth="1.8" />
+      {/* Person body */}
       <path
-        d="M3 24c0-4.418 3.582-7 8-7s8 2.582 8 7"
+        d="M5 26c0-4.418 3.582-7 8-7s8 2.582 8 7"
         stroke="#5FD9C2"
         strokeWidth="1.8"
         strokeLinecap="round"
       />
-      <circle cx="22" cy="11" r="3" stroke="#5FD9C2" strokeWidth="1.5" strokeOpacity="0.6" />
-      <path
-        d="M25 24c0-3.314-2.239-5.5-5-6"
+      {/* Badge/card */}
+      <rect
+        x="20"
+        y="12"
+        width="9"
+        height="12"
+        rx="2"
         stroke="#5FD9C2"
         strokeWidth="1.5"
-        strokeLinecap="round"
         strokeOpacity="0.6"
       />
+      {/* Badge line 1 */}
+      <line x1="22.5" y1="16" x2="26.5" y2="16" stroke="#5FD9C2" strokeWidth="1" strokeOpacity="0.4" />
+      {/* Badge line 2 */}
+      <line x1="22.5" y1="19" x2="26.5" y2="19" stroke="#5FD9C2" strokeWidth="1" strokeOpacity="0.4" />
     </svg>
   );
 }
 
-function IconClock() {
+function IconRouting() {
   return (
     <svg
       width="32"
@@ -188,36 +207,75 @@ function IconClock() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="16" cy="16" r="11" stroke="#5FD9C2" strokeWidth="1.8" />
-      <polyline
-        points="16,9 16,16 22,16"
+      {/* Main stem */}
+      <path
+        d="M6 16h10"
         stroke="#5FD9C2"
         strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      {/* Top branch */}
+      <path
+        d="M16 16L24 8"
+        stroke="#5FD9C2"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      {/* Middle branch */}
+      <path
+        d="M16 16h10"
+        stroke="#5FD9C2"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      {/* Bottom branch */}
+      <path
+        d="M16 16L24 24"
+        stroke="#5FD9C2"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      {/* Arrow tip - top */}
+      <path
+        d="M21 6l3 2-3 2"
+        stroke="#5FD9C2"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+      {/* Arrow tip - middle */}
       <path
-        d="M25 7l3-3M28 7l-3 0M25 4l0 3"
+        d="M23 14l3 2-3 2"
         stroke="#5FD9C2"
         strokeWidth="1.5"
         strokeLinecap="round"
-        strokeOpacity="0.5"
+        strokeLinejoin="round"
       />
+      {/* Arrow tip - bottom */}
+      <path
+        d="M21 22l3 2-3 2"
+        stroke="#5FD9C2"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {/* Start node */}
+      <circle cx="6" cy="16" r="2" fill="#5FD9C2" fillOpacity="0.3" stroke="#5FD9C2" strokeWidth="1" />
     </svg>
   );
 }
 
 const iconMap: Record<string, () => React.ReactNode> = {
-  ipad: IconIpad,
-  people: IconPeople,
-  clock: IconClock,
+  unified: IconUnified,
+  persona: IconPersona,
+  routing: IconRouting,
 };
 
 /* ════════════════════════════════════════════════════════
-   MUSTANG CAT CASE STUDY
+   GLOBAL DEALER LEARNING CASE STUDY
    ════════════════════════════════════════════════════════ */
 
-export default function MustangCatCaseStudy() {
+export default function GlobalDealerLearningCaseStudy() {
   return (
     <>
       {/* ═══════════════════ 1. HERO ═══════════════════ */}
@@ -306,7 +364,7 @@ export default function MustangCatCaseStudy() {
               marginBottom: "24px",
             }}
           >
-            Paper sign-ups out.<br />Digital pipeline in.
+            40 dealers. One platform.<br />Zero lost candidates.
           </motion.h1>
 
           {/* Subhead */}
@@ -323,24 +381,14 @@ export default function MustangCatCaseStudy() {
               marginBottom: "48px",
             }}
           >
-            From paper sign-ups to a digital pipeline capturing 600+ candidates across career fairs and school visits.
+            Unified recruiting across SkillsUSA and FFA. Qualified candidates routed to 40 dealers in real time.
           </motion.p>
-
-          {/* Listen to this page */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.22 }}
-            style={{ marginBottom: "48px" }}
-          >
-            <ListenToPage narrationText={NARRATION_TEXT} />
-          </motion.div>
 
           {/* Stat row */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.30 }}
+            transition={{ duration: 0.5, delay: 0.26 }}
             className="flex flex-col sm:flex-row items-start sm:items-center gap-8 sm:gap-0"
           >
             {heroStats.map((stat, i) => (
@@ -363,7 +411,7 @@ export default function MustangCatCaseStudy() {
                     style={{
                       fontFamily: "var(--font-inter)",
                       fontWeight: 500,
-                      fontSize: "clamp(44px, 5vw, 64px)",
+                      fontSize: (stat as { numberSize?: string }).numberSize || "clamp(44px, 5vw, 64px)",
                       lineHeight: 1,
                       letterSpacing: "-0.02em",
                       marginBottom: "6px",
@@ -392,14 +440,14 @@ export default function MustangCatCaseStudy() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.38 }}
+            transition={{ duration: 0.5, delay: 0.34 }}
             className="flex items-center gap-3"
             style={{ marginTop: "40px" }}
           >
             <img
-              src="/logos/mustang-cat-color.png"
-              alt="Mustang CAT"
-              style={{ maxHeight: "48px", width: "auto", opacity: 0.85 }}
+              src="/logos/caterpillar.png"
+              alt="Caterpillar"
+              style={{ maxHeight: "36px", width: "auto", opacity: 0.85 }}
             />
             <span style={{ color: "rgba(255, 255, 255, 0.20)", fontSize: "12px" }}>·</span>
             <span
@@ -410,7 +458,7 @@ export default function MustangCatCaseStudy() {
                 color: "rgba(255, 255, 255, 0.50)",
               }}
             >
-              Senior Recruiter: Sarah Bell
+              Global Dealer Learning
             </span>
           </motion.div>
         </div>
@@ -456,7 +504,7 @@ export default function MustangCatCaseStudy() {
                   marginBottom: "24px",
                 }}
               >
-                A recruiter doing everything right, with no way to show it.
+                A national recruiting effort with no way to connect the dots.
               </motion.h2>
 
               <motion.div variants={fadeUp}>
@@ -470,7 +518,7 @@ export default function MustangCatCaseStudy() {
                     marginBottom: "20px",
                   }}
                 >
-                  Sarah Bell has been recruiting diesel technicians for Mustang CAT for years. She shows up with energy, makes intentional connections, and genuinely believes in the career she is selling. But when she walked out of a career fair, everything she had built in those conversations walked out with her.
+                  Caterpillar&apos;s Global Dealer Learning group runs one of the largest technician recruiting programs in the industry. They attend SkillsUSA and FFA events nationwide, meeting thousands of students who are already interested in skilled trades careers.
                 </p>
                 <p
                   style={{
@@ -482,7 +530,7 @@ export default function MustangCatCaseStudy() {
                     marginBottom: "20px",
                   }}
                 >
-                  No digital capture. No notes attached to names. No way to sort hot candidates from cold ones. No analytics to tell her which events were worth going back to. The follow-up happened on memory and hope.
+                  But the gap between the event and the dealer was a dead zone. Candidates who expressed interest at a national event had no clear path to the local dealer who could actually hire them. Information was captured on paper or not at all.
                 </p>
                 <p
                   style={{
@@ -493,22 +541,8 @@ export default function MustangCatCaseStudy() {
                     lineHeight: 1.75,
                   }}
                 >
-                  Mustang CAT was not doing anything wrong. They simply had no infrastructure to hold what their recruiter was building.
+                  Follow-up depended on someone remembering to pass a name along. Qualified candidates were falling through the gap between a national conversation and a local opportunity.
                 </p>
-              </motion.div>
-
-              {/* Sarah Bell photo */}
-              <motion.div variants={fadeUp} className="flex items-center gap-3" style={{ marginTop: "28px" }}>
-                <div
-                  className="rounded-full overflow-hidden flex-shrink-0"
-                  style={{ width: "44px", height: "44px", border: "2px solid rgba(95, 217, 194, 0.25)" }}
-                >
-                  <img src="/sarahbell.jpeg" alt="Sarah Bell" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                </div>
-                <div>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "13px", color: "#061341" }}>Sarah Bell</p>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "12px", color: "rgba(6, 19, 65, 0.45)" }}>Senior Recruiter, Mustang CAT</p>
-                </div>
               </motion.div>
             </div>
 
@@ -611,7 +645,7 @@ export default function MustangCatCaseStudy() {
                 marginBottom: "16px",
               }}
             >
-              One platform. Two pipelines. Double the output from every event.
+              One platform connecting events, schools, and dealers. Candidates routed in{"\u00A0"}real{"\u00A0"}time.
             </motion.h2>
 
             <motion.p
@@ -626,7 +660,7 @@ export default function MustangCatCaseStudy() {
                 marginBottom: "64px",
               }}
             >
-              Momentify gave Mustang CAT a way to capture candidates and advisors from the same event, score them by intent, and follow up before the competition did.
+              Momentify gave GDL a unified recruiting platform that captured candidates at every event and routed them to the right dealer based on interest and location.
             </motion.p>
           </motion.div>
 
@@ -695,61 +729,32 @@ export default function MustangCatCaseStudy() {
           className="flex overflow-x-auto md:grid md:grid-cols-3"
           style={{ scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch" }}
         >
-          {/* Sarah at the booth with tablet */}
-          <div className="relative overflow-hidden flex-shrink-0 w-[85vw] md:w-auto" style={{ height: "360px", scrollSnapAlign: "start" }}>
-            <img
-              src="/mustang1.png"
-              alt="Sarah Bell at the Mustang CAT booth"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center 30%",
-              }}
-            />
+          {[1, 2, 3].map((n) => (
             <div
-              className="absolute inset-0"
-              style={{ background: "rgba(4, 14, 40, 0.15)" }}
-            />
-          </div>
-          {/* Students engaging at the booth */}
-          <div className="relative overflow-hidden flex-shrink-0 w-[85vw] md:w-auto" style={{ height: "360px", scrollSnapAlign: "start" }}>
-            <img
-              src="/mustang2.png"
-              alt="FFA students engaging with Momentify at the Mustang CAT booth"
+              key={n}
+              className="relative overflow-hidden flex-shrink-0 w-[85vw] md:w-auto flex items-center justify-center"
               style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center 30%",
+                height: "360px",
+                scrollSnapAlign: "start",
+                background: "#E5E7EB",
               }}
-            />
-            <div
-              className="absolute inset-0"
-              style={{ background: "rgba(4, 14, 40, 0.15)" }}
-            />
-          </div>
-          {/* Sarah and the Think BIG banner */}
-          <div className="relative overflow-hidden flex-shrink-0 w-[85vw] md:w-auto" style={{ height: "360px", scrollSnapAlign: "start" }}>
-            <img
-              src="/mustang3.png"
-              alt="Sarah Bell with the Mustang CAT Think BIG banner"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "center 45%",
-              }}
-            />
-            <div
-              className="absolute inset-0"
-              style={{ background: "rgba(4, 14, 40, 0.15)" }}
-            />
-          </div>
+            >
+              <span
+                style={{
+                  color: "rgba(6,19,65,0.3)",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                  fontFamily: "var(--font-inter)",
+                }}
+              >
+                Photo placeholder
+              </span>
+            </div>
+          ))}
         </motion.div>
       </section>
 
-      {/* ═══════════════════ 4. SARAH QUOTE 1 ══════════ */}
+      {/* ═══════════════════ 4. QUOTE 1 (dark gradient) ══════════ */}
       <section
         className="relative overflow-hidden"
         style={{
@@ -809,7 +814,7 @@ export default function MustangCatCaseStudy() {
                 fontStyle: "italic",
               }}
             >
-              We were really leaving a large piece of the pie at the career fairs with not capturing any information. And now we&apos;re not just capturing it, but we&apos;re capturing it in the coolest way.
+              Placeholder for customer quote. Replace with actual testimonial when available.
             </motion.p>
 
             {/* Attribution */}
@@ -818,21 +823,26 @@ export default function MustangCatCaseStudy() {
               className="flex items-center justify-center gap-4"
               style={{ marginTop: "32px" }}
             >
-              {/* Photo placeholder */}
-              {/* <!-- Replace with Sarah Bell headshot when available --> */}
+              {/* Initials circle */}
               <div
-                className="rounded-full flex-shrink-0 overflow-hidden"
+                className="rounded-full flex-shrink-0 flex items-center justify-center"
                 style={{
                   width: "56px",
                   height: "56px",
+                  background: "rgba(95, 217, 194, 0.15)",
                   border: "2px solid rgba(95, 217, 194, 0.3)",
                 }}
               >
-                <img
-                  src="/sarahbell.jpeg"
-                  alt="Sarah Bell"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
+                <span
+                  style={{
+                    color: "#5FD9C2",
+                    fontWeight: 700,
+                    fontSize: "18px",
+                    fontFamily: "var(--font-inter)",
+                  }}
+                >
+                  GD
+                </span>
               </div>
               <div className="text-left">
                 <p
@@ -843,7 +853,7 @@ export default function MustangCatCaseStudy() {
                     color: "#FFFFFF",
                   }}
                 >
-                  Sarah Bell
+                  Name TBD
                 </p>
                 <p
                   style={{
@@ -853,7 +863,7 @@ export default function MustangCatCaseStudy() {
                     color: "rgba(255, 255, 255, 0.50)",
                   }}
                 >
-                  Senior Recruiter, Mustang CAT
+                  Global Dealer Learning, Caterpillar
                 </p>
               </div>
             </motion.div>
@@ -898,7 +908,7 @@ export default function MustangCatCaseStudy() {
                 marginBottom: "64px",
               }}
             >
-              <span className="text-gradient-brand" style={{ fontWeight: 600 }}>600+</span> candidate engagements.<br /><span className="text-gradient-brand" style={{ fontWeight: 600 }}>7</span> hired. <span className="text-gradient-brand" style={{ fontWeight: 600 }}>0</span> clipboards.
+              <span className="text-gradient-brand" style={{ fontWeight: 600 }}>5,400+</span> opt-ins.<br /><span className="text-gradient-brand" style={{ fontWeight: 600 }}>40</span> dealers. <span className="text-gradient-brand" style={{ fontWeight: 600 }}>0</span> lost candidates.
             </motion.h2>
           </motion.div>
 
@@ -940,81 +950,19 @@ export default function MustangCatCaseStudy() {
                   }}
                 />
 
-                {cell.type === "dual" ? (
-                  <>
-                    <div className="flex items-baseline gap-2" style={{ marginBottom: "4px" }}>
-                      <span
-                        className="text-gradient-brand"
-                        style={{
-                          fontFamily: "var(--font-inter)",
-                          fontWeight: 600,
-                          fontSize: "44px",
-                          lineHeight: 1,
-                        }}
-                      >
-                        {cell.number1}
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-inter)",
-                          fontWeight: 500,
-                          fontSize: "44px",
-                          color: "#061341",
-                          opacity: 0.2,
-                        }}
-                      >
-                        +
-                      </span>
-                      <span
-                        className="text-gradient-brand"
-                        style={{
-                          fontFamily: "var(--font-inter)",
-                          fontWeight: 600,
-                          fontSize: "44px",
-                          lineHeight: 1,
-                        }}
-                      >
-                        {cell.number2}
-                      </span>
-                    </div>
-                    <div className="flex gap-6" style={{ marginBottom: "8px" }}>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-inter)",
-                          fontWeight: 400,
-                          fontSize: "13px",
-                          color: "rgba(6, 19, 65, 0.40)",
-                        }}
-                      >
-                        {cell.sub1}
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-inter)",
-                          fontWeight: 400,
-                          fontSize: "13px",
-                          color: "rgba(6, 19, 65, 0.40)",
-                        }}
-                      >
-                        {cell.sub2}
-                      </span>
-                    </div>
-                  </>
-                ) : (
-                  <p
-                    className="text-gradient-brand"
-                    style={{
-                      fontFamily: "var(--font-inter)",
-                      fontWeight: 600,
-                      fontSize: (cell as { numberSize?: string }).numberSize || "56px",
-                      lineHeight: 1,
-                      marginBottom: "12px",
-                      letterSpacing: "-0.02em",
-                    }}
-                  >
-                    {cell.number}
-                  </p>
-                )}
+                <p
+                  className="text-gradient-brand"
+                  style={{
+                    fontFamily: "var(--font-inter)",
+                    fontWeight: 600,
+                    fontSize: (cell as { numberSize?: string }).numberSize || "56px",
+                    lineHeight: 1,
+                    marginBottom: "12px",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  {cell.number}
+                </p>
 
                 <p
                   style={{
@@ -1050,7 +998,7 @@ export default function MustangCatCaseStudy() {
             })}
           </motion.div>
 
-          {/* Pilot survey callout — full width */}
+          {/* Results callout - full width */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -1088,7 +1036,7 @@ export default function MustangCatCaseStudy() {
                 zIndex: 1,
               }}
             >
-              From the Pilot Survey
+              From the Results
             </p>
             <p
               style={{
@@ -1102,13 +1050,13 @@ export default function MustangCatCaseStudy() {
                 zIndex: 1,
               }}
             >
-              When asked what Momentify would cost Mustang CAT if it went away: &ldquo;We&apos;d go back to relying on paper sign-ups, spreadsheets, or memory at events, which risks losing high-quality prospects and creates gaps in our recruiting funnel. Candidates would wait longer for follow-up, which could mean losing them to other opportunities.&rdquo;
+              By connecting national events to local dealers through a single platform, GDL established the benchmark for scalable, data-driven technician recruiting across the Caterpillar dealer network.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* ═══════════════════ 6. SARAH QUOTE 2 ══════════ */}
+      {/* ═══════════════════ 6. QUOTE 2 (white bg) ══════════ */}
       <section
         style={{
           background: "#FFFFFF",
@@ -1135,7 +1083,7 @@ export default function MustangCatCaseStudy() {
                 fontStyle: "italic",
               }}
             >
-              &ldquo;We didn&apos;t track anything. We didn&apos;t have anything to compare to. Having analytics to show how many people we&apos;re reaching, how many hot leads we have, is a game changer, especially coming from a company who didn&apos;t track anything.&rdquo;
+              &ldquo;Placeholder for customer quote. Replace with actual testimonial when available.&rdquo;
             </motion.p>
 
             {/* Attribution */}
@@ -1144,20 +1092,26 @@ export default function MustangCatCaseStudy() {
               className="flex items-center justify-center gap-4"
               style={{ marginTop: "32px" }}
             >
-              {/* <!-- Replace with Sarah Bell headshot when available --> */}
+              {/* Initials circle */}
               <div
-                className="rounded-full flex-shrink-0 overflow-hidden"
+                className="rounded-full flex-shrink-0 flex items-center justify-center"
                 style={{
                   width: "56px",
                   height: "56px",
+                  background: "rgba(6,19,65,0.08)",
                   border: "2px solid rgba(6, 19, 65, 0.15)",
                 }}
               >
-                <img
-                  src="/sarahbell.jpeg"
-                  alt="Sarah Bell"
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
+                <span
+                  style={{
+                    color: "#061341",
+                    fontWeight: 700,
+                    fontSize: "18px",
+                    fontFamily: "var(--font-inter)",
+                  }}
+                >
+                  GD
+                </span>
               </div>
               <div className="text-left">
                 <p
@@ -1168,7 +1122,7 @@ export default function MustangCatCaseStudy() {
                     color: "#061341",
                   }}
                 >
-                  Sarah Bell
+                  Name TBD
                 </p>
                 <p
                   style={{
@@ -1178,7 +1132,7 @@ export default function MustangCatCaseStudy() {
                     color: "rgba(6, 19, 65, 0.50)",
                   }}
                 >
-                  Senior Recruiter, Mustang CAT
+                  Global Dealer Learning, Caterpillar
                 </p>
               </div>
             </motion.div>
@@ -1186,165 +1140,7 @@ export default function MustangCatCaseStudy() {
         </div>
       </section>
 
-      {/* ═══════════════════ 7. PODCAST CTA ═════════════ */}
-      <section style={{ background: "rgba(95, 217, 194, 0.06)", padding: "80px 0" }}>
-        <div className="mx-auto px-6 lg:px-12" style={{ maxWidth: "900px" }}>
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
-            variants={headerVariants}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16"
-          >
-            {/* Left column */}
-            <div>
-              <motion.p
-                variants={fadeUp}
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontWeight: 600,
-                  fontSize: "10px",
-                  color: "#5FD9C2",
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  marginBottom: "16px",
-                }}
-              >
-                Moments That Matter Podcast
-              </motion.p>
-
-              <motion.h3
-                variants={fadeUp}
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontWeight: 700,
-                  fontSize: "28px",
-                  color: "#061341",
-                  marginBottom: "16px",
-                }}
-              >
-                Hear the full story from Sarah.
-              </motion.h3>
-
-              <motion.p
-                variants={fadeUp}
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontWeight: 400,
-                  fontSize: "15px",
-                  color: "rgba(6, 19, 65, 0.55)",
-                  lineHeight: 1.7,
-                  marginBottom: "28px",
-                }}
-              >
-                Sarah joined Jake on the Moments That Matter podcast to talk about what recruiting actually looks like on the floor, how attention has shifted, and what it takes to create a conversation a candidate remembers. It is worth 30 minutes of your time.
-              </motion.p>
-
-              <motion.a
-                variants={fadeUp}
-                href="#" /* <!-- Replace with actual podcast episode URL --> */
-                className="inline-flex items-center gap-2 transition-all duration-200 hover:underline"
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontWeight: 600,
-                  fontSize: "15px",
-                  color: "#5FD9C2",
-                  textDecoration: "none",
-                }}
-              >
-                Listen to Episode 004 →
-              </motion.a>
-            </div>
-
-            {/* Right column: podcast card */}
-            <motion.div
-              variants={fadeUp}
-              style={{
-                background: "#FFFFFF",
-                border: "1px solid rgba(6, 19, 65, 0.08)",
-                borderRadius: "14px",
-                padding: "28px",
-                boxShadow: "0 2px 12px rgba(6, 19, 65, 0.06)",
-              }}
-            >
-              {/* Episode pill */}
-              <span
-                style={{
-                  display: "inline-block",
-                  fontFamily: "var(--font-inter)",
-                  fontWeight: 600,
-                  fontSize: "11px",
-                  color: "#5FD9C2",
-                  background: "rgba(95, 217, 194, 0.10)",
-                  borderRadius: "20px",
-                  padding: "4px 12px",
-                  marginBottom: "16px",
-                }}
-              >
-                Episode 004
-              </span>
-
-              <h4
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontWeight: 700,
-                  fontSize: "16px",
-                  color: "#061341",
-                  lineHeight: 1.4,
-                  marginBottom: "12px",
-                }}
-              >
-                Sarah Bell — Recruiting in the Skilled Trades: Intentional Conversations and the Long Game
-              </h4>
-
-              <p
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontWeight: 400,
-                  fontSize: "13px",
-                  color: "rgba(6, 19, 65, 0.50)",
-                  lineHeight: 1.6,
-                  marginBottom: "20px",
-                }}
-              >
-                Sarah Bell, Senior Recruiter at Mustang CAT, on what it takes to recruit diesel technicians, why candidates now have the upper hand, and how showing up with intention changes everything.
-              </p>
-
-              {/* Play button */}
-              <a
-                href="#" /* <!-- Replace with actual podcast URL --> */
-                className="inline-flex items-center gap-2.5 transition-opacity duration-200 hover:opacity-70"
-                style={{ textDecoration: "none" }}
-              >
-                <div
-                  className="flex items-center justify-center rounded-full"
-                  style={{
-                    width: "32px",
-                    height: "32px",
-                    background: "#061341",
-                  }}
-                >
-                  <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
-                    <path d="M1 1L11 7L1 13V1Z" fill="#FFFFFF" />
-                  </svg>
-                </div>
-                <span
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontWeight: 600,
-                    fontSize: "13px",
-                    color: "#061341",
-                  }}
-                >
-                  Listen Now
-                </span>
-              </a>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ 8. FINAL CTA ══════════════ */}
+      {/* ═══════════════════ 7. FINAL CTA ══════════════ */}
       <section
         className="relative overflow-hidden"
         style={{
@@ -1404,7 +1200,7 @@ export default function MustangCatCaseStudy() {
                 marginBottom: "20px",
               }}
             >
-              Ready to build a recruiting process like this?
+              Ready to unify your recruiting program?
             </motion.h2>
 
             {/* Subhead */}
@@ -1420,7 +1216,7 @@ export default function MustangCatCaseStudy() {
                 marginBottom: "40px",
               }}
             >
-              See how Momentify helps recruiting teams capture, score, and follow up with candidates before the competition does.
+              See how Momentify helps recruiting teams capture, qualify, and route candidates to the right teams in real time.
             </motion.p>
 
             {/* CTA pair */}
@@ -1430,7 +1226,7 @@ export default function MustangCatCaseStudy() {
             >
               {/* Primary */}
               <a
-                href="/demo?source=case-study-mustang-cat"
+                href="/demo?source=case-study-global-dealer-learning"
                 className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[14px] py-2.5 sm:py-3.5 px-3 sm:px-7 transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
                 style={{
                   fontFamily: "var(--font-inter)",
@@ -1446,7 +1242,7 @@ export default function MustangCatCaseStudy() {
 
               {/* Secondary */}
               <a
-                href="/what-is-rox"
+                href="/rox/recruiting"
                 className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[14px] py-2.5 sm:py-3.5 px-3 sm:px-7 transition-all duration-200"
                 style={{
                   fontFamily: "var(--font-inter)",
