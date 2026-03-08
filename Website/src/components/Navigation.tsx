@@ -15,7 +15,7 @@ const solutions = [
 const platformLinks = [
   { name: "How It Works", href: "/platform/how-it-works", description: "The four-step Momentify workflow", isRoute: true, icon: "workflow" as const },
   { name: "Integrations", href: "/platform/integrations", description: "Connect with your existing tools", isRoute: true, icon: "integrations" as const },
-  { name: "Security", href: "#", description: "Enterprise-grade data protection", isRoute: false, icon: "security" as const },
+  { name: "Security", href: "/platform/security", description: "Enterprise-grade data protection", isRoute: true, icon: "security" as const },
   { name: "Help Center", href: "https://intercom.help/momentifyapp/en/", description: "Guides, FAQs, and support resources", isRoute: false, icon: "help" as const },
   { name: "System Status", href: "https://status.momentifyapp.com/", description: "Real-time platform availability", isRoute: false, icon: "status" as const },
 ];

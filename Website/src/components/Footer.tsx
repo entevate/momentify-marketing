@@ -9,7 +9,7 @@ const solutionLinks = [
 const platformLinks = [
   { label: "How It Works", href: "/platform/how-it-works" },
   { label: "Integrations", href: "/platform/integrations" },
-  { label: "Security", href: "#" },
+  { label: "Security", href: "/platform/security" },
   { label: "Help Center", href: "https://intercom.help/momentifyapp/en/" },
   { label: "System Status", href: "https://status.momentifyapp.com/" },
 ];
