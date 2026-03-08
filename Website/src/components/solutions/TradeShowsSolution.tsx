@@ -669,7 +669,7 @@ export default function TradeShowsSolution() {
                     <span key={tag} style={{ display: "inline-block", fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "11px", color: "#6B21D4", background: "rgba(107, 33, 212, 0.08)", borderRadius: "20px", padding: "4px 12px" }}>{tag}</span>
                   ))}
                 </div>
-                <a href="/case-studies/mustang-cat" className="inline-flex items-center justify-center font-semibold text-[14px] py-3 px-6 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]" style={{ fontFamily: "var(--font-inter)", color: "#FFFFFF", background: "linear-gradient(135deg, #6B21D4, #9B5FE8)", border: "1.5px solid rgba(155, 95, 232, 0.4)" }}>
+                <a href="/case-studies/distributech" className="inline-flex items-center justify-center font-semibold text-[14px] py-3 px-6 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]" style={{ fontFamily: "var(--font-inter)", color: "#FFFFFF", background: "linear-gradient(135deg, #6B21D4, #9B5FE8)", border: "1.5px solid rgba(155, 95, 232, 0.4)" }}>
                   Read the Full Case Study
                 </a>
               </div>

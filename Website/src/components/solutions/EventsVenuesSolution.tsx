@@ -176,9 +176,9 @@ const testimonials = [
 /* ── Case study stats ─────────────────────────────────── */
 
 const caseStudyStats = [
-  { number: "92%", label: "Lead growth over three years at the same event" },
-  { number: "1,952", label: "Companies represented across the program" },
-  { number: "544", label: "Follow-ups routed to the right reps" },
+  { number: "TBD", label: "Attendee engagement lift" },
+  { number: "TBD", label: "Sponsor satisfaction increase" },
+  { number: "TBD", label: "Faster post-event reporting" },
 ];
 
 /* ── Icon components ──────────────────────────────────── */
@@ -636,21 +636,21 @@ export default function EventsVenuesSolution() {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }} variants={headerVariants}>
             <motion.p variants={fadeUp} className="uppercase font-semibold text-[12px] tracking-[0.14em] mb-4" style={{ color: "#F25E3D", fontFamily: "var(--font-inter)" }}>In the Field</motion.p>
             <motion.h2 variants={fadeUp} className="leading-[1.1]" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, letterSpacing: "-0.02em", fontSize: "clamp(28px, 4.5vw, 42px)", color: "#061341", maxWidth: "700px", marginBottom: "40px" }}>
-              92% more leads at the same event, three years running.
+              Case study coming soon.
             </motion.h2>
           </motion.div>
 
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={fadeUp} style={{ background: "#F8F9FC", border: "1px solid rgba(6, 19, 65, 0.08)", borderRadius: "20px", padding: "48px" }}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
               <div>
-                <Image src="/logos/caterpillar-logo_black.png" alt="Caterpillar" width={200} height={40} style={{ height: "32px", width: "auto", marginBottom: "20px", objectFit: "contain" }} />
-                <h3 style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "22px", color: "#061341", marginBottom: "16px" }}>DistribuTECH, Electric Power Division</h3>
+                <div style={{ width: "200px", height: "32px", marginBottom: "20px", background: "rgba(6, 19, 65, 0.06)", borderRadius: "6px" }} />
+                <h3 style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "22px", color: "#061341", marginBottom: "16px" }}>Venues & Events Case Study</h3>
                 <ul className="space-y-2" style={{ marginBottom: "24px" }}>
                   {[
-                    "Deployed Momentify at the same show across three consecutive years",
-                    "Leads grew from 701 (2024) to 878 (2025) to 1,348 (2026)",
-                    "1,952 companies represented, 1,681 opt-ins captured",
-                    "544 follow-ups routed to the right reps automatically",
+                    "Real-time attendee engagement tracking across venue spaces",
+                    "Visitor flow data powering smarter venue operations",
+                    "Sponsor ROX reports delivered within 48 hours of event close",
+                    "Full results and details coming soon",
                   ].map((item) => (
                     <li key={item} className="flex items-start gap-2.5">
                       <span className="mt-[7px] h-[5px] w-[5px] rounded-full flex-shrink-0" style={{ backgroundColor: "#F25E3D" }} />
@@ -659,12 +659,12 @@ export default function EventsVenuesSolution() {
                   ))}
                 </ul>
                 <div className="flex flex-wrap gap-2" style={{ marginBottom: "24px" }}>
-                  {["Venues and Events", "Electric Power"].map((tag) => (
+                  {["Venues & Events"].map((tag) => (
                     <span key={tag} style={{ display: "inline-block", fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "11px", color: "#D4421A", background: "rgba(212, 66, 26, 0.08)", borderRadius: "20px", padding: "4px 12px" }}>{tag}</span>
                   ))}
                 </div>
-                <a href="/case-studies/mustang-cat" className="inline-flex items-center justify-center font-semibold text-[14px] py-3 px-6 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]" style={{ fontFamily: "var(--font-inter)", color: "#FFFFFF", background: "linear-gradient(135deg, #D4421A, #F25E3D)", border: "1.5px solid rgba(242, 94, 61, 0.4)" }}>
-                  Read the Full Case Study
+                <a href="/demo" className="inline-flex items-center justify-center font-semibold text-[14px] py-3 px-6 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]" style={{ fontFamily: "var(--font-inter)", color: "#FFFFFF", background: "linear-gradient(135deg, #D4421A, #F25E3D)", border: "1.5px solid rgba(242, 94, 61, 0.4)" }}>
+                  Request a Demo
                 </a>
               </div>
               <div className="flex flex-col gap-4">
