@@ -344,6 +344,58 @@
       margin-top: 8px;
     }
 
+    /* ─── OG Images ──────────────────────────────────────────────── */
+    .og-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .og-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    .og-card img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 1200 / 630;
+      object-fit: cover;
+    }
+    .og-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      gap: 12px;
+    }
+    .og-card-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .og-card-route {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: monospace;
+      margin-top: 2px;
+    }
+    .og-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 6px 14px;
+      border-radius: 100px;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+      background: var(--accent-sec);
+      color: var(--accent);
+    }
+    .og-download:hover { opacity: 0.75; }
+
     /* ─── Color Palette ─────────────────────────────────────────── */
     .palette-group { margin-bottom: 40px; }
     .palette-group-title {
@@ -1044,6 +1096,7 @@
       .container { padding: 0 24px; }
       section { padding: 56px 0; }
       .ht-grid { grid-template-columns: 1fr 1fr; }
+      .og-grid { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 640px) {
@@ -1057,6 +1110,7 @@
       .swatch-block { width: 100px; height: 88px; }
       .swatch-info { width: 100px; }
       .ht-grid { grid-template-columns: 1fr; }
+      .og-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 480px) {
@@ -1122,6 +1176,7 @@
       <a href="#usage">Usage</a>
       <a href="#solutions">Solutions</a>
       <a href="#headlines">Headlines</a>
+      <a href="#og-images">OG Images</a>
       <a href="backgrounds.html">Backgrounds</a>
     </div>
   </nav>
@@ -1147,6 +1202,7 @@
             <li><a href="#usage">Usage Rules</a></li>
             <li><a href="#solutions">Solutions</a></li>
             <li><a href="#headlines">Headlines</a></li>
+            <li><a href="#og-images">OG Images</a></li>
             <li><a href="backgrounds.html">Backgrounds</a></li>
           </ul>
         </div>
@@ -1788,11 +1844,11 @@
             </div>
           </div>
 
-          <!-- 5. Events & Venues — Crimson -->
+          <!-- 5. Venues & Events — Crimson -->
           <div class="solution-card">
             <div class="solution-header" style="background:linear-gradient(135deg,#F25E3D20 0%,#C93A1D18 100%);">
               <div class="solution-meta">
-                <div class="solution-number" style="color:#F25E3D;">05 — Events &amp; Venues</div>
+                <div class="solution-number" style="color:#F25E3D;">05 — Venues &amp; Events</div>
                 <div class="solution-name">Crimson</div>
                 <div class="solution-tagline">Live energy, urgency, and excitement. Crimson captures the pulse of a packed venue. The colour of moments that people remember.</div>
               </div>
@@ -2014,11 +2070,11 @@
             </div>
           </div>
 
-          <!-- ── Events & Venues — Crimson ── -->
+          <!-- ── Venues & Events — Crimson ── -->
           <div class="ht-sol-section">
             <div class="section-header">
               <div class="section-dot" style="background:#F25E3D;"></div>
-              <span class="section-name">Events &amp; Venues — Crimson</span>
+              <span class="section-name">Venues &amp; Events — Crimson</span>
             </div>
             <div class="ht-pair">
               <div class="ht-card">
@@ -2029,7 +2085,7 @@
                   </div>
                 </div>
                 <div class="ht-card-footer">
-                  <div><div class="ht-card-name">Events &amp; Venues — Dark</div><div class="ht-card-desc">Crimson gradient · Coral accent</div></div>
+                  <div><div class="ht-card-name">Venues &amp; Events — Dark</div><div class="ht-card-desc">Crimson gradient · Coral accent</div></div>
                   <button class="ht-copy-btn" onclick="copyCSS('crimson-dark')">Copy CSS</button>
                 </div>
               </div>
@@ -2042,13 +2098,103 @@
                   </div>
                 </div>
                 <div class="ht-card-footer">
-                  <div><div class="ht-card-name">Events &amp; Venues — Reverse</div><div class="ht-card-desc">Crimson light · Scarlet accent</div></div>
+                  <div><div class="ht-card-name">Venues &amp; Events — Reverse</div><div class="ht-card-desc">Crimson light · Scarlet accent</div></div>
                   <button class="ht-copy-btn" onclick="copyCSS('crimson-light')">Copy CSS</button>
                 </div>
               </div>
             </div>
           </div>
 
+        </div>
+      </section>
+
+      <!-- ── OG IMAGES ──────────────────────────────────────────── -->
+      <section id="og-images">
+        <div class="container">
+          <div class="section-label">09 — OG Images</div>
+          <h2 class="section-title">Open Graph Images</h2>
+          <p class="section-desc">Social sharing images at 1200 x 630 for each page. Each solution uses its own gradient background and accent colors. Download as SVG or reference directly from <code>/og/</code> in the website repo.</p>
+
+          <div class="og-grid">
+
+            <div class="og-card">
+              <img src="../Website/public/og/og-default.svg" alt="OG — Default" />
+              <div class="og-card-footer">
+                <div>
+                  <div class="og-card-name">Default — Empower Every Moment.</div>
+                  <div class="og-card-route">/</div>
+                </div>
+                <a class="og-download" href="../Website/public/og/og-default.svg" download>↓ SVG</a>
+              </div>
+            </div>
+
+            <div class="og-card">
+              <img src="../Website/public/og/og-rox.svg" alt="OG — What is ROX" />
+              <div class="og-card-footer">
+                <div>
+                  <div class="og-card-name">What is ROX — Empower Every Moment.</div>
+                  <div class="og-card-route">/what-is-rox</div>
+                </div>
+                <a class="og-download" href="../Website/public/og/og-rox.svg" download>↓ SVG</a>
+              </div>
+            </div>
+
+            <div class="og-card">
+              <img src="../Website/public/og/og-trade-shows.svg" alt="OG — Trade Shows" />
+              <div class="og-card-footer">
+                <div>
+                  <div class="og-card-name">Trade Shows &amp; Exhibits</div>
+                  <div class="og-card-route">/solutions/trade-shows</div>
+                </div>
+                <a class="og-download" href="../Website/public/og/og-trade-shows.svg" download>↓ SVG</a>
+              </div>
+            </div>
+
+            <div class="og-card">
+              <img src="../Website/public/og/og-technical-recruiting.svg" alt="OG — Technical Recruiting" />
+              <div class="og-card-footer">
+                <div>
+                  <div class="og-card-name">Technical Recruiting</div>
+                  <div class="og-card-route">/solutions/technical-recruiting</div>
+                </div>
+                <a class="og-download" href="../Website/public/og/og-technical-recruiting.svg" download>↓ SVG</a>
+              </div>
+            </div>
+
+            <div class="og-card">
+              <img src="../Website/public/og/og-field-sales.svg" alt="OG — Field Sales" />
+              <div class="og-card-footer">
+                <div>
+                  <div class="og-card-name">Field Sales Enablement</div>
+                  <div class="og-card-route">/solutions/field-sales</div>
+                </div>
+                <a class="og-download" href="../Website/public/og/og-field-sales.svg" download>↓ SVG</a>
+              </div>
+            </div>
+
+            <div class="og-card">
+              <img src="../Website/public/og/og-facilities.svg" alt="OG — Facilities" />
+              <div class="og-card-footer">
+                <div>
+                  <div class="og-card-name">Facilities</div>
+                  <div class="og-card-route">/solutions/facilities</div>
+                </div>
+                <a class="og-download" href="../Website/public/og/og-facilities.svg" download>↓ SVG</a>
+              </div>
+            </div>
+
+            <div class="og-card">
+              <img src="../Website/public/og/og-events-venues.svg" alt="OG — Venues &amp; Events" />
+              <div class="og-card-footer">
+                <div>
+                  <div class="og-card-name">Venues &amp; Events</div>
+                  <div class="og-card-route">/solutions/events-venues</div>
+                </div>
+                <a class="og-download" href="../Website/public/og/og-events-venues.svg" download>↓ SVG</a>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
