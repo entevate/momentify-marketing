@@ -41,12 +41,9 @@
     <path d="M581.72 102.087C580.825 102.087 579.942 101.998 579.072 101.821L580.268 93.3114C581.138 93.4887 582.021 93.5774 582.916 93.5774C584.229 93.5774 585.349 93.2523 586.276 92.6023C587.194 92.0113 588.115 90.9772 589.039 89.4998C589.963 88.0224 591.085 85.9836 592.405 83.3834L578.867 36.4023H589.609L599.003 72.7462L617.179 36.4023H627.205L602.252 83.3834C599.907 87.7564 597.763 91.3317 595.821 94.1092C593.879 96.8867 591.836 98.896 589.693 100.137C587.541 101.437 584.883 102.087 581.72 102.087Z" fill="white"/>
   </g>
 
-  <!-- Eyebrow -->
-  <text x="80" y="260" font-family="Inter, sans-serif" font-size="14" font-weight="600" letter-spacing="3" fill="#5FD9C2">TECHNICAL RECRUITING</text>
-
   <!-- Headline -->
   <text x="80" y="340" font-family="Inter, sans-serif" font-size="72" font-weight="500" letter-spacing="-1.8" fill="white">Empower Every</text>
-  <text x="80" y="420" font-family="Inter, sans-serif" font-size="72" font-weight="500" letter-spacing="-1.8" fill="url(#accent)">Technical Recruiting.</text>
+  <text x="80" y="420" font-family="Inter, sans-serif" font-size="72" font-weight="500" letter-spacing="-1.8" fill="url(#accent)">Recruiting Event</text>
 
   <!-- Bottom accent line -->
   <rect x="80" y="560" width="200" height="3" rx="1.5" fill="url(#accent)" opacity="0.6"/>
