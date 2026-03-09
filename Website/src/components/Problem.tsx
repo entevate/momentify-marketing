@@ -6,19 +6,19 @@ import { motion } from "framer-motion";
 
 const quotes = [
   {
-    color: "#6B21D4",
+    color: "#061341",
     text: "We leave every event with a stack of cards and no idea which conversations actually matter.",
   },
   {
-    color: "#00BBA5",
+    color: "#1A2E73",
     text: "Our team comes home with hundreds of badge scans and no idea what any of those conversations revealed.",
   },
   {
-    color: "#F25E3D",
+    color: "#1A56DB",
     text: "Every event is a room full of opportunity. We just can't tell you how much of it we actually captured.",
   },
   {
-    color: "#F2B33D",
+    color: "#00BBA5",
     text: "We run facility tours and recruiting events all year. Nobody can tell me what any of them actually produced.",
   },
 ];
@@ -26,11 +26,11 @@ const quotes = [
 /* ── Role sentences mapped to solution colors ─────────── */
 
 const roles = [
-  { text: "Event managers plan.", color: "#6B21D4" },
-  { text: "Recruiters engage.", color: "#3BBFA8" },
-  { text: "Field reps show up.", color: "#D49A1F" },
-  { text: "Facility teams host.", color: "#3A2073" },
-  { text: "Teams fill the seats.", color: "#F25E3D" },
+  { text: "Event managers plan.", color: "#061341" },
+  { text: "Recruiters engage.", color: "#1A2E73" },
+  { text: "Field reps show up.", color: "#254FE5" },
+  { text: "Facility teams host.", color: "#1A56DB" },
+  { text: "Teams fill the seats.", color: "#00BBA5" },
 ];
 
 /* ── Animation variants ───────────────────────────────── */
@@ -148,7 +148,7 @@ export default function Problem() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.15 }}
               variants={headerVariants}
-              className="mt-10 flex flex-col sm:flex-row sm:items-center gap-6 sm:gap-0"
+              className="mt-10 flex flex-col sm:flex-row sm:items-start gap-6 sm:gap-0"
             >
               {/* Stat 1 */}
               <motion.div variants={fadeUp} className="flex flex-col gap-3">
@@ -172,7 +172,7 @@ export default function Problem() {
                     color: "rgba(6, 19, 65, 0.6)",
                   }}
                 >
-                  Spent annually on trade shows, recruiting events, and facility visits in the US alone.
+                  Spent annually on trade shows, recruiting events, and facility visits in the US.
                 </span>
               </motion.div>
 
@@ -208,7 +208,7 @@ export default function Problem() {
                     color: "rgba(6, 19, 65, 0.6)",
                   }}
                 >
-                  Fewer than 1 in 5 organizations can tie event investment to measurable outcomes.
+                  Fewer than 1 in 5 organizations can tie event spend to measurable outcomes.
                 </span>
               </motion.div>
             </motion.div>
