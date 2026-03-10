@@ -325,6 +325,53 @@ function PlaceholderCard({
   );
 }
 
+/* ── Step 1 auto-cycling slideshow ────────────────────── */
+
+const step1Images = [
+  "/how-it-works/step1/1.png",
+  "/how-it-works/step1/2.png",
+  "/how-it-works/step1/3.png",
+  "/how-it-works/step1/4.png",
+];
+
+function Step1Slideshow() {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActive((prev) => (prev + 1) % step1Images.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div
+      style={{
+        position: "relative",
+        transform: "scale(1.1)",
+        transformOrigin: "center center",
+      }}
+    >
+      {step1Images.map((src, i) => (
+        <img
+          key={src}
+          src={src}
+          alt={`Momentify Web - step ${i + 1}`}
+          style={{
+            position: i === 0 ? "relative" : "absolute",
+            inset: 0,
+            width: "100%",
+            height: "auto",
+            display: "block",
+            opacity: active === i ? 1 : 0,
+            transition: "opacity 1s ease-in-out",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 /* ════════════════════════════════════════════════════════
    HOW IT WORKS PAGE
    ════════════════════════════════════════════════════════ */
@@ -614,15 +661,14 @@ export default function HowItWorksContent() {
               </motion.div>
             </motion.div>
 
-            {/* Right: visual placeholder */}
+            {/* Right: auto-cycling screenshots */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              {/* Replace with Momentify Web UI screenshot */}
-              <PlaceholderCard label="Momentify Web" height="400px" comment="Replace with Momentify Web UI screenshot" />
+              <Step1Slideshow />
             </motion.div>
           </div>
         </div>
