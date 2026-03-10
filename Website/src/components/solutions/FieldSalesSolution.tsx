@@ -323,24 +323,6 @@ export default function FieldSalesSolution() {
             </a>
           </motion.div>
 
-          {/* Video walkthrough — mobile: inline before stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.36 }}
-            className="lg:hidden cursor-pointer group"
-            style={{ marginTop: "40px", maxWidth: "400px" }}
-          >
-            <div className="relative w-full" style={{ aspectRatio: "16 / 9", background: "rgba(6, 19, 65, 0.4)", border: "1px solid rgba(245, 213, 144, 0.15)", borderRadius: "16px", overflow: "hidden", backdropFilter: "blur(12px)" }}>
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                <div className="flex items-center justify-center transition-transform duration-200 group-hover:scale-110" style={{ width: "56px", height: "56px", borderRadius: "50%", background: "rgba(255, 255, 255, 0.12)", border: "1.5px solid rgba(255, 255, 255, 0.20)" }}>
-                  <svg width="20" height="24" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 2L22 14L4 26V2Z" fill="white" fillOpacity="0.9" /></svg>
-                </div>
-                <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "12px", color: "rgba(255, 255, 255, 0.60)", letterSpacing: "0.02em" }}>Field Sales Video Walk-Thru</p>
-              </div>
-            </div>
-          </motion.div>
-
           {/* Stat row */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
@@ -360,23 +342,6 @@ export default function FieldSalesSolution() {
             ))}
           </motion.div>
 
-          {/* Desktop: absolutely positioned, centered with content area */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.44 }}
-            className="hidden lg:flex items-center absolute cursor-pointer group"
-            style={{ top: "140px", bottom: "100px", right: "48px", width: "380px" }}
-          >
-            <div className="relative w-full" style={{ aspectRatio: "1 / 1", background: "rgba(6, 19, 65, 0.4)", border: "1px solid rgba(245, 213, 144, 0.15)", borderRadius: "16px", overflow: "hidden", backdropFilter: "blur(12px)" }}>
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                <div className="flex items-center justify-center transition-transform duration-200 group-hover:scale-110" style={{ width: "64px", height: "64px", borderRadius: "50%", background: "rgba(255, 255, 255, 0.12)", border: "1.5px solid rgba(255, 255, 255, 0.20)" }}>
-                  <svg width="24" height="28" viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 2L22 14L4 26V2Z" fill="white" fillOpacity="0.9" /></svg>
-                </div>
-                <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "rgba(255, 255, 255, 0.60)", letterSpacing: "0.02em" }}>Field Sales Video Walk-Thru</p>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </section>
 
