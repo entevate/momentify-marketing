@@ -196,7 +196,7 @@ export default function WhatIsROX() {
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-12" style={{ paddingTop: "160px", paddingBottom: "120px" }}>
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+          <div className="hero-two-col">
 
             {/* Left column: text + buttons */}
             <div className="flex-1 min-w-0">
