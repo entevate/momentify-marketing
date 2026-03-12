@@ -331,12 +331,12 @@ export default function FacilitiesSolution() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.42 }}
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-8 sm:gap-0"
+            className="stat-row"
             style={{ marginTop: "40px" }}
           >
             {heroStats.map((stat, i) => (
               <div key={stat.number} className="flex items-center">
-                {i > 0 && <div className="hidden sm:block" style={{ width: "1px", height: "48px", background: "rgba(255, 255, 255, 0.15)", marginLeft: "24px", marginRight: "24px" }} />}
+                {i > 0 && <div className="stat-divider" style={{ width: "1px", height: "48px", background: "rgba(255, 255, 255, 0.15)", marginLeft: "24px", marginRight: "24px" }} />}
                 <div>
                   <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "clamp(36px, 4vw, 44px)", color: "#FFFFFF", lineHeight: 1, letterSpacing: "-0.02em", marginBottom: "6px" }}>{stat.number}</p>
                   <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(255, 255, 255, 0.50)", lineHeight: 1.4, maxWidth: "160px" }}>{stat.label}</p>
