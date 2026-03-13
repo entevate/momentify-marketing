@@ -266,7 +266,7 @@ export default function Hero() {
               className="flex-shrink-0 text-white/40 font-semibold text-[11px] tracking-[0.12em] uppercase"
               style={{ fontFamily: "var(--font-inter)" }}
             >
-              TRUSTED BY:
+              TRUSTED BY
             </span>
 
             {/* Scrolling logos on mobile, static on sm+ */}
