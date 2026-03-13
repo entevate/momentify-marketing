@@ -31,6 +31,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# brand kit copy (generated at build time)
+Website/public/brand
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
