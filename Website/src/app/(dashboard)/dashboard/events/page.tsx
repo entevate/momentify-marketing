@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { Suspense, useState, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Search, ArrowUpDown } from "lucide-react";
 import TabBar from "@/components/dashboard/TabBar";
@@ -13,7 +13,7 @@ type SortOption = "date-desc" | "date-asc" | "name-asc" | "name-desc" | "session
 
 const validTabs: EventTab[] = ["all", "live", "upcoming", "past"];
 
-export default function EventsPage() {
+function EventsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const tabParam = searchParams.get("tab") as EventTab | null;
@@ -151,5 +151,13 @@ export default function EventsPage() {
       {/* Event grid */}
       <EventGrid events={filteredEvents} viewMode={viewMode} />
     </div>
+  );
+}
+
+export default function EventsPage() {
+  return (
+    <Suspense>
+      <EventsContent />
+    </Suspense>
   );
 }

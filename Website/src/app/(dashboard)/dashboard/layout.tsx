@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { ThemeProvider } from "@/components/dashboard/ThemeProvider";
 import AppSidebar from "@/components/dashboard/AppSidebar";
 import AppTopBar from "@/components/dashboard/AppTopBar";
@@ -23,11 +23,13 @@ export default function DashboardLayout({
         style={{ background: "var(--dash-bg)" }}
       >
         {/* Sidebar */}
-        <AppSidebar
-          collapsed={sidebarCollapsed}
-          mobileOpen={mobileMenuOpen}
-          onMobileClose={() => setMobileMenuOpen(false)}
-        />
+        <Suspense>
+          <AppSidebar
+            collapsed={sidebarCollapsed}
+            mobileOpen={mobileMenuOpen}
+            onMobileClose={() => setMobileMenuOpen(false)}
+          />
+        </Suspense>
 
         {/* Main content area */}
         <div className="flex flex-1 flex-col overflow-hidden">

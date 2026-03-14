@@ -391,13 +391,13 @@ export default function SessionTable({ sessions, isLive, onSessionClick, onAddSe
                 {/* Temp */}
                 <td className="px-3 py-3 text-center">
                   {session.temp === "hot" && (
-                    <Flame size={14} style={{ color: "#EF4444", margin: "0 auto" }} title="Hot" />
+                    <span title="Hot"><Flame size={14} style={{ color: "#EF4444", margin: "0 auto" }} /></span>
                   )}
                   {session.temp === "warm" && (
                     <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: "#F2B33D" }} title="Warm" />
                   )}
                   {session.temp === "cold" && (
-                    <Snowflake size={14} style={{ color: "#3B82F6", margin: "0 auto" }} title="Cold" />
+                    <span title="Cold"><Snowflake size={14} style={{ color: "#3B82F6", margin: "0 auto" }} /></span>
                   )}
                 </td>
                 {/* Name */}

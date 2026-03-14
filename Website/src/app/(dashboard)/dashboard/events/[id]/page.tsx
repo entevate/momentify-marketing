@@ -109,7 +109,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
         event={eventData}
         onSettingsClick={() => setDrawer({ mode: "settings" })}
         onMomentsClick={() => setDrawer({ mode: "moments" })}
-        onNameChange={(name) => setEventData((prev) => ({ ...prev, name }))}
+        onNameChange={(name) => setEventData((prev) => prev ? { ...prev, name } : prev)}
       />
 
       {eventData.status === "upcoming" ? (
