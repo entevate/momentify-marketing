@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Archivo, Manrope, Space_Grotesk } from "next/font/google";
+import { Inter, Archivo, Manrope, Space_Grotesk, Syne } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -25,6 +25,12 @@ const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-space-grotesk",
+});
+
+const syne = Syne({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-syne",
 });
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -189,7 +195,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${archivo.variable} ${manrope.variable} ${spaceGrotesk.variable}`}>
+    <html lang="en" className={`${inter.variable} ${archivo.variable} ${manrope.variable} ${spaceGrotesk.variable} ${syne.variable}`}>
       <head>
         {/* JSON-LD structured data */}
         <script

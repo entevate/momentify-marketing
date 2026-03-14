@@ -18,6 +18,7 @@ const platformLinks = [
   { name: "Security", href: "/platform/security", description: "Enterprise-grade data protection", isRoute: true, icon: "security" as const },
   { name: "Help Center", href: "https://intercom.help/momentifyapp/en/", description: "Guides, FAQs, and support resources", isRoute: false, icon: "help" as const },
   { name: "System Status", href: "https://status.momentifyapp.com/", description: "Real-time platform availability", isRoute: false, icon: "status" as const },
+  { name: "Social Toolkit", href: "/social-toolkit", description: "Create branded social graphics", isRoute: true, icon: "toolkit" as const },
 ];
 
 const ICON_COLOR = "rgba(6,19,65,0.45)";
@@ -48,6 +49,12 @@ const platformIcons: Record<string, React.ReactNode> = {
   status: (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M1 8h3l1.5-4 3 8L10 6l1.5 2H15" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  toolkit: (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="2" width="12" height="10" rx="1.5" stroke={ICON_COLOR} strokeWidth="1.3" />
+      <path d="M2 5h12M5 5v7M11 5v7" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" />
     </svg>
   ),
 };
