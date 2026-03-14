@@ -2,6 +2,8 @@
 
 import { type AspectRatio, brands, getBrand } from "./backgroundData";
 
+type TextAlign = "left" | "center" | "right";
+
 interface EditorControlsProps {
   brand: string;
   setBrand: (v: string) => void;
@@ -19,8 +21,8 @@ interface EditorControlsProps {
   setTextPosition: (v: "top" | "center" | "bottom") => void;
   showLogo: boolean;
   setShowLogo: (v: boolean) => void;
-  logoVariant: "auto" | "dark" | "white";
-  setLogoVariant: (v: "auto" | "dark" | "white") => void;
+  logoVariant: "auto" | "dark" | "white" | "all-white";
+  setLogoVariant: (v: "auto" | "dark" | "white" | "all-white") => void;
   logoScale: number;
   setLogoScale: (v: number) => void;
   showUrl: boolean;
@@ -39,6 +41,14 @@ interface EditorControlsProps {
   setBodyFontSize: (v: number) => void;
   bodyFontWeight: number;
   setBodyFontWeight: (v: number) => void;
+  headlineAlign: TextAlign;
+  setHeadlineAlign: (v: TextAlign) => void;
+  subheadAlign: TextAlign;
+  setSubheadAlign: (v: TextAlign) => void;
+  bodyAlign: TextAlign;
+  setBodyAlign: (v: TextAlign) => void;
+  layoutMargin: number;
+  setLayoutMargin: (v: number) => void;
   onDownload: () => void;
   onSave: () => void;
   onClear: () => void;
@@ -55,7 +65,7 @@ const RATIO_LABELS: Record<AspectRatio, string> = {
 };
 
 const POSITIONS = ["top", "center", "bottom"] as const;
-const LOGO_VARIANTS = ["auto", "dark", "white"] as const;
+const LOGO_VARIANTS = ["auto", "dark", "white", "all-white"] as const;
 const WEIGHT_OPTIONS = [100, 200, 300, 400, 500, 600, 700, 800, 900];
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -118,6 +128,31 @@ function WeightSelect({ value, onChange }: { value: number; onChange: (v: number
   );
 }
 
+const ALIGNS: TextAlign[] = ["left", "center", "right"];
+
+function AlignButtons({ value, onChange }: { value: TextAlign; onChange: (v: TextAlign) => void }) {
+  return (
+    <div className="flex gap-0.5">
+      {ALIGNS.map((a) => (
+        <button
+          key={a}
+          onClick={() => onChange(a)}
+          className={`p-1.5 rounded transition-all ${
+            value === a ? "bg-teal/15 text-teal" : "text-charcoal/25 hover:text-charcoal/50"
+          }`}
+          title={`Align ${a}`}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            {a === "left" && (<><line x1="1" y1="3" x2="13" y2="3"/><line x1="1" y1="7" x2="9" y2="7"/><line x1="1" y1="11" x2="11" y2="11"/></>)}
+            {a === "center" && (<><line x1="1" y1="3" x2="13" y2="3"/><line x1="3" y1="7" x2="11" y2="7"/><line x1="2" y1="11" x2="12" y2="11"/></>)}
+            {a === "right" && (<><line x1="1" y1="3" x2="13" y2="3"/><line x1="5" y1="7" x2="13" y2="7"/><line x1="3" y1="11" x2="13" y2="11"/></>)}
+          </svg>
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function EditorControls({
   brand,
   setBrand,
@@ -155,6 +190,14 @@ export default function EditorControls({
   setBodyFontSize,
   bodyFontWeight,
   setBodyFontWeight,
+  headlineAlign,
+  setHeadlineAlign,
+  subheadAlign,
+  setSubheadAlign,
+  bodyAlign,
+  setBodyAlign,
+  layoutMargin,
+  setLayoutMargin,
   onDownload,
   onSave,
   onClear,
@@ -249,6 +292,7 @@ export default function EditorControls({
           <div className="flex items-center gap-3">
             <span className="text-[11px] text-charcoal/40 w-10 shrink-0">Weight</span>
             <WeightSelect value={headlineFontWeight} onChange={setHeadlineFontWeight} />
+            <div className="ml-auto"><AlignButtons value={headlineAlign} onChange={setHeadlineAlign} /></div>
           </div>
         </div>
       </div>
@@ -268,6 +312,7 @@ export default function EditorControls({
           <div className="flex items-center gap-3">
             <span className="text-[11px] text-charcoal/40 w-10 shrink-0">Weight</span>
             <WeightSelect value={subheadFontWeight} onChange={setSubheadFontWeight} />
+            <div className="ml-auto"><AlignButtons value={subheadAlign} onChange={setSubheadAlign} /></div>
           </div>
         </div>
       </div>
@@ -287,6 +332,7 @@ export default function EditorControls({
           <div className="flex items-center gap-3">
             <span className="text-[11px] text-charcoal/40 w-10 shrink-0">Weight</span>
             <WeightSelect value={bodyFontWeight} onChange={setBodyFontWeight} />
+            <div className="ml-auto"><AlignButtons value={bodyAlign} onChange={setBodyAlign} /></div>
           </div>
         </div>
       </div>
@@ -309,6 +355,12 @@ export default function EditorControls({
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Layout */}
+      <div>
+        <SectionLabel>Layout</SectionLabel>
+        <SliderRow label="Margin" value={layoutMargin} min={20} max={120} step={5} onChange={setLayoutMargin} suffix="px" />
       </div>
 
       {/* Logo Controls */}
@@ -343,7 +395,7 @@ export default function EditorControls({
                         : "bg-charcoal/[0.04] text-charcoal/50 hover:bg-charcoal/[0.08]"
                     }`}
                   >
-                    {v === "auto" ? "Auto" : v === "dark" ? "Dark" : "White"}
+                    {v === "auto" ? "Auto" : v === "dark" ? "Dark" : v === "all-white" ? "All White" : "White"}
                   </button>
                 ))}
               </div>

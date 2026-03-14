@@ -9,8 +9,88 @@ import AssetLibrary, { type SavedAsset } from "./AssetLibrary";
 import { type AspectRatio, getBrand, getBackground, ASPECT_DIMENSIONS } from "./backgroundData";
 
 const STORAGE_KEY = "momentify_asset_library";
+const THEME_KEY = "mk-theme";
+
+/* Moon icon for dark mode toggle */
+function MoonIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
+    </svg>
+  );
+}
+
+/* Sun icon for light mode toggle */
+function SunIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="5" />
+      <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </svg>
+  );
+}
+
+/* Back arrow icon */
+function BackIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 2L4 7l5 5" />
+    </svg>
+  );
+}
+
+/* Dark/light theme tokens */
+const darkTokens = {
+  "--bk-bg": "#07081F",
+  "--bk-surface": "#0F1035",
+  "--bk-border": "rgba(12,244,223,0.12)",
+  "--bk-text": "#FFFFFF",
+  "--bk-text-muted": "rgba(255,255,255,0.45)",
+  "--bk-accent": "#0CF4DF",
+  "--bk-header-bg": "rgba(7,8,31,0.94)",
+  "--bk-toggle-bg": "rgba(255,255,255,0.1)",
+  "--bk-toggle-border": "rgba(255,255,255,0.18)",
+  "--bk-toggle-text": "rgba(255,255,255,0.8)",
+} as Record<string, string>;
+
+const lightTokens = {
+  "--bk-bg": "#F4F5FA",
+  "--bk-surface": "#FFFFFF",
+  "--bk-border": "rgba(31,51,149,0.12)",
+  "--bk-text": "#0B0B3C",
+  "--bk-text-muted": "rgba(11,11,60,0.48)",
+  "--bk-accent": "#1F3395",
+  "--bk-header-bg": "rgba(244,245,250,0.96)",
+  "--bk-toggle-bg": "rgba(11,11,60,0.06)",
+  "--bk-toggle-border": "rgba(11,11,60,0.14)",
+  "--bk-toggle-text": "rgba(11,11,60,0.7)",
+} as Record<string, string>;
 
 export default function SocialToolkitContent() {
+  // Theme state
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
+
+  // Read saved theme from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved === "dark" || saved === "light") setTheme(saved);
+    } catch { /* ignore */ }
+  }, []);
+
+  const toggleTheme = useCallback(() => {
+    setTheme((prev) => {
+      const next = prev === "dark" ? "light" : "dark";
+      try { localStorage.setItem(THEME_KEY, next); } catch { /* ignore */ }
+      return next;
+    });
+  }, []);
+
+  const tokens = theme === "dark" ? darkTokens : lightTokens;
+
   // Editor state
   const [brand, setBrand] = useState("momentify");
   const [backgroundId, setBackgroundId] = useState("main-minimal");
@@ -20,7 +100,7 @@ export default function SocialToolkitContent() {
   const [bodyCopy, setBodyCopy] = useState("");
   const [textPosition, setTextPosition] = useState<"top" | "center" | "bottom">("center");
   const [showLogo, setShowLogo] = useState(true);
-  const [logoVariant, setLogoVariant] = useState<"auto" | "dark" | "white">("auto");
+  const [logoVariant, setLogoVariant] = useState<"auto" | "dark" | "white" | "all-white">("auto");
   const [logoScale, setLogoScale] = useState(100);
   const [showUrl, setShowUrl] = useState(true);
   const [urlScale, setUrlScale] = useState(100);
@@ -30,6 +110,10 @@ export default function SocialToolkitContent() {
   const [subheadFontWeight, setSubheadFontWeight] = useState(300);
   const [bodyFontSize, setBodyFontSize] = useState(20);
   const [bodyFontWeight, setBodyFontWeight] = useState(300);
+  const [headlineAlign, setHeadlineAlign] = useState<"left" | "center" | "right">("left");
+  const [subheadAlign, setSubheadAlign] = useState<"left" | "center" | "right">("left");
+  const [bodyAlign, setBodyAlign] = useState<"left" | "center" | "right">("left");
+  const [layoutMargin, setLayoutMargin] = useState(60);
   const [downloading, setDownloading] = useState(false);
 
   // Caption state
@@ -67,17 +151,36 @@ export default function SocialToolkitContent() {
 
   // Download PNG
   const handleDownload = useCallback(async () => {
-    if (!canvasRef.current) return;
+    const el = canvasRef.current;
+    if (!el) return;
     setDownloading(true);
     try {
       await document.fonts.ready;
-      const canvas = await html2canvas(canvasRef.current, {
+
+      // Temporarily remove CSS transform/scale so html2canvas captures at full size
+      const prevTransform = el.style.transform;
+      const prevTransformOrigin = el.style.transformOrigin;
+      el.style.transform = "none";
+      el.style.transformOrigin = "";
+
+      // Also temporarily neutralize site-wide zoom on <html>
+      const htmlEl = document.documentElement;
+      const prevZoom = htmlEl.style.zoom;
+      htmlEl.style.zoom = "1";
+
+      const canvas = await html2canvas(el, {
         scale: 2,
         useCORS: true,
         backgroundColor: null,
         width: dims.w,
         height: dims.h,
       });
+
+      // Restore transform and zoom
+      el.style.transform = prevTransform;
+      el.style.transformOrigin = prevTransformOrigin;
+      htmlEl.style.zoom = prevZoom;
+
       const link = document.createElement("a");
       const slug = (headline || "momentify").toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40);
       link.download = `momentify-${slug}-${Date.now()}.png`;
@@ -92,10 +195,21 @@ export default function SocialToolkitContent() {
 
   // Save to library
   const handleSave = useCallback(async () => {
-    if (!canvasRef.current) return;
+    const el = canvasRef.current;
+    if (!el) return;
     try {
       await document.fonts.ready;
-      const canvas = await html2canvas(canvasRef.current, {
+
+      // Temporarily remove CSS transform/scale so html2canvas captures correctly
+      const prevTransform = el.style.transform;
+      const prevTransformOrigin = el.style.transformOrigin;
+      el.style.transform = "none";
+      el.style.transformOrigin = "";
+      const htmlEl = document.documentElement;
+      const prevZoom = htmlEl.style.zoom;
+      htmlEl.style.zoom = "1";
+
+      const canvas = await html2canvas(el, {
         scale: 0.25,
         useCORS: true,
         backgroundColor: null,
@@ -127,14 +241,23 @@ export default function SocialToolkitContent() {
         subheadFontWeight,
         bodyFontSize,
         bodyFontWeight,
+        headlineAlign,
+        subheadAlign,
+        bodyAlign,
+        layoutMargin,
         caption: caption || undefined,
         hashtags: hashtags.length ? hashtags : undefined,
       };
+      // Restore transform and zoom
+      el.style.transform = prevTransform;
+      el.style.transformOrigin = prevTransformOrigin;
+      htmlEl.style.zoom = prevZoom;
+
       persistAssets([newAsset, ...assets]);
     } catch (err) {
       console.error("Save failed:", err);
     }
-  }, [dims, brand, backgroundId, aspectRatio, headline, subhead, bodyCopy, textPosition, showLogo, logoVariant, logoScale, showUrl, urlScale, headlineFontSize, headlineFontWeight, subheadFontSize, subheadFontWeight, bodyFontSize, bodyFontWeight, caption, hashtags, assets, persistAssets]);
+  }, [dims, brand, backgroundId, aspectRatio, headline, subhead, bodyCopy, textPosition, showLogo, logoVariant, logoScale, showUrl, urlScale, headlineFontSize, headlineFontWeight, subheadFontSize, subheadFontWeight, bodyFontSize, bodyFontWeight, headlineAlign, subheadAlign, bodyAlign, layoutMargin, caption, hashtags, assets, persistAssets]);
 
   // Clear all fields to defaults
   const handleClear = useCallback(() => {
@@ -156,6 +279,10 @@ export default function SocialToolkitContent() {
     setSubheadFontWeight(300);
     setBodyFontSize(20);
     setBodyFontWeight(300);
+    setHeadlineAlign("left");
+    setSubheadAlign("left");
+    setBodyAlign("left");
+    setLayoutMargin(60);
     setCaption("");
     setHashtags([]);
   }, []);
@@ -183,6 +310,10 @@ export default function SocialToolkitContent() {
       setSubheadFontWeight(asset.subheadFontWeight ?? 300);
       setBodyFontSize(asset.bodyFontSize ?? 20);
       setBodyFontWeight(asset.bodyFontWeight ?? 300);
+      setHeadlineAlign(asset.headlineAlign ?? "left");
+      setSubheadAlign(asset.subheadAlign ?? "left");
+      setBodyAlign(asset.bodyAlign ?? "left");
+      setLayoutMargin(asset.layoutMargin ?? 60);
       if (asset.caption) setCaption(asset.caption);
       if (asset.hashtags) setHashtags(asset.hashtags);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -199,47 +330,132 @@ export default function SocialToolkitContent() {
   );
 
   return (
-    <div>
-      {/* Brand Kit Header */}
+    <div
+      style={{
+        ...tokens,
+        background: "var(--bk-bg)",
+        color: "var(--bk-text)",
+        minHeight: "100vh",
+        transition: "background 0.22s ease, color 0.22s ease",
+        fontFamily: "'Inter', sans-serif",
+      } as React.CSSProperties}
+    >
+      {/* Sticky Page Header */}
       <header
-        className="relative overflow-hidden"
         style={{
-          background: "linear-gradient(135deg, #7C316D 0%, #0B0B3C 55%, #1A2E73 100%)",
-          padding: "56px 0 48px",
+          position: "sticky",
+          top: 0,
+          zIndex: 100,
+          background: "var(--bk-header-bg)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
+          borderBottom: "1px solid var(--bk-border)",
+          transition: "background 0.22s ease, border-color 0.22s ease",
         }}
       >
         <div
-          className="absolute inset-0 pointer-events-none"
           style={{
-            background: "radial-gradient(ellipse 60% 80% at 80% 50%, rgba(12,244,223,0.08) 0%, transparent 70%)",
+            maxWidth: 1400,
+            margin: "0 auto",
+            padding: "0 32px",
+            height: 60,
+            display: "flex",
+            alignItems: "center",
+            gap: 24,
           }}
-        />
-        <div className="relative mx-auto max-w-7xl px-6 lg:px-12 flex items-center justify-between gap-6 flex-wrap">
-          <a href="/">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/Momentify-Logo_Reverse.svg"
-              alt="Momentify"
-              style={{ height: 36 }}
-            />
+        >
+          <a
+            href="/brand/index.html"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              color: "var(--bk-text-muted)",
+              textDecoration: "none",
+              fontSize: 13,
+              fontWeight: 500,
+              flexShrink: 0,
+            }}
+          >
+            <BackIcon />
+            Brand Kit
           </a>
-          <div className="text-right">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0CF4DF] mb-1">
-              Brand Kit
-            </p>
-            <p className="text-[14px] font-[500] text-white/55">
+          <div style={{ width: 1, height: 20, background: "var(--bk-border)", flexShrink: 0 }} />
+          <nav style={{ display: "flex", alignItems: "center", gap: 4, flex: 1, minWidth: 0 }}>
+            <a
+              href="/brand/backgrounds.html"
+              style={{
+                fontSize: 13,
+                fontWeight: 500,
+                color: "var(--bk-text-muted)",
+                textDecoration: "none",
+                padding: "6px 10px",
+                borderRadius: 6,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Backgrounds
+            </a>
+            <a
+              href="/brand/design-system.html"
+              style={{
+                fontSize: 13,
+                fontWeight: 500,
+                color: "var(--bk-text-muted)",
+                textDecoration: "none",
+                padding: "6px 10px",
+                borderRadius: 6,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Design System
+            </a>
+            <a
+              href="/social-toolkit"
+              style={{
+                fontSize: 13,
+                fontWeight: 500,
+                color: "var(--bk-accent)",
+                textDecoration: "none",
+                padding: "6px 10px",
+                borderRadius: 6,
+                whiteSpace: "nowrap",
+              }}
+            >
               Social Toolkit
-            </p>
-          </div>
+            </a>
+          </nav>
+          <button
+            onClick={toggleTheme}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 7,
+              background: "var(--bk-toggle-bg)",
+              border: "1px solid var(--bk-toggle-border)",
+              borderRadius: 100,
+              padding: "7px 16px",
+              cursor: "pointer",
+              fontSize: 12,
+              fontWeight: 600,
+              color: "var(--bk-toggle-text)",
+              fontFamily: "'Inter', sans-serif",
+              whiteSpace: "nowrap",
+              transition: "background 0.15s, border-color 0.15s, color 0.15s",
+            }}
+          >
+            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
+            {theme === "dark" ? "Light Mode" : "Dark Mode"}
+          </button>
         </div>
       </header>
 
       {/* Editor section */}
-      <section className="py-12 px-6 lg:px-12">
-        <div className="mx-auto max-w-7xl">
+      <section style={{ padding: "48px 24px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start">
             {/* Canvas */}
-            <div className="flex justify-center lg:sticky lg:top-24">
+            <div className="flex justify-center">
               <CanvasEditor
                 ref={canvasRef}
                 aspectRatio={aspectRatio}
@@ -260,11 +476,15 @@ export default function SocialToolkitContent() {
                 subheadFontWeight={subheadFontWeight}
                 bodyFontSize={bodyFontSize}
                 bodyFontWeight={bodyFontWeight}
+                headlineAlign={headlineAlign}
+                subheadAlign={subheadAlign}
+                bodyAlign={bodyAlign}
+                layoutMargin={layoutMargin}
               />
             </div>
 
-            {/* Controls */}
-            <div className="bg-white rounded-2xl border border-charcoal/[0.06] p-6 shadow-sm">
+            {/* Controls - always white card, sticky + scrollable */}
+            <div className="bg-white rounded-2xl border border-charcoal/[0.06] p-6 shadow-sm lg:sticky lg:top-[84px] lg:max-h-[calc(100vh-100px)] lg:overflow-y-auto">
               <EditorControls
                 brand={brand}
                 setBrand={setBrand}
@@ -302,6 +522,14 @@ export default function SocialToolkitContent() {
                 setBodyFontSize={setBodyFontSize}
                 bodyFontWeight={bodyFontWeight}
                 setBodyFontWeight={setBodyFontWeight}
+                headlineAlign={headlineAlign}
+                setHeadlineAlign={setHeadlineAlign}
+                subheadAlign={subheadAlign}
+                setSubheadAlign={setSubheadAlign}
+                bodyAlign={bodyAlign}
+                setBodyAlign={setBodyAlign}
+                layoutMargin={layoutMargin}
+                setLayoutMargin={setLayoutMargin}
                 onDownload={handleDownload}
                 onSave={handleSave}
                 onClear={handleClear}
@@ -313,8 +541,8 @@ export default function SocialToolkitContent() {
       </section>
 
       {/* Caption generator section */}
-      <section className="py-12 px-6 lg:px-12 bg-light-bg">
-        <div className="mx-auto max-w-7xl">
+      <section style={{ padding: "48px 24px", background: "var(--bk-surface)", transition: "background 0.22s ease" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div className="bg-white rounded-2xl border border-charcoal/[0.06] p-6 shadow-sm">
             <CaptionGenerator
               headline={headline}
@@ -331,9 +559,11 @@ export default function SocialToolkitContent() {
       </section>
 
       {/* Asset library section */}
-      <section className="py-12 px-6 lg:px-12">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="text-[20px] font-[500] text-charcoal mb-6">Asset Library</h2>
+      <section style={{ padding: "48px 24px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto" }}>
+          <h2 style={{ fontSize: 20, fontWeight: 500, color: "var(--bk-text)", marginBottom: 24 }}>
+            Asset Library
+          </h2>
           <AssetLibrary
             assets={assets}
             onEdit={handleEdit}
@@ -343,20 +573,53 @@ export default function SocialToolkitContent() {
       </section>
 
       {/* Brand Kit Footer */}
-      <footer className="border-t border-charcoal/[0.06] py-8 px-6 lg:px-12">
-        <div className="mx-auto max-w-7xl flex items-center justify-between gap-6 flex-wrap">
+      <footer
+        style={{
+          background: "var(--bk-surface)",
+          borderTop: "1px solid var(--bk-border)",
+          padding: "32px 0",
+          transition: "background 0.22s ease, border-color 0.22s ease",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 1400,
+            margin: "0 auto",
+            padding: "0 32px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 24,
+            flexWrap: "wrap",
+          }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/Momentify-Logo.svg"
+            src={theme === "dark" ? "/Momentify-Logo_Reverse.svg" : "/Momentify-Logo.svg"}
             alt="Momentify"
             style={{ height: 22, opacity: 0.5 }}
           />
-          <p className="text-[12px] text-charcoal/25">
+          <nav style={{ display: "flex", gap: 16, fontSize: 12 }}>
+            <a href="/brand/index.html" style={{ color: "var(--bk-text-muted)", textDecoration: "none" }}>Brand Kit</a>
+            <a href="/brand/backgrounds.html" style={{ color: "var(--bk-text-muted)", textDecoration: "none" }}>Backgrounds</a>
+            <a href="/brand/design-system.html" style={{ color: "var(--bk-text-muted)", textDecoration: "none" }}>Design System</a>
+            <a href="/social-toolkit" style={{ color: "var(--bk-accent)", textDecoration: "none" }}>Social Toolkit</a>
+          </nav>
+          <span style={{ fontSize: 12, color: "var(--bk-text-muted)" }}>
             &copy; 2026 Momentify. All brand assets are proprietary and confidential.
-          </p>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[#00BBA5]/70">
+          </span>
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "var(--bk-accent)",
+              opacity: 0.7,
+            }}
+          >
             Brand Kit v1.0
-          </p>
+          </span>
         </div>
       </footer>
     </div>

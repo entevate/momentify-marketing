@@ -16,7 +16,7 @@ export interface SavedAsset {
   bodyCopy: string;
   textPosition: "top" | "center" | "bottom";
   showLogo: boolean;
-  logoVariant?: "auto" | "dark" | "white";
+  logoVariant?: "auto" | "dark" | "white" | "all-white";
   logoScale?: number;
   showUrl?: boolean;
   urlScale?: number;
@@ -26,6 +26,10 @@ export interface SavedAsset {
   subheadFontWeight?: number;
   bodyFontSize?: number;
   bodyFontWeight?: number;
+  headlineAlign?: "left" | "center" | "right";
+  subheadAlign?: "left" | "center" | "right";
+  bodyAlign?: "left" | "center" | "right";
+  layoutMargin?: number;
   caption?: string;
   hashtags?: string[];
   category?: string;
