@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momentify Explorer Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    color: #fff;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ─── Password Gate ─────────────────────── */
+  #password-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s ease;
+  }
+  #password-gate.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .pw-box {
+    text-align: center;
+    max-width: 360px;
+    width: 100%;
+    padding: 0 24px;
+  }
+
+  .pw-logo {
+    margin-bottom: 32px;
+  }
+  .pw-logo svg {
+    height: 36px;
+    width: auto;
+  }
+
+  .pw-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .pw-input-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .pw-input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 15px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .pw-input:focus {
+    border-color: #FFCC00;
+  }
+  .pw-input.error {
+    border-color: #E5484D;
+    animation: shake 0.4s ease;
+  }
+
+  .pw-submit {
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 1px solid #FFCC00;
+    background: transparent;
+    color: #FFCC00;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+  .pw-submit:hover {
+    background: #FFCC00;
+    color: #000;
+  }
+
+  .pw-error-msg {
+    font-size: 12px;
+    color: #E5484D;
+    margin-top: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .pw-error-msg.visible { opacity: 1; }
+
+  .pw-hint {
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+    margin-top: 24px;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(4px); }
+  }
+
+  /* ─── iPad Bezel ────────────────────────── */
+  #ipad-wrapper {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+  }
+  #ipad-wrapper.visible {
+    display: flex;
+  }
+
+  .ipad-bezel {
+    position: relative;
+    /* iPad Pro 12.9" screen: 1366x1024, bezel adds ~40px each side */
+    width: 1446px;
+    height: 1104px;
+    background: #1a1a1a;
+    border-radius: 36px;
+    border: 2px solid rgba(255,255,255,0.08);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.04),
+      0 20px 80px rgba(0,0,0,0.6),
+      0 4px 20px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.06);
+    padding: 40px;
+    /* Scale to fit viewport */
+    transform-origin: center center;
+  }
+
+  .ipad-screen {
+    width: 1366px;
+    height: 1024px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .ipad-screen iframe {
+    width: 1366px;
+    height: 1024px;
+    border: none;
+    display: block;
+  }
+
+  /* Camera dot */
+  .ipad-camera {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2a2a2a;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* Powered by badge */
+  .powered-by {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  .powered-by a {
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Password Gate -->
+<div id="password-gate">
+  <div class="pw-box">
+    <div class="pw-logo">
+      <svg viewBox="0 0 1154.9 181" xmlns="http://www.w3.org/2000/svg">
+        <path d="M513,165.6v-43.1c0-20.4-7.3-32.3-22.8-35.1c18.1-4.8,23-20,23-39.4c0-27.4-9.9-44.5-41.8-44.5h-57.3l0,177.5h38.1v-77.2h9.4c9.2,0,13.5,6.3,13.5,14.8v47.2c0,7.9,1.6,13.6,2.7,15.2h38.5C515,179.5,513,173.4,513,165.6 M462.3,73.9l-10.1,0.2V34h11.5c8.7,0,11.6,6.4,11.6,20.4S472.1,73.9,462.3,73.9" fill="white"/>
+        <path d="M85.5,150.8c6.8-5.7,8-12.7,8-19v-26.5h-37v36c0,5.1-4.2,9.3-9.3,9.3c-5.1,0-9-4.2-9-9.3v-102c0-5.1,3.8-9.3,9-9.3c5.1,0,9.3,4.2,9.3,9.3v36.2h37V37.9C93.4,17.1,79.8,0,46.8,0C12.8,0,0,17.2,0,37.9v106.5c0,20.6,16.3,36.2,37.2,36.2h11.5L85.5,150.8z" fill="white"/>
+        <path d="M1103.5,165.5v-43.1c0-20.4-7.3-32.3-22.8-35.1c18.1-4.8,23-20,23-39.4c0-27.4-9.9-44.5-41.8-44.5h-57.3l0,177.5h38.2v-77.2h9.3c9.2,0,13.5,6.3,13.5,14.8v47.2c0,7.9,1.6,13.7,2.7,15.2h38.5C1105.6,179.4,1103.5,173.3,1103.5,165.5 M1052.8,73.8h-10.1v-40h11.6c8.7,0,11.6,6.4,11.6,20.4C1065.9,68.3,1062.7,73.8,1052.8,73.8" fill="white"/>
+        <path d="M960.7,3.1h-51.3L879,180.9h38.6l3.8-31.4l27.6,0l3.8,31.4h38.6L960.7,3.1z M925.3,117.1l9.9-82.8l9.9,82.8H925.3z" fill="white"/>
+        <polygon points="705.2,180.9 705.2,3.5 744.3,3.5 744.3,147.2 785,147.2 785,180.9" fill="white"/>
+        <rect x="645.4" y="3.5" width="39.1" height="177.4" fill="white"/>
+        <polygon points="794.4,180.9 794.4,3.5 833.5,3.5 833.5,147.2 874.2,147.2 874.2,180.9" fill="white"/>
+        <path d="M591.3,3.5h-59.6l0,177.5h38.2v-70.4h21.4c35.1,0,41-22.4,41-53.5C632.3,25.8,626.4,3.5,591.3,3.5 M581.4,79.1L569.8,79V34h11.6c9.9,0,11.6,6.8,11.6,23C593,73.8,591.3,79.1,581.4,79.1" fill="white"/>
+        <polygon points="348.1,37.3 348.1,72.5 388.6,72.5 388.6,107.2 348.1,107.2 348.1,146.6 396.2,146.6 396.2,180.8 309,180.9 309,3.4 309,3.4 394.6,3.4 394.6,37.3" fill="white"/>
+        <polygon points="231.5,155 231.5,38 206,38 206,3.5 298.5,3.5 298.5,38 272.8,38 272.8,180.4 261.8,180.4" fill="white"/>
+        <polygon points="248.1,180.6 158,105.1 64.6,180.6" fill="#FFCC00"/>
+        <path d="M183.7,3.7h-51.6L102,138.6l56-45.2l58.4,48.9L183.7,3.7z M148,84.8l10-51l9.9,51H148z" fill="white"/>
+        <path d="M1154.9,15.9c0,8.3-6.6,15-14.9,15c-8.3,0-15-6.7-15-15c0-8.3,6.7-14.9,15-14.9C1148.3,1,1154.9,7.6,1154.9,15.9 M1152.1,15.9c0-6.7-5.5-12.1-12.1-12.1c-6.8,0-12.2,5.4-12.2,12.1c0,6.7,5.4,12.2,12.2,12.2C1146.7,28.1,1152.1,22.6,1152.1,15.9 M1138.1,24.6h-3.9V7.2h7.3c2.7,0,4.4,1.6,4.4,4.6c0,2.2-0.9,3.9-3.5,4.3v0.1c0.9,0,3.4,0.2,3.4,3.4c0,1.1,0.1,4.4,0.4,5.1h-3.9c-0.5-1.1-0.5-2.2-0.5-3.4c0-2,0.3-3.8-2.7-3.8h-1V24.6z M1138.1,14.9h1.8c1.6,0,2.1-1.4,2.1-2.6c0-1.6-0.8-2.3-2.1-2.3h-1.8V14.9z" fill="white"/>
+      </svg>
+    </div>
+    <div class="pw-label">Enter password to continue</div>
+    <div class="pw-input-row">
+      <input type="password" class="pw-input" id="pw-input" placeholder="Password" autocomplete="off" autofocus>
+      <button class="pw-submit" onclick="checkPassword()">Enter</button>
+    </div>
+    <div class="pw-error-msg" id="pw-error">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- iPad Bezel -->
+<div id="ipad-wrapper">
+  <div class="ipad-bezel" id="ipad-bezel">
+    <div class="ipad-camera"></div>
+    <div class="ipad-screen">
+      <iframe id="proto-frame" src="about:blank"></iframe>
+    </div>
+  </div>
+  <div class="powered-by">Prototype preview &mdash; best viewed in landscape on desktop</div>
+</div>
+
+<script>
+  const PASSWORD = 'electricpower';
+
+  function checkPassword() {
+    const input = document.getElementById('pw-input');
+    const error = document.getElementById('pw-error');
+    if (input.value === PASSWORD) {
+      // Unlock
+      const gate = document.getElementById('password-gate');
+      gate.classList.add('hidden');
+      setTimeout(() => { gate.style.display = 'none'; }, 400);
+      // Show iPad and load prototype
+      document.getElementById('ipad-wrapper').classList.add('visible');
+      document.getElementById('proto-frame').src = 'explorer-prototype_cat.html';
+      scaleBezel();
+    } else {
+      input.classList.add('error');
+      error.classList.add('visible');
+      setTimeout(() => { input.classList.remove('error'); }, 400);
+      input.select();
+    }
+  }
+
+  // Enter key submits
+  document.getElementById('pw-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkPassword();
+    // Clear error on typing
+    document.getElementById('pw-error').classList.remove('visible');
+  });
+
+  // Scale bezel to fit viewport
+  function scaleBezel() {
+    const bezel = document.getElementById('ipad-bezel');
+    if (!bezel) return;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const bw = 1446;
+    const bh = 1104;
+    const scaleX = (vw - 40) / bw; // 20px margin each side
+    const scaleY = (vh - 40) / bh;
+    const scale = Math.min(scaleX, scaleY, 1); // never scale up
+    bezel.style.transform = `scale(${scale})`;
+  }
+
+  window.addEventListener('resize', scaleBezel);
+</script>
+</body>
+</html>
