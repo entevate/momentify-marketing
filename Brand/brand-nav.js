@@ -15,10 +15,12 @@
   ];
 
   var prototypes = [
+    { label: 'Explorer Dashboard',  href: '/prototypes/explorer',        external: true },
+    { label: 'Explorer (PHIL)',     href: 'explorer-prototype_phil.html' },
+    { label: 'Explorer (CAT)',      href: 'explorer-prototype_cat.html' },
+    { label: 'Explorer Prototype',  href: 'explorer-prototype.html' },
     { label: 'Web Dashboard',       href: '/dashboard',                  external: true },
     { label: 'Fan Gallery',         href: '/fan-gallery/admin',          external: true },
-    { label: 'Explorer Prototype',  href: 'explorer-prototype.html' },
-    { label: 'Explorer (CAT)',      href: 'explorer-prototype_cat.html' },
     { label: 'Email Signature',     href: 'email-signature.html' },
     { label: 'LinkedIn CONEXPO',    href: 'linkedin-conexpo.html' },
     { label: 'ROX Infographic',     href: 'rox-infographic.html' }
