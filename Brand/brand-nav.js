@@ -81,7 +81,7 @@
 
   var prototypes = [
     { label: 'Momentify Web',           href: 'https://www.momentifyapp.com/dashboard/events', external: true },
-    { label: 'Momentify Explorer',      href: 'explorer-prototype.html' },
+    { label: 'Momentify Explorer',      href: 'https://www.momentifyapp.com/prototypes/explorer', external: true },
     { label: 'Momentify Fan',           href: 'https://www.momentifyapp.com/fan-gallery/admin', external: true }
   ];
 
