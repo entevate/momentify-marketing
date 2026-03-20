@@ -71,7 +71,7 @@
     { label: 'Brand Guidelines', href: 'index.html',         match: ['index.html', '/brand/', '/brand'] },
     { label: 'Design System',    href: 'design-system.html',  match: ['design-system.html'] },
     { label: 'Backgrounds',      href: 'backgrounds.html',    match: ['backgrounds.html'] },
-    { label: 'Social Toolkit',   href: 'linkedin-conexpo.html', match: ['linkedin-conexpo.html'] }
+    { label: 'Social Toolkit',   href: 'https://www.momentifyapp.com/social-toolkit', match: [], external: true }
   ];
 
   var graphicLibrary = [
@@ -115,7 +115,8 @@
 
   var linksHtml = pages.map(function (p) {
     var cls = isActive(p) ? ' class="active"' : '';
-    return '<a href="' + p.href + '"' + cls + '>' + p.label + '</a>';
+    var target = p.external ? ' target="_blank" rel="noopener"' : '';
+    return '<a href="' + p.href + '"' + cls + target + '>' + p.label + '</a>';
   }).join('');
 
   // Graphic Library dropdown items
@@ -170,7 +171,8 @@
   // Mobile links
   var mobileLinksHtml = pages.map(function (p) {
     var cls = isActive(p) ? ' class="active"' : '';
-    return '<a href="' + p.href + '"' + cls + '>' + p.label + '</a>';
+    var target = p.external ? ' target="_blank" rel="noopener"' : '';
+    return '<a href="' + p.href + '"' + cls + target + '>' + p.label + '</a>';
   }).join('');
 
   var mobileGlHtml = graphicLibrary.map(function (p) {
