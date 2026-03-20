@@ -283,6 +283,19 @@ export default function FanGalleryAdmin() {
   const [secondaryColor, setSecondaryColor] = useState(INITIAL_SECONDARY);
   const [bgColor, setBgColor] = useState(INITIAL_BG);
   const [adminTheme, setAdminTheme] = useState<"dark" | "light">("dark");
+
+  // Sync admin theme from BrandNav's mk-theme localStorage key
+  useEffect(() => {
+    const saved = localStorage.getItem("mk-theme");
+    if (saved === "light" || saved === "dark") setAdminTheme(saved);
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "mk-theme" && (e.newValue === "light" || e.newValue === "dark")) {
+        setAdminTheme(e.newValue);
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
   const [previewScale, setPreviewScale] = useState(50);
   const [previewDevice, setPreviewDevice] = useState(0); // index into PREVIEW_PRESETS
   const previewAreaRef = useRef<HTMLDivElement>(null);
@@ -494,41 +507,6 @@ export default function FanGalleryAdmin() {
           maxHeight: "100vh",
           borderRight: `1px solid ${t.border}`,
         }}>
-          {/* Header */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: DS.spacing[6],
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: DS.spacing[3] }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/Momentify-Icon.svg" alt="" width={28} height={28} style={{ borderRadius: DS.radius.md }} />
-              <h1 style={{ fontSize: 20, fontWeight: 500, margin: 0, color: t.text }}>Fan Gallery Admin</h1>
-            </div>
-            {/* Admin theme toggle */}
-            <button
-              onClick={() => setAdminTheme(adminTheme === "dark" ? "light" : "dark")}
-              style={{
-                ...btnBase,
-                padding: "8px 14px",
-                background: t.surface2,
-                color: t.text,
-                border: `1px solid ${t.border}`,
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-              }}
-            >
-              {adminTheme === "dark" ? (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="2"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
-              ) : (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-              )}
-              {adminTheme === "dark" ? "Light" : "Dark"}
-            </button>
-          </div>
-
           {/* ── Team Selector ── */}
           <Section title="Team" t={t}>
             <div style={{ display: "flex", gap: DS.spacing[2], alignItems: "center" }}>

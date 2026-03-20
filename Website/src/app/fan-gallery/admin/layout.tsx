@@ -2,7 +2,7 @@
 
 import BrandNav from "@/components/BrandNav";
 
-export default function PrototypesLayout({
+export default function FanGalleryAdminLayout({
   children,
 }: {
   children: React.ReactNode;

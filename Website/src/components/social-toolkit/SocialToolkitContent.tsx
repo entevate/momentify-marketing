@@ -9,88 +9,10 @@ import AssetLibrary, { type SavedAsset } from "./AssetLibrary";
 import { type AspectRatio, getBrand, getBackground, ASPECT_DIMENSIONS } from "./backgroundData";
 
 const STORAGE_KEY = "momentify_asset_library";
-const THEME_KEY = "mk-theme";
 
-/* Moon icon for dark mode toggle */
-function MoonIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
-    </svg>
-  );
-}
-
-/* Sun icon for light mode toggle */
-function SunIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="5" />
-      <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-      <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-    </svg>
-  );
-}
-
-/* Back arrow icon */
-function BackIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 2L4 7l5 5" />
-    </svg>
-  );
-}
-
-/* Dark/light theme tokens */
-const darkTokens = {
-  "--bk-bg": "#07081F",
-  "--bk-surface": "#0F1035",
-  "--bk-border": "rgba(12,244,223,0.12)",
-  "--bk-text": "#FFFFFF",
-  "--bk-text-muted": "rgba(255,255,255,0.45)",
-  "--bk-accent": "#0CF4DF",
-  "--bk-header-bg": "rgba(7,8,31,0.94)",
-  "--bk-toggle-bg": "rgba(255,255,255,0.1)",
-  "--bk-toggle-border": "rgba(255,255,255,0.18)",
-  "--bk-toggle-text": "rgba(255,255,255,0.8)",
-} as Record<string, string>;
-
-const lightTokens = {
-  "--bk-bg": "#F4F5FA",
-  "--bk-surface": "#FFFFFF",
-  "--bk-border": "rgba(31,51,149,0.12)",
-  "--bk-text": "#0B0B3C",
-  "--bk-text-muted": "rgba(11,11,60,0.48)",
-  "--bk-accent": "#1F3395",
-  "--bk-header-bg": "rgba(244,245,250,0.96)",
-  "--bk-toggle-bg": "rgba(11,11,60,0.06)",
-  "--bk-toggle-border": "rgba(11,11,60,0.14)",
-  "--bk-toggle-text": "rgba(11,11,60,0.7)",
-} as Record<string, string>;
+/* Theme tokens are provided by BrandNav via CSS variables on :root */
 
 export default function SocialToolkitContent() {
-  // Theme state
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
-
-  // Read saved theme from localStorage on mount
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(THEME_KEY);
-      if (saved === "dark" || saved === "light") setTheme(saved);
-    } catch { /* ignore */ }
-  }, []);
-
-  const toggleTheme = useCallback(() => {
-    setTheme((prev) => {
-      const next = prev === "dark" ? "light" : "dark";
-      try { localStorage.setItem(THEME_KEY, next); } catch { /* ignore */ }
-      return next;
-    });
-  }, []);
-
-  const tokens = theme === "dark" ? darkTokens : lightTokens;
-
   // Editor state
   const [brand, setBrand] = useState("momentify");
   const [backgroundId, setBackgroundId] = useState("main-minimal");
@@ -332,124 +254,9 @@ export default function SocialToolkitContent() {
   return (
     <div
       style={{
-        ...tokens,
-        background: "var(--bk-bg)",
-        color: "var(--bk-text)",
-        minHeight: "100vh",
-        transition: "background 0.22s ease, color 0.22s ease",
         fontFamily: "'Inter', sans-serif",
-      } as React.CSSProperties}
+      }}
     >
-      {/* Sticky Page Header */}
-      <header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-          background: "var(--bk-header-bg)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          borderBottom: "1px solid var(--bk-border)",
-          transition: "background 0.22s ease, border-color 0.22s ease",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 1400,
-            margin: "0 auto",
-            padding: "0 32px",
-            height: 60,
-            display: "flex",
-            alignItems: "center",
-            gap: 24,
-          }}
-        >
-          <a
-            href="/brand/index.html"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              color: "var(--bk-text-muted)",
-              textDecoration: "none",
-              fontSize: 13,
-              fontWeight: 500,
-              flexShrink: 0,
-            }}
-          >
-            <BackIcon />
-            Brand Kit
-          </a>
-          <div style={{ width: 1, height: 20, background: "var(--bk-border)", flexShrink: 0 }} />
-          <nav style={{ display: "flex", alignItems: "center", gap: 4, flex: 1, minWidth: 0 }}>
-            <a
-              href="/brand/backgrounds.html"
-              style={{
-                fontSize: 13,
-                fontWeight: 500,
-                color: "var(--bk-text-muted)",
-                textDecoration: "none",
-                padding: "6px 10px",
-                borderRadius: 6,
-                whiteSpace: "nowrap",
-              }}
-            >
-              Backgrounds
-            </a>
-            <a
-              href="/brand/design-system.html"
-              style={{
-                fontSize: 13,
-                fontWeight: 500,
-                color: "var(--bk-text-muted)",
-                textDecoration: "none",
-                padding: "6px 10px",
-                borderRadius: 6,
-                whiteSpace: "nowrap",
-              }}
-            >
-              Design System
-            </a>
-            <a
-              href="/social-toolkit"
-              style={{
-                fontSize: 13,
-                fontWeight: 500,
-                color: "var(--bk-accent)",
-                textDecoration: "none",
-                padding: "6px 10px",
-                borderRadius: 6,
-                whiteSpace: "nowrap",
-              }}
-            >
-              Social Toolkit
-            </a>
-          </nav>
-          <button
-            onClick={toggleTheme}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 7,
-              background: "var(--bk-toggle-bg)",
-              border: "1px solid var(--bk-toggle-border)",
-              borderRadius: 100,
-              padding: "7px 16px",
-              cursor: "pointer",
-              fontSize: 12,
-              fontWeight: 600,
-              color: "var(--bk-toggle-text)",
-              fontFamily: "'Inter', sans-serif",
-              whiteSpace: "nowrap",
-              transition: "background 0.15s, border-color 0.15s, color 0.15s",
-            }}
-          >
-            {theme === "dark" ? <MoonIcon /> : <SunIcon />}
-            {theme === "dark" ? "Light Mode" : "Dark Mode"}
-          </button>
-        </div>
-      </header>
-
       {/* Editor section */}
       <section style={{ padding: "48px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
@@ -541,7 +348,7 @@ export default function SocialToolkitContent() {
       </section>
 
       {/* Caption generator section */}
-      <section style={{ padding: "48px 24px", background: "var(--bk-surface)", transition: "background 0.22s ease" }}>
+      <section style={{ padding: "48px 24px", background: "var(--surface)", transition: "background 0.22s ease" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
           <div className="bg-white rounded-2xl border border-charcoal/[0.06] p-6 shadow-sm">
             <CaptionGenerator
@@ -561,7 +368,7 @@ export default function SocialToolkitContent() {
       {/* Asset library section */}
       <section style={{ padding: "48px 24px" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-          <h2 style={{ fontSize: 20, fontWeight: 500, color: "var(--bk-text)", marginBottom: 24 }}>
+          <h2 style={{ fontSize: 20, fontWeight: 500, color: "var(--text)", marginBottom: 24 }}>
             Asset Library
           </h2>
           <AssetLibrary
@@ -572,56 +379,6 @@ export default function SocialToolkitContent() {
         </div>
       </section>
 
-      {/* Brand Kit Footer */}
-      <footer
-        style={{
-          background: "var(--bk-surface)",
-          borderTop: "1px solid var(--bk-border)",
-          padding: "32px 0",
-          transition: "background 0.22s ease, border-color 0.22s ease",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 1400,
-            margin: "0 auto",
-            padding: "0 32px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 24,
-            flexWrap: "wrap",
-          }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={theme === "dark" ? "/Momentify-Logo_Reverse.svg" : "/Momentify-Logo.svg"}
-            alt="Momentify"
-            style={{ height: 22, opacity: 0.5 }}
-          />
-          <nav style={{ display: "flex", gap: 16, fontSize: 12 }}>
-            <a href="/brand/index.html" style={{ color: "var(--bk-text-muted)", textDecoration: "none" }}>Brand Kit</a>
-            <a href="/brand/backgrounds.html" style={{ color: "var(--bk-text-muted)", textDecoration: "none" }}>Backgrounds</a>
-            <a href="/brand/design-system.html" style={{ color: "var(--bk-text-muted)", textDecoration: "none" }}>Design System</a>
-            <a href="/social-toolkit" style={{ color: "var(--bk-accent)", textDecoration: "none" }}>Social Toolkit</a>
-          </nav>
-          <span style={{ fontSize: 12, color: "var(--bk-text-muted)" }}>
-            &copy; 2026 Momentify. All brand assets are proprietary and confidential.
-          </span>
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "var(--bk-accent)",
-              opacity: 0.7,
-            }}
-          >
-            Brand Kit v1.0
-          </span>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -1,0 +1,5 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" rx="12" fill="#000"/>
+  <polygon points="100,42 172,148 28,148" fill="#FFCC00"/>
+  <text x="100" y="180" text-anchor="middle" font-family="'Arial Black', 'Impact', Arial, sans-serif" font-weight="900" font-size="62" fill="#FFF" letter-spacing="6">CAT</text>
+</svg>

@@ -260,6 +260,7 @@ html[data-theme="light"] .logo-dark  { display: none; }
   gap: 2px;
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 
 .brand-topnav-links a {
@@ -271,6 +272,8 @@ html[data-theme="light"] .logo-dark  { display: none; }
   border-radius: 6px;
   transition: color 0.15s, background 0.15s;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
 }
 .brand-topnav-links a:hover {
   color: var(--text);
@@ -279,6 +282,22 @@ html[data-theme="light"] .logo-dark  { display: none; }
 .brand-topnav-links a.active {
   color: var(--accent);
 }
+
+/* Proto link divider and icon */
+.brand-topnav-proto-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+/* Show correct icon per theme */
+[data-theme="dark"] .proto-mk-icon { display: inline; }
+[data-theme="dark"] .proto-mk-icon-dark { display: none; }
+[data-theme="light"] .proto-mk-icon { display: none; }
+[data-theme="light"] .proto-mk-icon-dark { display: inline; }
+/* Default (no data-theme yet = dark) */
+.proto-mk-icon-dark { display: none; }
 
 /* Prototypes Dropdown */
 .brand-topnav-dropdown {
@@ -501,7 +520,7 @@ html[data-theme="light"] .icon-moon { display: none; }
 
 /* ─── Shared Layout ────────────────────────────────────────── */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
-section { padding: 80px 0; }
+section { padding: 56px 0; }
 section + section { border-top: 1px solid var(--border); }
 
 /* ─── Section Headers ──────────────────────────────────────── */
@@ -511,21 +530,21 @@ section + section { border-top: 1px solid var(--border); }
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   transition: color var(--t);
 }
 .section-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 .section-desc {
-  font-size: 15px;
+  font-size: 14px;
   color: var(--text-muted);
   max-width: 560px;
-  margin-bottom: 48px;
-  line-height: 1.7;
+  margin-bottom: 32px;
+  line-height: 1.6;
 }
 
 /* ─── Side Nav (shared between index & design-system) ──────── */
@@ -618,7 +637,7 @@ section + section { border-top: 1px solid var(--border); }
 .brand-footer {
   background: var(--footer-bg);
   border-top: 1px solid var(--footer-border);
-  padding: 40px 0;
+  padding: 28px 0;
   transition: background var(--t), border-color var(--t);
 }
 .brand-footer-inner {
@@ -678,8 +697,8 @@ section + section { border-top: 1px solid var(--border); }
   .page-layout { grid-template-columns: 1fr; }
   .side-nav { display: none; }
   .container { padding: 0 20px; }
-  section { padding: 48px 0; }
-  .section-title { font-size: 24px; }
+  section { padding: 36px 0; }
+  .section-title { font-size: 22px; }
   .mobile-nav-inner { padding: 8px 16px; }
   .brand-footer-inner { padding: 0 20px; }
 }

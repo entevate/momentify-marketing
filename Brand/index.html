@@ -795,6 +795,94 @@
       .swatch-hex { font-size: 10px; }
       .solution-name { font-size: 18px; }
     }
+
+    /* ─── Email Signature Generator ──────────────────────────── */
+    .sig-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    .sig-form { display: flex; flex-direction: column; gap: 16px; }
+    .sig-form label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .sig-form input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .sig-form input:focus { border-color: var(--accent); }
+    .sig-form input::placeholder { color: var(--text-caption); }
+    .sig-preview-wrap {
+      background: #FFFFFF;
+      border-radius: var(--radius);
+      padding: 32px;
+      border: 1px solid var(--border);
+    }
+    .sig-preview-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-caption);
+      margin-bottom: 12px;
+    }
+    .sig-actions { display: flex; gap: 10px; margin-top: 4px; }
+    .sig-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      border: none;
+    }
+    .sig-btn:hover { opacity: 0.85; }
+    .sig-btn-primary {
+      background: linear-gradient(135deg, #00BBA5, #1A56DB);
+      color: #fff;
+    }
+    .sig-btn-secondary {
+      background: var(--toggle-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .sig-instructions {
+      margin-top: 32px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: var(--text-body);
+      line-height: 1.7;
+    }
+    .sig-instructions strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 6px;
+    }
+    @media (max-width: 700px) {
+      .sig-layout { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -834,6 +922,7 @@
             <li><a href="#solutions">Solutions</a></li>
             <li><a href="#headlines">Headlines</a></li>
             <li><a href="#og-images">OG Images</a></li>
+            <li><a href="#email-signature">Email Signature</a></li>
           </ul>
         </div>
       </div><!-- /.side-nav-inner -->
@@ -1813,6 +1902,54 @@
         </div>
       </section>
 
+      <!-- ── EMAIL SIGNATURE ─────────────────────────────────────── -->
+      <section id="email-signature">
+        <div class="container">
+          <div class="section-label">10 — Email Signature</div>
+          <h2 class="section-title">Email Signature Generator</h2>
+          <p class="section-desc">Customize the fields below and copy the signature to your email client.</p>
+
+          <div class="sig-layout">
+            <div class="sig-form">
+              <div>
+                <label for="sig-name">Full Name</label>
+                <input type="text" id="sig-name" value="Jake Hamann" placeholder="Your name" />
+              </div>
+              <div>
+                <label for="sig-title">Title</label>
+                <input type="text" id="sig-title" value="Co-Founder" placeholder="Your title" />
+              </div>
+              <div>
+                <label for="sig-email">Email</label>
+                <input type="email" id="sig-email" value="jake@momentifyapp.com" placeholder="you@momentifyapp.com" />
+              </div>
+              <div>
+                <label for="sig-phone">Phone</label>
+                <input type="tel" id="sig-phone" value="309.657.3258" placeholder="555.123.4567" />
+              </div>
+              <div class="sig-actions">
+                <button class="sig-btn sig-btn-primary" onclick="copySignature()">Copy Signature</button>
+                <button class="sig-btn sig-btn-secondary" onclick="copyHTML()">Copy HTML</button>
+              </div>
+            </div>
+
+            <div>
+              <div class="sig-preview-label">Preview</div>
+              <div class="sig-preview-wrap">
+                <div id="sig-render"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sig-instructions">
+            <strong>How to use this signature:</strong>
+            <b>Apple Mail:</b> Click "Copy Signature" above, then go to Mail &gt; Settings &gt; Signatures &gt; Create new &gt; Paste (Cmd+V).<br>
+            <b>Superhuman:</b> Click "Copy HTML", then go to Settings &gt; Signatures &gt; Edit &gt; Toggle to HTML mode &gt; Paste.<br>
+            <b>Gmail:</b> Click "Copy Signature", then go to Settings &gt; See all settings &gt; General &gt; Signature &gt; Paste.
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -1864,6 +2001,51 @@
         setTimeout(() => toast.classList.remove('show'), 2000);
       });
     }
+
+    // ── Email signature ──────────────────────────────────────────
+    function buildSignature() {
+      var name = document.getElementById('sig-name').value || 'Your Name';
+      var title = document.getElementById('sig-title').value || 'Your Title';
+      var email = document.getElementById('sig-email').value || 'you@momentifyapp.com';
+      var phone = document.getElementById('sig-phone').value || '';
+      var phoneRow = phone ? '<tr><td style="font-size:13px;color:#555;padding-top:2px;"><a href="tel:' + phone.replace(/[^+\d]/g, '') + '" style="color:#555;text-decoration:none;">' + phone + '</a></td></tr>' : '';
+      return '<table cellpadding="0" cellspacing="0" border="0" style="font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Helvetica,Arial,sans-serif;font-size:14px;color:#1a1a2e;line-height:1.4;">' +
+        '<tr><td style="padding-bottom:12px;"><img src="https://www.momentifyapp.com/brand/assets/momentify-email-logo.png" alt="Momentify" width="150" style="display:block;height:auto;" /></td></tr>' +
+        '<tr><td style="padding-bottom:12px;"><table cellpadding="0" cellspacing="0" border="0" width="200"><tr><td style="height:2px;background-color:#00BBA5;background:linear-gradient(90deg,#00BBA5 0%,#3257D9 100%);border-radius:1px;font-size:0;line-height:0;">&nbsp;</td></tr></table></td></tr>' +
+        '<tr><td><table cellpadding="0" cellspacing="0" border="0">' +
+          '<tr><td style="font-size:16px;font-weight:600;color:#1a1a2e;padding-bottom:2px;">' + name + '</td></tr>' +
+          '<tr><td style="font-size:13px;font-weight:400;color:#555;padding-bottom:10px;">' + title + '</td></tr>' +
+          '<tr><td style="font-size:13px;color:#555;"><a href="mailto:' + email + '" style="color:#00BBA5;text-decoration:none;">' + email + '</a></td></tr>' +
+          phoneRow +
+        '</table></td></tr></table>';
+    }
+    function renderSig() { document.getElementById('sig-render').innerHTML = buildSignature(); }
+    document.querySelectorAll('.sig-form input').forEach(function(input) { input.addEventListener('input', renderSig); });
+    function showSigToast(msg) {
+      var toast = document.getElementById('copy-toast');
+      toast.textContent = msg || 'Copied!';
+      toast.classList.add('show');
+      setTimeout(function() { toast.classList.remove('show'); }, 2000);
+    }
+    function copySignature() {
+      var el = document.getElementById('sig-render');
+      var range = document.createRange();
+      range.selectNodeContents(el);
+      var sel = window.getSelection();
+      sel.removeAllRanges(); sel.addRange(range);
+      var html = el.innerHTML;
+      if (navigator.clipboard && navigator.clipboard.write) {
+        var blob = new Blob([html], { type: 'text/html' });
+        var textBlob = new Blob([el.innerText], { type: 'text/plain' });
+        navigator.clipboard.write([new ClipboardItem({ 'text/html': blob, 'text/plain': textBlob })]);
+      } else { document.execCommand('copy'); }
+      sel.removeAllRanges();
+      showSigToast('Signature copied!');
+    }
+    function copyHTML() {
+      navigator.clipboard.writeText(buildSignature()).then(function() { showSigToast('HTML copied!'); });
+    }
+    renderSig();
 
     // ── Active nav on scroll ──────────────────────────────────────
     const sections = document.querySelectorAll('section[id]');

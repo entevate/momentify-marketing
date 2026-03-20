@@ -71,18 +71,16 @@
     { label: 'Brand Guidelines', href: 'index.html',         match: ['index.html', '/brand/', '/brand'] },
     { label: 'Design System',    href: 'design-system.html',  match: ['design-system.html'] },
     { label: 'Backgrounds',      href: 'backgrounds.html',    match: ['backgrounds.html'] },
-    { label: 'Social Toolkit',   href: 'https://www.momentifyapp.com/social-toolkit', match: [], external: true }
+    { label: 'Social Toolkit',   href: '/social-toolkit',     match: ['/social-toolkit'] }
   ];
 
-  var graphicLibrary = [
-    { label: 'Email Signature',  href: 'email-signature.html' },
-    { label: 'ROX Infographic',  href: 'rox-infographic.html' }
-  ];
+  var graphicLibrary = []; // Removed: Email Signature moved to Brand Guidelines side nav
 
-  var prototypes = [
-    { label: 'Momentify Web',           href: 'https://www.momentifyapp.com/dashboard/events', external: true },
-    { label: 'Momentify Explorer',      href: 'https://www.momentifyapp.com/prototypes/explorer', external: true },
-    { label: 'Momentify Fan',           href: 'https://www.momentifyapp.com/fan-gallery/admin', external: true }
+  // Flat prototype links (no dropdown)
+  var protoPages = [
+    { label: 'Web',      href: '/dashboard/events',      match: ['/dashboard/events', '/dashboard'], newWindow: true },
+    { label: 'Explorer', href: '/prototypes/explorer',   match: ['/prototypes/explorer'] },
+    { label: 'Fan',     href: '/fan-gallery/admin',      match: ['/fan-gallery/admin'] }
   ];
 
   // ── Detect active page ────────────────────────────────────
@@ -112,8 +110,7 @@
 
   var linksHtml = pages.map(function (p) {
     var cls = isActive(p) ? ' class="active"' : '';
-    var target = p.external ? ' target="_blank" rel="noopener"' : '';
-    return '<a href="' + p.href + '"' + cls + target + '>' + p.label + '</a>';
+    return '<a href="' + p.href + '"' + cls + '>' + p.label + '</a>';
   }).join('');
 
   // Graphic Library dropdown items
@@ -124,33 +121,16 @@
 
   var glActive = isInGroup(graphicLibrary);
 
-  // Prototypes dropdown items (with nested sub-menu for Explorer)
-  var protoItemsHtml = prototypes.map(function (p) {
-    if (p.children) {
-      var subItems = p.children.map(function (c) {
-        var attrs = '';
-        if (c.comingSoon) {
-          attrs = ' class="coming-soon" onclick="return false"';
-        } else if (file === c.href) {
-          attrs = ' class="active"';
-        }
-        var badge = c.comingSoon ? '<span class="coming-soon-badge">Coming Soon</span>' : '';
-        return '<a href="' + c.href + '"' + attrs + '>' + c.label + badge + '</a>';
-      }).join('');
-      var subActive = p.children.some(function (c) { return file === c.href; });
-      return '<div class="dropdown-submenu">' +
-        '<div class="dropdown-submenu-label' + (subActive ? ' active' : '') + '">' + p.label +
-          '<svg viewBox="0 0 6 10" fill="none"><path d="M1 1l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-        '</div>' +
-        '<div class="dropdown-submenu-items">' + subItems + '</div>' +
-      '</div>';
-    }
-    var target = p.external ? ' target="_blank" rel="noopener"' : '';
-    var extIcon = p.external ? '<svg class="ext-icon" viewBox="0 0 12 12" fill="none"><path d="M4.5 2H2.5a1 1 0 00-1 1v6.5a1 1 0 001 1H9a1 1 0 001-1V7.5M7 1.5h3.5m0 0V5m0-3.5L6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '';
-    return '<a href="' + p.href + '"' + target + '>' + p.label + extIcon + '</a>';
+  // Flat prototype links (no dropdown)
+  var externalIcon = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.5;margin-left:3px;vertical-align:middle"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+  var mkIcon = '<img class="proto-mk-icon" src="assets/Momentify-Icon.svg" alt="" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;" />';
+  var mkIconDark = '<img class="proto-mk-icon-dark" src="assets/Momentify-Icon_Dark.svg" alt="" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;" />';
+  var protoLinksHtml = '<span class="brand-topnav-proto-divider"></span>' + protoPages.map(function (p) {
+    var cls = isActive(p) ? ' class="active proto-link"' : ' class="proto-link"';
+    var target = p.newWindow ? ' target="_blank" rel="noopener noreferrer"' : '';
+    var icon = p.newWindow ? externalIcon : '';
+    return '<a href="' + p.href + '"' + cls + target + '>' + mkIcon + mkIconDark + p.label + icon + '</a>';
   }).join('');
-
-  var protoActive = isInGroup(prototypes);
 
   // Dropdown builder helper
   function buildDropdown(id, label, itemsHtml, active) {
@@ -168,8 +148,7 @@
   // Mobile links
   var mobileLinksHtml = pages.map(function (p) {
     var cls = isActive(p) ? ' class="active"' : '';
-    var target = p.external ? ' target="_blank" rel="noopener"' : '';
-    return '<a href="' + p.href + '"' + cls + target + '>' + p.label + '</a>';
+    return '<a href="' + p.href + '"' + cls + '>' + p.label + '</a>';
   }).join('');
 
   var mobileGlHtml = graphicLibrary.map(function (p) {
@@ -177,19 +156,11 @@
     return '<a href="' + p.href + '"' + cls + '>' + p.label + '</a>';
   }).join('');
 
-  var mobileProtosHtml = prototypes.map(function (p) {
-    if (p.children) {
-      return p.children.map(function (c) {
-        if (c.comingSoon) {
-          return '<a href="#" class="coming-soon" onclick="return false">' + c.label + '<span class="coming-soon-badge">Coming Soon</span></a>';
-        }
-        var cls = file === c.href ? ' class="active"' : '';
-        return '<a href="' + c.href + '"' + cls + '>' + p.label + ': ' + c.label + '</a>';
-      }).join('');
-    }
-    var cls = file === p.href ? ' class="active"' : '';
-    var target = p.external ? ' target="_blank" rel="noopener"' : '';
-    return '<a href="' + p.href + '"' + cls + target + '>' + p.label + '</a>';
+  var mobileProtosHtml = protoPages.map(function (p) {
+    var cls = isActive(p) ? ' class="active proto-link"' : ' class="proto-link"';
+    var target = p.newWindow ? ' target="_blank" rel="noopener noreferrer"' : '';
+    var icon = p.newWindow ? externalIcon : '';
+    return '<a href="' + p.href + '"' + cls + target + '>' + mkIcon + mkIconDark + p.label + icon + '</a>';
   }).join('');
 
   var navHtml = '' +
@@ -207,8 +178,7 @@
         /* Page links */
         '<div class="brand-topnav-links">' +
           linksHtml +
-          buildDropdown('dropdown-gl', 'Graphic Library', glItemsHtml, glActive) +
-          buildDropdown('dropdown-proto', 'Prototypes', protoItemsHtml, protoActive) +
+          protoLinksHtml +
         '</div>' +
 
         /* Controls */
@@ -231,8 +201,6 @@
     /* Mobile full-screen menu */
     '<div class="brand-topnav-mobile-menu" id="brand-mobile-menu">' +
       mobileLinksHtml +
-      '<div class="mobile-menu-label">Graphic Library</div>' +
-      mobileGlHtml +
       '<div class="mobile-menu-label">Prototypes</div>' +
       mobileProtosHtml +
     '</div>';

@@ -129,7 +129,7 @@ const CanvasEditor = forwardRef<HTMLDivElement, CanvasEditorProps>(
                   fontFamily: "var(--font-inter), sans-serif",
                   border: "none",
                   cursor: "pointer",
-                  background: isActive ? "var(--bk-accent, #0CF4DF)" : "transparent",
+                  background: isActive ? "var(--accent, #0CF4DF)" : "transparent",
                   color: isActive ? "#07081F" : "inherit",
                   opacity: isActive ? 1 : 0.4,
                   transition: "all 0.15s",

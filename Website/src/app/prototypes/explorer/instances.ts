@@ -7,9 +7,20 @@ export interface ExplorerInstance {
   logo?: string;
   accentColor: string;
   createdAt: string;
+  password?: string;
 }
 
 export const instances: ExplorerInstance[] = [
+  {
+    slug: "momentify",
+    name: "Momentify Explorer",
+    company: "Momentify",
+    industry: "Demo",
+    prototypeFile: "/brand/explorer-prototype_momentify.html",
+    logo: "/brand/assets/Momentify-Icon.svg",
+    accentColor: "#0CF4DF",
+    createdAt: "2025-01-01",
+  },
   {
     slug: "phil",
     name: "PHIL Aggregates",
@@ -19,15 +30,17 @@ export const instances: ExplorerInstance[] = [
     logo: "/brand/phil-logo.png",
     accentColor: "#F16A21",
     createdAt: "2025-03-15",
+    password: "philsystems",
   },
   {
     slug: "cat",
     name: "CAT Electric Power",
     company: "Caterpillar",
     industry: "Electric Power",
-    prototypeFile: "/brand/explorer-prototype_cat.html",
-    logo: undefined,
+    prototypeFile: "/brand/explorer-prototype_catepd.html",
+    logo: "/brand/assets/cat-icon.png",
     accentColor: "#FFCC00",
     createdAt: "2025-02-20",
+    password: "electricpower",
   },
 ];

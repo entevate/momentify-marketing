@@ -6,9 +6,6 @@
 <title>Momentify Explorer Preview - Brand Kit</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<script>(function(){var t=localStorage.getItem('mk-theme');if(t)document.documentElement.dataset.theme=t;})();</script>
-<script>window.BRAND_SKIP_AUTH = true;</script>
-<link rel="stylesheet" href="brand-nav.css" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   body {
@@ -96,7 +93,7 @@
     80% { transform: translateX(4px); }
   }
 
-  /* ─── iPad Bezel ────────────────────────── */
+  /* ─── iPad Pro 13" M4 Bezel ─────────────── */
   #ipad-wrapper {
     display: none;
     align-items: center;
@@ -104,30 +101,30 @@
     flex-direction: column;
     gap: 12px;
     width: 100vw;
-    height: calc(100vh - 60px);
+    height: 100vh;
   }
   #ipad-wrapper.visible { display: flex; }
 
   .ipad-bezel {
     position: relative;
-    width: 1446px;
-    height: 1104px;
+    width: 1398px;
+    height: 1056px;
     background: #1a1a1a;
-    border-radius: 36px;
-    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 22px;
+    border: 1.5px solid rgba(255,255,255,0.1);
     box-shadow:
-      0 0 0 1px rgba(255,255,255,0.04),
-      0 20px 80px rgba(0,0,0,0.6),
-      0 4px 20px rgba(0,0,0,0.4),
-      inset 0 1px 0 rgba(255,255,255,0.06);
-    padding: 40px;
+      0 0 0 1px rgba(255,255,255,0.03),
+      0 30px 100px rgba(0,0,0,0.65),
+      0 6px 24px rgba(0,0,0,0.4),
+      inset 0 0.5px 0 rgba(255,255,255,0.08);
+    padding: 16px;
     transform-origin: center center;
   }
 
   .ipad-screen {
     width: 1366px;
     height: 1024px;
-    border-radius: 8px;
+    border-radius: 6px;
     overflow: hidden;
     background: #000;
   }
@@ -141,14 +138,14 @@
 
   .ipad-camera {
     position: absolute;
-    top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 8px;
-    height: 8px;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: #2a2a2a;
-    border: 1px solid rgba(255,255,255,0.06);
+    background: #1e1e1e;
+    border: 0.5px solid rgba(255,255,255,0.06);
   }
 
   .powered-by {
@@ -166,8 +163,6 @@
 </style>
 </head>
 <body>
-
-<div id="brand-topnav-mount"></div>
 
 <!-- Client Password Gate -->
 <div id="client-pw-gate">
@@ -226,11 +221,11 @@
     var bezel = document.getElementById('ipad-bezel');
     if (!bezel) return;
     var vw = window.innerWidth;
-    var vh = window.innerHeight - 60;
-    var bw = 1446;
-    var bh = 1104;
+    var vh = window.innerHeight;
+    var bw = 1398;
+    var bh = 1056;
     var scaleX = (vw - 40) / bw;
-    var scaleY = (vh - 70) / bh;
+    var scaleY = (vh - 60) / bh;
     var scale = Math.min(scaleX, scaleY, 1);
     bezel.style.transform = 'scale(' + scale + ')';
   }
@@ -238,6 +233,5 @@
   window.addEventListener('resize', scaleBezel);
 </script>
 
-<script src="brand-nav.js"></script>
 </body>
 </html>

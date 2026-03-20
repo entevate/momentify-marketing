@@ -2,7 +2,7 @@
 
 import BrandNav from "@/components/BrandNav";
 
-export default function PrototypesLayout({
+export default function SocialToolkitLayout({
   children,
 }: {
   children: React.ReactNode;
