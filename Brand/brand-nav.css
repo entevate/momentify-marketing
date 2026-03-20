@@ -117,6 +117,95 @@ body {
   transition: background var(--t), color var(--t);
 }
 
+/* ─── Password Gate ───────────────────────────────────────── */
+#brand-pw-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #07081F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease;
+}
+#brand-pw-gate.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.pw-box {
+  text-align: center;
+  max-width: 360px;
+  width: 100%;
+  padding: 0 24px;
+}
+.pw-logo { margin-bottom: 32px; }
+.pw-label {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+}
+.pw-input-row {
+  display: flex;
+  gap: 8px;
+}
+.pw-input {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  font-size: 15px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.pw-input:focus {
+  border-color: var(--teal, #00BBA5);
+}
+.pw-input.error {
+  border-color: #E5484D;
+  animation: pw-shake 0.4s ease;
+}
+.pw-submit {
+  padding: 12px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--teal, #00BBA5);
+  background: transparent;
+  color: var(--teal, #00BBA5);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+.pw-submit:hover {
+  background: var(--teal, #00BBA5);
+  color: #fff;
+}
+.pw-error-msg {
+  font-size: 12px;
+  color: #E5484D;
+  margin-top: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.pw-error-msg.visible { opacity: 1; }
+
+@keyframes pw-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(4px); }
+}
+
 /* ─── Logo show/hide by theme ──────────────────────────────── */
 .logo-light { display: none; }
 .logo-dark  { display: block; }
@@ -256,6 +345,72 @@ html[data-theme="light"] .logo-dark  { display: none; }
 .brand-topnav-dropdown-menu a:hover {
   color: var(--text);
   background: var(--accent-sec);
+}
+.brand-topnav-dropdown-menu a.active {
+  color: var(--accent);
+}
+
+/* External link icon in dropdown */
+.brand-topnav-dropdown-menu a .ext-icon {
+  width: 11px;
+  height: 11px;
+  margin-left: 6px;
+  opacity: 0.4;
+  vertical-align: -1px;
+}
+
+/* Nested submenu inside dropdown */
+.dropdown-submenu {
+  padding: 2px 0;
+}
+.dropdown-submenu-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-caption);
+  padding: 10px 12px 4px;
+  cursor: default;
+}
+.dropdown-submenu-label.active {
+  color: var(--accent);
+}
+.dropdown-submenu-label svg {
+  width: 6px;
+  height: 10px;
+  opacity: 0.4;
+}
+.dropdown-submenu-items a {
+  padding-left: 20px !important;
+}
+
+/* Coming Soon badge */
+.coming-soon {
+  opacity: 0.4 !important;
+  cursor: default !important;
+  pointer-events: none;
+}
+.coming-soon-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--accent-sec);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: 1px;
+}
+
+/* Mobile coming soon */
+.brand-topnav-mobile-menu a.coming-soon {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
 /* Controls (right side) */
