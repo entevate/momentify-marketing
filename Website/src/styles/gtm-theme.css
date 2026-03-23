@@ -1,0 +1,142 @@
+/* GTM Framework — Theme Variables
+   Scoped to [data-theme] on the GTM layout wrapper only.
+   Never use hardcoded hex values in GTM components — use these variables. */
+
+:root,
+[data-theme="light"] {
+  --gtm-bg-page:      #F8F9FC;
+  --gtm-bg-card:      #FFFFFF;
+  --gtm-border:       rgba(6, 19, 65, 0.08);
+  --gtm-text-primary: #061341;
+  --gtm-text-muted:   rgba(6, 19, 65, 0.50);
+  --gtm-text-faint:   rgba(6, 19, 65, 0.35);
+  --gtm-cyan:         #0CF4DF;
+  --gtm-tag-bg:       rgba(12, 244, 223, 0.10);
+  --gtm-tag-text:     #0AA891;
+  --gtm-layer-bg:     #FFFFFF;
+  --gtm-layer-hover:  #F0F9FF;
+  --gtm-shadow:       0 1px 3px rgba(6,19,65,0.08), 0 4px 12px rgba(6,19,65,0.04);
+  --gtm-shadow-hover: 0 4px 16px rgba(6,19,65,0.12), 0 8px 24px rgba(6,19,65,0.06);
+  /* Accent defaults (overridden per solution) */
+  --gtm-accent:       #0CF4DF;
+  --gtm-accent-light: #0CF4DF;
+  --gtm-accent-grad:  linear-gradient(135deg, #0CF4DF, #1A56DB);
+  --gtm-accent-bg:    rgba(12, 244, 223, 0.10);
+  --gtm-accent-text:  #0AA891;
+}
+
+[data-theme="dark"] {
+  --gtm-bg-page:      #070E2B;
+  --gtm-bg-card:      rgba(255, 255, 255, 0.04);
+  --gtm-border:       rgba(255, 255, 255, 0.08);
+  --gtm-text-primary: #FFFFFF;
+  --gtm-text-muted:   rgba(255, 255, 255, 0.55);
+  --gtm-text-faint:   rgba(255, 255, 255, 0.30);
+  --gtm-cyan:         #0CF4DF;
+  --gtm-tag-bg:       rgba(12, 244, 223, 0.12);
+  --gtm-tag-text:     #0CF4DF;
+  --gtm-layer-bg:     rgba(255, 255, 255, 0.04);
+  --gtm-layer-hover:  rgba(12, 244, 223, 0.06);
+  --gtm-shadow:       0 1px 3px rgba(0,0,0,0.30), 0 4px 12px rgba(0,0,0,0.20);
+  --gtm-shadow-hover: 0 4px 20px rgba(0,0,0,0.40), 0 8px 32px rgba(0,0,0,0.25);
+  /* Accent defaults (overridden per solution) */
+  --gtm-accent:       #0CF4DF;
+  --gtm-accent-light: #0CF4DF;
+  --gtm-accent-grad:  linear-gradient(135deg, #0CF4DF, #1A56DB);
+  --gtm-accent-bg:    rgba(12, 244, 223, 0.12);
+  --gtm-accent-text:  #0CF4DF;
+}
+
+/* ═══ Solution Color Schemes ═══
+   Each solution page sets data-solution on its wrapper.
+   data-theme is on the layout parent, so use descendant selectors. */
+
+/* Trade Shows — Violet */
+[data-theme="light"] [data-solution="trade-shows"] {
+  --gtm-accent:       #6B21D4;
+  --gtm-accent-light: #9B5FE8;
+  --gtm-accent-grad:  linear-gradient(135deg, #6B21D4, #9B5FE8);
+  --gtm-accent-bg:    rgba(107, 33, 212, 0.08);
+  --gtm-accent-text:  #6B21D4;
+  --gtm-layer-hover:  rgba(107, 33, 212, 0.04);
+}
+[data-theme="dark"] [data-solution="trade-shows"] {
+  --gtm-accent:       #9B5FE8;
+  --gtm-accent-light: #B88BF0;
+  --gtm-accent-grad:  linear-gradient(135deg, #6B21D4, #9B5FE8);
+  --gtm-accent-bg:    rgba(155, 95, 232, 0.12);
+  --gtm-accent-text:  #B88BF0;
+  --gtm-layer-hover:  rgba(107, 33, 212, 0.08);
+}
+
+/* Tech Recruiting — Teal */
+[data-theme="light"] [data-solution="recruiting"] {
+  --gtm-accent:       #0AA891;
+  --gtm-accent-light: #5FD9C2;
+  --gtm-accent-grad:  linear-gradient(135deg, #0AA891, #5FD9C2);
+  --gtm-accent-bg:    rgba(10, 168, 145, 0.08);
+  --gtm-accent-text:  #0AA891;
+  --gtm-layer-hover:  rgba(10, 168, 145, 0.04);
+}
+[data-theme="dark"] [data-solution="recruiting"] {
+  --gtm-accent:       #5FD9C2;
+  --gtm-accent-light: #7FE8D4;
+  --gtm-accent-grad:  linear-gradient(135deg, #0AA891, #5FD9C2);
+  --gtm-accent-bg:    rgba(95, 217, 194, 0.12);
+  --gtm-accent-text:  #5FD9C2;
+  --gtm-layer-hover:  rgba(95, 217, 194, 0.06);
+}
+
+/* Field Sales — Amber */
+[data-theme="light"] [data-solution="field-sales"] {
+  --gtm-accent:       #D4940A;
+  --gtm-accent-light: #F2B33D;
+  --gtm-accent-grad:  linear-gradient(135deg, #D4940A, #F2B33D);
+  --gtm-accent-bg:    rgba(242, 179, 61, 0.10);
+  --gtm-accent-text:  #D4940A;
+  --gtm-layer-hover:  rgba(242, 179, 61, 0.04);
+}
+[data-theme="dark"] [data-solution="field-sales"] {
+  --gtm-accent:       #F2B33D;
+  --gtm-accent-light: #F5C76A;
+  --gtm-accent-grad:  linear-gradient(135deg, #D4940A, #F2B33D);
+  --gtm-accent-bg:    rgba(242, 179, 61, 0.12);
+  --gtm-accent-text:  #F2B33D;
+  --gtm-layer-hover:  rgba(242, 179, 61, 0.06);
+}
+
+/* Facilities — Indigo */
+[data-theme="light"] [data-solution="facilities"] {
+  --gtm-accent:       #3A2073;
+  --gtm-accent-light: #5B3DAA;
+  --gtm-accent-grad:  linear-gradient(135deg, #3A2073, #5B3DAA);
+  --gtm-accent-bg:    rgba(58, 32, 115, 0.08);
+  --gtm-accent-text:  #3A2073;
+  --gtm-layer-hover:  rgba(58, 32, 115, 0.04);
+}
+[data-theme="dark"] [data-solution="facilities"] {
+  --gtm-accent:       #7B62C9;
+  --gtm-accent-light: #9B85D9;
+  --gtm-accent-grad:  linear-gradient(135deg, #5B3DAA, #7B62C9);
+  --gtm-accent-bg:    rgba(123, 98, 201, 0.12);
+  --gtm-accent-text:  #9B85D9;
+  --gtm-layer-hover:  rgba(123, 98, 201, 0.06);
+}
+
+/* Events & Venues — Crimson */
+[data-theme="light"] [data-solution="events-venues"] {
+  --gtm-accent:       #D43D1A;
+  --gtm-accent-light: #F25E3D;
+  --gtm-accent-grad:  linear-gradient(135deg, #D43D1A, #F25E3D);
+  --gtm-accent-bg:    rgba(242, 94, 61, 0.08);
+  --gtm-accent-text:  #D43D1A;
+  --gtm-layer-hover:  rgba(242, 94, 61, 0.04);
+}
+[data-theme="dark"] [data-solution="events-venues"] {
+  --gtm-accent:       #F25E3D;
+  --gtm-accent-light: #F58068;
+  --gtm-accent-grad:  linear-gradient(135deg, #D43D1A, #F25E3D);
+  --gtm-accent-bg:    rgba(242, 94, 61, 0.12);
+  --gtm-accent-text:  #F25E3D;
+  --gtm-layer-hover:  rgba(242, 94, 61, 0.06);
+}

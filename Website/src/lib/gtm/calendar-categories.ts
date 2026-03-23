@@ -1,0 +1,92 @@
+import type { TaskCategoryMeta } from "./calendar-types"
+
+export const taskCategories: Record<string, TaskCategoryMeta> = {
+  "linkedin-post": {
+    key: "linkedin-post",
+    label: "LinkedIn Post",
+    iconName: "Linkedin",
+    color: "#0A66C2",
+    bgLight: "rgba(10, 102, 194, 0.10)",
+    bgDark: "rgba(10, 102, 194, 0.20)",
+  },
+  "social-post": {
+    key: "social-post",
+    label: "Social Post",
+    iconName: "Share2",
+    color: "#E1306C",
+    bgLight: "rgba(225, 48, 108, 0.10)",
+    bgDark: "rgba(225, 48, 108, 0.20)",
+  },
+  "cold-email": {
+    key: "cold-email",
+    label: "Cold Email",
+    iconName: "Mail",
+    color: "#6B21D4",
+    bgLight: "rgba(107, 33, 212, 0.10)",
+    bgDark: "rgba(107, 33, 212, 0.20)",
+  },
+  "lead-magnet": {
+    key: "lead-magnet",
+    label: "Lead Magnet",
+    iconName: "BookOpen",
+    color: "#0AA891",
+    bgLight: "rgba(10, 168, 145, 0.10)",
+    bgDark: "rgba(10, 168, 145, 0.20)",
+  },
+  "discovery-call": {
+    key: "discovery-call",
+    label: "Discovery Call",
+    iconName: "Phone",
+    color: "#D4940A",
+    bgLight: "rgba(212, 148, 10, 0.10)",
+    bgDark: "rgba(212, 148, 10, 0.20)",
+  },
+  "partner-outreach": {
+    key: "partner-outreach",
+    label: "Partner Outreach",
+    iconName: "Handshake",
+    color: "#F25E3D",
+    bgLight: "rgba(242, 94, 61, 0.10)",
+    bgDark: "rgba(242, 94, 61, 0.20)",
+  },
+  "content-creation": {
+    key: "content-creation",
+    label: "Content Creation",
+    iconName: "FileText",
+    color: "#3B82F6",
+    bgLight: "rgba(59, 130, 246, 0.10)",
+    bgDark: "rgba(59, 130, 246, 0.20)",
+  },
+  "internal-review": {
+    key: "internal-review",
+    label: "Internal Review",
+    iconName: "ClipboardCheck",
+    color: "#6B7280",
+    bgLight: "rgba(107, 114, 128, 0.10)",
+    bgDark: "rgba(107, 114, 128, 0.20)",
+  },
+  "follow-up": {
+    key: "follow-up",
+    label: "Follow-Up",
+    iconName: "Reply",
+    color: "#8B5CF6",
+    bgLight: "rgba(139, 92, 246, 0.10)",
+    bgDark: "rgba(139, 92, 246, 0.20)",
+  },
+  "event-prep": {
+    key: "event-prep",
+    label: "Event Prep",
+    iconName: "CalendarCheck",
+    color: "#EC4899",
+    bgLight: "rgba(236, 72, 153, 0.10)",
+    bgDark: "rgba(236, 72, 153, 0.20)",
+  },
+}
+
+export const solutionMeta: Record<string, { label: string; color: string; bgLight: string; bgDark: string }> = {
+  "trade-shows": { label: "Trade Shows", color: "#9B5FE8", bgLight: "rgba(155, 95, 232, 0.10)", bgDark: "rgba(155, 95, 232, 0.20)" },
+  "recruiting": { label: "Recruiting", color: "#5FD9C2", bgLight: "rgba(95, 217, 194, 0.10)", bgDark: "rgba(95, 217, 194, 0.20)" },
+  "field-sales": { label: "Field Sales", color: "#F2B33D", bgLight: "rgba(242, 179, 61, 0.10)", bgDark: "rgba(242, 179, 61, 0.20)" },
+  "facilities": { label: "Facilities", color: "#7B62C9", bgLight: "rgba(123, 98, 201, 0.10)", bgDark: "rgba(123, 98, 201, 0.20)" },
+  "events-venues": { label: "Events", color: "#F25E3D", bgLight: "rgba(242, 94, 61, 0.10)", bgDark: "rgba(242, 94, 61, 0.20)" },
+}
