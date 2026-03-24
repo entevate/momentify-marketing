@@ -275,10 +275,10 @@ export default function ExplorerDashboard() {
   const [viewData, setViewData] = useState<ViewData>({});
 
   useEffect(() => {
-    fetch("/api/prototypes/track")
+    fetch("/api/prototypes/track", { cache: "no-store" })
       .then((r) => r.json())
-      .then(setViewData)
-      .catch(() => {});
+      .then((d) => { console.log("View data:", d); setViewData(d); })
+      .catch((e) => console.error("Fetch error:", e));
   }, []);
 
   return (
