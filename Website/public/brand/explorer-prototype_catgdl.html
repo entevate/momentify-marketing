@@ -387,8 +387,18 @@ window.addEventListener('message',function(e){
 });
 
 initState();renderUI();
-window.addEventListener('load',function(){scaleToFit();initMap();});
-window.addEventListener('resize',scaleToFit);
+window.addEventListener('load',function(){
+  scaleToFit();
+  initMap();
+  // Re-fit after layout settles (iframe scaling)
+  setTimeout(function(){
+    if(mapObj){mapObj.invalidateSize();mapObj.fitBounds([[51.5,-126],[24.5,-68]],{padding:[0,0]});}
+  },500);
+  setTimeout(function(){
+    if(mapObj){mapObj.invalidateSize();mapObj.fitBounds([[51.5,-126],[24.5,-68]],{padding:[0,0]});}
+  },1500);
+});
+window.addEventListener('resize',function(){scaleToFit();if(mapObj){mapObj.invalidateSize();}});
 </script>
 </body>
 </html>
