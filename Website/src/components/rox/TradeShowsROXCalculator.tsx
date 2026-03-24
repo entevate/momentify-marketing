@@ -394,7 +394,7 @@ function clamp(val: number, min: number, max: number) {
 const tierInterpretations: Record<string, { headline: string; body: string }> = {
   "Critical Gap": {
     headline: "Your events are costing more than they're delivering.",
-    body: "Lead capture is inconsistent, engagement depth is low, follow-up is slow, and conversions are not tracking. You likely lack the visibility and tools to identify and act on your best opportunities. Every category has room to improve, and improvement in any one of them compounds across the others.",
+    body: "Lead capture is inconsistent, engagement depth is low, follow-up is slow, conversions are not tracking, and your cost per lead is too high. You likely lack the visibility and tools to identify and act on your best opportunities. Every category has room to improve, and improvement in any one of them compounds across the others.",
   },
   "Needs Optimization": {
     headline: "You're capturing some value, but leaving ROX on the table.",
@@ -428,6 +428,10 @@ const impactLines: Record<string, { headline: string; body: string }> = {
   "Conversion Effectiveness": {
     headline: "Score leads by intent, not just contact info.",
     body: "Engagement-based scoring surfaces your highest-intent leads so your team focuses where it counts.",
+  },
+  "Event Investment Efficiency": {
+    headline: "Know your true cost per qualified lead before the next event.",
+    body: "Momentify tracks total investment against real outcomes so you can optimize spend across shows.",
   },
 };
 
@@ -565,11 +569,23 @@ export default function TradeShowsROXCalculator() {
     return clamp((conversions / total) * 100, 0, 100);
   }, [c4_conversions, c4_totalLeads]);
 
-  const categoryScores = useMemo(() => {
-    return [calcCategory1(), calcCategory2(), calcCategory3(), calcCategory4()];
-  }, [calcCategory1, calcCategory2, calcCategory3, calcCategory4]);
+  const calcCategory5 = useCallback((): number | null => {
+    const cost = parseFloat(inv_boothCost.value);
+    const leads = parseFloat(c1_leads.value);
+    if (!cost || !leads || cost <= 0 || leads <= 0 || inv_boothCost.skipped || c1_leads.skipped) return null;
+    const cpl = cost / leads;
+    // Linear interpolation within CPL bands: $0-150 = 85-100, $150-350 = 70-84, $350-700 = 40-69, $700+ = 0-39
+    if (cpl <= 150) return clamp(100 - (cpl / 150) * 15, 85, 100);
+    if (cpl <= 350) return clamp(84 - ((cpl - 150) / 200) * 14, 70, 84);
+    if (cpl <= 700) return clamp(69 - ((cpl - 350) / 350) * 29, 40, 69);
+    return clamp(39 - ((cpl - 700) / 700) * 39, 0, 39);
+  }, [inv_boothCost, c1_leads]);
 
-  const categoryNames = ["Lead Capture Efficiency", "Engagement Quality", "Follow-Up Speed", "Conversion Effectiveness"];
+  const categoryScores = useMemo(() => {
+    return [calcCategory1(), calcCategory2(), calcCategory3(), calcCategory4(), calcCategory5()];
+  }, [calcCategory1, calcCategory2, calcCategory3, calcCategory4, calcCategory5]);
+
+  const categoryNames = ["Lead Capture Efficiency", "Engagement Quality", "Follow-Up Speed", "Conversion Effectiveness", "Event Investment Efficiency"];
 
   const totalScore = useMemo(() => {
     const valid = categoryScores.filter((s) => s !== null) as number[];
@@ -579,9 +595,9 @@ export default function TradeShowsROXCalculator() {
   }, [categoryScores]);
 
   const skippedCount = useMemo(() => {
-    const fields = [c1_visitors, c1_leads, c2a_avgTime, c2a_targetTime, c2b_meaningful, c2b_totalLeads, c3_days, c4_conversions, c4_totalLeads];
+    const fields = [inv_boothCost, inv_sqFootage, inv_totalAttendees, c1_visitors, c1_leads, c2a_avgTime, c2a_targetTime, c2b_meaningful, c2b_totalLeads, c3_days, c4_conversions, c4_totalLeads];
     return fields.filter((f) => f.skipped).length;
-  }, [c1_visitors, c1_leads, c2a_avgTime, c2a_targetTime, c2b_meaningful, c2b_totalLeads, c3_days, c4_conversions, c4_totalLeads]);
+  }, [inv_boothCost, inv_sqFootage, inv_totalAttendees, c1_visitors, c1_leads, c2a_avgTime, c2a_targetTime, c2b_meaningful, c2b_totalLeads, c3_days, c4_conversions, c4_totalLeads]);
 
   // Per-lead cost calculation
   const perLeadCost = useMemo(() => {
@@ -877,6 +893,7 @@ export default function TradeShowsROXCalculator() {
               "Engagement Quality": s !== null && s >= 70 ? "Visitors are spending meaningful time at your booth." : "Interactions are shallow. Visitors are not engaging deeply.",
               "Follow-Up Speed": s !== null && s >= 70 ? "Your team is following up quickly after the event." : "Leads are going cold before your team reaches out.",
               "Conversion Effectiveness": s !== null && s >= 70 ? "Strong post-event conversion from leads to pipeline." : "Captured leads are not converting to meetings or deals.",
+              "Event Investment Efficiency": s !== null && s >= 70 ? "Your cost per lead is competitive for the industry." : "Your event spend is too high relative to leads captured.",
             };
 
             return (
@@ -1332,34 +1349,8 @@ export default function TradeShowsROXCalculator() {
 
                     {/* Calculator inputs */}
                     <div className="space-y-6">
-                    {/* Event Investment (Category 0) */}
-                    <CategoryCard num="00" name="Event Investment" weight="Sets context for your ROX calculation" score={null}>
-                      {renderField("Total Booth Cost", "Your all-in cost including booth space, drayage, build-out, travel, staffing, and sponsorships.", inv_boothCost, setInvBoothCost, "e.g. 50000", "$")}
-                      {renderField("Booth Square Footage", "Total square footage of your booth space. Used with event attendance to estimate potential traffic.", inv_sqFootage, setInvSqFootage, "e.g. 400")}
-                      {renderField("Total Event Attendees", "Total registered or expected attendees for the event. Used to estimate traffic potential for your booth size.", inv_totalAttendees, setInvTotalAttendees, "e.g. 5000")}
-                      {/* Estimated traffic indicator */}
-                      {(() => {
-                        const attendees = parseFloat(inv_totalAttendees.value);
-                        const sqft = parseFloat(inv_sqFootage.value);
-                        if (!attendees || attendees <= 0 || inv_totalAttendees.skipped) return null;
-                        const estimated = sqft && sqft > 0 && !inv_sqFootage.skipped
-                          ? Math.round(attendees * (sqft / 10000))
-                          : null;
-                        return estimated ? (
-                          <div className="mt-2" style={{ background: "rgba(107,33,212,0.04)", borderRadius: "8px", padding: "10px 14px" }}>
-                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#6B21D4" }}>
-                              Estimated Booth Traffic: ~{estimated.toLocaleString()} visitors
-                            </p>
-                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
-                              Based on {sqft.toLocaleString()} sq ft booth at a {attendees.toLocaleString()}-attendee event
-                            </p>
-                          </div>
-                        ) : null;
-                      })()}
-                    </CategoryCard>
-
                     {/* Category 1 */}
-                    <CategoryCard num="01" name="Lead Capture Efficiency" weight="Worth 25% of your total score" score={categoryScores[0]}>
+                    <CategoryCard num="01" name="Lead Capture Efficiency" weight="Worth 20% of your total score" score={categoryScores[0]}>
                       {renderField("Total Booth Visitors", "Estimated total number of people who stopped at or walked through your booth. Use event organizer traffic count if available.", c1_visitors, setC1Visitors, "e.g. 500")}
                       {renderField("Total Leads Captured", "Total contacts captured via badge scan, form entry, or any other method.", c1_leads, setC1Leads, "e.g. 150")}
                       {categoryScores[0] !== null && (
@@ -1375,7 +1366,7 @@ export default function TradeShowsROXCalculator() {
                     </CategoryCard>
 
                     {/* Category 2 */}
-                    <CategoryCard num="02" name="Engagement Quality" weight="Worth 25% of your total score" score={categoryScores[1]}>
+                    <CategoryCard num="02" name="Engagement Quality" weight="Worth 20% of your total score" score={categoryScores[1]}>
                       {/* Toggle */}
                       <div className="flex items-center gap-1 mb-6" style={{ background: "rgba(107,33,212,0.06)", borderRadius: "24px", padding: "3px", width: "fit-content" }}>
                         <button
@@ -1427,7 +1418,7 @@ export default function TradeShowsROXCalculator() {
                     </CategoryCard>
 
                     {/* Category 3 */}
-                    <CategoryCard num="03" name="Follow-Up Speed" weight="Worth 25% of your total score" score={categoryScores[2]}>
+                    <CategoryCard num="03" name="Follow-Up Speed" weight="Worth 20% of your total score" score={categoryScores[2]}>
                       {renderField(
                         "Average Days to First Follow-Up",
                         "How many days on average before your team sent the first follow-up after the event ended?",
@@ -1458,7 +1449,7 @@ export default function TradeShowsROXCalculator() {
                     </CategoryCard>
 
                     {/* Category 4 */}
-                    <CategoryCard num="04" name="Conversion Effectiveness" weight="Worth 25% of your total score" score={categoryScores[3]}>
+                    <CategoryCard num="04" name="Conversion Effectiveness" weight="Worth 20% of your total score" score={categoryScores[3]}>
                       {renderField("Post-Event Conversions", "How many leads converted to a meeting booked, qualified opportunity, or closed deal after the event?", c4_conversions, setC4Conversions, "e.g. 15")}
                       {renderField("Total Leads Captured", "Same number from Category 1. Auto-populated if already entered above.", c4_totalLeads, setC4TotalLeads, "e.g. 150")}
                       {categoryScores[3] !== null && (
@@ -1468,6 +1459,42 @@ export default function TradeShowsROXCalculator() {
                           </p>
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
                             Industry average: ~5-10% post-event conversion
+                          </p>
+                        </div>
+                      )}
+                    </CategoryCard>
+
+                    {/* Category 5 */}
+                    <CategoryCard num="05" name="Event Investment Efficiency" weight="Worth 20% of your total score" score={categoryScores[4]}>
+                      {renderField("Total Booth Cost", "Your all-in cost including booth space, drayage, build-out, travel, staffing, and sponsorships.", inv_boothCost, setInvBoothCost, "e.g. 50000", "$")}
+                      {renderField("Booth Square Footage", "Total square footage of your booth space. Used with event attendance to estimate potential traffic.", inv_sqFootage, setInvSqFootage, "e.g. 400")}
+                      {renderField("Total Event Attendees", "Total registered or expected attendees for the event. Used to estimate traffic potential for your booth size.", inv_totalAttendees, setInvTotalAttendees, "e.g. 5000")}
+                      {/* Estimated traffic indicator */}
+                      {(() => {
+                        const attendees = parseFloat(inv_totalAttendees.value);
+                        const sqft = parseFloat(inv_sqFootage.value);
+                        if (!attendees || attendees <= 0 || inv_totalAttendees.skipped) return null;
+                        const estimated = sqft && sqft > 0 && !inv_sqFootage.skipped
+                          ? Math.round(attendees * (sqft / 10000))
+                          : null;
+                        return estimated ? (
+                          <div className="mt-2" style={{ background: "rgba(107,33,212,0.04)", borderRadius: "8px", padding: "10px 14px" }}>
+                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#6B21D4" }}>
+                              Estimated Booth Traffic: ~{estimated.toLocaleString()} visitors
+                            </p>
+                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
+                              Based on {sqft.toLocaleString()} sq ft booth at a {attendees.toLocaleString()}-attendee event
+                            </p>
+                          </div>
+                        ) : null;
+                      })()}
+                      {categoryScores[4] !== null && (
+                        <div className="mt-2">
+                          <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
+                            Cost Per Lead: ${perLeadCost !== null ? perLeadCost.toLocaleString() : "--"}
+                          </p>
+                          <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
+                            Industry average: $200-400 per lead at B2B trade shows
                           </p>
                         </div>
                       )}
