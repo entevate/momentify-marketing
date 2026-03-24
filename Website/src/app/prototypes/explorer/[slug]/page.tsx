@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter, notFound } from "next/navigation";
+import { useParams, useRouter, useSearchParams, notFound } from "next/navigation";
 import { instances } from "../instances";
 
 export default function ExplorerInstancePage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const slug = params.slug as string;
   const instance = instances.find((i) => i.slug === slug);
   const [authorized, setAuthorized] = useState(false);
@@ -15,8 +16,14 @@ export default function ExplorerInstancePage() {
 
   useEffect(() => {
     if (!instance) return;
-    // No password required, or already unlocked via sessionStorage
     if (!instance.password) {
+      setAuthorized(true);
+      return;
+    }
+    // Check query param ?pw=
+    const qpw = searchParams.get("pw");
+    if (qpw === instance.password) {
+      sessionStorage.setItem(`proto-auth-${slug}`, "1");
       setAuthorized(true);
       return;
     }
@@ -24,7 +31,7 @@ export default function ExplorerInstancePage() {
     if (sessionStorage.getItem(key) === "1") {
       setAuthorized(true);
     }
-  }, [slug, instance]);
+  }, [slug, instance, searchParams]);
 
   useEffect(() => {
     if (!instance || !authorized) return;

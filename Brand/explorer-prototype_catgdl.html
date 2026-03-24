@@ -178,7 +178,7 @@ html.dark .hot-card{box-shadow:0 1px 4px rgba(0,0,0,0.2);}
           <option value="dark">Dark</option>
           <option value="voyager">Voyager</option>
           <option value="positron">Positron</option>
-          <option value="watercolor">Watercolor</option>
+          <option value="toner">Toner</option>
         </select>
         <div class="map-demo">
           <button class="demo-btn" onclick="resetAll()">Reset</button>
@@ -257,7 +257,7 @@ function getTE(){return dealerState.length*INITIAL_PINS-getTR();}
 
 function initMap(){
   mapObj=L.map('map',{minZoom:3,maxZoom:10,zoomControl:true,attributionControl:false});
-  var tileUrl=isDark?'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png':'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png';
+  var tileUrl=isDark?'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png':'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png';
   tileLayer=L.tileLayer(tileUrl,{subdomains:'abcd',maxZoom:19}).addTo(mapObj);
   loadTerritories();
   var bounds=[];
@@ -345,11 +345,11 @@ function simulateExchange(){
 function resetAll(){initState();if(mapObj)mapObj.flyToBounds([[51.5,-126],[24.5,-68]],{padding:[0,0],duration:0.8});renderAll();}
 
 var MAP_TILES={
-  light:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png',
+  light:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png',
   dark:'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
-  voyager:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+  voyager:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png',
   positron:'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
-  watercolor:'https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg'
+  toner:'https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png'
 };
 function changeMapStyle(style){
   if(!mapObj||!tileLayer)return;

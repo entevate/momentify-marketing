@@ -157,14 +157,54 @@ function InstanceCard({
             </div>
           )}
 
-          {/* Stats row */}
+          {/* Copy link + Stats row */}
           <div
             style={{
               display: "flex",
               gap: 24,
+              alignItems: "center",
               borderTop: "1px solid var(--border)",
               paddingTop: 16,
               marginTop: "auto",
+            }}
+          >
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const base = window.location.origin;
+                const pw = instance.password ? `?pw=${instance.password}` : "";
+                const url = `${base}/prototypes/explorer/${instance.slug}${pw}`;
+                navigator.clipboard.writeText(url);
+                const btn = e.currentTarget;
+                const orig = btn.textContent;
+                btn.textContent = "Copied!";
+                setTimeout(() => { btn.textContent = orig; }, 1500);
+              }}
+              style={{
+                padding: "6px 12px",
+                borderRadius: 6,
+                border: "1px solid var(--border)",
+                background: "transparent",
+                color: instance.accentColor,
+                fontSize: 11,
+                fontWeight: 600,
+                fontFamily: "inherit",
+                cursor: "pointer",
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+                whiteSpace: "nowrap",
+                transition: "all 0.15s",
+              }}
+            >
+              Copy Link
+            </button>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              gap: 24,
+              paddingTop: 12,
             }}
           >
             <div>
