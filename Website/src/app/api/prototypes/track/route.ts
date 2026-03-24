@@ -2,11 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { put, list } from "@vercel/blob";
 
 const BLOB_NAME = "prototype-views.json";
-// Vercel Blob stores may use different env var names
-const token = process.env.BLOB_READ_WRITE_TOKEN
-  || process.env.momentify_website_blob_READ_WRITE_TOKEN
-  || process.env.VERCEL_BLOB_READ_WRITE_TOKEN
-  || "";
+const token = process.env.BLOB_READ_WRITE_TOKEN || "";
 
 interface ViewEntry { views: number; lastViewed: string; }
 interface ViewData { [slug: string]: ViewEntry; }
@@ -15,8 +11,11 @@ async function readData(): Promise<ViewData> {
   try {
     const { blobs } = await list({ prefix: BLOB_NAME, token });
     if (blobs.length > 0) {
-      const res = await fetch(blobs[0].downloadUrl);
-      return await res.json();
+      // For private blobs, use the url with token auth header
+      const res = await fetch(blobs[0].url, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) return await res.json();
     }
   } catch (e) {
     console.error("Blob read error:", e);
@@ -28,6 +27,7 @@ async function writeData(data: ViewData) {
   await put(BLOB_NAME, JSON.stringify(data), {
     access: "private",
     addRandomSuffix: false,
+    allowOverwrite: true,
     token,
   });
 }
@@ -39,8 +39,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (!token) {
-    console.error("No blob token found. Env vars:", Object.keys(process.env).filter(k => k.includes("BLOB") || k.includes("blob")));
-    return NextResponse.json({ error: "No storage token", slug, views: 0 }, { status: 500 });
+    return NextResponse.json({ error: "No storage token" }, { status: 500 });
   }
 
   try {
