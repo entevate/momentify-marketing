@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAT GDL - SkillsUSA IPEX Pin Exchange Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --cat-yellow:#FFCC00;--cat-dark:#1A1A1A;
+  --bg:#F4F5FA;--surface:#FFFFFF;--surface-2:#F0F1F8;
+  --border:rgba(11,11,60,0.06);--border-strong:rgba(11,11,60,0.10);
+  --text:#0B0B3C;--text-sub:#555;--text-muted:rgba(11,11,60,0.38);
+  --deep-blue:#3257D9;--navy:#1F3395;--cobalt:#4F6AE8;
+  --teal:#00BBA5;--amber:#F2B33D;--red:#E5484D;
+  --radius-sm:4px;--radius-md:6px;--radius-lg:8px;--radius-xl:12px;--radius-2xl:16px;--radius-full:9999px;
+  --shadow-card:0 1px 3px rgba(11,11,60,0.05);
+  --transition:200ms ease;
+  --map-tile:light_nolabels;
+  --state-label-color:rgba(11,11,60,0.18);
+  --tooltip-text:rgba(11,11,60,0.3);
+  --val-full:#8A6D00;--val-mid:#8A5A00;
+  --tooltip-bg:#FFFFFF;
+}
+html.dark{
+  --bg:#0A0A0A;--surface:rgba(255,255,255,0.06);--surface-2:rgba(255,255,255,0.10);
+  --border:rgba(255,255,255,0.12);--border-strong:rgba(255,255,255,0.16);
+  --text:#FFFFFF;--text-sub:rgba(255,255,255,0.75);--text-muted:rgba(255,255,255,0.50);
+  --shadow-card:0 1px 3px rgba(0,0,0,0.4);
+  --cat-dark:#0A0A0A;
+  --state-label-color:rgba(255,255,255,0.15);
+  --tooltip-text:rgba(255,255,255,0.50);
+  --val-full:#FFCC00;--val-mid:#F2B33D;
+  --tooltip-bg:rgba(20,20,20,0.92);
+}
+html{overflow:hidden;background:var(--bg);transition:background 0.3s ease;}
+body{width:1920px;height:1080px;overflow:hidden;font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;transform-origin:top left;transition:background 0.3s ease,color 0.3s ease;}
+.dashboard{display:flex;flex-direction:column;height:1080px;width:1920px;padding:0;}
+
+/* ═══ Top Bar ═══ */
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:80px;flex-shrink:0;background:var(--cat-dark);z-index:10;}
+.top-bar-left{display:flex;align-items:center;gap:20px;}
+.cat-logo svg{height:34px;width:auto;}
+.cat-logo svg path,.cat-logo svg polygon,.cat-logo svg rect{fill:#fff;}
+.cat-logo svg .cat-tri{fill:var(--cat-yellow)!important;}
+.tb-sep{width:1px;height:32px;background:rgba(255,255,255,0.12);}
+.tb-title{font-size:20px;font-weight:500;color:#fff;}
+.tb-sub{font-size:10px;font-weight:400;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;}
+.top-bar-right{display:flex;align-items:center;gap:14px;}
+.live-pill{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--cat-yellow);text-transform:uppercase;letter-spacing:0.08em;}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--cat-yellow);animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+
+/* ═══ Content: left sidebar + right main ═══ */
+.content{flex:1;display:flex;padding:20px 24px 20px 28px;gap:20px;overflow:hidden;}
+
+/* ═══ Section Headers ═══ */
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.section-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;color:var(--text);}
+html.dark .section-title{color:var(--cat-yellow);}
+.section-header-right{margin-left:auto;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);padding-right:4px;}
+
+/* ═══ Left Sidebar: dealer list ═══ */
+.sidebar{width:320px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;}
+.sidebar-cards{flex:1;display:flex;flex-direction:column;gap:8px;}
+.sidebar-cards::-webkit-scrollbar{width:3px;}
+.sidebar-cards::-webkit-scrollbar-track{background:transparent;}
+.sidebar-cards::-webkit-scrollbar-thumb{background:rgba(128,128,128,0.15);border-radius:3px;}
+
+/* Cards: design kit style - generous padding, large radius, subtle elevation */
+.hot-card{min-width:0;display:flex;align-items:center;gap:14px;padding:0 18px;border-radius:var(--radius-2xl);background:var(--surface);border:1px solid var(--border);position:relative;overflow:hidden;flex:1;box-shadow:0 1px 4px rgba(0,0,0,0.03);}
+html.dark .hot-card{box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+.hot-card.is-crit{border-color:rgba(229,72,77,0.15);}
+.hot-card.flash{border-color:rgba(255,204,0,0.4);background:rgba(255,204,0,0.03);}
+.hc-info{flex:1;min-width:0;}
+.hc-eyebrow{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.10em;margin-bottom:3px;}
+.hc-name{font-size:18px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hc-val{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;min-width:44px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-lg);flex-shrink:0;padding:0 12px;}
+.hc-val.v-full{background:rgba(0,187,165,0.10);color:var(--teal);}
+.hc-val.v-mid{background:rgba(242,179,61,0.10);color:var(--val-mid);}
+.hc-val.v-low{background:rgba(229,72,77,0.10);color:var(--red);animation:pulse-low 1.5s ease infinite;}
+.hc-val.v-empty{background:rgba(229,72,77,0.12);color:var(--red);font-size:12px;font-weight:700;animation:pulse-low 1.5s ease infinite;}
+@keyframes pulse-low{0%,100%{opacity:1;}50%{opacity:0.6;}}
+
+/* ═══ Right Main: map + stats ═══ */
+.main-col{flex:1;display:flex;flex-direction:column;gap:20px;min-width:0;}
+
+/* ═══ Map Card ═══ */
+.map-card{flex:1;min-height:0;border-radius:var(--radius-2xl);background:var(--surface);border:1px solid var(--border);overflow:hidden;position:relative;}
+/* Map style selector */
+.map-style-select{position:absolute;top:12px;right:12px;z-index:600;padding:6px 12px;border-radius:var(--radius-lg);border:1px solid var(--border-strong);background:var(--surface);color:var(--text-sub);font-size:10px;font-weight:500;font-family:inherit;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:26px;text-transform:uppercase;letter-spacing:0.05em;box-shadow:var(--shadow-card);}
+#map{width:100%;height:100%;z-index:1;}
+.leaflet-control-zoom{border:1px solid var(--border-strong)!important;border-radius:var(--radius-lg)!important;overflow:hidden;box-shadow:var(--shadow-card)!important;}
+.leaflet-control-zoom a{background:var(--surface)!important;color:var(--text)!important;border-color:var(--border)!important;width:30px!important;height:30px!important;line-height:30px!important;font-size:14px!important;}
+.leaflet-control-zoom a:hover{background:var(--surface-2)!important;}
+.leaflet-control-attribution{display:none!important;}
+.dealer-tooltip{background:var(--tooltip-bg,var(--surface))!important;border:1px solid var(--border-strong)!important;border-radius:var(--radius-md)!important;padding:3px 8px!important;font-family:'Inter',sans-serif!important;box-shadow:var(--shadow-card)!important;white-space:nowrap!important;color:var(--text)!important;}
+.dealer-tooltip::before{border-right-color:var(--tooltip-bg,var(--surface))!important;}
+.leaflet-tooltip-left.dealer-tooltip::before{border-left-color:var(--tooltip-bg,var(--surface))!important;}
+.dealer-popup .leaflet-popup-content-wrapper{background:var(--tooltip-bg);border:1px solid var(--border-strong);border-radius:var(--radius-xl);box-shadow:0 4px 12px rgba(0,0,0,0.08);color:var(--text);}
+.dealer-popup .leaflet-popup-tip{background:var(--tooltip-bg);border:1px solid var(--border);}
+.dealer-popup .leaflet-popup-close-button{color:var(--text-muted);font-size:16px;}
+.popup-inner{padding:4px;min-width:150px;}
+.popup-name{font-size:14px;font-weight:500;margin-bottom:2px;}
+.popup-region{font-size:10px;color:var(--text-muted);margin-bottom:6px;}
+.popup-pins{display:flex;align-items:center;gap:6px;}
+.popup-pins-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;}
+.popup-pins-value{font-size:18px;font-weight:500;font-variant-numeric:tabular-nums;}
+.state-label{background:none!important;border:none!important;box-shadow:none!important;font-family:'Inter',sans-serif!important;font-size:10px!important;font-weight:600!important;color:var(--state-label-color)!important;text-transform:uppercase!important;letter-spacing:0.04em!important;padding:0!important;white-space:nowrap!important;}
+.map-demo{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:600;display:flex;gap:8px;}
+.demo-btn{padding:8px 16px;border-radius:var(--radius-lg);border:1px solid var(--border-strong);background:var(--surface);color:var(--text-sub);font-size:10px;font-weight:500;font-family:inherit;cursor:pointer;transition:all var(--transition);text-transform:uppercase;letter-spacing:0.05em;box-shadow:var(--shadow-card);}
+.demo-btn:hover{background:var(--surface-2);}
+.demo-btn.primary{background:var(--cat-yellow);color:var(--cat-dark);border-color:var(--cat-yellow);}
+.demo-btn.primary:hover{background:#E6B800;}
+
+/* ═══ Bottom Stats Row ═══ */
+.stats-section{flex-shrink:0;}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:20px;}
+.stat-card{padding:18px 22px;border-radius:var(--radius-2xl);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;gap:16px;}
+.stat-ring{position:relative;width:64px;height:64px;flex-shrink:0;}
+.stat-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.stat-ring-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:600;color:var(--text);}
+.stat-info{}
+.stat-label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.10em;}
+.stat-value{font-size:34px;font-weight:500;color:var(--text);font-variant-numeric:tabular-nums;line-height:1.1;margin-top:3px;}
+.stat-compare{font-size:11px;color:var(--text-muted);margin-top:3px;}
+.stat-compare .up{color:var(--teal);font-weight:600;}
+.stat-compare .down{color:var(--red);font-weight:600;}
+
+/* Health mini-bars in stat card */
+.health-list{display:flex;flex-direction:column;gap:10px;flex:1;}
+.health-row{display:flex;align-items:center;gap:10px;}
+.health-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.health-name{font-size:14px;color:var(--text-sub);width:66px;}
+.health-bar-track{flex:1;height:10px;border-radius:5px;background:var(--surface-2);overflow:hidden;}
+.health-bar-fill{height:100%;border-radius:5px;transition:width 0.4s ease;}
+.health-count{font-size:16px;font-weight:500;color:var(--text);width:30px;text-align:right;font-variant-numeric:tabular-nums;}
+
+/* Region legend as colored pills */
+.region-legend{display:flex;flex-wrap:wrap;gap:8px;align-items:center;align-content:center;flex:1;}
+.rl-pill{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:var(--radius-full);font-size:12px;font-weight:600;letter-spacing:0.02em;}
+</style>
+</head>
+<body>
+<div class="dashboard">
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <div class="cat-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 20"><g transform="translate(1.76,1.056)"><path d="M 45.365,7.256 L 44.379,7.279 L 44.379,3.336 L 45.509,3.336 C 46.365,3.336 46.646,3.964 46.646,5.336 C 46.646,6.708 46.33,7.256 45.365,7.256 M 50.34,16.246 L 50.34,12.02 C 50.34,10.016 49.625,8.851 48.097,8.577 C 49.873,8.106 50.359,6.616 50.359,4.708 C 50.359,2.018 49.392,0.346 46.255,0.346 L 40.637,0.346 L 40.64,17.763 L 44.38,17.763 L 44.38,10.19 L 45.302,10.19 C 46.202,10.19 46.629,10.811 46.629,11.64 L 46.629,16.273 C 46.629,17.043 46.784,17.611 46.89,17.762 L 50.673,17.762 C 50.541,17.618 50.34,17.017 50.34,16.246"/><path d="M 8.387,14.801 C 9.056,14.243 9.171,13.552 9.171,12.932 L 9.171,10.328 L 5.535,10.328 L 5.535,13.861 C 5.535,14.367 5.126,14.777 4.621,14.777 C 4.116,14.777 3.74,14.367 3.74,13.861 L 3.74,3.852 C 3.74,3.347 4.116,2.937 4.621,2.937 C 5.126,2.937 5.535,3.347 5.535,3.852 L 5.535,7.408 L 9.166,7.408 L 9.166,3.719 C 9.166,1.681 7.834,0.004 4.59,0 C 1.259,0 0,1.685 0,3.723 L 0,14.174 C 0,16.194 1.604,17.722 3.655,17.722 L 4.781,17.722 L 8.387,14.801 z"/><path d="M 103.314,7.247 L 102.321,7.247 L 102.321,3.327 L 103.457,3.327 C 104.311,3.327 104.594,3.955 104.594,5.326 C 104.594,6.699 104.28,7.247 103.314,7.247 M 108.285,16.237 L 108.285,12.01 C 108.285,10.007 107.573,8.842 106.045,8.567 C 107.821,8.097 108.307,6.608 108.307,4.701 C 108.307,2.009 107.337,0.337 104.203,0.337 L 98.584,0.337 L 98.584,17.754 L 102.333,17.754 L 102.333,10.182 L 103.248,10.182 C 104.15,10.182 104.572,10.802 104.572,11.632 L 104.572,16.265 C 104.572,17.036 104.731,17.603 104.836,17.754 L 108.616,17.754 C 108.486,17.609 108.285,17.007 108.285,16.237"/><path d="M 90.796,11.487 L 91.77,3.36 L 92.742,11.487 L 90.796,11.487 z M 94.275,0.303 L 89.246,0.303 L 86.258,17.753 L 90.044,17.753 L 90.415,14.674 L 93.12,14.672 L 93.489,17.753 L 97.278,17.753 L 94.275,0.303 z"/><polygon points="69.198,17.751 69.198,0.341 73.034,0.341 73.034,14.446 77.031,14.446 77.031,17.751"/><rect width="3.833" height="17.41" x="63.333" y="0.342"/><polygon points="77.954,17.751 77.954,0.341 81.787,0.341 81.787,14.446 85.786,14.446 85.786,17.751"/><path d="M 57.057,7.764 L 55.913,7.75 L 55.913,3.334 L 57.051,3.334 C 58.023,3.334 58.186,4 58.186,5.594 C 58.186,7.241 58.022,7.764 57.057,7.764 M 58.022,0.342 L 52.177,0.342 L 52.177,17.759 L 55.925,17.759 L 55.925,10.847 L 58.022,10.847 C 61.465,10.847 62.046,8.653 62.046,5.594 C 62.047,2.536 61.466,0.342 58.022,0.342"/><polygon points="34.161,3.66 34.161,7.11 38.13,7.11 38.13,10.521 34.161,10.521 34.161,14.387 38.877,14.385 38.877,17.746 30.322,17.75 30.322,0.338 30.318,0.338 38.722,0.338 38.722,3.66"/><polygon points="22.721,15.211 22.721,3.726 20.211,3.726 20.211,0.343 29.293,0.343 29.293,3.726 26.771,3.726 26.771,17.701 25.695,17.701"/><polygon points="24.348,17.727 15.504,10.316 6.34,17.727" class="cat-tri" style="fill:#ffc400"/><path d="M 14.526,8.319 L 15.505,3.315 L 16.479,8.319 L 14.526,8.319 z M 18.027,0.361 L 12.961,0.361 L 10.01,13.604 L 15.506,9.167 L 21.236,13.969 L 18.027,0.361 z"/></g></svg></div>
+      <div class="tb-sep"></div>
+      <div><div class="tb-title">SkillsUSA IPEX 2026</div><div class="tb-sub">Interactive Pin Exchange Dashboard</div></div>
+    </div>
+    <div class="top-bar-right">
+      <div class="live-pill"><span class="live-dot"></span>Live</div>
+    </div>
+  </header>
+
+  <div class="content">
+    <!-- Left sidebar: dealer inventory -->
+    <div class="sidebar">
+      <div class="section-header">
+        <div class="section-title" id="sec-title">Lowest Inventory</div>
+        <div class="section-header-right">Remaining</div>
+      </div>
+      <div class="sidebar-cards" id="hot-row"></div>
+    </div>
+
+    <!-- Right main: map + stats -->
+    <div class="main-col">
+      <div class="map-card">
+        <div id="map"></div>
+        <select class="map-style-select" id="map-style" onchange="changeMapStyle(this.value)">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="voyager">Voyager</option>
+          <option value="positron">Positron</option>
+          <option value="watercolor">Watercolor</option>
+        </select>
+        <div class="map-demo">
+          <button class="demo-btn" onclick="resetAll()">Reset</button>
+          <button class="demo-btn primary" onclick="simulateExchange()">Simulate Exchange</button>
+        </div>
+      </div>
+      <div class="stats-section">
+        <div class="stats-row" id="stats-row"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var DEALERS=[
+  {name:'Finning Canada',region:'Canada',lat:50.5,lng:-113.56},
+  {name:'Toromont',region:'Canada',lat:43.79,lng:-79.52},
+  {name:'Harnish',region:'Pacific West',lat:47.47,lng:-122.26},
+  {name:'Peterson',region:'Mountain West',lat:37.71,lng:-122.19},
+  {name:'Holt of California',region:'Mountain West',lat:37.95,lng:-121.31},
+  {name:'Hawthorne',region:'Mountain West',lat:33.02,lng:-117.08},
+  {name:'Quinn Group, Inc.',region:'Mountain West',lat:34.00,lng:-117.95},
+  {name:'Western States',region:'Mountain West',lat:43.60,lng:-116.39},
+  {name:'Wyoming',region:'Mountain West',lat:42.85,lng:-106.33},
+  {name:'Wheeler',region:'Mountain West',lat:40.72,lng:-111.99},
+  {name:'Empire Southwest',region:'Central',lat:33.39,lng:-111.84},
+  {name:'Butler',region:'Midwest',lat:46.84,lng:-96.86},
+  {name:'Ziegler',region:'Midwest',lat:44.85,lng:-93.31},
+  {name:'NMC',region:'Midwest',lat:41.19,lng:-96.09},
+  {name:'Altorfer',region:'Midwest',lat:41.95,lng:-91.69},
+  {name:'Fabick',region:'Midwest',lat:38.51,lng:-90.44},
+  {name:'MacAllister',region:'Midwest',lat:39.73,lng:-86.09},
+  {name:'Ohio Cat',region:'Midwest',lat:41.32,lng:-81.69},
+  {name:'Foley Equipment',region:'Central',lat:37.67,lng:-97.36},
+  {name:'Wagner',region:'Central',lat:39.74,lng:-104.78},
+  {name:'Warren',region:'Southern',lat:32.00,lng:-102.12},
+  {name:'Holt Texas',region:'Southern',lat:29.37,lng:-98.44},
+  {name:'Mustang',region:'Southern',lat:29.86,lng:-95.47},
+  {name:'Louisiana',region:'Southern',lat:30.06,lng:-90.55},
+  {name:'Pipeline Machinery',region:'Southern',lat:29.97,lng:-95.70},
+  {name:'Riggs',region:'Central',lat:34.71,lng:-92.37},
+  {name:'Puckett',region:'Southern',lat:32.32,lng:-90.12},
+  {name:'Boyd',region:'Southeast',lat:38.24,lng:-85.62},
+  {name:'Thompson Tractor',region:'Southeast',lat:33.56,lng:-86.76},
+  {name:'Yancey',region:'Southeast',lat:33.81,lng:-84.63},
+  {name:'Blanchard',region:'Southeast',lat:33.96,lng:-81.10},
+  {name:'Ring Power',region:'Southeast',lat:29.98,lng:-81.43},
+  {name:'Kelly Tractor',region:'Southeast',lat:25.81,lng:-80.32},
+  {name:'Carter',region:'Southeast',lat:37.29,lng:-80.06},
+  {name:'Carolina',region:'Southeast',lat:35.31,lng:-80.84},
+  {name:'Gregory Poole',region:'Southeast',lat:35.75,lng:-78.71},
+  {name:'Stowers',region:'Southeast',lat:36.00,lng:-83.82},
+  {name:'Thompson Machinery',region:'Southeast',lat:36.02,lng:-86.58},
+  {name:'Cleveland Brothers',region:'Northeast',lat:40.43,lng:-79.67},
+  {name:'Milton',region:'Northeast',lat:42.16,lng:-71.52},
+  {name:'H.O. Penn',region:'Northeast',lat:41.69,lng:-73.89},
+  {name:'Foley, Inc.',region:'Northeast',lat:40.55,lng:-74.45},
+];
+var DEALER_STATES={'Finning Canada':['British Columbia','Alberta','Saskatchewan','Manitoba','Yukon','Northwest Territories','Nunavut'],'Toromont':['Ontario','Quebec','New Brunswick','Nova Scotia','Prince Edward Island','Newfoundland and Labrador'],'Harnish':['Washington','Oregon','Alaska','Hawaii','Montana'],'Peterson':['California'],'Hawthorne':['Nevada'],'Western States':['Idaho','Utah','Colorado'],'Wyoming':['Wyoming'],'Wheeler':['New Mexico'],'Empire Southwest':['Arizona'],'Butler':['Minnesota','North Dakota','South Dakota'],'Ziegler':['Wisconsin'],'NMC':['Michigan'],'Altorfer':['Iowa','Illinois'],'Fabick':['Missouri'],'MacAllister':['Indiana'],'Ohio Cat':['Ohio'],'Foley Equipment':['Kansas','Nebraska'],'Warren':['Oklahoma'],'Holt Texas':['Texas'],'Louisiana':['Louisiana'],'Riggs':['Arkansas'],'Puckett':['Mississippi'],'Boyd':['Alabama'],'Yancey':['Georgia'],'Ring Power':['Florida'],'Carter':['South Carolina'],'Carolina':['North Carolina'],'Stowers':['Kentucky','Tennessee'],'Cleveland Brothers':['Pennsylvania'],'Milton':['New York','Vermont','New Hampshire','Maine'],'H.O. Penn':['Connecticut','Massachusetts','Rhode Island'],'Foley, Inc.':['New Jersey','Delaware','Maryland','District of Columbia']};
+var STATE_TO_DEALER={};Object.keys(DEALER_STATES).forEach(function(d){DEALER_STATES[d].forEach(function(s){STATE_TO_DEALER[s]=d;});});
+var REGION_COLORS={'Canada':{fill:'transparent',stroke:'#5B7FBF',pill:'#3A5FA0',pillBg:'rgba(58,95,160,0.12)'},'Pacific West':{fill:'transparent',stroke:'#9B6EC0',pill:'#7B4EA0',pillBg:'rgba(123,78,160,0.12)'},'Mountain West':{fill:'transparent',stroke:'#6B8FD0',pill:'#4B6FB0',pillBg:'rgba(75,111,176,0.12)'},'Midwest':{fill:'transparent',stroke:'#4F7FD0',pill:'#3060B0',pillBg:'rgba(48,96,176,0.12)'},'Central':{fill:'transparent',stroke:'#A070B8',pill:'#8050A0',pillBg:'rgba(128,80,160,0.12)'},'Southern':{fill:'transparent',stroke:'#D09050',pill:'#B07030',pillBg:'rgba(176,112,48,0.12)'},'Southeast':{fill:'transparent',stroke:'#C0A050',pill:'#A08030',pillBg:'rgba(160,128,48,0.12)'},'Northeast':{fill:'transparent',stroke:'#5098B0',pill:'#307890',pillBg:'rgba(48,120,144,0.12)'}};
+var STATE_TO_REGION={'British Columbia':'Canada','Alberta':'Canada','Saskatchewan':'Canada','Manitoba':'Canada','Ontario':'Canada','Quebec':'Canada','New Brunswick':'Canada','Nova Scotia':'Canada','Prince Edward Island':'Canada','Newfoundland and Labrador':'Canada','Yukon':'Canada','Northwest Territories':'Canada','Nunavut':'Canada','Washington':'Pacific West','Oregon':'Pacific West','Alaska':'Pacific West','Hawaii':'Pacific West','Montana':'Pacific West','Idaho':'Mountain West','Wyoming':'Mountain West','Nevada':'Mountain West','Utah':'Mountain West','Colorado':'Mountain West','California':'Mountain West','North Dakota':'Midwest','South Dakota':'Midwest','Nebraska':'Midwest','Minnesota':'Midwest','Iowa':'Midwest','Wisconsin':'Midwest','Michigan':'Midwest','Illinois':'Midwest','Indiana':'Midwest','Ohio':'Midwest','Kansas':'Midwest','Missouri':'Midwest','Arizona':'Central','New Mexico':'Central','Oklahoma':'Central','Texas':'Southern','Louisiana':'Southern','Arkansas':'Southern','Mississippi':'Southern','Alabama':'Southeast','Georgia':'Southeast','Florida':'Southeast','South Carolina':'Southeast','North Carolina':'Southeast','Tennessee':'Southeast','Kentucky':'Southeast','Virginia':'Southeast','West Virginia':'Southeast','Pennsylvania':'Northeast','New York':'Northeast','New Jersey':'Northeast','Connecticut':'Northeast','Massachusetts':'Northeast','Rhode Island':'Northeast','Vermont':'Northeast','New Hampshire':'Northeast','Maine':'Northeast','Maryland':'Northeast','Delaware':'Northeast','District of Columbia':'Northeast'};
+var STATE_ABBR={'Alabama':'AL','Alaska':'AK','Arizona':'AZ','Arkansas':'AR','California':'CA','Colorado':'CO','Connecticut':'CT','Delaware':'DE','Florida':'FL','Georgia':'GA','Hawaii':'HI','Idaho':'ID','Illinois':'IL','Indiana':'IN','Iowa':'IA','Kansas':'KS','Kentucky':'KY','Louisiana':'LA','Maine':'ME','Maryland':'MD','Massachusetts':'MA','Michigan':'MI','Minnesota':'MN','Mississippi':'MS','Missouri':'MO','Montana':'MT','Nebraska':'NE','Nevada':'NV','New Hampshire':'NH','New Jersey':'NJ','New Mexico':'NM','New York':'NY','North Carolina':'NC','North Dakota':'ND','Ohio':'OH','Oklahoma':'OK','Oregon':'OR','Pennsylvania':'PA','Rhode Island':'RI','South Carolina':'SC','South Dakota':'SD','Tennessee':'TN','Texas':'TX','Utah':'UT','Vermont':'VT','Virginia':'VA','Washington':'WA','West Virginia':'WV','Wisconsin':'WI','Wyoming':'WY'};
+
+var INITIAL_PINS=10,HOT_THRESHOLD=6,dealerState=[],mapObj=null,markers={},tileLayer=null;
+function initState(){dealerState=DEALERS.map(function(d){return{name:d.name,region:d.region,lat:d.lat,lng:d.lng,pins:INITIAL_PINS};});}
+function sc(p){return p===0?'empty':p<=3?'low':p<=6?'mid':'full';}
+var isDark=false;
+function scolor(p){
+  if(isDark) return p===0?'#E5484D':p<=3?'#E5484D':p<=6?'#F2B33D':'#FFCC00';
+  return p===0?'#E5484D':p<=3?'#E5484D':p<=6?'#8A5A00':'#8A6D00';
+}
+function mcolor(p){return p===0?'#E5484D':p<=3?'#E5484D':p<=6?'#F2B33D':'#FFCC00';}
+function getTR(){return dealerState.reduce(function(s,d){return s+d.pins;},0);}
+function getTE(){return dealerState.length*INITIAL_PINS-getTR();}
+
+function initMap(){
+  mapObj=L.map('map',{minZoom:3,maxZoom:10,zoomControl:true,attributionControl:false});
+  var tileUrl=isDark?'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png':'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png';
+  tileLayer=L.tileLayer(tileUrl,{subdomains:'abcd',maxZoom:19}).addTo(mapObj);
+  loadTerritories();
+  var bounds=[];
+  dealerState.forEach(function(d){
+    bounds.push([d.lat,d.lng]);
+    var m=L.circleMarker([d.lat,d.lng],{radius:10,fillColor:mcolor(d.pins),fillOpacity:0.85,color:'#fff',weight:2,opacity:1}).addTo(mapObj);
+    m.bindTooltip(ttHtml(d),{permanent:true,direction:'right',offset:[12,0],className:'dealer-tooltip'});
+    m.bindPopup(ppHtml(d),{className:'dealer-popup',maxWidth:200});
+    markers[d.name]=m;
+  });
+  // Tight: Harnish/Finning top, Kelly bottom, coasts at edges
+  mapObj.fitBounds([[51.5,-126],[24.5,-68]],{padding:[0,0]});
+}
+function ttHtml(d){var c=scolor(d.pins),v=d.pins===0?'OUT':d.pins;var nc=isDark?'rgba(255,255,255,0.7)':'rgba(11,11,60,0.5)';return '<span style="font-weight:500;font-size:14px;color:'+c+';font-variant-numeric:tabular-nums;">'+v+'</span><span style="font-size:11px;font-weight:500;color:'+nc+';margin-left:5px;">'+d.name+'</span>';}
+function ppHtml(d){var c=scolor(d.pins),v=d.pins===0?'OUT':d.pins;return '<div class="popup-inner"><div class="popup-name">'+d.name+'</div><div class="popup-region">'+d.region+'</div><div class="popup-pins"><span class="popup-pins-label">Pins remaining</span><span class="popup-pins-value" style="color:'+c+'">'+v+'</span></div></div>';}
+function updateMarkers(){dealerState.forEach(function(d){var m=markers[d.name];if(!m)return;m.setStyle({fillColor:mcolor(d.pins)});m.unbindTooltip();m.bindTooltip(ttHtml(d),{permanent:true,direction:'right',offset:[12,0],className:'dealer-tooltip'});m.setPopupContent(ppHtml(d));});}
+
+function loadTerritories(){
+  fetch('https://raw.githubusercontent.com/PublicaMundi/MappingAPI/master/data/geojson/us-states.json').then(function(r){return r.json();}).then(function(data){
+    var gl=L.geoJSON(data,{
+      style:function(f){var rg=STATE_TO_REGION[f.properties.name];var c=REGION_COLORS[rg]||{fill:'transparent',stroke:'#D0D2DA'};return{fillColor:'transparent',fillOpacity:0,color:c.stroke,weight:1.5,opacity:0.5};},
+      onEachFeature:function(f,layer){var abbr=STATE_ABBR[f.properties.name];if(abbr){var ctr=layer.getBounds().getCenter();L.marker(ctr,{icon:L.divIcon({className:'state-label',html:abbr,iconSize:[28,12],iconAnchor:[14,6]})}).addTo(mapObj);}}
+    }).addTo(mapObj);
+    geoLayers.push(gl);
+    bringFront();
+  });
+  fetch('https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/canada.geojson').then(function(r){return r.json();}).then(function(data){
+    var cl=L.geoJSON(data,{style:{fillColor:'transparent',fillOpacity:0,color:'#B0BFD8',weight:1.5,opacity:0.4}}).addTo(mapObj);
+    geoLayers.push(cl);
+    bringFront();
+  });
+}
+function bringFront(){dealerState.forEach(function(d){var m=markers[d.name];if(m)m.bringToFront();});}
+
+function ringSVG(pct,color,size){
+  var r=(size-8)/2,circ=2*Math.PI*r,fill=pct/100*circ;
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="#F0F1F8" stroke-width="6"/><circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="6" stroke-dasharray="'+fill+' '+(circ-fill)+'" stroke-linecap="round"/></svg>';
+}
+
+function renderUI(){
+  var sorted=dealerState.slice().sort(function(a,b){return a.pins!==b.pins?a.pins-b.pins:a.name.localeCompare(b.name);});
+  var hotCount=sorted.filter(function(d){return d.pins<=HOT_THRESHOLD;}).length;
+  var titleEl=document.getElementById('sec-title');
+  titleEl.textContent=hotCount>0?'Low Inventory':'Lowest Inventory';
+
+  // Top row: show 7 lowest dealers
+  var show=sorted.slice(0,9);
+  document.getElementById('hot-row').innerHTML=show.map(function(d){
+    var s=sc(d.pins),v=d.pins===0?'OUT':d.pins,crit=d.pins<=3?' is-crit':'';
+    var rc=REGION_COLORS[d.region];var ec=rc?rc.pill:'var(--teal)';
+    return '<div class="hot-card'+crit+'" data-dealer="'+d.name+'"><div class="hc-info"><div class="hc-eyebrow" style="color:'+ec+';">'+d.region+'</div><div class="hc-name">'+d.name+'</div></div><div class="hc-val v-'+s+'">'+v+'</div></div>';
+  }).join('');
+
+  // Bottom stats
+  var tr=getTR(),te=getTE(),total=tr+te,pctR=total?Math.round(tr/total*100):100,pctE=100-pctR;
+  var full=dealerState.filter(function(d){return d.pins>6;}).length;
+  var mid=dealerState.filter(function(d){return d.pins>3&&d.pins<=6;}).length;
+  var low=dealerState.filter(function(d){return d.pins>0&&d.pins<=3;}).length;
+  var out=dealerState.filter(function(d){return d.pins===0;}).length;
+  var tot=dealerState.length;
+
+  document.getElementById('stats-row').innerHTML=
+    // Card 1: Pins Remaining with ring
+    '<div class="stat-card"><div class="stat-ring">'+ringSVG(pctR,'#FFCC00',64)+'<div class="stat-ring-center">'+pctR+'%</div></div><div class="stat-info"><div class="stat-label">Pins Remaining</div><div class="stat-value">'+tr+'</div><div class="stat-compare">of '+total+' total</div></div></div>'+
+    // Card 2: Pins Exchanged with ring
+    '<div class="stat-card"><div class="stat-ring">'+ringSVG(pctE,'#3257D9',64)+'<div class="stat-ring-center">'+pctE+'%</div></div><div class="stat-info"><div class="stat-label">Pins Exchanged</div><div class="stat-value">'+te+'</div><div class="stat-compare">across '+tot+' dealers</div></div></div>'+
+    // Card 3: Health breakdown
+    '<div class="stat-card"><div class="health-list">'+
+      '<div class="health-row"><div class="health-dot" style="background:#00BBA5;"></div><div class="health-name">Full</div><div class="health-bar-track"><div class="health-bar-fill" style="width:'+(full/tot*100)+'%;background:#00BBA5;"></div></div><div class="health-count">'+full+'</div></div>'+
+      '<div class="health-row"><div class="health-dot" style="background:#F2B33D;"></div><div class="health-name">Medium</div><div class="health-bar-track"><div class="health-bar-fill" style="width:'+(mid/tot*100)+'%;background:#F2B33D;"></div></div><div class="health-count">'+mid+'</div></div>'+
+      '<div class="health-row"><div class="health-dot" style="background:#E5484D;"></div><div class="health-name">Low</div><div class="health-bar-track"><div class="health-bar-fill" style="width:'+(low/tot*100)+'%;background:#E5484D;"></div></div><div class="health-count">'+low+'</div></div>'+
+      '<div class="health-row"><div class="health-dot" style="background:#ccc;"></div><div class="health-name">Out</div><div class="health-bar-track"><div class="health-bar-fill" style="width:'+(out/tot*100)+'%;background:#ccc;"></div></div><div class="health-count">'+out+'</div></div>'+
+    '</div></div>'+
+    // Card 4: Region legend
+    '<div class="stat-card"><div class="region-legend" id="rl">'+Object.keys(REGION_COLORS).map(function(r){var c=REGION_COLORS[r];return '<span class="rl-pill" style="background:'+c.pillBg+';color:'+c.pill+';border:1px solid '+(c.pill+'30')+';">'+r+'</span>';}).join('')+'</div></div>';
+}
+function renderAll(){renderUI();updateMarkers();}
+function simulateExchange(){
+  var avail=dealerState.filter(function(d){return d.pins>0;});if(!avail.length)return;
+  var dealer=avail[Math.floor(Math.random()*avail.length)];dealer.pins--;renderAll();
+  document.querySelectorAll('.hot-card[data-dealer="'+dealer.name+'"]').forEach(function(r){r.classList.add('flash');setTimeout(function(){r.classList.remove('flash');},800);});
+  var m=markers[dealer.name];if(m)m.openPopup();
+}
+function resetAll(){initState();if(mapObj)mapObj.flyToBounds([[51.5,-126],[24.5,-68]],{padding:[0,0],duration:0.8});renderAll();}
+
+var MAP_TILES={
+  light:'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
+  dark:'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+  voyager:'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png',
+  positron:'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  watercolor:'https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg'
+};
+function changeMapStyle(style){
+  if(!mapObj||!tileLayer)return;
+  mapObj.removeLayer(tileLayer);
+  tileLayer=L.tileLayer(MAP_TILES[style]||MAP_TILES.light,{subdomains:'abcd',maxZoom:19}).addTo(mapObj);
+  tileLayer.setZIndex(0);
+  bringFront();
+}
+function scaleToFit(){
+  var vw=window.innerWidth,vh=window.innerHeight,scale=Math.min(vw/1920,vh/1080);
+  document.body.style.transform='scale('+scale+')';document.body.style.width='1920px';document.body.style.height='1080px';
+  document.body.style.marginLeft=Math.max(0,(vw-1920*scale)/2)+'px';document.body.style.marginTop=Math.max(0,(vh-1080*scale)/2)+'px';
+}
+var REGION_COLORS_DARK={'Canada':{fill:'#1A2E73',stroke:'#162560'},'Pacific West':{fill:'#3A2073',stroke:'#2E1860'},'Mountain West':{fill:'#2A3A6E',stroke:'#1E2D5C'},'Midwest':{fill:'#1F3395',stroke:'#182878'},'Central':{fill:'#4A3060',stroke:'#3D2650'},'Southern':{fill:'#6B3A1F',stroke:'#5A3018'},'Southeast':{fill:'#5A4020',stroke:'#4A3418'},'Northeast':{fill:'#254F70',stroke:'#1E4060'}};
+var REGION_COLORS_LIGHT=JSON.parse(JSON.stringify(REGION_COLORS));
+var geoLayers=[];
+
+function setTheme(mode){
+  isDark=(mode==='dark');
+  document.documentElement.className=isDark?'dark':'';
+  var sel=document.getElementById('map-style');
+  if(sel) sel.value=isDark?'dark':'light';
+  changeMapStyle(isDark?'dark':'light');
+  renderAll();
+}
+
+function applyScenario(pinFnStr){
+  var pinFn=new Function('return ('+pinFnStr+')()');;
+  dealerState.forEach(function(d){d.pins=Math.max(0,Math.min(INITIAL_PINS,pinFn()));});
+  renderAll();
+}
+
+window.addEventListener('message',function(e){
+  if(e.data&&e.data.theme) setTheme(e.data.theme);
+  if(e.data&&e.data.pinFn) applyScenario(e.data.pinFn);
+});
+
+initState();renderUI();
+window.addEventListener('load',function(){scaleToFit();initMap();});
+window.addEventListener('resize',scaleToFit);
+</script>
+</body>
+</html>

@@ -43,4 +43,15 @@ export const instances: ExplorerInstance[] = [
     createdAt: "2025-02-20",
     password: "electricpower",
   },
+  {
+    slug: "cat-gdl",
+    name: "CAT GDL - SkillsUSA IPEX",
+    company: "Caterpillar",
+    industry: "Global Dealer Learning",
+    prototypeFile: "/brand/explorer-prototype_catgdl-dashboard.html",
+    logo: "/brand/assets/cat-icon.png",
+    accentColor: "#FFCC00",
+    createdAt: "2025-03-23",
+    password: "skillsusaIPEX",
+  },
 ];
