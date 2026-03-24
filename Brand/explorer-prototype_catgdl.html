@@ -268,8 +268,9 @@ function initMap(){
     m.bindPopup(ppHtml(d),{className:'dealer-popup',maxWidth:200});
     markers[d.name]=m;
   });
-  // Tight: Harnish/Finning top, Kelly bottom, coasts at edges
+  // One zoom level tighter than fitBounds
   mapObj.fitBounds([[51.5,-126],[24.5,-68]],{padding:[0,0]});
+  setTimeout(function(){if(mapObj)mapObj.zoomIn(1);},200);
 }
 function ttHtml(d){var c=scolor(d.pins),v=d.pins===0?'OUT':d.pins;var nc=isDark?'rgba(255,255,255,0.7)':'rgba(11,11,60,0.5)';return '<span style="font-weight:500;font-size:14px;color:'+c+';font-variant-numeric:tabular-nums;">'+v+'</span><span style="font-size:11px;font-weight:500;color:'+nc+';margin-left:5px;">'+d.name+'</span>';}
 function ppHtml(d){var c=scolor(d.pins),v=d.pins===0?'OUT':d.pins;return '<div class="popup-inner"><div class="popup-name">'+d.name+'</div><div class="popup-region">'+d.region+'</div><div class="popup-pins"><span class="popup-pins-label">Pins remaining</span><span class="popup-pins-value" style="color:'+c+'">'+v+'</span></div></div>';}
@@ -375,15 +376,16 @@ function setTheme(mode){
   renderAll();
 }
 
-function applyScenario(pinFnStr){
-  var pinFn=new Function('return ('+pinFnStr+')()');;
-  dealerState.forEach(function(d){d.pins=Math.max(0,Math.min(INITIAL_PINS,pinFn()));});
+function applyPins(pinsArray){
+  for(var i=0;i<dealerState.length&&i<pinsArray.length;i++){
+    dealerState[i].pins=Math.max(0,Math.min(INITIAL_PINS,pinsArray[i]));
+  }
   renderAll();
 }
 
 window.addEventListener('message',function(e){
   if(e.data&&e.data.theme) setTheme(e.data.theme);
-  if(e.data&&e.data.pinFn) applyScenario(e.data.pinFn);
+  if(e.data&&e.data.pins) applyPins(e.data.pins);
 });
 
 initState();renderUI();
@@ -392,10 +394,10 @@ window.addEventListener('load',function(){
   initMap();
   // Re-fit after layout settles (iframe scaling)
   setTimeout(function(){
-    if(mapObj){mapObj.invalidateSize();mapObj.fitBounds([[51.5,-126],[24.5,-68]],{padding:[0,0]});}
+    if(mapObj){mapObj.invalidateSize();mapObj.fitBounds([[51.5,-126],[24.5,-68]],{padding:[0,0]});setTimeout(function(){mapObj.zoomIn(1);},200);}
   },500);
   setTimeout(function(){
-    if(mapObj){mapObj.invalidateSize();mapObj.fitBounds([[51.5,-126],[24.5,-68]],{padding:[0,0]});}
+    if(mapObj){mapObj.invalidateSize();mapObj.fitBounds([[51.5,-126],[24.5,-68]],{padding:[0,0]});setTimeout(function(){mapObj.zoomIn(1);},200);}
   },1500);
 });
 window.addEventListener('resize',function(){scaleToFit();if(mapObj){mapObj.invalidateSize();}});

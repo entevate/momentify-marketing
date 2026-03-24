@@ -123,13 +123,13 @@ function setTheme(mode){
 }
 
 /* ─── Scenario cycling ─── */
-// Each scenario uses a unique global var name so the counter resets per scenario
+// 42 dealers - each gets a specific pin count per scenario
 var scenarios=[
-  {name:'Full Stock',pins:'function(){return 10;}'},
-  {name:'Early Exchanges',pins:'function(){window._s2=(window._s2||0)+1;return [10,9,8,10,7,9,8,10,9,10,8,7,10,9,8,7,10,10,9,8,10,7,9,8,10,9,10,8,7,10,9,8,7,10,10,9,8,10,7,9,8,10][(window._s2-1)%42];}'},
-  {name:'Mid Event',pins:'function(){window._s3=(window._s3||0)+1;return [7,5,3,8,4,6,5,3,7,4,6,8,3,5,7,4,6,8,3,5,7,4,6,8,3,5,7,4,6,8,3,5,7,4,6,8,3,5,7,4,6,8][(window._s3-1)%42];}'},
-  {name:'Low Inventory',pins:'function(){window._s4=(window._s4||0)+1;return [0,2,1,5,0,3,1,4,0,2,6,0,1,3,0,2,5,1,0,4,0,2,1,5,0,3,1,4,0,2,6,0,1,3,0,2,5,1,0,4,0,2][(window._s4-1)%42];}'},
-  {name:'Nearly Done',pins:'function(){window._s5=(window._s5||0)+1;return [0,0,1,0,0,2,0,1,0,0,0,1,0,0,0,2,0,0,0,1,0,0,1,0,0,2,0,1,0,0,0,1,0,0,0,2,0,0,0,1,0,0][(window._s5-1)%42];}'},
+  {name:'Full Stock',pins:[10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]},
+  {name:'Early Exchanges',pins:[10,9,8,10,7,9,8,10,9,10,8,7,10,9,8,7,10,10,9,8,10,7,9,8,10,9,10,8,7,10,9,8,7,10,10,9,8,10,7,9,8,10]},
+  {name:'Mid Event',pins:[7,5,3,8,4,6,5,3,7,4,6,8,3,5,7,4,6,8,3,5,7,4,6,8,3,5,7,4,6,8,3,5,7,4,6,8,3,5,7,4,6,8]},
+  {name:'Low Inventory',pins:[0,2,1,5,0,3,1,4,0,2,6,0,1,3,0,2,5,1,0,4,0,2,1,5,0,3,1,4,0,2,6,0,1,3,0,2,5,1,0,4,0,2]},
+  {name:'Nearly Done',pins:[0,0,1,0,0,2,0,1,0,0,0,1,0,0,0,2,0,0,0,1,0,0,1,0,0,2,0,1,0,0,0,1,0,0,0,2,0,0,0,1,0,0]},
 ];
 var currentScenario=0;
 var cycleTimer=null;
@@ -140,11 +140,9 @@ function applyScenario(idx){
   var dots=document.querySelectorAll('.scenario-dot');
   dots.forEach(function(d,i){d.className='scenario-dot'+(i===idx?' active':'');});
   document.getElementById('scenario-label').textContent=s.name;
-  // Reset counters in iframe
   var frame=document.getElementById('proto-frame');
   if(frame.contentWindow){
-    try{frame.contentWindow._s2=0;frame.contentWindow._s3=0;frame.contentWindow._s4=0;frame.contentWindow._s5=0;}catch(e){}
-    frame.contentWindow.postMessage({pinFn:s.pins},'*');
+    frame.contentWindow.postMessage({pins:s.pins},'*');
   }
 }
 
