@@ -524,6 +524,21 @@ export default function RecruitingROXCalculator() {
     }
   }, [c1_leads.value, c2b_totalLeads.value, c2b_totalLeads.skipped, c4_totalLeads.value, c4_totalLeads.skipped]);
 
+  // Cross-populate: Engagement total leads ↔ Conversion total leads
+  useEffect(() => {
+    if (c2b_totalLeads.value && c2b_totalLeads.value !== lastAutoC2b.current && !c4_totalLeads.skipped && (c4_totalLeads.value === "" || c4_totalLeads.value === lastAutoC4.current)) {
+      setC4TotalLeads((prev) => ({ ...prev, value: c2b_totalLeads.value }));
+      lastAutoC4.current = c2b_totalLeads.value;
+    }
+  }, [c2b_totalLeads.value, c4_totalLeads.value, c4_totalLeads.skipped]);
+
+  useEffect(() => {
+    if (c4_totalLeads.value && c4_totalLeads.value !== lastAutoC4.current && !c2b_totalLeads.skipped && (c2b_totalLeads.value === "" || c2b_totalLeads.value === lastAutoC2b.current)) {
+      setC2bTotalLeads((prev) => ({ ...prev, value: c4_totalLeads.value }));
+      lastAutoC2b.current = c4_totalLeads.value;
+    }
+  }, [c4_totalLeads.value, c2b_totalLeads.value, c2b_totalLeads.skipped]);
+
   // Category scores
   const calcCategory1 = useCallback((): number | null => {
     if (c1_visitors.skipped && c1_leads.skipped) return null;
@@ -581,10 +596,10 @@ export default function RecruitingROXCalculator() {
   }, [inv_boothCost, c1_leads]);
 
   const categoryScores = useMemo(() => {
-    return [calcCategory1(), calcCategory2(), calcCategory3(), calcCategory4(), calcCategory5()];
+    return [calcCategory5(), calcCategory1(), calcCategory2(), calcCategory3(), calcCategory4()];
   }, [calcCategory1, calcCategory2, calcCategory3, calcCategory4, calcCategory5]);
 
-  const categoryNames = ["Candidate Capture Rate", "Engagement Quality", "Follow-Up Speed", "Conversion to Hire", "Event Investment Efficiency"];
+  const categoryNames = ["Event Investment Efficiency", "Candidate Capture Rate", "Engagement Quality", "Follow-Up Speed", "Conversion to Hire"];
 
   const totalScore = useMemo(() => {
     const valid = categoryScores.filter((s) => s !== null) as number[];
@@ -1258,10 +1273,11 @@ export default function RecruitingROXCalculator() {
                       {/* Bullet points */}
                       <motion.div variants={fadeUp} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "48px" }}>
                         {[
+                          { icon: "M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6", label: "Event investment and cost per candidate" },
                           { icon: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75", label: "Candidates captured vs. qualified" },
                           { icon: "M13 2L3 14h9l-1 8 10-12h-9l1-8", label: "Engagement depth by role" },
-                          { icon: "M18 20V10M12 20V4M6 20v-6", label: "Conversion to interviews and hires" },
                           { icon: "M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83", label: "Time-to-first-contact speed" },
+                          { icon: "M18 20V10M12 20V4M6 20v-6", label: "Conversion to interviews and hires" },
                         ].map((item) => (
                           <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                             <div
@@ -1334,14 +1350,50 @@ export default function RecruitingROXCalculator() {
 
                     {/* Calculator inputs */}
                     <div className="space-y-6">
-                    {/* Category 1 */}
-                    <CategoryCard num="01" name="Candidate Capture Rate" weight="Worth 20% of your total score" score={categoryScores[0]}>
-                      {renderField("Total Event Attendees", "Estimated total number of candidates who visited your booth or attended your recruiting session. Use event organizer attendance counts if available.", c1_visitors, setC1Visitors, "e.g. 300")}
-                      {renderField("Candidates Captured", "Total candidate profiles collected via badge scan, QR code, sign-up form, or resume drop.", c1_leads, setC1Leads, "e.g. 75")}
+                    {/* Category 1: Event Investment Efficiency */}
+                    <CategoryCard num="01" name="Event Investment Efficiency" weight="Worth 20% of your total score" score={categoryScores[0]}>
+                      {renderField("Total Event Cost", "Your all-in cost including booth/table space, build-out, travel, staffing, swag, and sponsorships.", inv_boothCost, setInvBoothCost, "e.g. 25000", "$")}
+                      {renderField("Booth/Table Square Footage", "Total square footage of your booth or table space. Used with event attendance to estimate potential traffic.", inv_sqFootage, setInvSqFootage, "e.g. 100")}
+                      {renderField("Total Event Attendees", "Total registered or expected attendees for the event. Used to estimate traffic potential for your space.", inv_totalAttendees, setInvTotalAttendees, "e.g. 2000")}
+                      {/* Estimated traffic indicator */}
+                      {(() => {
+                        const attendees = parseFloat(inv_totalAttendees.value);
+                        const sqft = parseFloat(inv_sqFootage.value);
+                        if (!attendees || attendees <= 0 || inv_totalAttendees.skipped) return null;
+                        const estimated = sqft && sqft > 0 && !inv_sqFootage.skipped
+                          ? Math.round(attendees * (sqft / 10000))
+                          : null;
+                        return estimated ? (
+                          <div className="mt-2" style={{ background: "rgba(26,138,118,0.06)", borderRadius: "8px", padding: "10px 14px" }}>
+                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#1A8A76" }}>
+                              Estimated Booth Traffic: ~{estimated.toLocaleString()} visitors
+                            </p>
+                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
+                              Based on {sqft.toLocaleString()} sq ft space at a {attendees.toLocaleString()}-attendee event
+                            </p>
+                          </div>
+                        ) : null;
+                      })()}
                       {categoryScores[0] !== null && (
                         <div className="mt-2">
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
-                            Capture Rate: {Math.round(categoryScores[0])}%
+                            Cost Per Candidate: ${perLeadCost !== null ? perLeadCost.toLocaleString() : "--"}
+                          </p>
+                          <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
+                            Industry average: $300-600 per candidate at recruiting events
+                          </p>
+                        </div>
+                      )}
+                    </CategoryCard>
+
+                    {/* Category 2: Candidate Capture Rate */}
+                    <CategoryCard num="02" name="Candidate Capture Rate" weight="Worth 20% of your total score" score={categoryScores[1]}>
+                      {renderField("Total Event Attendees", "Estimated total number of candidates who visited your booth or attended your recruiting session. Use event organizer attendance counts if available.", c1_visitors, setC1Visitors, "e.g. 300")}
+                      {renderField("Candidates Captured", "Total candidate profiles collected via badge scan, QR code, sign-up form, or resume drop.", c1_leads, setC1Leads, "e.g. 75")}
+                      {categoryScores[1] !== null && (
+                        <div className="mt-2">
+                          <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
+                            Capture Rate: {Math.round(categoryScores[1])}%
                           </p>
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
                             Industry average: ~20-30%
@@ -1350,8 +1402,8 @@ export default function RecruitingROXCalculator() {
                       )}
                     </CategoryCard>
 
-                    {/* Category 2 */}
-                    <CategoryCard num="02" name="Engagement Quality" weight="Worth 20% of your total score" score={categoryScores[1]}>
+                    {/* Category 3: Engagement Quality */}
+                    <CategoryCard num="03" name="Engagement Quality" weight="Worth 20% of your total score" score={categoryScores[2]}>
                       {/* Toggle */}
                       <div className="flex items-center gap-1 mb-6" style={{ background: "rgba(26,138,118,0.06)", borderRadius: "24px", padding: "3px", width: "fit-content" }}>
                         <button
@@ -1397,13 +1449,13 @@ export default function RecruitingROXCalculator() {
                       ) : (
                         <>
                           {renderField("Candidates with a Meaningful Interaction", "How many candidates attended a tech talk, completed a coding challenge, had a 1:1 with an engineer, or engaged with role-specific content?", c2b_meaningful, setC2bMeaningful, "e.g. 35")}
-                          {renderField("Total Candidates Captured", "Same number from Category 1. Auto-populated if already entered above.", c2b_totalLeads, setC2bTotalLeads, "e.g. 75")}
+                          {renderField("Total Candidates Captured", "Auto-populated from Candidate Capture. Edit if different.", c2b_totalLeads, setC2bTotalLeads, "e.g. 75")}
                         </>
                       )}
                     </CategoryCard>
 
-                    {/* Category 3 */}
-                    <CategoryCard num="03" name="Follow-Up Speed" weight="Worth 20% of your total score" score={categoryScores[2]}>
+                    {/* Category 4: Follow-Up Speed */}
+                    <CategoryCard num="04" name="Follow-Up Speed" weight="Worth 20% of your total score" score={categoryScores[3]}>
                       {renderField(
                         "Average Days to First Contact",
                         "How many days on average before your team sent the first outreach after the event ended?",
@@ -1414,10 +1466,10 @@ export default function RecruitingROXCalculator() {
                         20,
                         "Scores above 20 days are capped at 0 points for this category."
                       )}
-                      {categoryScores[2] !== null && (
+                      {categoryScores[3] !== null && (
                         <div className="mt-2">
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
-                            Follow-Up Score: {Math.round(categoryScores[2])}
+                            Follow-Up Score: {Math.round(categoryScores[3])}
                           </p>
                           {(() => {
                             const days = parseFloat(c3_days.value);
@@ -1433,53 +1485,17 @@ export default function RecruitingROXCalculator() {
                       )}
                     </CategoryCard>
 
-                    {/* Category 4 */}
-                    <CategoryCard num="04" name="Conversion to Hire" weight="Worth 20% of your total score" score={categoryScores[3]}>
+                    {/* Category 5: Conversion to Hire */}
+                    <CategoryCard num="05" name="Conversion to Hire" weight="Worth 20% of your total score" score={categoryScores[4]}>
                       {renderField("Post-Event Hires or Advances", "How many candidates moved to a phone screen, on-site interview, or accepted offer as a direct result of the event?", c4_conversions, setC4Conversions, "e.g. 8")}
-                      {renderField("Total Candidates Captured", "Same number from Category 1. Auto-populated if already entered above.", c4_totalLeads, setC4TotalLeads, "e.g. 75")}
-                      {categoryScores[3] !== null && (
-                        <div className="mt-2">
-                          <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
-                            Conversion Rate: {Math.round(categoryScores[3])}%
-                          </p>
-                          <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
-                            Industry average: ~5-12% post-event conversion to next stage
-                          </p>
-                        </div>
-                      )}
-                    </CategoryCard>
-
-                    {/* Category 5 */}
-                    <CategoryCard num="05" name="Event Investment Efficiency" weight="Worth 20% of your total score" score={categoryScores[4]}>
-                      {renderField("Total Event Cost", "Your all-in cost including booth/table space, build-out, travel, staffing, swag, and sponsorships.", inv_boothCost, setInvBoothCost, "e.g. 25000", "$")}
-                      {renderField("Booth/Table Square Footage", "Total square footage of your booth or table space. Used with event attendance to estimate potential traffic.", inv_sqFootage, setInvSqFootage, "e.g. 100")}
-                      {renderField("Total Event Attendees", "Total registered or expected attendees for the event. Used to estimate traffic potential for your space.", inv_totalAttendees, setInvTotalAttendees, "e.g. 2000")}
-                      {/* Estimated traffic indicator */}
-                      {(() => {
-                        const attendees = parseFloat(inv_totalAttendees.value);
-                        const sqft = parseFloat(inv_sqFootage.value);
-                        if (!attendees || attendees <= 0 || inv_totalAttendees.skipped) return null;
-                        const estimated = sqft && sqft > 0 && !inv_sqFootage.skipped
-                          ? Math.round(attendees * (sqft / 10000))
-                          : null;
-                        return estimated ? (
-                          <div className="mt-2" style={{ background: "rgba(26,138,118,0.06)", borderRadius: "8px", padding: "10px 14px" }}>
-                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#1A8A76" }}>
-                              Estimated Booth Traffic: ~{estimated.toLocaleString()} visitors
-                            </p>
-                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
-                              Based on {sqft.toLocaleString()} sq ft space at a {attendees.toLocaleString()}-attendee event
-                            </p>
-                          </div>
-                        ) : null;
-                      })()}
+                      {renderField("Total Candidates Captured", "Auto-populated from Candidate Capture. Edit if different.", c4_totalLeads, setC4TotalLeads, "e.g. 75")}
                       {categoryScores[4] !== null && (
                         <div className="mt-2">
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
-                            Cost Per Candidate: ${perLeadCost !== null ? perLeadCost.toLocaleString() : "--"}
+                            Conversion Rate: {Math.round(categoryScores[4])}%
                           </p>
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
-                            Industry average: $300-600 per candidate at recruiting events
+                            Industry average: ~5-12% post-event conversion to next stage
                           </p>
                         </div>
                       )}

@@ -510,7 +510,7 @@ export default function TradeShowsROXCalculator() {
     }
   }, [inv_totalAttendees.value, inv_totalAttendees.skipped, inv_sqFootage.value, inv_sqFootage.skipped, c1_visitors.value, c1_visitors.skipped]);
 
-  // Auto-populate total leads from Category 1 to Category 2B and 4
+  // Auto-populate total leads from Category 2 (Lead Capture) to Engagement (3) and Conversion (5)
   const lastAutoC2b = useRef("");
   const lastAutoC4 = useRef("");
   useEffect(() => {
@@ -524,6 +524,23 @@ export default function TradeShowsROXCalculator() {
       lastAutoC4.current = leadsVal;
     }
   }, [c1_leads.value, c2b_totalLeads.value, c2b_totalLeads.skipped, c4_totalLeads.value, c4_totalLeads.skipped]);
+
+  // Cross-populate: Engagement total leads ↔ Conversion total leads
+  useEffect(() => {
+    // If c2b has a user-entered value (not from auto-populate from c1), sync to c4
+    if (c2b_totalLeads.value && c2b_totalLeads.value !== lastAutoC2b.current && !c4_totalLeads.skipped && (c4_totalLeads.value === "" || c4_totalLeads.value === lastAutoC4.current)) {
+      setC4TotalLeads((prev) => ({ ...prev, value: c2b_totalLeads.value }));
+      lastAutoC4.current = c2b_totalLeads.value;
+    }
+  }, [c2b_totalLeads.value, c4_totalLeads.value, c4_totalLeads.skipped]);
+
+  useEffect(() => {
+    // If c4 has a user-entered value (not from auto-populate from c1), sync to c2b
+    if (c4_totalLeads.value && c4_totalLeads.value !== lastAutoC4.current && !c2b_totalLeads.skipped && (c2b_totalLeads.value === "" || c2b_totalLeads.value === lastAutoC2b.current)) {
+      setC2bTotalLeads((prev) => ({ ...prev, value: c4_totalLeads.value }));
+      lastAutoC2b.current = c4_totalLeads.value;
+    }
+  }, [c4_totalLeads.value, c2b_totalLeads.value, c2b_totalLeads.skipped]);
 
   // Category scores
   const calcCategory1 = useCallback((): number | null => {
@@ -582,10 +599,10 @@ export default function TradeShowsROXCalculator() {
   }, [inv_boothCost, c1_leads]);
 
   const categoryScores = useMemo(() => {
-    return [calcCategory1(), calcCategory2(), calcCategory3(), calcCategory4(), calcCategory5()];
+    return [calcCategory5(), calcCategory1(), calcCategory2(), calcCategory3(), calcCategory4()];
   }, [calcCategory1, calcCategory2, calcCategory3, calcCategory4, calcCategory5]);
 
-  const categoryNames = ["Lead Capture Efficiency", "Engagement Quality", "Follow-Up Speed", "Conversion Effectiveness", "Event Investment Efficiency"];
+  const categoryNames = ["Event Investment Efficiency", "Lead Capture Efficiency", "Engagement Quality", "Follow-Up Speed", "Conversion Effectiveness"];
 
   const totalScore = useMemo(() => {
     const valid = categoryScores.filter((s) => s !== null) as number[];
@@ -1273,10 +1290,11 @@ export default function TradeShowsROXCalculator() {
                       {/* Bullet points — 2×2 grid */}
                       <motion.div variants={fadeUp} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "48px" }}>
                         {[
+                          { icon: "M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6", label: "Event investment and cost per lead" },
                           { icon: "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75", label: "Leads captured vs. qualified" },
                           { icon: "M13 2L3 14h9l-1 8 10-12h-9l1-8", label: "Engagement depth and duration" },
-                          { icon: "M18 20V10M12 20V4M6 20v-6", label: "Conversion to meetings or pipeline" },
                           { icon: "M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83", label: "Time-to-follow-up" },
+                          { icon: "M18 20V10M12 20V4M6 20v-6", label: "Conversion to meetings or pipeline" },
                         ].map((item) => (
                           <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                             <div
@@ -1349,14 +1367,50 @@ export default function TradeShowsROXCalculator() {
 
                     {/* Calculator inputs */}
                     <div className="space-y-6">
-                    {/* Category 1 */}
-                    <CategoryCard num="01" name="Lead Capture Efficiency" weight="Worth 20% of your total score" score={categoryScores[0]}>
-                      {renderField("Total Booth Visitors", "Estimated total number of people who stopped at or walked through your booth. Use event organizer traffic count if available.", c1_visitors, setC1Visitors, "e.g. 500")}
-                      {renderField("Total Leads Captured", "Total contacts captured via badge scan, form entry, or any other method.", c1_leads, setC1Leads, "e.g. 150")}
+                    {/* Category 1: Event Investment Efficiency */}
+                    <CategoryCard num="01" name="Event Investment Efficiency" weight="Worth 20% of your total score" score={categoryScores[0]}>
+                      {renderField("Total Booth Cost", "Your all-in cost including booth space, drayage, build-out, travel, staffing, and sponsorships.", inv_boothCost, setInvBoothCost, "e.g. 50000", "$")}
+                      {renderField("Booth Square Footage", "Total square footage of your booth space. Used with event attendance to estimate potential traffic.", inv_sqFootage, setInvSqFootage, "e.g. 400")}
+                      {renderField("Total Event Attendees", "Total registered or expected attendees for the event. Used to estimate traffic potential for your booth size.", inv_totalAttendees, setInvTotalAttendees, "e.g. 5000")}
+                      {/* Estimated traffic indicator */}
+                      {(() => {
+                        const attendees = parseFloat(inv_totalAttendees.value);
+                        const sqft = parseFloat(inv_sqFootage.value);
+                        if (!attendees || attendees <= 0 || inv_totalAttendees.skipped) return null;
+                        const estimated = sqft && sqft > 0 && !inv_sqFootage.skipped
+                          ? Math.round(attendees * (sqft / 10000))
+                          : null;
+                        return estimated ? (
+                          <div className="mt-2" style={{ background: "rgba(107,33,212,0.04)", borderRadius: "8px", padding: "10px 14px" }}>
+                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#6B21D4" }}>
+                              Estimated Booth Traffic: ~{estimated.toLocaleString()} visitors
+                            </p>
+                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
+                              Based on {sqft.toLocaleString()} sq ft booth at a {attendees.toLocaleString()}-attendee event
+                            </p>
+                          </div>
+                        ) : null;
+                      })()}
                       {categoryScores[0] !== null && (
                         <div className="mt-2">
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
-                            Capture Rate: {Math.round(categoryScores[0])}%
+                            Cost Per Lead: ${perLeadCost !== null ? perLeadCost.toLocaleString() : "--"}
+                          </p>
+                          <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
+                            Industry average: $200-400 per lead at B2B trade shows
+                          </p>
+                        </div>
+                      )}
+                    </CategoryCard>
+
+                    {/* Category 2: Lead Capture Efficiency */}
+                    <CategoryCard num="02" name="Lead Capture Efficiency" weight="Worth 20% of your total score" score={categoryScores[1]}>
+                      {renderField("Total Booth Visitors", "Estimated total number of people who stopped at or walked through your booth. Use event organizer traffic count if available.", c1_visitors, setC1Visitors, "e.g. 500")}
+                      {renderField("Total Leads Captured", "Total contacts captured via badge scan, form entry, or any other method.", c1_leads, setC1Leads, "e.g. 150")}
+                      {categoryScores[1] !== null && (
+                        <div className="mt-2">
+                          <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
+                            Capture Rate: {Math.round(categoryScores[1])}%
                           </p>
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
                             Industry average: ~20-30%
@@ -1365,8 +1419,8 @@ export default function TradeShowsROXCalculator() {
                       )}
                     </CategoryCard>
 
-                    {/* Category 2 */}
-                    <CategoryCard num="02" name="Engagement Quality" weight="Worth 20% of your total score" score={categoryScores[1]}>
+                    {/* Category 3: Engagement Quality */}
+                    <CategoryCard num="03" name="Engagement Quality" weight="Worth 20% of your total score" score={categoryScores[2]}>
                       {/* Toggle */}
                       <div className="flex items-center gap-1 mb-6" style={{ background: "rgba(107,33,212,0.06)", borderRadius: "24px", padding: "3px", width: "fit-content" }}>
                         <button
@@ -1412,13 +1466,13 @@ export default function TradeShowsROXCalculator() {
                       ) : (
                         <>
                           {renderField("Leads with a Meaningful Interaction", "How many leads attended a demo, downloaded content, or had a recorded conversation?", c2b_meaningful, setC2bMeaningful, "e.g. 60")}
-                          {renderField("Total Leads Captured", "Same number from Category 1. Auto-populated if already entered above.", c2b_totalLeads, setC2bTotalLeads, "e.g. 150")}
+                          {renderField("Total Leads Captured", "Auto-populated from Lead Capture. Edit if different.", c2b_totalLeads, setC2bTotalLeads, "e.g. 150")}
                         </>
                       )}
                     </CategoryCard>
 
-                    {/* Category 3 */}
-                    <CategoryCard num="03" name="Follow-Up Speed" weight="Worth 20% of your total score" score={categoryScores[2]}>
+                    {/* Category 4: Follow-Up Speed */}
+                    <CategoryCard num="04" name="Follow-Up Speed" weight="Worth 20% of your total score" score={categoryScores[3]}>
                       {renderField(
                         "Average Days to First Follow-Up",
                         "How many days on average before your team sent the first follow-up after the event ended?",
@@ -1429,10 +1483,10 @@ export default function TradeShowsROXCalculator() {
                         20,
                         "Scores above 20 days are capped at 0 points for this category."
                       )}
-                      {categoryScores[2] !== null && (
+                      {categoryScores[3] !== null && (
                         <div className="mt-2">
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
-                            Follow-Up Score: {Math.round(categoryScores[2])}
+                            Follow-Up Score: {Math.round(categoryScores[3])}
                           </p>
                           {(() => {
                             const days = parseFloat(c3_days.value);
@@ -1448,53 +1502,17 @@ export default function TradeShowsROXCalculator() {
                       )}
                     </CategoryCard>
 
-                    {/* Category 4 */}
-                    <CategoryCard num="04" name="Conversion Effectiveness" weight="Worth 20% of your total score" score={categoryScores[3]}>
+                    {/* Category 5: Conversion Effectiveness */}
+                    <CategoryCard num="05" name="Conversion Effectiveness" weight="Worth 20% of your total score" score={categoryScores[4]}>
                       {renderField("Post-Event Conversions", "How many leads converted to a meeting booked, qualified opportunity, or closed deal after the event?", c4_conversions, setC4Conversions, "e.g. 15")}
-                      {renderField("Total Leads Captured", "Same number from Category 1. Auto-populated if already entered above.", c4_totalLeads, setC4TotalLeads, "e.g. 150")}
-                      {categoryScores[3] !== null && (
-                        <div className="mt-2">
-                          <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
-                            Conversion Rate: {Math.round(categoryScores[3])}%
-                          </p>
-                          <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
-                            Industry average: ~5-10% post-event conversion
-                          </p>
-                        </div>
-                      )}
-                    </CategoryCard>
-
-                    {/* Category 5 */}
-                    <CategoryCard num="05" name="Event Investment Efficiency" weight="Worth 20% of your total score" score={categoryScores[4]}>
-                      {renderField("Total Booth Cost", "Your all-in cost including booth space, drayage, build-out, travel, staffing, and sponsorships.", inv_boothCost, setInvBoothCost, "e.g. 50000", "$")}
-                      {renderField("Booth Square Footage", "Total square footage of your booth space. Used with event attendance to estimate potential traffic.", inv_sqFootage, setInvSqFootage, "e.g. 400")}
-                      {renderField("Total Event Attendees", "Total registered or expected attendees for the event. Used to estimate traffic potential for your booth size.", inv_totalAttendees, setInvTotalAttendees, "e.g. 5000")}
-                      {/* Estimated traffic indicator */}
-                      {(() => {
-                        const attendees = parseFloat(inv_totalAttendees.value);
-                        const sqft = parseFloat(inv_sqFootage.value);
-                        if (!attendees || attendees <= 0 || inv_totalAttendees.skipped) return null;
-                        const estimated = sqft && sqft > 0 && !inv_sqFootage.skipped
-                          ? Math.round(attendees * (sqft / 10000))
-                          : null;
-                        return estimated ? (
-                          <div className="mt-2" style={{ background: "rgba(107,33,212,0.04)", borderRadius: "8px", padding: "10px 14px" }}>
-                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#6B21D4" }}>
-                              Estimated Booth Traffic: ~{estimated.toLocaleString()} visitors
-                            </p>
-                            <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
-                              Based on {sqft.toLocaleString()} sq ft booth at a {attendees.toLocaleString()}-attendee event
-                            </p>
-                          </div>
-                        ) : null;
-                      })()}
+                      {renderField("Total Leads Captured", "Auto-populated from Lead Capture. Edit if different.", c4_totalLeads, setC4TotalLeads, "e.g. 150")}
                       {categoryScores[4] !== null && (
                         <div className="mt-2">
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#061341" }}>
-                            Cost Per Lead: ${perLeadCost !== null ? perLeadCost.toLocaleString() : "--"}
+                            Conversion Rate: {Math.round(categoryScores[4])}%
                           </p>
                           <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.35)", marginTop: "2px" }}>
-                            Industry average: $200-400 per lead at B2B trade shows
+                            Industry average: ~5-10% post-event conversion
                           </p>
                         </div>
                       )}
