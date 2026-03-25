@@ -8,6 +8,7 @@ export interface ExplorerInstance {
   accentColor: string;
   createdAt: string;
   password?: string;
+  bezel?: "ipad-landscape";
 }
 
 export const instances: ExplorerInstance[] = [
@@ -64,5 +65,6 @@ export const instances: ExplorerInstance[] = [
     accentColor: "#5ED6FF",
     createdAt: "2025-03-24",
     password: "freeman2026",
+    bezel: "ipad-landscape",
   },
 ];
