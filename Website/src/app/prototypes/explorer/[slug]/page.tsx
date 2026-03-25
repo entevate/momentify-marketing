@@ -74,10 +74,11 @@ export default function ExplorerInstancePage() {
               src={instance.gateLogo || instance.logo}
               alt={instance.company}
               style={{
+                display: "block",
                 maxWidth: 180,
                 maxHeight: 64,
                 objectFit: "contain",
-                marginBottom: 16,
+                margin: "0 auto 16px",
               }}
             />
           )}
