@@ -6,6 +6,9 @@ export interface SessionRecord {
   utmSource: string | null;
   utmMedium: string | null;
   utmCampaign: string | null;
+  country: string | null;
+  city: string | null;
+  region: string | null;
 }
 
 export interface SourceCount {
@@ -17,6 +20,7 @@ export interface AnalyticsSummary {
   totalSessions: number;
   avgDurationMs: number;
   sources: SourceCount[];
+  locations: SourceCount[];
   recentSessions: SessionRecord[];
 }
 

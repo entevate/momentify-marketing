@@ -69,6 +69,9 @@ export async function POST(req: NextRequest) {
         utmSource: (body.utmSource as string) || null,
         utmMedium: (body.utmMedium as string) || null,
         utmCampaign: (body.utmCampaign as string) || null,
+        country: req.headers.get("x-vercel-ip-country") || null,
+        city: req.headers.get("x-vercel-ip-city") ? decodeURIComponent(req.headers.get("x-vercel-ip-city")!) : null,
+        region: req.headers.get("x-vercel-ip-country-region") || null,
       };
       sessions.unshift(record);
       if (sessions.length > MAX_SESSIONS) sessions.length = MAX_SESSIONS;
@@ -121,10 +124,21 @@ export async function GET(req: NextRequest) {
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => b.count - a.count);
 
+    const locationCounts: Record<string, number> = {};
+    for (const s of sessions) {
+      const parts = [s.city, s.region, s.country].filter(Boolean);
+      const loc = parts.length > 0 ? parts.join(", ") : "Unknown";
+      locationCounts[loc] = (locationCounts[loc] || 0) + 1;
+    }
+    const locations = Object.entries(locationCounts)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
+
     const summary: AnalyticsSummary = {
       totalSessions: sessions.length,
       avgDurationMs,
       sources,
+      locations,
       recentSessions: sessions.slice(0, 20),
     };
 
@@ -132,7 +146,7 @@ export async function GET(req: NextRequest) {
   } catch (e) {
     console.error("Analytics GET error:", e);
     return NextResponse.json(
-      { totalSessions: 0, avgDurationMs: 0, sources: [], recentSessions: [] } satisfies AnalyticsSummary
+      { totalSessions: 0, avgDurationMs: 0, sources: [], locations: [], recentSessions: [] } satisfies AnalyticsSummary
     );
   }
 }
