@@ -39,7 +39,7 @@ export const instances: ExplorerInstance[] = [
     name: "CAT Electric Power",
     company: "Caterpillar",
     industry: "Electric Power",
-    prototypeFile: "/brand/explorer-prototype_catepd.html",
+    prototypeFile: "/brand/explorer-prototype_cat.html",
     logo: "/brand/assets/cat-icon.png",
     accentColor: "#FFCC00",
     createdAt: "2025-02-20",

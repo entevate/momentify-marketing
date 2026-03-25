@@ -306,16 +306,114 @@ function InstanceCard({
   );
 }
 
+const DASHBOARD_PASSWORD = "momentify2026";
+
 export default function ExplorerDashboard() {
   const [viewData, setViewData] = useState<ViewData>({});
   const [analyticsSlug, setAnalyticsSlug] = useState<string | null>(null);
+  const [authed, setAuthed] = useState(false);
+  const [pw, setPw] = useState("");
+  const [pwErr, setPwErr] = useState(false);
 
   useEffect(() => {
+    if (sessionStorage.getItem("proto-dashboard-auth") === "1") {
+      setAuthed(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!authed) return;
     fetch("/api/prototypes/track", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => { console.log("View data:", d); setViewData(d); })
       .catch((e) => console.error("Fetch error:", e));
-  }, []);
+  }, [authed]);
+
+  function handlePw() {
+    if (pw === DASHBOARD_PASSWORD) {
+      sessionStorage.setItem("proto-dashboard-auth", "1");
+      setAuthed(true);
+      setPwErr(false);
+    } else {
+      setPwErr(true);
+      setPw("");
+    }
+  }
+
+  if (!authed) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#0a0a0a",
+          fontFamily: "'Inter', sans-serif",
+        }}
+      >
+        <div style={{ textAlign: "center", maxWidth: 360, padding: "0 24px" }}>
+          <div style={{ fontSize: 20, fontWeight: 500, color: "#fff", marginBottom: 24 }}>
+            Explorer Dashboard
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              color: "rgba(255,255,255,0.4)",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              marginBottom: 12,
+            }}
+          >
+            Enter password to continue
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <input
+              type="password"
+              value={pw}
+              onChange={(e) => { setPw(e.target.value); setPwErr(false); }}
+              onKeyDown={(e) => e.key === "Enter" && handlePw()}
+              placeholder="Password"
+              autoFocus
+              style={{
+                flex: 1,
+                padding: "12px 16px",
+                borderRadius: 10,
+                border: `1px solid ${pwErr ? "#E5484D" : "rgba(255,255,255,0.12)"}`,
+                background: "rgba(255,255,255,0.05)",
+                color: "#fff",
+                fontSize: 15,
+                fontFamily: "inherit",
+                outline: "none",
+              }}
+            />
+            <button
+              onClick={handlePw}
+              style={{
+                padding: "12px 20px",
+                borderRadius: 10,
+                border: "1px solid #0CF4DF",
+                background: "transparent",
+                color: "#0CF4DF",
+                fontSize: 14,
+                fontWeight: 500,
+                fontFamily: "inherit",
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Enter
+            </button>
+          </div>
+          {pwErr && (
+            <div style={{ fontSize: 12, color: "#E5484D", marginTop: 8 }}>
+              Incorrect password
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
