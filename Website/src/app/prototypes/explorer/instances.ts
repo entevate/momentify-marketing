@@ -44,6 +44,7 @@ export const instances: ExplorerInstance[] = [
     accentColor: "#FFCC00",
     createdAt: "2025-02-20",
     password: "electricpower",
+    bezel: "ipad-landscape",
   },
   {
     slug: "cat-gdl",
