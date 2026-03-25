@@ -82,4 +82,17 @@ export const instances: ExplorerInstance[] = [
     password: "pac2026",
     bezel: "ipad-landscape",
   },
+  {
+    slug: "tradegroup",
+    name: "The Trade Group Explorer",
+    company: "The Trade Group",
+    industry: "Exhibits & Events",
+    prototypeFile: "/brand/explorer-prototype_tradegroup.html",
+    logo: "/brand/assets/tradegroup-icon.svg",
+    gateLogo: "/brand/assets/tradegroup-logo.svg",
+    accentColor: "#CD9F26",
+    createdAt: "2025-03-25",
+    password: "tradegroup2026",
+    bezel: "ipad-landscape",
+  },
 ];
