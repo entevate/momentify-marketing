@@ -2638,6 +2638,8 @@
     .thank-you-center svg.ty-light { display: none; }
     [data-theme="light"] .thank-you-center svg.ty-dark { display: none; }
     [data-theme="light"] .thank-you-center svg.ty-light { display: block; }
+    .thank-you-center .ty-logo { width: 180px; height: auto; display: block; margin: 0 auto 8px; }
+    [data-theme="light"] .thank-you-center .ty-logo { filter: invert(1); }
     .thank-you-title {
       font-size: 42px;
       font-weight: 500;
@@ -4092,7 +4094,7 @@
     <!-- Step 8: Thank You -->
     <div class="step step-8">
       <div class="thank-you-center">
-        <div style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em; color: var(--text-1);">Freeman</div>
+        <img class="ty-logo" src="/brand/assets/freeman-logo.svg" alt="Freeman" />
         <div class="thank-you-title" id="thank-you-name">Thank you!</div>
         <div class="thank-you-subtitle">We hope you enjoyed your Freeman experience.</div>
       </div>
