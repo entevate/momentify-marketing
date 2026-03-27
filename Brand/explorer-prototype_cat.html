@@ -4149,15 +4149,16 @@
           </div>
 
           <!-- Tab content fills the same grid area as steps 2/3 -->
-          <div class="results-body view-small">
+          <div class="results-body view-medium">
 
             <div class="results-controls">
               <div class="learn-filters" id="shared-learn-filters" style="display:none">
                 <button class="learn-filter active" data-filter="all" onclick="filterLearn('all', this)">All</button>
-                <button class="learn-filter" data-filter="video" onclick="filterLearn('video', this)">Video</button>
-                <button class="learn-filter" data-filter="pdf" onclick="filterLearn('pdf', this)">PDF</button>
+                <button class="learn-filter" data-filter="blog" onclick="filterLearn('blog', this)">Blog</button>
+                <button class="learn-filter" data-filter="webinar" onclick="filterLearn('webinar', this)">Webinar</button>
                 <button class="learn-filter" data-filter="podcast" onclick="filterLearn('podcast', this)">Podcast</button>
-                <button class="learn-filter" data-filter="website" onclick="filterLearn('website', this)">Website</button>
+                <button class="learn-filter" data-filter="whitepaper" onclick="filterLearn('whitepaper', this)">Whitepaper</button>
+                <button class="learn-filter" data-filter="video" onclick="filterLearn('video', this)">Video</button>
               </div>
               <div class="pagination-controls-shared hidden" id="shared-pagination">
                 <button class="page-btn page-prev disabled" onclick="navigateActivePage(-1)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg></button>
@@ -4165,10 +4166,10 @@
                 <button class="page-btn page-next" onclick="navigateActivePage(1)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg></button>
               </div>
               <div class="view-toggle">
-                <button class="view-toggle-btn active" data-view="small" onclick="setViewMode('small')" title="Small cards">
+                <button class="view-toggle-btn" data-view="small" onclick="setViewMode('small')" title="Small cards">
                   <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="4" height="6.5" rx="1"/><rect x="6" y="1" width="4" height="6.5" rx="1"/><rect x="11" y="1" width="4" height="6.5" rx="1"/><rect x="1" y="8.5" width="4" height="6.5" rx="1"/><rect x="6" y="8.5" width="4" height="6.5" rx="1"/><rect x="11" y="8.5" width="4" height="6.5" rx="1"/></svg>
                 </button>
-                <button class="view-toggle-btn" data-view="medium" onclick="setViewMode('medium')" title="Medium cards">
+                <button class="view-toggle-btn active" data-view="medium" onclick="setViewMode('medium')" title="Medium cards">
                   <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6.5" height="14" rx="1.5"/><rect x="8.5" y="1" width="6.5" height="14" rx="1.5"/></svg>
                 </button>
                 <button class="view-toggle-btn" data-view="large" onclick="setViewMode('large')" title="Large cards">
@@ -4186,55 +4187,8 @@
                   <button class="page-btn page-next" onclick="navigatePage('outcomes', 1)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg></button>
                 </div>
                 <div class="grid-pages">
-                  <div class="grid-page">
-                    <div class="result-card" data-card-type="outcome" data-stat="3x" data-title="3x Lead Capture Rate" data-desc="3x more qualified leads per event. Eliminates manual entry lag with instant badge scanning and real-time CRM sync." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" /></svg>
-                        <div class="card-title">3x Lead Capture Rate</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Capture 3x more qualified leads per event with instant badge scanning</div>
-                    </div>
-                    <div class="result-card" data-card-type="outcome" data-stat="40%" data-title="40% Faster Follow-up" data-desc="Real-time CRM sync on scan enables same-day outreach capability. Follow up with leads while they still remember your conversation." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <div class="card-title">40% Faster Follow-up</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Real-time CRM sync enables same-day outreach capability</div>
-                    </div>
-                    <div class="result-card" data-card-type="outcome" data-stat="85%" data-title="85% Data Accuracy" data-desc="Badge scanning eliminates manual entry errors. Clean, actionable contact data flows directly into your CRM without re-keying." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <div class="card-title">85% Data Accuracy</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Badge scanning eliminates errors for clean, actionable data</div>
-                    </div>
-                    <div class="result-card" data-card-type="outcome" data-stat="67%" data-title="67% Reduced Booth Costs" data-desc="Digital collateral replaces print materials. Fewer staff needed per station with self-service kiosk capabilities." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
-                        <div class="card-title">67% Reduced Booth Costs</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Digital collateral replaces print, fewer staff per station</div>
-                    </div>
-                    <div class="result-card" data-card-type="outcome" data-stat="5min" data-title="5min Setup Time" data-desc="Self-service kiosk deployment with no IT support required. Staff can set up and start scanning in under 5 minutes." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" /></svg>
-                        <div class="card-title">5min Setup Time</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Self-service kiosk deployment, no IT support required</div>
-                    </div>
-                    <div class="result-card" data-card-type="outcome" data-stat="92%" data-title="92% Visitor Satisfaction" data-desc="Personalized content delivery and frictionless badge-scan experience. Visitors get tailored recommendations instantly." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" /></svg>
-                        <div class="card-title">92% Visitor Satisfaction</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Personalized content delivery with frictionless badge scanning</div>
-                    </div>
+                  <div class="grid-page" id="outcomes-grid-page">
+                    <!-- Outcome cards dynamically populated by JS -->
                   </div>
                 </div>
                 <div class="swipe-dots" data-dots="outcomes"></div>
@@ -4246,101 +4200,12 @@
               <div class="paginated-wrapper" data-tab-grid="learn">
                 <div class="pagination-controls hidden" data-pagination="learn">
                   <button class="page-btn page-prev disabled" onclick="navigatePage('learn', -1)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg></button>
-                  <span class="page-text">1/2</span>
+                  <span class="page-text">1/1</span>
                   <button class="page-btn page-next" onclick="navigatePage('learn', 1)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg></button>
                 </div>
                 <div class="grid-pages">
-                  <div class="grid-page">
-                    <div class="result-card" data-card-type="learn" data-type="video" data-title="Platform Overview" data-desc="See how Momentify works end-to-end for your team. This walkthrough covers lead capture, real-time analytics, CRM integrations, and the full post-event workflow." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" /></svg>
-                        <div class="card-title">Platform Overview</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">See how Momentify works end-to-end for your team</div>
-                    </div>
-                    <div class="result-card" data-card-type="learn" data-type="pdf" data-title="Mustang CAT Case Study" data-desc="How Mustang CAT boosted lead capture 3x at trade shows using Momentify. Covers their deployment strategy, measurable outcomes, and lessons learned from 12 events." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
-                        <div class="card-title">Mustang CAT Case Study</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">How Mustang CAT boosted lead capture 3x at trade shows</div>
-                    </div>
-                    <div class="result-card" data-card-type="learn" data-type="video" data-title="Live Product Demo" data-desc="Interactive walkthrough tailored to your role and interests. Covers badge scanning, lead routing, real-time dashboards, and CRM sync capabilities." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" /></svg>
-                        <div class="card-title">Live Product Demo</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Interactive walkthrough tailored to your role</div>
-                    </div>
-                    <div class="result-card" data-card-type="learn" data-type="podcast" data-title="ROI Deep Dive" data-desc="How to measure return on experience at events. This episode breaks down attribution models, cost-per-lead benchmarks, and how top teams report ROX to leadership." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" /></svg>
-                        <div class="card-title">ROI Deep Dive</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">How to measure return on experience at events</div>
-                    </div>
-                    <div class="result-card" data-card-type="learn" data-type="pdf" data-title="Technical Spec Sheet" data-desc="Full specs, integrations, and system requirements for Momentify. Includes API documentation, SSO setup, data retention policies, and hardware compatibility." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
-                        <div class="card-title">Technical Spec Sheet</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Full specs, integrations, and system requirements</div>
-                    </div>
-                    <div class="result-card" data-card-type="learn" data-type="video" data-title="Customer Testimonials" data-desc="Hear from event managers, sales directors, and marketing teams about how Momentify transformed their trade show operations and lead generation." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" /></svg>
-                        <div class="card-title">Customer Testimonials</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Hear from event managers and sales teams on results</div>
-                    </div>
-                  </div>
-                  <div class="grid-page">
-                    <div class="result-card" data-card-type="learn" data-type="pdf" data-title="Implementation Guide" data-desc="Step-by-step setup guide for deploying Momentify at your next event. Covers hardware requirements, network setup, CRM configuration, and staff training best practices." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" /></svg>
-                        <div class="card-title">Implementation Guide</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Step-by-step setup for your next event deployment</div>
-                    </div>
-                    <div class="result-card" data-card-type="learn" data-type="podcast" data-title="Event Tech Trends 2026" data-desc="Industry experts discuss the latest trends in event technology, including AI-powered lead scoring, contactless experiences, and hybrid event strategies." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" /></svg>
-                        <div class="card-title">Event Tech Trends 2026</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Industry experts on the latest in event technology</div>
-                    </div>
-                    <div class="result-card" data-card-type="learn" data-type="website" data-title="Momentify Platform" data-url="https://momentifyapp.com/platform/how-it-works" data-desc="Explore the full Momentify platform overview including lead capture workflows, real-time analytics dashboards, and CRM integration capabilities." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" /></svg>
-                        <div class="card-title">Momentify Platform</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Explore the full platform overview and capabilities</div>
-                    </div>
-                    <div class="result-card" data-card-type="learn" data-type="website" data-title="Integration Hub" data-url="https://momentifyapp.com/platform/integrations" data-desc="Browse all available integrations including Salesforce, HubSpot, Marketo, and 50+ other CRM and marketing automation platforms." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" /></svg>
-                        <div class="card-title">Integration Hub</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Browse 50+ CRM and marketing integrations</div>
-                    </div>
-                    <div class="result-card" data-card-type="learn" data-type="website" data-title="ROX Calculator" data-url="https://momentifyapp.com/what-is-rox" data-desc="Calculate your projected return on experience with our interactive ROX tool. Input your event metrics and see estimated cost savings and lead capture improvements." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" /></svg>
-                        <div class="card-title">ROX Calculator</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Understand and calculate your return on experience</div>
-                    </div>
+                  <div class="grid-page" id="learn-grid-page">
+                    <!-- Learn cards dynamically populated by JS -->
                   </div>
                 </div>
                 <div class="swipe-dots" data-dots="learn"></div>
@@ -4356,31 +4221,8 @@
                   <button class="page-btn page-next" onclick="navigatePage('solutions', 1)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg></button>
                 </div>
                 <div class="grid-pages">
-                  <div class="grid-page">
-                    <div class="result-card" data-card-type="solution" data-title="Lead Capture" data-desc="Badge scanning, form entry, and real-time CRM sync to capture every visitor interaction. Supports NFC, QR, and manual entry modes with instant data validation." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z" /></svg>
-                        <div class="card-title">Lead Capture</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Badge scanning, form entry, and real-time CRM sync to capture every visitor interaction.</div>
-                    </div>
-                    <div class="result-card" data-card-type="solution" data-title="Analytics" data-desc="Real-time engagement metrics, booth traffic, and conversion analytics in one dashboard. Track visitor flow, dwell time, and qualification scoring live." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" /></svg>
-                        <div class="card-title">Analytics</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Real-time engagement metrics, booth traffic, and conversion analytics in one dashboard.</div>
-                    </div>
-                    <div class="result-card" data-card-type="solution" data-title="Team Collaboration" data-desc="Assign leads, share notes, and coordinate booth coverage with shared visibility. Real-time notifications keep your entire team in sync across the event floor." onclick="openCardOverlay(this)">
-                      <div class="card-top">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>
-                        <div class="card-title">Team Collaboration</div>
-                      <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
-                      </div>
-                      <div class="card-desc">Assign leads, share notes, and coordinate booth coverage with shared visibility.</div>
-                    </div>
+                  <div class="grid-page" id="solutions-grid-page">
+                    <!-- Solution cards dynamically populated by JS -->
                   </div>
                 </div>
                 <div class="swipe-dots" data-dots="solutions"></div>
@@ -4418,10 +4260,10 @@
 
           <div class="summary-controls">
             <div class="view-toggle">
-              <button class="view-toggle-btn active" data-view="small" onclick="setViewMode('small')" title="Small cards">
+              <button class="view-toggle-btn" data-view="small" onclick="setViewMode('small')" title="Small cards">
                 <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="4" height="6.5" rx="1"/><rect x="6" y="1" width="4" height="6.5" rx="1"/><rect x="11" y="1" width="4" height="6.5" rx="1"/><rect x="1" y="8.5" width="4" height="6.5" rx="1"/><rect x="6" y="8.5" width="4" height="6.5" rx="1"/><rect x="11" y="8.5" width="4" height="6.5" rx="1"/></svg>
               </button>
-              <button class="view-toggle-btn" data-view="medium" onclick="setViewMode('medium')" title="Medium cards">
+              <button class="view-toggle-btn active" data-view="medium" onclick="setViewMode('medium')" title="Medium cards">
                 <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6.5" height="14" rx="1.5"/><rect x="8.5" y="1" width="6.5" height="14" rx="1.5"/></svg>
               </button>
               <button class="view-toggle-btn" data-view="large" onclick="setViewMode('large')" title="Large cards">
@@ -4483,10 +4325,10 @@
               </div>
             </div>
             <div class="view-toggle">
-              <button class="view-toggle-btn active" data-view="small" onclick="setViewMode('small')" title="Small cards">
+              <button class="view-toggle-btn" data-view="small" onclick="setViewMode('small')" title="Small cards">
                 <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="4" height="6.5" rx="1"/><rect x="6" y="1" width="4" height="6.5" rx="1"/><rect x="11" y="1" width="4" height="6.5" rx="1"/><rect x="1" y="8.5" width="4" height="6.5" rx="1"/><rect x="6" y="8.5" width="4" height="6.5" rx="1"/><rect x="11" y="8.5" width="4" height="6.5" rx="1"/></svg>
               </button>
-              <button class="view-toggle-btn" data-view="medium" onclick="setViewMode('medium')" title="Medium cards">
+              <button class="view-toggle-btn active" data-view="medium" onclick="setViewMode('medium')" title="Medium cards">
                 <svg viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6.5" height="14" rx="1.5"/><rect x="8.5" y="1" width="6.5" height="14" rx="1.5"/></svg>
               </button>
               <button class="view-toggle-btn" data-view="large" onclick="setViewMode('large')" title="Large cards">
@@ -4851,6 +4693,10 @@
         document.querySelector('.results-tab-panel[data-tab="outcomes"]').classList.add('active');
         document.querySelector('.results-tab').classList.add('active');
         populateStep4Header();
+        buildOutcomeCards();
+        buildSolutionCards();
+        buildLearnCards();
+        setViewMode(currentViewMode);
         initPagination();
         initSwipe();
       }
@@ -5288,18 +5134,40 @@
 
     function buildClCards() {
       clCards = [];
-      document.querySelectorAll('.step-5 .result-card').forEach(card => {
-        if (!card.dataset.title) return;
-        const iconEl = card.querySelector('.card-icon');
-        clCards.push({
-          title: card.dataset.title,
-          desc: card.dataset.desc || '',
-          type: card.dataset.cardType || 'outcome',
-          mediaType: card.dataset.type || '',
-          url: card.dataset.url || '',
-          iconHtml: iconEl ? iconEl.outerHTML : '',
-          isSaved: card.querySelector('.btn-save.saved') !== null
+      // If step 5 cards exist in DOM, scrape them (preserves saved state)
+      const step5Cards = document.querySelectorAll('.step-5 .result-card');
+      if (step5Cards.length > 0) {
+        step5Cards.forEach(card => {
+          if (!card.dataset.title) return;
+          const iconEl = card.querySelector('.card-icon');
+          clCards.push({
+            title: card.dataset.title,
+            desc: card.dataset.descOverlay || card.dataset.desc || '',
+            descSmall: card.dataset.descSmall || '',
+            descMedium: card.dataset.descMedium || '',
+            type: card.dataset.cardType || 'outcome',
+            mediaType: card.dataset.type || '',
+            url: card.dataset.url || '',
+            iconHtml: iconEl ? iconEl.outerHTML : '',
+            isSaved: card.querySelector('.btn-save.saved') !== null
+          });
         });
+        return;
+      }
+      // Otherwise build from data arrays (content library opened before step 5)
+      const svgWrap = (path) => `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon">${path}</svg>`;
+      // Outcomes
+      Object.values(OUTCOMES).forEach(o => {
+        clCards.push({ title: o.title, desc: o.desc.overlay, descSmall: o.desc.small, descMedium: o.desc.medium, type: 'outcome', mediaType: '', url: '', iconHtml: svgWrap(o.icon), isSaved: false });
+      });
+      // Learn
+      LEARN_CARDS.forEach(lc => {
+        const icon = LEARN_ICONS[lc.type] || LEARN_ICONS.blog;
+        clCards.push({ title: lc.title, desc: lc.desc.overlay, descSmall: lc.desc.small, descMedium: lc.desc.medium, type: 'learn', mediaType: lc.type, url: lc.url || '', iconHtml: svgWrap(icon), isSaved: false });
+      });
+      // Solutions
+      SOLUTIONS.forEach(s => {
+        clCards.push({ title: s.title, desc: s.desc.overlay, descSmall: s.desc.small, descMedium: s.desc.medium, type: 'solution', mediaType: '', url: '', iconHtml: svgWrap(s.icon), isSaved: false });
       });
     }
 
@@ -5327,14 +5195,14 @@
         document.getElementById('cl-body').innerHTML = sorted.length ? html : '<div class="summary-empty"><div class="summary-empty-text">No matching content found.</div></div>';
       } else if (clSortMode === 'type') {
         const types = {};
-        const typeLabels = { video: 'Videos', pdf: 'Documents', podcast: 'Podcasts', website: 'Websites', '': 'Other' };
+        const typeLabels = { blog: 'Blogs', webinar: 'Webinars', podcast: 'Podcasts', whitepaper: 'Whitepapers', video: 'Videos', '': 'Other' };
         filtered.forEach(c => {
           const t = c.mediaType || (c.type === 'learn' ? '' : c.type);
           if (!types[t]) types[t] = [];
           types[t].push(c);
         });
         let html = '';
-        ['video', 'pdf', 'podcast', 'website', 'outcome', 'solution', ''].forEach(t => {
+        ['blog', 'webinar', 'podcast', 'whitepaper', 'video', 'outcome', 'solution', ''].forEach(t => {
           if (!types[t] || types[t].length === 0) return;
           const label = typeLabels[t] || t.charAt(0).toUpperCase() + t.slice(1) + 's';
           html += `<div class="summary-section"><div class="summary-section-label">${label}</div><div class="summary-grid">`;
@@ -5346,7 +5214,7 @@
     }
 
     function clCardHtml(c) {
-      return `<div class="result-card" data-title="${c.title}" data-desc="${c.desc}" data-card-type="${c.type}" data-type="${c.mediaType}"${c.url ? ` data-url="${c.url}"` : ``} onclick="openCardOverlay(this)">
+      return `<div class="result-card" data-title="${c.title}" data-desc="${c.desc}" data-desc-small="${c.descSmall || ''}" data-desc-medium="${c.descMedium || ''}" data-desc-large="${c.desc}" data-desc-overlay="${c.desc}" data-card-type="${c.type}" data-type="${c.mediaType}"${c.url ? ` data-url="${c.url}"` : ``} onclick="openCardOverlay(this)">
         <div class="card-top">
           ${c.iconHtml}
           <div class="card-title">${c.title}</div>
@@ -5647,8 +5515,985 @@
       updateSharedPagination();
     }
 
+    // ── Outcome Cards Data ──
+    // Keyed by trait-card-label text from steps 4a (objectives), 4b (interests), 4c (industries)
+    const OUTCOMES = {
+      // ── Step 4a: Objectives (top path) ──
+      'Sustainability / Renewables': {
+        title: 'Sustainability / Renewables',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />',
+        desc: {
+          small: 'On-site DER solutions to address intermittency and promote clean energy',
+          medium: 'On-site distributed energy resources help address renewable intermittency by reducing peak loads and dispatching generation when needed, while advancing sustainability goals.',
+          large: 'On-site distributed energy resources help utilities and energy customers address intermittency issues by reducing loads during peak demand and dispatching generation when needed. Cat Electric Power provides holistic DER solutions with solar, storage, and natural gas generators, plus the Cat AMP platform to monitor and verify performance against sustainability goals.',
+          overlay: 'Renewables provide approximately 25% of U.S. electric generation, with goals to reach 80% by 2030. Despite their advantages, intermittent power remains a key challenge. On-site distributed energy resources address this by reducing peak loads and dispatching generation when needed. Cat Electric Power provides holistic DER solutions including solar arrays, storage, and natural gas generators. Cat AMP monitors, manages, and monetizes your assets while reporting performance against operational, sustainability, and economic goals. Our Energy as a Service model provides access to these benefits without the capital investment or operational costs of ownership.'
+        }
+      },
+      'Cost Efficiency': {
+        title: 'Cost Efficiency',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />',
+        desc: {
+          small: 'Lower capacity and transmission charges with on-site DER',
+          medium: 'Reduce capacity and transmission reserve charges by sourcing power from on-site DER during critical grid periods. Cat makes DER solutions accessible and affordable.',
+          large: 'Utility bills include reserves for capacity and transmission based on peak usage. By sourcing power from on-site DER during critical periods, you can lower these charges significantly. Cat Electric Power uses Energy as a Service with third-party funding and long-term PPAs to deliver DER benefits without capital expenditure.',
+          overlay: 'Utility bills include capacity and transmission reserves based on energy used during critical grid periods. By sourcing power from on-site DER during these peaks, you can lower reserve charges significantly. Cat Electric Power makes DER solutions accessible through Energy as a Service with third-party funding and long-term Power Purchase Agreements, eliminating capital expenditure and operating costs. Cat AMP predicts capacity and transmission peaks, dispatches assets to reduce usage during those periods, and verifies reductions at both the asset and aggregate level to lower overall utility capacity obligations.'
+        }
+      },
+      'Improved Energy Reliability': {
+        title: 'Improved Energy Reliability',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />',
+        desc: {
+          small: 'On-site generation to protect against unplanned outages',
+          medium: 'Add affordable, reliable on-site generation to protect against unplanned outages. Cat provides single-source DER solutions that integrate into legacy energy systems.',
+          large: 'Unplanned outages can cause safety issues, productivity losses, and reputation damage. Cat Electric Power provides single-source DER solutions that incorporate solar, storage, and natural gas generation into legacy energy systems. Cat AMP optimizes operations by monitoring grid, facility, and environmental signals.',
+          overlay: 'Unplanned outages can result in safety issues, productivity and revenue losses, and long-term reputation damage. Adding on-site generation with solar, storage, and natural gas gensets significantly improves reliability. Cat Electric Power provides a single-source, holistic DER solution that integrates distributed generation and load management into legacy energy systems. Cat AMP monitors energy signals from the grid, facility, and environment, then manages dispatch of new and legacy assets. Our Energy as a Service model delivers the reliability benefits of on-site generation without the financial burden of capital investment, all supported through local Cat dealers.'
+        }
+      },
+      'Increased Capacity': {
+        title: 'Increased Capacity',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 0 0 6 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0 1 18 16.5h-2.25m-7.5 0h7.5m-7.5 0-1 3m8.5-3 1 3m0 0 .5 1.5m-.5-1.5h-9.5m0 0-.5 1.5m.75-9 3-3 2.148 2.148A12.061 12.061 0 0 1 16.5 7.605" />',
+        desc: {
+          small: 'Bridge the gap between demand growth and grid supply',
+          medium: 'Nationwide electricity demand is expected to grow 4.7% over the next five years. On-site DER assets from Cat bridge the gap when the grid cannot keep up.',
+          large: 'Peak demand is expected to grow 38 GW over the next five years, driven by manufacturing, data center growth, and electrification. On-site DER from Cat bridges the gap between what your operations need and what the grid can supply, with Energy as a Service eliminating capital barriers.',
+          overlay: 'Nationwide electricity demand is expected to grow 4.7% over the next five years, nearly double the previous projection. Peak demand is expected to grow 38 GW, driven by manufacturing, data center growth, electrification, hydrogen production, and severe weather. This creates localized capacity issues that can delay or derail growth plans. Cat Electric Power provides industry-leading DER assets including solar, storage, and natural gas generators. Cat AMP predicts and responds to economic opportunities on the energy grid. Our Energy as a Service model provides the capacity benefits of DER without the capital investment or cost of ownership.'
+        }
+      },
+      'Transmission Congestion': {
+        title: 'Transmission Congestion',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z" />',
+        desc: {
+          small: 'Solve transmission bottlenecks with on-site generation',
+          medium: 'Increased electricity demand stresses crowded transmission lines. On-site DER from Cat solves transmission congestion that can delay or derail growth and expansion plans.',
+          large: 'Growing electricity demand creates additional stress on crowded transmission lines. For customers looking to expand, transmission congestion can derail growth plans. Cat Electric Power provides on-site DER solutions that solve transmission issues, with Cat AMP enhancing economics by predicting critical peaks and managing energy market participation.',
+          overlay: 'Nationwide electricity demand is expected to grow 4.7% over the next five years. Increased demand creates additional stress on already crowded transmission lines. For customers looking to grow existing operations or expand into new areas, transmission congestion can delay or derail growth plans. On-site DER assets solve these issues. Cat Electric Power makes holistic DER solutions accessible and affordable through Energy as a Service with third-party funding and long-term Power Purchase Agreements. Cat AMP enhances DER economics by predicting and avoiding critical peaks and high-cost hours, and by managing participation in demand response and other energy market programs.'
+        }
+      },
+      'Emergency Preparedness': {
+        title: 'Emergency Preparedness',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />',
+        desc: {
+          small: 'Reliable on-site generation for critical backup power',
+          medium: 'Add affordable, reliable on-site generation for emergency backup. Cat provides holistic DER solutions with automatic dispatch, supported through local Cat dealers.',
+          large: 'Unplanned outages can cause safety issues, productivity losses, and reputation damage. Cat Electric Power provides single-source DER solutions with solar, storage, and natural gas generation that integrate into legacy systems. Cat AMP monitors and dispatches assets automatically when disruptions occur.',
+          overlay: 'Unplanned outages can result in safety issues, productivity and revenue losses, and long-term reputation damage. Adding on-site generation with solar, storage, and natural gas gensets significantly improves emergency preparedness. Cat Electric Power provides a single-source, holistic DER solution that integrates distributed generation and load management strategies into legacy energy systems. Cat AMP monitors energy signals from the grid, facility, and environment, then manages dispatch of assets automatically. Our Energy as a Service model delivers reliability without the financial burden of capital investment, all supported through local Cat dealers you already know.'
+        }
+      },
+
+      // ── Step 4b: Interests (bottom path) ──
+      'Advanced Microgrid Solutions': {
+        title: 'Cat Microgrids: PV Solar & Energy Storage',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" />',
+        desc: {
+          small: 'Complete microgrid systems from 10 kW to 100 MW',
+          medium: 'Cat Microgrid systems from 10 kW to 100 MW with turnkey or design-to-order PV solar and maximized renewable penetration, fully supported by your local Cat dealer.',
+          large: 'Cat Microgrid systems range from 10 kW to 100 MW. Fully supported by your local Cat dealer at every phase, from complete turnkey or design-to-order PV solar with maximized renewable penetration to product upgrades, financing, warranty, service agreements, and parts availability.',
+          overlay: 'Caterpillar offers a full range of Cat Microgrid systems from 10 kW to 100 MW. Fully supported by your local Cat dealer, we are with you at every phase of your advanced microgrid project, from delivery of your complete turnkey or design-to-order PV solar panel system with maximized renewable penetration to product upgrades, financing services, warranty, service agreements, and parts availability. We will customize our microgrid technologies to meet your business and industry needs.'
+        }
+      },
+      'Combined Heat & Power': {
+        title: 'Cogeneration',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z" />',
+        desc: {
+          small: 'Simultaneous electricity and thermal energy from one fuel source',
+          medium: 'CHP generates electric power and captures waste heat to provide useful thermal energy for space heating, cooling, hot water, and industrial processes.',
+          large: 'CHP is energy-efficient technology that generates electric power and captures waste heat to provide thermal energy for space heating, cooling, domestic hot water, and industrial processes. Cat gas generator sets simultaneously provide electricity and heat energy for facility requirements.',
+          overlay: 'CHP is energy-efficient technology that generates electric power and captures the heat that would otherwise be wasted to provide useful thermal energy such as steam or hot water for space heating, cooling, domestic hot water, and industrial processes. Cat gas generator sets can simultaneously provide electricity for electrical loads and heat energy for a facility\'s thermal requirements. Any Cat natural gas-fueled engine can be configured specifically for applications involving heat recovery.'
+        }
+      },
+      'Biogas to Clean Energy': {
+        title: 'Higher Efficiency, Lower Cost, Renewable Energy',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />',
+        desc: {
+          small: 'Sustainable, economical alternative fuel from biogas',
+          medium: 'Cat gas gensets are designed to maximize long-range cost savings and environmental benefits from biogas, engineered to withstand the rigors of biogas applications.',
+          large: 'Biogas is a sustainable, economical alternative to diesel and natural gas. Cat gas gensets are specifically engineered for biogas applications, with hardened components that handle methane variations while optimizing efficient conversion to electrical power.',
+          overlay: 'Biogas is a sustainable, economical, and efficient alternative to fuels like diesel and natural gas. Cat gas gensets are designed to maximize long-range cost savings and environmental benefits from biogas. Key components are hardened against the corrosive properties of the gas, maximizing longevity and efficient operation. Your Cat generator handles variations in methane content with ease, while optimizing efficient, effective conversion of the gas to electrical power.'
+        }
+      },
+      'Energy As A Service': {
+        title: 'Optimize Energy Savings, System Management',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />',
+        desc: {
+          small: 'Managed DER services that enhance operational and economic value',
+          medium: 'Energy as a Service combines an industry-leading technology platform with expert insights and managed services to enhance the operational and economic opportunities of DER assets.',
+          large: 'Energy as a Service solutions combine an industry-leading technology platform with expert insights, managed services, and cutting-edge technology to significantly enhance the operational and economic opportunities of distributed generation and storage assets.',
+          overlay: 'Energy as a Service (EaaS) solutions combine an industry-leading technology platform with expert insights, managed services, and cutting-edge technology to significantly enhance the operational and economic opportunities of distributed generation and storage assets. The holistic energy market expertise provided by EaaS solutions makes distributed energy resource (DER) asset management easier and more profitable.'
+        }
+      },
+      'Hydrogen': {
+        title: 'Powering Sustainably',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />',
+        desc: {
+          small: 'Hydrogen and hydrogen-blend generator sets for cleaner power',
+          medium: 'Renewable hydrogen and hydrogen blends are among the alternative fuels companies are adopting to meet ESG goals. Caterpillar offers generator sets capable of running on hydrogen fuel.',
+          large: 'As more companies turn to sustainable solutions, renewable hydrogen and hydrogen blends are gaining traction as alternative fuels for ESG goals. Caterpillar has added three new generator sets capable of running on hydrogen fuel to meet growing demand.',
+          overlay: 'As the global climate changes, more companies are turning to sustainable solutions to lower their carbon footprint. Renewable hydrogen and hydrogen blends are among several alternative fuels companies are considering as they work toward their environmental, social, and governance (ESG) goals. To meet the growing demand for renewable power sources, Caterpillar has added three new generator sets capable of running on hydrogen fuel.'
+        }
+      },
+      'Renewable Biofuel': {
+        title: 'Power from Renewable Biofuels',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />',
+        desc: {
+          small: 'Cat diesel generators run on biodiesel and HVO biofuels',
+          medium: 'Renewable liquid fuels like HVO and biodiesel are becoming a popular choice for reducing environmental impact. Cat diesel generators have accommodated biofuels for over a decade.',
+          large: 'Available for over 20 years in some markets, renewable liquid fuels such as HVO and biodiesel are becoming popular for reducing environmental impact. Cat diesel generators can run on biofuels and have supported biodiesel and HVO for over a decade.',
+          overlay: 'Available for over 20 years in some markets, renewable liquid fuels such as hydrotreated vegetable oil (HVO) and biodiesel are becoming a more popular choice among customers seeking to reduce their environmental impact in the near term. Cat diesel generators can run on biofuels and have accommodated biodiesel and HVO for over a decade. These fuels are available now, and your local Cat dealer can provide guidance and recommendations for switching to renewable liquid fuels.'
+        }
+      },
+      'Rental Generators': {
+        title: 'Rental Solutions',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />',
+        desc: {
+          small: 'Mobile generators for any temporary power need',
+          medium: 'Cat Rental Power is your one source for all rental needs, from disaster relief and scheduled maintenance to standby supply and special events.',
+          large: 'Cat Rental Power is your one source for all rental needs. From disaster relief and scheduled maintenance to standby supply and special events. Cat mobile generator sets are engineered for easy transport, fast installation, and designed to meet your greatest power need in the shortest time.',
+          overlay: 'Cat Rental Power is your one source for all your rental needs. From disaster relief or scheduled power system maintenance to standby power supply or special events. Cat mobile generator sets are engineered for easy transporting and fast installation, designed to work alone or in redundancy to meet your greatest power need in the shortest time. In addition to generators, Cat Rental Power delivers air compressors and temperature control products whenever and wherever you need them, backed by the largest dealer network in the world.'
+        }
+      },
+      'Standby Generators': {
+        title: 'Power That\'s Ready For The Unexpected',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3m3 3a3 3 0 1 0 0 6h13.5a3 3 0 1 0 0-6m-16.5-3a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3m-19.5 0a4.5 4.5 0 0 1 .9-2.7L5.737 5.1a3.375 3.375 0 0 1 2.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 0 1 .9 2.7m0 0a3 3 0 0 1-3 3m0 3h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Zm-3 6h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Z" />',
+        desc: {
+          small: 'Diesel backup power sized for your application and budget',
+          medium: 'Cat diesel standby generator sets are designed to match your specific power needs. From small businesses to hospitals to nuclear plants, with reliable emergency power in a minimal footprint.',
+          large: 'Cat diesel standby generator sets are designed to match your specific power needs. From small businesses to hospitals to nuclear power plants, we have a backup power solution for your application and budget. The new Cat GC line delivers reliable emergency power in a minimal footprint.',
+          overlay: 'Cat diesel-fueled standby generator sets are designed to match your specific power needs. From small businesses to hospitals to nuclear power plants, we have a diesel backup power solution to fit your application and budget. The new line of Cat GC diesel standby generator sets delivers the reliable emergency power you need within a minimal footprint. Our GC generator sets are value-engineered to lower costs without compromising performance.'
+        }
+      },
+
+      // ── Step 4c: Industries (bottom path) ──
+      'Agriculture': {
+        title: 'Agriculture',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />',
+        desc: {
+          small: 'Convert agricultural waste into cost-saving fuel and power',
+          medium: 'Byproduct gases from agricultural and food processing operations fuel Cat low-energy generators. Standby and rental generators keep farms running during costly outages.',
+          large: 'What generations before you considered waste is now cost-saving fuel. Byproduct gases from agricultural, food processing, and industrial processes fuel Cat low-energy generators. Standby and rental emergency generators keep farms, dairy operations, and greenhouses running during costly power outages.',
+          overlay: 'What generations before you considered waste is now counted as cost-saving fuel. Byproduct gases from agricultural, food processing, and industrial processes are captured to create agricultural biogas that fuels Cat low-energy fuel generators. The energy you generate is nearly free power for your facility. Our standby and rental emergency generators help farmers keep their operations running smoothly during costly power outages. From dairy farms to greenhouse facilities, Cat farm generators provide power for all your agricultural applications.'
+        }
+      },
+      'Commercial Business': {
+        title: 'Commercial Business',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21m-3.75 3H21" />',
+        desc: {
+          small: 'Distributed generation and CHP for commercial facilities',
+          medium: 'Select distributed generation for permanent or temporary power, or design a standby power plant. Reduce operating expenses with Cat combined heat and power (CHP) systems.',
+          large: 'Select distributed generation for permanent or temporary power, or design a standby power plant. Run uninterrupted power and reduce operating expenses with Cat CHP systems. Commercial facilities like resorts, malls, offices, and hospitals can sell excess electricity to the local grid.',
+          overlay: 'Select a distributed generation system for permanent or temporary power, or design a standby power plant. We offer exhaust emissions for regulated environments and utility-grade Cat paralleling switchgear to sell excess electricity to your local grid. Reduce operating expenses with Cat combined heat and power (CHP) to simultaneously provide electricity and recover heat. Commercial businesses such as resorts, shopping malls, high-rise office buildings, universities, data centers, and hospitals can cut costs with cogeneration technology.'
+        }
+      },
+      'Construction': {
+        title: 'Construction',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" />',
+        desc: {
+          small: 'Consistent, reliable power for any construction jobsite',
+          medium: 'In a changing industry run on consistency, run on Cat power. Construction site generators offer low owning and operating costs with a proven performance record.',
+          large: 'Projects expand, regulations change, and deadlines shorten. In a changing industry run on consistency, run on Cat power. Our construction generators offer low owning and operating costs and a proven performance record, backed by the largest dealer network in the world.',
+          overlay: 'You\'re building the future. Projects expand, regulations change, and deadlines shorten. In a changing industry run on consistency, run on Cat power. Our construction site generators offer low owning and operating costs and have a record for performance. Don\'t let power supply stop you from getting a job done right, on time, and on budget. Wherever you build, you\'ll be backed by the largest dealer network in the world, giving you access to the parts, service, and support you need.'
+        }
+      },
+      'Data Centers': {
+        title: 'Data Centers',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3m3 3a3 3 0 1 0 0 6h13.5a3 3 0 1 0 0-6m-16.5-3a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3m-19.5 0a4.5 4.5 0 0 1 .9-2.7L5.737 5.1a3.375 3.375 0 0 1 2.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 0 1 .9 2.7m0 0a3 3 0 0 1-3 3m0 3h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Zm-3 6h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Z" />',
+        desc: {
+          small: 'Constant quality power to protect critical data operations',
+          medium: 'Securing data and preventing information from being compromised requires a constant source of quality power. Our data center power solutions meet your uptime promises.',
+          large: 'Data centers are hubs for storing and processing large volumes of data. Securing data requires a constant source of quality power. Our data center solutions deliver transient response, quick start capability, block load acceptance, emissions reduction, and fuel efficiency.',
+          overlay: 'Data centers are centralized hubs for storing, processing, and disseminating large volumes of data. The data we generate every day is increasing exponentially. Securing data and preventing important information from being compromised can only be guaranteed with a constant source of quality power. In line with your uptime promises, our data center power solutions meet your needs for transient response, quick start capability, block load acceptance, emissions reduction, noise suppression, and fuel efficiency.'
+        }
+      },
+      'Education': {
+        title: 'Education',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5" />',
+        desc: {
+          small: 'Cost-effective power solutions for schools and universities',
+          medium: 'Distributed generation for schools, colleges, and universities. Reduce operating expenses with Cat CHP systems and sell excess electricity to the local grid.',
+          large: 'Select distributed generation for permanent or temporary power for schools, colleges, and universities. Reduce operating expenses with Cat CHP for simultaneous electricity and heat recovery. Sell excess electricity with utility-grade Cat paralleling switchgear.',
+          overlay: 'You\'re trusted to power the places people study and to do it cost-effectively. Select a distributed generation system for permanent or temporary power, or design a standby power plant. We offer exhaust emissions for regulated environments and utility-grade Cat paralleling switchgear to sell excess electricity to your local grid. Reduce operating expenses with Cat combined heat and power (CHP) to simultaneously provide electricity and recover heat. We\'re here to keep power production efficient so you can focus on your institution.'
+        }
+      },
+      'Greenhouses': {
+        title: 'Greenhouses',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />',
+        desc: {
+          small: 'CHP systems that cut costs and boost plant health',
+          medium: 'CHP systems yield over 90% fuel efficiency versus typical 40-50% boiler rates. Cat CHP generators produce electricity while heating your facility with natural gas.',
+          large: 'CHP systems yield over 90% fuel efficiency versus typical 40-50% boiler efficiency, with payback typically under 3-4 years. Cat CHP generators produce electricity while heating your facility, with aftertreatment systems filtering exhaust CO2 for use as plant fertilizer.',
+          overlay: 'Combined heat and power systems provide a profitable and sustainable solution for greenhouses. CHP yields over 90% fuel efficiency versus typical boiler efficiency of 40-50%, with payback typically under 3-4 years. Cat CHP systems produce electricity for your operation while heating your facility with natural gas. A Cat aftertreatment system filters exhaust gas, rich in carbon dioxide, to be used as plant root fertilizer. Even sell excess energy to your local grid with our utility-grade paralleling switchgear and controls.'
+        }
+      },
+      'Healthcare': {
+        title: 'Healthcare',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />',
+        desc: {
+          small: 'Reliable backup power for critical life-support systems',
+          medium: 'Your facility powers equipment that sustains lives. Cat generators ensure critical life-support power, supported by UPS systems, automatic transfer switches, and switchgear.',
+          large: 'Your facility powers equipment that sustains lives. Install standby power generation that delivers backup power you can count on. Cat generators ensure critical life-support power to some of the world\'s largest hospitals, supported by UPS systems, automatic transfer switches, and switchgear.',
+          overlay: 'Your facility powers equipment that sustains lives. Install a standby power generation system that delivers backup power you can count on. Cat generators are ensuring critical life-support power to some of the world\'s largest hospitals, supported by Cat uninterruptible power supply (UPS) systems, automatic transfer switches (ATS), and switchgear.'
+        }
+      },
+      'Landfills': {
+        title: 'Landfills',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="m20.893 13.393-1.135-1.135a2.252 2.252 0 0 1-.421-.585l-1.08-2.16a.414.414 0 0 0-.663-.107.827.827 0 0 1-.812.21l-1.273-.363a.89.89 0 0 0-.738 1.595l.587.39c.59.395.674 1.23.172 1.732l-.2.2c-.212.212-.33.498-.33.796v.41c0 .409-.11.809-.32 1.158l-1.315 2.191a2.11 2.11 0 0 1-1.81 1.025 1.055 1.055 0 0 1-1.055-1.055v-1.172c0-.92-.56-1.747-1.414-2.089l-.655-.261a2.25 2.25 0 0 1-1.383-2.46l.007-.042a2.25 2.25 0 0 1 .29-.787l.09-.15a2.25 2.25 0 0 1 2.37-1.048l1.178.236a1.125 1.125 0 0 0 1.302-.795l.208-.73a1.125 1.125 0 0 0-.578-1.315l-.665-.332-.091.091a2.25 2.25 0 0 1-1.591.659h-.18a.94.94 0 0 0-.662.274.931.931 0 0 1-1.458-1.137l1.411-2.353a2.25 2.25 0 0 0 .286-.76m11.928 9.869A9 9 0 0 0 8.965 3.525m11.928 9.868A9 9 0 1 1 8.965 3.525" />',
+        desc: {
+          small: 'Turn landfill methane gas into renewable electric power',
+          medium: 'Rather than simply burning off landfill gas, Cat generators can produce electric power from it. Sell power to your utility with Cat switchgear and paralleling controls.',
+          large: 'Modern landfills must install gas collection systems to capture methane. Rather than burning it off in a flare, Cat generators can produce electric power from landfill gas. Sell the power to your electric utility with Cat switchgear and PLC-based paralleling controls.',
+          overlay: 'Modern landfills are required to install gas collection systems to capture and destroy methane gases. Rather than eliminating landfill gas by simply burning it off, Caterpillar can help you turn it into a renewable fuel by providing methane generators that can produce electric power from landfill gas. Power your world with sustainable practices. Sell the power produced to your electric utility with our switchgear, including PLC-based controls, paralleling your methane generators to the local grid.'
+        }
+      },
+      'Manufacturing': {
+        title: 'Manufacturing',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3H21m-3.75 3H21" />',
+        desc: {
+          small: 'Keep production lines running with reliable, efficient power',
+          medium: 'When your lines are not moving, you are not making money. Cat standby generators run with low owning and operating costs to maximize profit and minimize electrical expenses.',
+          large: 'When your lines are not moving, you are not making money. Find permanent or temporary standby power to keep up with manufacturing schedules. Cat CHP systems help industrial facilities reduce operating costs with cogeneration technology.',
+          overlay: 'When your lines aren\'t moving, you\'re not making money. You need power that will keep you in production and keep you efficient. Cat standby generators run with low owning and operating costs so you can maximize profit by minimizing electrical expenses. Find permanent or temporary standby power for manufacturing facilities. Many industrial facilities reduce operating costs by implementing Cat combined heat and power (CHP), also known as cogeneration.'
+        }
+      },
+      'Mining': {
+        title: 'Mining',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-2.25-1.313M21 7.5v2.25m0-2.25l-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3l2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75l2.25-1.313M12 21.75V19.5m0 2.25l-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />',
+        desc: {
+          small: 'Customized power systems for every mining phase',
+          medium: 'Powering exploration, construction, and IPP services while minimizing environmental impact. Cat delivers power solutions customized for your mining needs and sustainability goals.',
+          large: 'Powering exploration, construction, and IPP services while minimizing environmental impact. Cat delivers customized systems using hydrogen, natural gas, mixed gas, and solar. Microgrids let you mix renewable, grid, and generated power. Smart energy storage reduces costs and grid dependence.',
+          overlay: 'Powering your need for exploration, construction, or IPP services, Cat Electric Power keeps your mine in full operation while minimizing environmental impact. Products can produce electricity using hydrogen, natural gas, mixed gas solutions, and solar power. Microgrids allow you to mix renewable, grid, and generated power. Smart energy storage solutions offer additional ways to reduce costs and grid dependence. Natural gas generator sets offer increased fuel efficiency and 34% lower greenhouse gas emissions compared to diesel, with opportunity for combined heat and power generation.'
+        }
+      },
+      'Municipality': {
+        title: 'Municipality',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z" />',
+        desc: {
+          small: 'Reliable power your community can count on',
+          medium: 'Provide the power your community lives on. Whether standby or rental power for emergencies or peak hours, be there when people need it most with Cat power.',
+          large: 'You are trusted to provide the power your community lives on. Whether it is standby or rental power for emergency use or additional systems for peak hours, be there when the people you serve need it most. Cat generators meet rapidly changing needs at low owning and operating costs.',
+          overlay: 'In an emergency, seconds can save lives. You\'re trusted to provide the power your community lives on and makes a living with. Whether it\'s standby or rental power for emergency use or additional systems to handle peak hours, be there when the people you serve need it most. Cat generators for municipal buildings are proven to meet rapidly changing needs at low owning and operating costs.'
+        }
+      },
+      'Nuclear': {
+        title: 'Nuclear',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />',
+        desc: {
+          small: 'Highest-standard standby and emergency power for nuclear',
+          medium: 'The nuclear industry demands the highest levels of quality and safety from its power systems. Cat diesel generators for nuclear plants meet exacting standards and specifications.',
+          large: 'The nuclear industry demands the highest levels of commitment and quality. Cat diesel generators meet exacting standards for standby and emergency power. Modular SBO installations offer factory-completed products installed on-site in days, setting a new benchmark for deployment velocity.',
+          overlay: 'The nuclear industry demands the highest levels of commitment and quality standards from its suppliers. With exacting standards and specifications for standby and emergency power, Cat diesel generators for nuclear power plants meet this challenge. When deadlines, budgets, and installation environments are constrained, our modular SBO installations offer product completed in a controlled factory environment and installed at site within a few days, setting a new benchmark in deployment velocity and simplicity of installation.'
+        }
+      },
+      'Powerplants': {
+        title: 'Powerplants',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />',
+        desc: {
+          small: 'Proven durability and low operating costs for power plants',
+          medium: 'Power plant generators, systems, and controls for emergency, standby, prime, peak, and continuous power with proven durability and low operating costs.',
+          large: 'Together with your trusted EPC company, Caterpillar brings reliable power everywhere on earth. Our power plant generators, systems, and controls provide proven durability and low operating costs for emergency, standby, prime, peak, and continuous power applications.',
+          overlay: 'Together with your trusted EPC company, Caterpillar brings reliable power for your solution everywhere on earth. Our power plant generators, systems, and controls for emergency, standby, prime, peak, and continuous power provide proven durability and low operating costs combined with flexibility and dependability in the most demanding applications, burning natural gas, diesel, heavy fuel oil (HFO), or crude oil to keep your costs down.'
+        }
+      },
+      'Telecom': {
+        title: 'Telecom',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z" />',
+        desc: {
+          small: 'Reliable backup power for unmanned remote telecom sites',
+          medium: 'For unmanned operations in remote locations, rent or own Cat telecom backup power generators. Factory made for nonstop power, customized by your Cat dealer.',
+          large: 'For unmanned operations in remote locations, you need a system you can rely on. Cat telecom backup power generators are factory made for nonstop power and customized to meet specific site requirements. Modular sound-attenuated enclosures keep you in compliance with noise regulations.',
+          overlay: 'When it comes to unmanned operations in remote locations, you need a system you can rely on and easily access. Rent or own Cat telecom backup power generators. They\'re factory made for nonstop power and customized by your Cat dealer to meet specific site requirements. We can configure and install telecom generator sets that deliver the right power for your operation. Modular sound-attenuated enclosures keep you in compliance with noise level regulations, deter fuel theft, offer protection from the elements, and still allow for easy repair and installation.'
+        }
+      },
+      'Utilities': {
+        title: 'Utilities',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />',
+        desc: {
+          small: 'Navigating the energy transition with Cat power innovations',
+          medium: 'Utilities face the greatest challenges in the energy transition. Cat is strategically positioned to help with power innovations, energy storage, and digital solutions.',
+          large: 'While power consumption is projected to triple by 2050, utilities must also reduce greenhouse gas emissions. Cat offers traditional generator sets, utility-scale energy storage, and turnkey virtual power plant (VPP) solutions to monitor, manage, and monetize DER systems.',
+          overlay: 'More than any other industry, utilities face the greatest challenges in the energy transition. While power consumption is projected to triple by 2050, utilities have also been tasked with reducing greenhouse gas emissions. Caterpillar is strategically positioned to help navigate the energy transition through a growing portfolio of power innovations and digital solutions. We offer traditional generator sets, advanced utility-scale energy storage technologies, and turnkey virtual power plant (VPP) solutions to help utilities monitor, manage, and monetize distributed energy resource (DER) systems.'
+        }
+      }
+    };
+
+    function getSelectedOutcomeKeys() {
+      const keys = [];
+      if (rolePath === 'top') {
+        // Top path: multi-select objectives from 4a
+        document.querySelectorAll('.step-4a .trait-card.selected').forEach(card => {
+          keys.push(card.querySelector('.trait-card-label').textContent.trim());
+        });
+      } else if (rolePath === 'bottom') {
+        // Bottom path: multi-select interests from 4b + single industry from 4c
+        document.querySelectorAll('.step-4b .trait-card.selected').forEach(card => {
+          keys.push(card.querySelector('.trait-card-label').textContent.trim());
+        });
+        const industryCard = document.querySelector('.step-4c .trait-card.selected');
+        if (industryCard) {
+          keys.push(industryCard.querySelector('.trait-card-label').textContent.trim());
+        }
+      }
+      return keys;
+    }
+
+    function buildOutcomeCards() {
+      const container = document.getElementById('outcomes-grid-page');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const keys = getSelectedOutcomeKeys();
+      const sizeKey = currentViewMode === 'large' ? 'large' : (currentViewMode === 'medium' ? 'medium' : 'small');
+
+      keys.forEach(key => {
+        const o = OUTCOMES[key];
+        if (!o) return;
+
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.dataset.cardType = 'outcome';
+        card.dataset.title = o.title;
+        card.dataset.desc = o.desc.large;
+        card.dataset.descSmall = o.desc.small;
+        card.dataset.descMedium = o.desc.medium;
+        card.dataset.descLarge = o.desc.large;
+        card.dataset.descOverlay = o.desc.overlay;
+        card.setAttribute('onclick', 'openCardOverlay(this)');
+
+        const descText = o.desc[sizeKey];
+
+        card.innerHTML = `
+          <div class="card-top">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon">${o.icon}</svg>
+            <div class="card-title">${o.title}</div>
+            <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
+          </div>
+          <div class="card-desc" data-short-desc="${o.desc.small}">${descText}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // ── Solution Cards Data ──
+    const SOLUTIONS = [
+      {
+        id: 'microgrid',
+        title: 'Adv. Microgrid Solutions',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25a2.25 2.25 0 0 1-2.25-2.25v-2.25Z" />',
+        industries: 'all',
+        desc: {
+          small: 'Integrated microgrid systems for resilient, independent power',
+          medium: 'Integrated microgrid systems combining generation, storage, and controls for resilient, independent power that keeps your operations running.',
+          large: 'Integrated microgrid systems combining generation, storage, and intelligent controls for resilient, independent power. Designed to keep your operations running during outages while optimizing energy costs and enabling seamless transitions between grid-tied and islanded modes.',
+          overlay: 'Integrated microgrid systems combining generation, storage, and intelligent controls for resilient, independent power. Designed to keep your operations running during outages while optimizing energy costs and enabling seamless transitions between grid-tied and islanded modes. Cat advanced microgrids incorporate solar, wind, battery, and generator assets into a unified control platform with predictive load management, automated demand response, and utility interconnection capabilities.'
+        }
+      },
+      {
+        id: 'chp',
+        title: 'Combined Heat & Power',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z" />',
+        industries: 'Commercial Business,Education,Healthcare,Manufacturing,Landfills,Municipality,Utilities',
+        desc: {
+          small: 'Simultaneous electricity and thermal energy from a single fuel source',
+          medium: 'Generate electricity and capture usable thermal energy from a single fuel source, boosting overall efficiency up to 80% while reducing emissions and energy costs.',
+          large: 'Generate electricity and capture usable thermal energy from a single fuel source, boosting overall efficiency up to 80%. CHP systems reduce emissions, lower energy costs, and provide reliable baseload power with waste heat recovery for heating, cooling, or industrial processes.',
+          overlay: 'Generate electricity and capture usable thermal energy from a single fuel source, boosting overall efficiency up to 80%. CHP systems reduce emissions, lower energy costs, and provide reliable baseload power with waste heat recovery for heating, cooling, or industrial processes. Cat CHP solutions range from 30 kW to 10+ MW, supporting natural gas, biogas, and diesel fuel sources with integrated heat recovery for steam, hot water, or absorption chilling applications.'
+        }
+      },
+      {
+        id: 'hydrogen',
+        title: 'Hydrogen',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 0-6.23.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />',
+        industries: 'Commercial Business,Data Centers,Utilities,Municipality,Powerplants,Manufacturing',
+        desc: {
+          small: 'Clean hydrogen generation for zero-emission power and fuel',
+          medium: 'Clean hydrogen generation and fuel cell systems delivering zero-emission power for facilities seeking to decarbonize operations while maintaining reliable energy supply.',
+          large: 'Clean hydrogen generation and fuel cell systems delivering zero-emission power. Purpose-built for facilities seeking to decarbonize operations while maintaining reliable energy supply. Supports green hydrogen production, storage, and distribution for both stationary power and transportation fueling applications.',
+          overlay: 'Clean hydrogen generation and fuel cell systems delivering zero-emission power. Purpose-built for facilities seeking to decarbonize operations while maintaining reliable energy supply. Supports green hydrogen production, storage, and distribution for both stationary power and transportation fueling applications. Cat hydrogen solutions include electrolyzer systems, fuel cell power plants, hydrogen-ready gensets, and complete fueling station packages with compression, storage, and dispensing infrastructure.'
+        }
+      },
+      {
+        id: 'biogas',
+        title: 'Biogas to Clean',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />',
+        industries: 'Agriculture,Commercial Business,Manufacturing,Greenhouses,Landfills,Municipality',
+        desc: {
+          small: 'Convert organic waste streams into renewable natural gas',
+          medium: 'Convert organic waste streams into renewable natural gas and clean electricity. Turn waste liabilities into revenue-generating energy assets with proven gas cleanup technology.',
+          large: 'Convert organic waste streams into renewable natural gas and clean electricity. Turn waste liabilities into revenue-generating energy assets with proven gas cleanup and conditioning technology. Systems handle landfill gas, agricultural digesters, and wastewater biogas for pipeline-quality fuel or on-site power generation.',
+          overlay: 'Convert organic waste streams into renewable natural gas and clean electricity. Turn waste liabilities into revenue-generating energy assets with proven gas cleanup and conditioning technology. Systems handle landfill gas, agricultural digesters, and wastewater biogas for pipeline-quality fuel or on-site power generation. Cat biogas solutions include siloxane removal, H2S treatment, moisture separation, and CO2 scrubbing to deliver pipeline-quality RNG or conditioned fuel for high-efficiency generator sets.'
+        }
+      },
+      {
+        id: 'temp-power',
+        title: 'Temporary Power Solution',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />',
+        industries: 'all',
+        desc: {
+          small: 'Rapid-deploy power for planned and emergency needs',
+          medium: 'Rapid-deploy power solutions for planned outages, peak shaving, construction sites, and emergency response. Scalable from kilowatts to multi-megawatt configurations.',
+          large: 'Rapid-deploy power solutions for planned outages, peak shaving, construction sites, and emergency response. Scalable from kilowatts to multi-megawatt configurations with turnkey delivery, fuel management, and 24/7 remote monitoring. Minimizes downtime with fast mobilization and seamless load transfer.',
+          overlay: 'Rapid-deploy power solutions for planned outages, peak shaving, construction sites, and emergency response. Scalable from kilowatts to multi-megawatt configurations with turnkey delivery, fuel management, and 24/7 remote monitoring. Minimizes downtime with fast mobilization and seamless load transfer. Cat temporary power packages include trailer-mounted generators, switchgear, transformers, and distribution panels delivered as complete turnkey systems with on-site commissioning and operator support.'
+        }
+      },
+      {
+        id: 'battery',
+        title: 'Battery Storage',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M21 10.5h.375c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125H21M3.75 18h15A2.25 2.25 0 0 0 21 15.75v-6a2.25 2.25 0 0 0-2.25-2.25h-15A2.25 2.25 0 0 0 1.5 9.75v6A2.25 2.25 0 0 0 3.75 18Z" />',
+        industries: 'Commercial Business,Construction,Data Centers,Education,Manufacturing,Mining,Municipality,Utilities',
+        desc: {
+          small: 'Energy storage systems for peak management and backup',
+          medium: 'Energy storage systems that capture and dispatch power on demand. Reduce peak charges, provide backup capacity, and integrate seamlessly with renewables and existing infrastructure.',
+          large: 'Energy storage systems that capture and dispatch power on demand. Reduce peak demand charges, provide seamless backup capacity, and integrate with renewables and existing infrastructure. Advanced battery management ensures long cycle life, fast response times, and optimized charge/discharge strategies tailored to your load profile.',
+          overlay: 'Energy storage systems that capture and dispatch power on demand. Reduce peak demand charges, provide seamless backup capacity, and integrate with renewables and existing infrastructure. Advanced battery management ensures long cycle life, fast response times, and optimized charge/discharge strategies tailored to your load profile. Cat battery energy storage systems (BESS) feature lithium-ion or iron phosphate chemistry with integrated thermal management, fire suppression, and grid-forming inverters for both front-of-meter and behind-the-meter deployments.'
+        }
+      },
+      {
+        id: 'standby',
+        title: 'Standby Generators',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3m3 3a3 3 0 1 0 0 6h13.5a3 3 0 1 0 0-6m-16.5-3a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3m-19.5 0a4.5 4.5 0 0 1 .9-2.7L5.737 5.1a3.375 3.375 0 0 1 2.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 0 1 .9 2.7m0 0a3 3 0 0 1-3 3m0 3h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Zm-3 6h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Z" />',
+        industries: 'all',
+        desc: {
+          small: 'Reliable backup power for critical facility protection',
+          medium: 'Reliable standby generator systems sized for your facility. Automatic transfer switches ensure uninterrupted power within seconds of any utility disruption.',
+          large: 'Reliable standby generator systems sized and configured for your facility. Automatic transfer switches ensure uninterrupted power within seconds of any utility disruption. Available in diesel, natural gas, and bi-fuel configurations with remote monitoring, load bank testing, and comprehensive maintenance programs.',
+          overlay: 'Reliable standby generator systems sized and configured for your facility. Automatic transfer switches ensure uninterrupted power within seconds of any utility disruption. Available in diesel, natural gas, and bi-fuel configurations with remote monitoring, load bank testing, and comprehensive maintenance programs. Cat standby generators range from 22 kW to 17.5 MW with UL-listed paralleling switchgear, automatic transfer switches, and Cat Connect remote asset monitoring for full visibility into runtime, fuel levels, and maintenance schedules.'
+        }
+      },
+      {
+        id: 'monetization',
+        title: 'Monetization Technology',
+        icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />',
+        industries: 'Commercial Business,Data Centers,Education,Healthcare,Landfills,Manufacturing,Mining,Municipality,Utilities',
+        desc: {
+          small: 'Turn distributed energy assets into revenue streams',
+          medium: 'Turn distributed energy assets into revenue streams through demand response, capacity markets, and grid services. Maximize ROI on your existing power infrastructure.',
+          large: 'Turn distributed energy assets into revenue streams through demand response, capacity markets, and ancillary grid services. Maximize ROI on your existing power infrastructure with intelligent dispatch software that identifies and captures the highest-value opportunities across wholesale energy markets and utility programs.',
+          overlay: 'Turn distributed energy assets into revenue streams through demand response, capacity markets, and ancillary grid services. Maximize ROI on your existing power infrastructure with intelligent dispatch software that identifies and captures the highest-value opportunities across wholesale energy markets and utility programs. Cat monetization technology aggregates your generation, storage, and load flexibility into grid service programs, handling bidding, dispatch, settlement, and compliance reporting so you earn revenue without operational complexity.'
+        }
+      }
+    ];
+
+    function getSelectedIndustry() {
+      const card = document.querySelector('.step-4c .trait-card.selected');
+      if (!card) return null;
+      return card.querySelector('.trait-card-label').textContent.trim();
+    }
+
+    // ── Learn Cards Data ──
+    const LEARN_ICONS = {
+      blog: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 3h7.5m-7.5 3h7.5m3-9h3.375c.621 0 1.125.504 1.125 1.125V18a2.25 2.25 0 0 1-2.25 2.25M16.5 7.5V18a2.25 2.25 0 0 0 2.25 2.25M16.5 7.5V4.875c0-.621-.504-1.125-1.125-1.125H4.125C3.504 3.75 3 4.254 3 4.875V18a2.25 2.25 0 0 0 2.25 2.25h13.5M6 7.5h3v3H6V7.5Z" />',
+      webinar: '<path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />',
+      podcast: '<path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 0 0 6-6v-1.5m-6 7.5a6 6 0 0 1-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 0 1-3-3V4.5a3 3 0 1 1 6 0v8.25a3 3 0 0 1-3 3Z" />',
+      whitepaper: '<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />',
+      video: '<path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />'
+    };
+
+    const LEARN_TYPE_LABELS = {
+      blog: 'Blog',
+      webinar: 'Webinar',
+      podcast: 'Podcast',
+      whitepaper: 'Whitepaper',
+      video: 'Video'
+    };
+
+    const LEARN_CARDS = [
+      {
+        title: 'Data Center Blog',
+        type: 'blog',
+        roles: ['Sustainability Manager', 'Utility Manager', 'Consulting Engineer'],
+        objectives: ['Improved Energy Reliability', 'Cost Efficiency'],
+        url: 'https://www.cat.com/en_US/blog/data-centers_growing-pains-blog.html',
+        desc: {
+          small: 'How data centers are addressing growing power demands',
+          medium: 'Explore how data centers are tackling growing power demands with distributed energy resources, backup generation, and grid independence strategies.',
+          large: 'Explore how data centers are tackling growing power demands with distributed energy resources, backup generation, and grid independence strategies. Learn about the challenges of scaling power infrastructure and the role Cat solutions play in keeping operations online.',
+          overlay: 'Explore how data centers are tackling growing power demands with distributed energy resources, backup generation, and grid independence strategies. Learn about the challenges of scaling power infrastructure and the role Cat solutions play in keeping operations online and efficient as demand continues to climb.'
+        }
+      },
+      {
+        title: 'Funding the Electricity Gap',
+        type: 'blog',
+        roles: ['Municipality Manager', 'Utility Manager'],
+        objectives: ['Cost Efficiency', 'Increased Capacity'],
+        url: 'https://www.cat.com/en_US/blog/funding-the-electricity-gap.html',
+        desc: {
+          small: 'Financing strategies to bridge capacity shortfalls',
+          medium: 'Practical funding strategies for municipalities and utilities to bridge the growing electricity gap without overextending budgets.',
+          large: 'Practical funding strategies for municipalities and utilities to bridge the growing electricity gap. Covers grant programs, public-private partnerships, and Energy as a Service models that deliver capacity without large capital outlays.',
+          overlay: 'Practical funding strategies for municipalities and utilities to bridge the growing electricity gap. Covers grant programs, public-private partnerships, and Energy as a Service models that deliver capacity without large capital outlays. Learn how Cat helps organizations secure funding and deploy solutions faster.'
+        }
+      },
+      {
+        title: 'Try Before You Buy',
+        type: 'blog',
+        roles: ['Plant Manager', 'Electrical Contractor', 'Consulting Engineer'],
+        objectives: ['Cost Efficiency', 'Increased Capacity'],
+        url: 'https://www.cat.com/en_US/blog/five-times-it-pays-to-try-before-you-buy-with-rental-power.html',
+        desc: {
+          small: 'Five scenarios where rental power makes financial sense',
+          medium: 'Five scenarios where renting power equipment pays off before committing to purchase, from seasonal peaks to emergency preparedness testing.',
+          large: 'Five scenarios where renting power equipment pays off before committing to purchase. Covers seasonal peaks, planned outages, load testing, emergency preparedness, and capacity bridging during new construction or expansion.',
+          overlay: 'Five scenarios where renting power equipment pays off before committing to purchase. Covers seasonal peaks, planned outages, load testing, emergency preparedness, and capacity bridging during new construction or expansion. Understand the financial advantages and operational flexibility of Cat rental power solutions.'
+        }
+      },
+      {
+        title: 'Munis & Energy Transition',
+        type: 'blog',
+        roles: ['Municipality Manager', 'Utility Manager'],
+        objectives: ['Increased Capacity', 'Improved Energy Reliability'],
+        url: 'https://www.cat.com/en_US/blog/your-options-for-the-energy-transition.html',
+        desc: {
+          small: 'Energy transition options for municipal utilities',
+          medium: 'How municipal utilities can navigate the energy transition with practical generation options that maintain reliability while progressing toward cleaner energy.',
+          large: 'How municipal utilities can navigate the energy transition with practical generation options that maintain reliability while progressing toward cleaner energy. Covers natural gas, renewables, storage, and hybrid approaches suited to municipal-scale operations.',
+          overlay: 'How municipal utilities can navigate the energy transition with practical generation options that maintain reliability while progressing toward cleaner energy. Covers natural gas, renewables, storage, and hybrid approaches suited to municipal-scale operations and public service obligations.'
+        }
+      },
+      {
+        title: 'Business Case',
+        type: 'blog',
+        roles: ['Municipality Manager', 'Sustainability Manager', 'Utility Manager', 'Plant Manager'],
+        objectives: ['Cost Efficiency', 'Sustainability / Renewables'],
+        url: 'https://www.cat.com/en_US/blog/5-steps-to-sign-off-on-a-new-energy-solution.html',
+        desc: {
+          small: 'Five steps to build a business case for new energy solutions',
+          medium: 'A five-step framework for building a compelling business case to get leadership sign-off on a new energy solution investment.',
+          large: 'A five-step framework for building a compelling business case to get leadership sign-off on a new energy solution. Covers cost analysis, ROI modeling, risk assessment, stakeholder alignment, and implementation planning.',
+          overlay: 'A five-step framework for building a compelling business case to get leadership sign-off on a new energy solution. Covers cost analysis, ROI modeling, risk assessment, stakeholder alignment, and implementation planning. Designed for decision-makers who need to justify DER investments to executives and boards.'
+        }
+      },
+      {
+        title: 'EaaS',
+        type: 'blog',
+        roles: ['Municipality Manager', 'Utility Manager', 'Plant Manager'],
+        objectives: ['Improved Energy Reliability', 'Cost Efficiency'],
+        url: 'https://www.cat.com/en_US/blog/is-your-organization-a-good-fit-for-eaas.html',
+        desc: {
+          small: 'Is your organization a good fit for Energy as a Service?',
+          medium: 'Determine whether Energy as a Service is the right model for your organization based on operational profile, capital constraints, and reliability needs.',
+          large: 'Determine whether Energy as a Service is the right model for your organization. Evaluates operational profiles, capital constraints, reliability needs, and sustainability goals to help you decide if EaaS delivers the right value.',
+          overlay: 'Determine whether Energy as a Service is the right model for your organization. Evaluates operational profiles, capital constraints, reliability needs, and sustainability goals to help you decide if EaaS delivers the right value. Includes real-world criteria and a self-assessment framework.'
+        }
+      },
+      {
+        title: 'Hydrogen',
+        type: 'blog',
+        roles: ['all'],
+        objectives: ['Sustainability / Renewables', 'Improved Energy Reliability'],
+        url: 'https://www.cat.com/en_US/blog/hydrogens-true-colors-a-key-to-defining-carbon-intensity-blog.html',
+        desc: {
+          small: 'Understanding hydrogen color classifications and carbon intensity',
+          medium: 'A guide to hydrogen color classifications and what they mean for carbon intensity, cost, and practical deployment in power generation.',
+          large: 'A guide to hydrogen color classifications (green, blue, grey) and what they mean for carbon intensity, cost, and practical deployment. Understand how hydrogen fits into your energy strategy and where Cat technology supports hydrogen-ready generation.',
+          overlay: 'A guide to hydrogen color classifications (green, blue, grey) and what they mean for carbon intensity, cost, and practical deployment. Understand how hydrogen fits into your energy strategy and where Cat technology supports hydrogen-ready generation across commercial, utility, and industrial applications.'
+        }
+      },
+      {
+        title: 'K Series',
+        type: 'webinar',
+        roles: ['Municipality Manager', 'Utility Manager', 'Plant Manager', 'Electrical Contractor', 'Consulting Engineer'],
+        objectives: ['Improved Energy Reliability', 'Cost Efficiency'],
+        url: 'https://www.cat.com/en_US/exclusive/industry/electric-power/electric-power-webinars/achieving-energy-efficiency-with-the-new-k-series.html',
+        desc: {
+          small: 'Achieving energy efficiency with the new Cat K Series',
+          medium: 'Webinar on the new Cat K Series generator sets and how they deliver improved energy efficiency, lower emissions, and reduced operating costs.',
+          large: 'Webinar on the new Cat K Series generator sets and how they deliver improved energy efficiency, lower emissions, and reduced operating costs. Includes technical specs, fuel flexibility options, and real-world performance data from early deployments.',
+          overlay: 'Webinar on the new Cat K Series generator sets and how they deliver improved energy efficiency, lower emissions, and reduced operating costs. Includes technical specs, fuel flexibility options, and real-world performance data from early deployments across municipal, utility, and industrial applications.'
+        }
+      },
+      {
+        title: 'DERMS',
+        type: 'webinar',
+        roles: ['Municipality Manager', 'Utility Manager', 'Plant Manager'],
+        objectives: ['Increased Capacity', 'Cost Efficiency'],
+        url: 'https://www.cat.com/en_US/exclusive/industry/electric-power/electric-power-webinars/lower-energy-costs-protect-your-business-operations-and-keep-the-power-going.html',
+        desc: {
+          small: 'Lower energy costs with distributed energy resource management',
+          medium: 'How distributed energy resource management systems (DERMS) help lower energy costs while protecting business operations and maintaining power continuity.',
+          large: 'How distributed energy resource management systems help lower energy costs while protecting business operations. Covers Cat AMP capabilities, demand response strategies, and real-time asset dispatch for peak shaving and load management.',
+          overlay: 'How distributed energy resource management systems help lower energy costs while protecting business operations. Covers Cat AMP capabilities, demand response strategies, and real-time asset dispatch for peak shaving and load management. Learn how DERMS integration reduces utility charges and improves grid participation.'
+        }
+      },
+      {
+        title: 'GHG',
+        type: 'webinar',
+        roles: ['all'],
+        objectives: ['Sustainability / Renewables', 'Improved Energy Reliability'],
+        url: 'https://www.cat.com/en_US/exclusive/industry/electric-power/electric-power-webinars/greenhouse-gas-trends-drivers-and-solutions.html',
+        desc: {
+          small: 'Greenhouse gas trends, drivers, and energy solutions',
+          medium: 'Webinar covering greenhouse gas trends, regulatory drivers, and practical power generation solutions that reduce emissions while maintaining reliability.',
+          large: 'Webinar covering greenhouse gas trends, regulatory drivers, and practical power generation solutions. Explores how organizations can meet GHG reduction targets through fuel switching, efficiency improvements, and renewable integration with Cat technology.',
+          overlay: 'Webinar covering greenhouse gas trends, regulatory drivers, and practical power generation solutions. Explores how organizations can meet GHG reduction targets through fuel switching, efficiency improvements, and renewable integration with Cat technology. Includes policy landscape analysis and actionable strategies.'
+        }
+      },
+      {
+        title: 'Data In Mind',
+        type: 'webinar',
+        roles: ['all'],
+        objectives: ['Improved Energy Reliability', 'Emergency Preparedness'],
+        url: 'https://www.cat.com/en_US/exclusive/industry/electric-power/electric-power-webinars/designing-power-systems-data-in-mind.html',
+        desc: {
+          small: 'Designing power systems with data center requirements in mind',
+          medium: 'How to design power systems specifically for data center requirements, covering redundancy, scalability, and uptime optimization strategies.',
+          large: 'How to design power systems specifically for data center requirements. Covers N+1 redundancy, modular scalability, thermal management integration, and uptime optimization strategies that meet Tier III and Tier IV reliability standards.',
+          overlay: 'How to design power systems specifically for data center requirements. Covers N+1 redundancy, modular scalability, thermal management integration, and uptime optimization strategies that meet Tier III and Tier IV reliability standards. Includes Cat generator sizing guidance and emergency transfer considerations.'
+        }
+      },
+      {
+        title: 'ECS',
+        type: 'webinar',
+        roles: ['all'],
+        objectives: ['Improved Energy Reliability', 'Increased Capacity'],
+        url: 'https://www.cat.com/en_US/by-industry/electric-power/electric-power-webinars/a-future-of-possibilities-one-energy-solution-cat-ecs.html',
+        desc: {
+          small: 'Cat Energy Control System for integrated power management',
+          medium: 'Webinar on the Cat Energy Control System (ECS) and how it integrates multiple energy assets into one managed platform for reliability and efficiency.',
+          large: 'Webinar on the Cat Energy Control System (ECS) and how it integrates multiple energy assets, including generators, solar, and storage, into one managed platform. Covers automated dispatch, load balancing, and predictive maintenance capabilities.',
+          overlay: 'Webinar on the Cat Energy Control System (ECS) and how it integrates multiple energy assets, including generators, solar, and storage, into one managed platform. Covers automated dispatch, load balancing, and predictive maintenance capabilities. See how ECS enables seamless grid-tied and islanded operation.'
+        }
+      },
+      {
+        title: 'Fuel Options',
+        type: 'webinar',
+        roles: ['all'],
+        objectives: ['Improved Energy Reliability', 'Sustainability / Renewables'],
+        url: 'https://www.cat.com/en_US/exclusive/industry/electric-power/electric-power-webinars/the-right-genset-for-your-site.html',
+        desc: {
+          small: 'Choosing the right generator fuel type for your site',
+          medium: 'How to select the right generator set and fuel type for your site based on operational requirements, emissions targets, and total cost of ownership.',
+          large: 'How to select the right generator set and fuel type for your site. Compares diesel, natural gas, biogas, and hydrogen-blend options across performance, emissions, cost, and fuel availability to match your operational and sustainability goals.',
+          overlay: 'How to select the right generator set and fuel type for your site. Compares diesel, natural gas, biogas, and hydrogen-blend options across performance, emissions, cost, and fuel availability to match your operational and sustainability goals. Includes Cat product recommendations by application type.'
+        }
+      },
+      {
+        title: 'Hydrogen',
+        type: 'webinar',
+        roles: ['all'],
+        objectives: ['Sustainability / Renewables', 'Improved Energy Reliability'],
+        url: 'https://www.cat.com/en_US/exclusive/industry/electric-power/electric-power-webinars/the-hydrogen-economy.html',
+        desc: {
+          small: 'The hydrogen economy and its role in power generation',
+          medium: 'Webinar exploring the emerging hydrogen economy and what it means for power generation, including production methods, storage challenges, and deployment timelines.',
+          large: 'Webinar exploring the emerging hydrogen economy. Covers production methods, storage and distribution challenges, blending ratios for existing gensets, and realistic deployment timelines. Learn where Cat hydrogen-ready equipment fits into the evolving energy landscape.',
+          overlay: 'Webinar exploring the emerging hydrogen economy. Covers production methods, storage and distribution challenges, blending ratios for existing gensets, and realistic deployment timelines. Learn where Cat hydrogen-ready equipment fits into the evolving energy landscape and how to prepare your infrastructure for hydrogen adoption.'
+        }
+      },
+      {
+        title: 'Hydrogen Powered Data Centers',
+        type: 'podcast',
+        roles: ['all'],
+        objectives: ['Sustainability / Renewables', 'Improved Energy Reliability'],
+        url: 'https://www.buzzsprout.com/833452/episodes/15695628-hydrogen-powered-data-centers',
+        desc: {
+          small: 'Exploring hydrogen as a fuel source for data centers',
+          medium: 'Podcast episode exploring the feasibility of hydrogen-powered data centers, including current pilot projects, infrastructure needs, and timeline expectations.',
+          large: 'Podcast episode exploring the feasibility of hydrogen-powered data centers. Covers current pilot projects, fuel cell vs. combustion approaches, infrastructure requirements, and realistic timelines for commercial adoption in the data center sector.',
+          overlay: 'Podcast episode exploring the feasibility of hydrogen-powered data centers. Covers current pilot projects, fuel cell vs. combustion approaches, infrastructure requirements, and realistic timelines for commercial adoption. Hear from industry experts on what it takes to make hydrogen viable for mission-critical facilities.'
+        }
+      },
+      {
+        title: 'When to Choose Used',
+        type: 'podcast',
+        roles: ['all'],
+        objectives: ['Cost Efficiency', 'Improved Energy Reliability'],
+        url: 'https://www.buzzsprout.com/833452/episodes/15576881-when-to-choose-used-10-essential-questions-for-purchasing-a-used-generator',
+        desc: {
+          small: '10 essential questions for buying a used generator',
+          medium: 'Podcast covering the 10 essential questions to ask before purchasing a used generator, from hours and maintenance history to warranty and load testing.',
+          large: 'Podcast covering the 10 essential questions to ask before purchasing a used generator. Covers runtime hours, maintenance records, warranty availability, load bank testing, and how to evaluate whether used equipment meets your reliability standards.',
+          overlay: 'Podcast covering the 10 essential questions to ask before purchasing a used generator. Covers runtime hours, maintenance records, warranty availability, load bank testing, and how to evaluate whether used equipment meets your reliability standards. Practical guidance for getting quality equipment at lower cost.'
+        }
+      },
+      {
+        title: 'Why it Pays to Have a Disaster Plan',
+        type: 'podcast',
+        roles: ['all'],
+        objectives: ['Emergency Preparedness', 'Improved Energy Reliability'],
+        url: 'https://www.buzzsprout.com/833452/episodes/15381414-disaster-preparedness-why-it-pays-to-have-a-plan',
+        desc: {
+          small: 'The ROI of disaster preparedness planning',
+          medium: 'Why investing in a disaster preparedness plan pays off. Covers the financial and operational risks of being unprepared and how backup power fits into a resilience strategy.',
+          large: 'Why investing in a disaster preparedness plan pays off. Covers the financial and operational risks of being unprepared, insurance considerations, regulatory requirements, and how standby generation and fuel contracts fit into a comprehensive resilience strategy.',
+          overlay: 'Why investing in a disaster preparedness plan pays off. Covers the financial and operational risks of being unprepared, insurance considerations, regulatory requirements, and how standby generation and fuel contracts fit into a comprehensive resilience strategy. Real-world examples of organizations that avoided catastrophic losses through planning.'
+        }
+      },
+      {
+        title: 'Bridging Power',
+        type: 'podcast',
+        roles: ['all'],
+        objectives: ['Increased Capacity', 'Improved Energy Reliability'],
+        url: 'https://www.buzzsprout.com/833452/episodes/15283799-bridging-power-fix-short-term-gaps-and-plan-for-future-ones',
+        desc: {
+          small: 'Bridging short-term power gaps while planning ahead',
+          medium: 'How to fix short-term power gaps while planning for future capacity needs. Covers temporary generation, modular solutions, and phased infrastructure upgrades.',
+          large: 'How to fix short-term power gaps while planning for future capacity needs. Covers temporary generation, modular power solutions, phased infrastructure upgrades, and how rental and bridging strategies buy time while permanent solutions are designed and deployed.',
+          overlay: 'How to fix short-term power gaps while planning for future capacity needs. Covers temporary generation, modular power solutions, phased infrastructure upgrades, and how rental and bridging strategies buy time while permanent solutions are designed and deployed. Ideal for operations facing rapid demand growth.'
+        }
+      },
+      {
+        title: 'Mobile ESS + Gensets',
+        type: 'podcast',
+        roles: ['all'],
+        objectives: ['Improved Energy Reliability', 'Sustainability / Renewables'],
+        url: 'https://www.buzzsprout.com/833452/episodes/14960781-mobile-energy-storage-generator-sets-the-ideal-combination',
+        desc: {
+          small: 'Pairing mobile energy storage with generator sets',
+          medium: 'Why mobile energy storage systems paired with generator sets create an ideal combination for flexible, reliable, and cleaner temporary power deployments.',
+          large: 'Why mobile energy storage systems paired with generator sets create an ideal combination. Covers fuel savings from load optimization, emissions reductions, noise benefits, and deployment flexibility for construction, events, and emergency response scenarios.',
+          overlay: 'Why mobile energy storage systems paired with generator sets create an ideal combination. Covers fuel savings from load optimization, emissions reductions, noise benefits, and deployment flexibility for construction, events, and emergency response scenarios. Learn how Cat mobile ESS integrates seamlessly with genset fleets.'
+        }
+      },
+      {
+        title: 'EaaS: What is it? How can you benefit?',
+        type: 'podcast',
+        roles: ['all'],
+        objectives: ['Improved Energy Reliability', 'Cost Efficiency'],
+        url: 'https://www.buzzsprout.com/833452/episodes/14778975-eaas-what-is-it-how-can-you-benefit',
+        desc: {
+          small: 'Understanding Energy as a Service and its benefits',
+          medium: 'Podcast explaining Energy as a Service, how it works, who benefits most, and why it is becoming the preferred model for organizations deploying distributed energy.',
+          large: 'Podcast explaining Energy as a Service: how it works, who benefits most, and why it is becoming the preferred model. Covers contract structures, risk transfer, performance guarantees, and how Cat delivers EaaS through its dealer network with third-party financing.',
+          overlay: 'Podcast explaining Energy as a Service: how it works, who benefits most, and why it is becoming the preferred model. Covers contract structures, risk transfer, performance guarantees, and how Cat delivers EaaS through its dealer network with third-party financing. Includes real customer examples and ROI scenarios.'
+        }
+      },
+      {
+        title: 'Data Center Bridging Power',
+        type: 'whitepaper',
+        roles: ['all'],
+        objectives: ['Increased Capacity', 'Cost Efficiency'],
+        url: '',
+        desc: {
+          small: 'Bridging power solutions for data center expansion',
+          medium: 'Whitepaper on bridging power strategies for data centers facing capacity constraints during expansion, covering temporary and modular generation approaches.',
+          large: 'Whitepaper on bridging power strategies for data centers facing capacity constraints during expansion. Covers temporary generation, modular deployment, utility interconnection timelines, and financial models for bridging the gap between demand and permanent infrastructure.',
+          overlay: 'Whitepaper on bridging power strategies for data centers facing capacity constraints during expansion. Covers temporary generation, modular deployment, utility interconnection timelines, and financial models for bridging the gap between demand and permanent infrastructure. Includes case examples and Cat solution recommendations.'
+        }
+      },
+      {
+        title: 'Nothing but the BESS',
+        type: 'whitepaper',
+        roles: ['all'],
+        objectives: ['Increased Capacity', 'Sustainability / Renewables'],
+        url: 'https://www.cat.com/en_US/by-industry/electric-power/Articles/White-papers/nothing-but-the-bess-why-integrating-temporary-small-batteries-optimizes-your-site.html',
+        desc: {
+          small: 'Why integrating temporary battery storage optimizes your site',
+          medium: 'Whitepaper explaining why integrating temporary small-scale battery energy storage systems optimizes site operations, reduces fuel costs, and improves power quality.',
+          large: 'Whitepaper explaining why integrating temporary small-scale battery energy storage systems optimizes site operations. Covers peak shaving, renewable firming, generator load leveling, fuel savings, and how portable BESS units complement existing generation assets.',
+          overlay: 'Whitepaper explaining why integrating temporary small-scale battery energy storage systems optimizes site operations. Covers peak shaving, renewable firming, generator load leveling, fuel savings, and how portable BESS units complement existing generation assets. Includes sizing guidelines and deployment case studies.'
+        }
+      },
+      {
+        title: 'Supporting the Grid with Gas',
+        type: 'whitepaper',
+        roles: ['all'],
+        objectives: ['Increased Capacity', 'Improved Energy Reliability'],
+        url: 'https://www.cat.com/en_US/by-industry/electric-power/Articles/White-papers/supporting-the-grid.html',
+        desc: {
+          small: 'How natural gas generation supports grid stability',
+          medium: 'Whitepaper on how natural gas generation supports grid stability and reliability, especially as intermittent renewables grow and baseload capacity retires.',
+          large: 'Whitepaper on how natural gas generation supports grid stability as intermittent renewables grow and baseload capacity retires. Covers peaking applications, frequency regulation, behind-the-meter generation, and the role of gas in the energy transition.',
+          overlay: 'Whitepaper on how natural gas generation supports grid stability as intermittent renewables grow and baseload capacity retires. Covers peaking applications, frequency regulation, behind-the-meter generation, and the role of gas in the energy transition. Includes Cat gas generator performance data and grid services capabilities.'
+        }
+      },
+      {
+        title: 'Hydrogen Video',
+        type: 'video',
+        roles: ['all'],
+        objectives: ['Sustainability / Renewables', 'Improved Energy Reliability'],
+        url: 'https://www.youtube.com/watch?v=o5mUjd_aRUs&t=9s',
+        desc: {
+          small: 'Cat hydrogen power generation technology overview',
+          medium: 'Video overview of Cat hydrogen power generation technology, including hydrogen-ready gensets, blending capabilities, and the path to zero-carbon generation.',
+          large: 'Video overview of Cat hydrogen power generation technology. Covers hydrogen-ready gensets, fuel blending capabilities, infrastructure requirements, and how Cat is enabling the transition to low and zero-carbon power generation across commercial and industrial applications.',
+          overlay: 'Video overview of Cat hydrogen power generation technology. Covers hydrogen-ready gensets, fuel blending capabilities, infrastructure requirements, and how Cat is enabling the transition to low and zero-carbon power generation across commercial and industrial applications. See real equipment in action with performance metrics.'
+        }
+      },
+      {
+        title: 'Hurricane Helene Video',
+        type: 'video',
+        roles: ['all'],
+        objectives: ['Emergency Preparedness', 'Improved Energy Reliability'],
+        url: 'https://www.youtube.com/watch?v=vstdL2XIq2c',
+        desc: {
+          small: 'Emergency power response during Hurricane Helene',
+          medium: 'Video documenting Cat dealer emergency power response during Hurricane Helene, from rapid generator deployment to community power restoration.',
+          large: 'Video documenting Cat dealer emergency power response during Hurricane Helene. Covers rapid mobilization of rental generators, community power restoration efforts, fuel logistics, and lessons learned for improving future disaster response readiness.',
+          overlay: 'Video documenting Cat dealer emergency power response during Hurricane Helene. Covers rapid mobilization of rental generators, community power restoration efforts, fuel logistics, and lessons learned for improving future disaster response readiness. A real-world example of the Cat dealer network in action.'
+        }
+      },
+      {
+        title: 'Cat AMP for Businesses & Utilities',
+        type: 'video',
+        roles: ['all'],
+        objectives: ['Cost Efficiency', 'Improved Energy Reliability'],
+        url: 'https://www.youtube.com/watch?v=Jm-LVT9T9Y4&t=2s',
+        desc: {
+          small: 'Cat AMP platform for monitoring and managing energy assets',
+          medium: 'Video introducing Cat AMP, the asset monitoring platform that helps businesses and utilities monitor, manage, and monetize distributed energy resources in real time.',
+          large: 'Video introducing Cat AMP, the asset monitoring platform that helps businesses and utilities monitor, manage, and monetize distributed energy resources. Covers real-time dashboards, automated dispatch, peak demand management, and performance verification.',
+          overlay: 'Video introducing Cat AMP, the asset monitoring platform that helps businesses and utilities monitor, manage, and monetize distributed energy resources. Covers real-time dashboards, automated dispatch, peak demand management, and performance verification. See how Cat AMP creates value from your on-site generation assets.'
+        }
+      },
+      {
+        title: '10 Prospect Square',
+        type: 'video',
+        roles: ['all'],
+        objectives: ['Emergency Preparedness', 'Improved Energy Reliability'],
+        url: 'https://www.youtube.com/watch?v=kLzeQ2vWH_o',
+        desc: {
+          small: 'Standby power case study at 10 Prospect Square',
+          medium: 'Video case study showing how 10 Prospect Square implemented Cat standby power to protect critical operations and ensure business continuity.',
+          large: 'Video case study showing how 10 Prospect Square implemented Cat standby power. Covers system design, automatic transfer switching, load prioritization, and how standby generation provides peace of mind for commercial facilities in outage-prone areas.',
+          overlay: 'Video case study showing how 10 Prospect Square implemented Cat standby power. Covers system design, automatic transfer switching, load prioritization, and how standby generation provides peace of mind for commercial facilities in outage-prone areas. Includes facility manager perspectives and ROI analysis.'
+        }
+      },
+      {
+        title: 'K Series Video',
+        type: 'video',
+        roles: ['all'],
+        objectives: ['Improved Energy Reliability', 'Cost Efficiency'],
+        url: 'https://www.youtube.com/watch?v=4MyELDwHDw0',
+        desc: {
+          small: 'Cat K Series generator set product overview',
+          medium: 'Product video showcasing the Cat K Series generator sets, featuring improved fuel efficiency, lower emissions, and enhanced serviceability for standby and prime power.',
+          large: 'Product video showcasing the Cat K Series generator sets. Highlights improved fuel efficiency, lower emissions, enhanced serviceability, and digital connectivity features that make the K Series the new standard for standby and prime power applications.',
+          overlay: 'Product video showcasing the Cat K Series generator sets. Highlights improved fuel efficiency, lower emissions, enhanced serviceability, and digital connectivity features. See the engineering innovations and field performance that make the K Series the new standard for standby and prime power applications across all sectors.'
+        }
+      },
+      {
+        title: 'Baja Case Study',
+        type: 'video',
+        roles: ['all'],
+        objectives: ['Improved Energy Reliability', 'Increased Capacity'],
+        url: 'https://www.youtube.com/watch?v=6eXbIjef7RI&t=11s',
+        desc: {
+          small: 'Cat power solutions deployment in Baja California',
+          medium: 'Video case study of Cat power solutions deployed in Baja California to address grid reliability challenges and support growing industrial capacity needs.',
+          large: 'Video case study of Cat power solutions deployed in Baja California. Covers the grid reliability challenges facing the region, the generation solution deployed, and measurable improvements in uptime and capacity for industrial operations.',
+          overlay: 'Video case study of Cat power solutions deployed in Baja California. Covers the grid reliability challenges facing the region, the generation solution deployed, and measurable improvements in uptime and capacity for industrial operations. A real-world demonstration of Cat distributed power at scale.'
+        }
+      },
+      {
+        title: 'Reading Case Study',
+        type: 'video',
+        roles: ['all'],
+        objectives: ['Increased Capacity', 'Cost Efficiency'],
+        url: 'https://www.youtube.com/watch?v=hvF1QIXN8x0&t=2s',
+        desc: {
+          small: 'Cat power generation case study from Reading, PA',
+          medium: 'Video case study from Reading, PA showing how Cat generation solutions addressed growing capacity demands while controlling energy costs for a municipal utility.',
+          large: 'Video case study from Reading, PA showing how Cat generation solutions addressed growing capacity demands. Covers the municipal utility challenge, system design, performance results, and how the deployment reduced peak demand charges while adding needed generation capacity.',
+          overlay: 'Video case study from Reading, PA showing how Cat generation solutions addressed growing capacity demands. Covers the municipal utility challenge, system design, performance results, and how the deployment reduced peak demand charges while adding needed generation capacity. Includes financial impact analysis and lessons for similar municipal deployments.'
+        }
+      }
+    ];
+
+    function getSelectedRole() {
+      const rc = document.querySelector('.step-3 .trait-card.selected');
+      return rc ? rc.querySelector('.trait-card-label').textContent.trim() : '';
+    }
+
+    function getSelectedObjectives() {
+      // Top path: step 4a (multi-select objectives)
+      const objs = Array.from(document.querySelectorAll('.step-4a .trait-card.selected'))
+        .map(c => c.querySelector('.trait-card-label').textContent.trim());
+      return objs;
+    }
+
+    function buildLearnCards() {
+      const container = document.getElementById('learn-grid-page');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const role = getSelectedRole();
+      const objectives = getSelectedObjectives();
+      const sizeKey = currentViewMode === 'large' ? 'large' : (currentViewMode === 'medium' ? 'medium' : 'small');
+
+      // Filter cards: match role AND at least one objective
+      const filtered = LEARN_CARDS.filter(card => {
+        const roleMatch = card.roles.includes('all') || card.roles.includes(role);
+        const objMatch = objectives.length === 0 || card.objectives.some(o => objectives.includes(o));
+        return roleMatch && objMatch;
+      });
+
+      filtered.forEach(lc => {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.dataset.cardType = 'learn';
+        card.dataset.type = lc.type;
+        card.dataset.title = lc.title;
+        card.dataset.desc = lc.desc.large;
+        card.dataset.descSmall = lc.desc.small;
+        card.dataset.descMedium = lc.desc.medium;
+        card.dataset.descLarge = lc.desc.large;
+        card.dataset.descOverlay = lc.desc.overlay;
+        if (lc.url) card.dataset.url = lc.url;
+        card.setAttribute('onclick', 'openCardOverlay(this)');
+
+        const descText = lc.desc[sizeKey];
+        const icon = LEARN_ICONS[lc.type] || LEARN_ICONS.blog;
+        const typeLabel = LEARN_TYPE_LABELS[lc.type] || lc.type;
+
+        card.innerHTML = `
+          <div class="card-top">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon">${icon}</svg>
+            <div class="card-title">${lc.title}</div>
+            <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
+          </div>
+          <span class="card-type-label">${typeLabel}</span>
+          <div class="card-desc" data-short-desc="${lc.desc.small}">${descText}</div>
+        `;
+        container.appendChild(card);
+      });
+
+      // Reset learn filter to "All"
+      document.querySelectorAll('.learn-filter').forEach(f => f.classList.toggle('active', f.dataset.filter === 'all'));
+    }
+
+    function buildSolutionCards() {
+      const industry = getSelectedIndustry();
+      const container = document.getElementById('solutions-grid-page');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const filtered = SOLUTIONS.filter(s => {
+        if (s.industries === 'all') return true;
+        if (!industry) return true;
+        return s.industries.split(',').includes(industry);
+      });
+
+      const sizeKey = currentViewMode === 'large' ? 'large' : (currentViewMode === 'medium' ? 'medium' : 'small');
+
+      filtered.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.dataset.cardType = 'solution';
+        card.dataset.solutionId = s.id;
+        card.dataset.title = s.title;
+        card.dataset.desc = s.desc.large;
+        card.dataset.descSmall = s.desc.small;
+        card.dataset.descMedium = s.desc.medium;
+        card.dataset.descLarge = s.desc.large;
+        card.dataset.descOverlay = s.desc.overlay;
+        card.setAttribute('onclick', 'openCardOverlay(this)');
+
+        const descText = s.desc[sizeKey];
+
+        card.innerHTML = `
+          <div class="card-top">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="card-icon">${s.icon}</svg>
+            <div class="card-title">${s.title}</div>
+            <button class="btn-save" onclick="event.stopPropagation();toggleSave(this)"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" /></svg></button>
+          </div>
+          <div class="card-desc" data-short-desc="${s.desc.small}">${descText}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
     // ── View Mode Toggle ──
-    let currentViewMode = 'small';
+    let currentViewMode = 'medium';
+    document.documentElement.classList.add('view-medium');
 
     function getCardsPerPage() {
       if (currentViewMode === 'small') return 6;
@@ -5673,6 +6518,16 @@
       } else {
         removeCardExtras();
       }
+
+      // Update dynamic card descriptions (outcomes + solutions) for current size
+      const sizeKey = mode === 'large' ? 'large' : (mode === 'medium' ? 'medium' : 'small');
+      const descProp = 'desc' + sizeKey.charAt(0).toUpperCase() + sizeKey.slice(1);
+      document.querySelectorAll('.result-card[data-desc-small]').forEach(card => {
+        const descEl = card.querySelector('.card-desc');
+        if (descEl && card.dataset[descProp]) {
+          descEl.textContent = card.dataset[descProp];
+        }
+      });
 
       repaginateTab('outcomes');
       repaginateTab('solutions');
@@ -5830,7 +6685,7 @@
       activeOverlayCard = card;
       const type = card.dataset.cardType;
       const title = card.dataset.title;
-      const desc = card.dataset.desc;
+      const desc = card.dataset.descOverlay || card.dataset.desc;
       const stat = card.dataset.stat;
       const mediaType = card.dataset.type; // for learn cards
       const iconSvg = card.querySelector('.card-icon').outerHTML;
