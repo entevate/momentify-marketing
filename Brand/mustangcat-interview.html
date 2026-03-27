@@ -1,0 +1,1946 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-step="0">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Mustang CAT - Open Interview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --yellow: #FFCC00;
+      --yellow-dim: rgba(255,204,0,0.15);
+      --bg-dark: #0A0A0A;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg: var(--bg-dark);
+      --bg-gradient: linear-gradient(145deg, #1a1400 0%, #0A0A0A 30%, #0d0800 55%, #111005 75%, #0A0A0A 100%);
+      --surface: rgba(255,255,255,0.06);
+      --surface-hover: rgba(255,255,255,0.10);
+      --border: rgba(255,255,255,0.12);
+      --border-focus: var(--yellow);
+      --text-1: #FFFFFF;
+      --text-2: rgba(255,255,255,0.75);
+      --text-3: rgba(255,255,255,0.50);
+      --input-bg: rgba(255,255,255,0.08);
+      --input-text: #FFFFFF;
+      --input-placeholder: rgba(255,255,255,0.40);
+      --focus-ring: rgba(255,204,0,0.15);
+    }
+
+    html { height: 100%; -webkit-text-size-adjust: 100%; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      min-height: 100dvh;
+      color: var(--text-1);
+      -webkit-font-smoothing: antialiased;
+      text-wrap: pretty;
+      overflow-x: hidden;
+    }
+
+    /* ─── Layout Shell ─────────────────────── */
+    .shell {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      min-height: 100dvh;
+      position: relative;
+      background: var(--bg-gradient);
+    }
+
+    /* ─── Background Pattern ─────────────── */
+    .bg-pattern {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        /* Diagonal hatching overlay */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Cpath d='M0 20L20 0' stroke='white' stroke-opacity='0.035' stroke-width='0.5'/%3E%3C/svg%3E") repeat,
+        /* Secondary cross-hatch at wider spacing */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M40 0L0 40' stroke='white' stroke-opacity='0.02' stroke-width='0.5'/%3E%3C/svg%3E") repeat,
+        /* Dot grid */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Ccircle cx='20' cy='20' r='0.8' fill='white' fill-opacity='0.03'/%3E%3C/svg%3E") repeat,
+        /* Grid lines */
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M80 0V80M0 80H80' stroke='white' stroke-opacity='0.02' stroke-width='0.5'/%3E%3C/svg%3E") repeat;
+    }
+
+    /* ─── Gradient Overlay ────────────────── */
+    .bg-gradient-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 80%, rgba(255,204,0,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 50% at 85% 20%, rgba(255,170,0,0.04) 0%, transparent 55%),
+        radial-gradient(ellipse 90% 70% at 50% 50%, rgba(255,204,0,0.02) 0%, transparent 70%),
+        linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.4) 100%);
+    }
+
+    /* ─── Top Bar ────────────────────────── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 24px 12px;
+      position: relative;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    .logo img {
+      height: 36px;
+      width: auto;
+    }
+
+    .btn-startover {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: transparent;
+      color: var(--text-3);
+      cursor: pointer;
+      transition: var(--transition);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      padding: 0;
+    }
+    .btn-startover:active {
+      color: var(--text-2);
+      border-color: rgba(255,255,255,0.2);
+      background: var(--surface);
+    }
+    .btn-startover svg { width: 16px; height: 16px; }
+
+    @media (min-width: 768px) {
+      .logo img { height: 44px; }
+      .btn-startover { right: 40px; }
+    }
+
+    /* ─── Center Content ─────────────────── */
+    .center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      min-height: 0;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    @media (min-width: 768px) {
+      .content { padding: 0 40px; max-width: 700px; }
+    }
+
+    /* ─── Steps Visibility ───────────────── */
+    .step { display: none; }
+    .step.active { display: flex; flex-direction: column; flex: 1; justify-content: center; }
+
+    /* ─── Aurora Background ──────────────── */
+    .aurora-orbs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .aurora-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      pointer-events: none;
+      will-change: transform;
+    }
+    .aurora-orb-1 {
+      width: 400px; height: 350px;
+      background: rgba(255,180,0,0.07);
+      left: -15%; bottom: -10%;
+      animation: auroraMove1 10s ease-in-out infinite;
+    }
+    .aurora-orb-2 {
+      width: 350px; height: 280px;
+      background: rgba(255,204,0,0.05);
+      right: -10%; top: 5%;
+      animation: auroraMove2 13s ease-in-out infinite;
+    }
+    .aurora-orb-3 {
+      width: 280px; height: 240px;
+      background: rgba(255,160,0,0.03);
+      left: 25%; top: 35%;
+      animation: auroraMove3 16s ease-in-out infinite;
+    }
+    @keyframes auroraMove1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(15%, -10%) scale(1.15); }
+    }
+    @keyframes auroraMove2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-20%, 10%) scale(1.1); }
+    }
+    @keyframes auroraMove3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(10%, 10%) scale(1.3); }
+    }
+
+    /* ─── Step 0: Welcome ────────────────── */
+    .step-welcome {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding-bottom: 60px;
+    }
+    .welcome-title {
+      font-size: 36px;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      color: var(--text-1);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .welcome-title .gradient-word {
+      color: var(--yellow);
+    }
+    .welcome-subtitle {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text-2);
+      line-height: 1.5;
+      margin-bottom: 36px;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .btn-begin {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 14px 32px;
+      border-radius: 12px;
+      border: 1.5px solid var(--yellow);
+      background: transparent;
+      color: var(--yellow);
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-begin::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -100%;
+      width: 85%; height: 200%;
+      background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.12) 50%, transparent 65%);
+      animation: sheen 7s ease-in-out infinite;
+    }
+    @keyframes sheen {
+      0% { left: -120%; }
+      35% { left: 160%; }
+      100% { left: 160%; }
+    }
+    .btn-begin:active { transform: scale(0.97); opacity: 0.9; }
+    .btn-begin svg { width: 18px; height: 18px; }
+
+    @media (min-width: 768px) {
+      .welcome-title { font-size: 52px; }
+      .welcome-subtitle { font-size: 18px; max-width: 400px; }
+    }
+
+    /* ─── Step 1: Contact Form ───────────── */
+    .step-form { padding-top: 16px; }
+    @media (min-width: 768px) {
+      .step-form { padding-top: 0; }
+    }
+    .form-header { margin-bottom: 20px; text-align: center; }
+    .form-title {
+      font-size: 24px;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      color: var(--text-1);
+      margin-bottom: 4px;
+    }
+    .form-subtitle {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-2);
+    }
+
+    .form-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-field label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+    .required { color: var(--yellow); }
+    .form-field input {
+      padding: 14px 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--input-text);
+      outline: none;
+      transition: var(--transition);
+      -webkit-appearance: none;
+    }
+    .form-field input::placeholder { color: var(--input-placeholder); }
+    .form-field input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    /* Validation error states */
+    .form-field.has-error input {
+      border-color: #E5484D;
+      box-shadow: 0 0 0 3px rgba(229,72,77,0.12);
+    }
+    .form-field.has-error input:focus {
+      border-color: #E5484D;
+      box-shadow: 0 0 0 3px rgba(229,72,77,0.18);
+    }
+    .field-error {
+      font-size: 12px;
+      font-weight: 400;
+      color: #E5484D;
+      display: none;
+    }
+    .form-field.has-error .field-error { display: block; }
+
+    .step-error {
+      font-size: 13px;
+      font-weight: 400;
+      color: #E5484D;
+      text-align: center;
+      margin-top: 16px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .step-error.visible { display: flex; }
+    .step-error svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    @keyframes headShake {
+      0% { transform: translateX(0); }
+      15% { transform: translateX(-4px); }
+      30% { transform: translateX(4px); }
+      45% { transform: translateX(-3px); }
+      60% { transform: translateX(2px); }
+      75% { transform: translateX(-1px); }
+      100% { transform: translateX(0); }
+    }
+    .shake { animation: headShake 0.4s ease; }
+
+    @media (min-width: 768px) {
+      .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    }
+
+    /* ─── Step 2-7: Questions ────────────── */
+    .step-question {
+      padding-top: 24px;
+    }
+    @media (min-width: 768px) {
+      .step-question { padding-top: 0; }
+    }
+    /* Location step has lots of scrollable content - don't center */
+    #step-7.step.active {
+      justify-content: flex-start;
+    }
+    @media (min-width: 768px) {
+      #step-7.step.active { justify-content: flex-start; }
+    }
+    .question-header {
+      margin-bottom: 24px;
+    }
+    .question-step-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--yellow);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .question-title {
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: -0.025em;
+      color: var(--text-1);
+      line-height: 1.3;
+    }
+
+    /* ─── Answer Cards ───────────────────── */
+    .answer-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .answer-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.05);
+      cursor: pointer;
+      transition: var(--transition);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .answer-card:active {
+      border-color: rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.08);
+    }
+    .answer-card.selected {
+      border-color: var(--yellow);
+      background: rgba(255,204,0,0.06);
+    }
+    .answer-card-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    .answer-card.selected .answer-card-icon {
+      border-color: var(--yellow);
+      background: var(--yellow);
+    }
+    .answer-card.selected .answer-card-icon::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #000;
+    }
+    .answer-card-label {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text-2);
+      line-height: 1.4;
+      transition: var(--transition);
+    }
+    .answer-card.selected .answer-card-label {
+      color: var(--text-1);
+      font-weight: 500;
+    }
+
+    @media (min-width: 768px) {
+      .answer-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .answer-card { padding: 20px 22px; }
+    }
+
+    /* ─── Referral Input (conditional) ──── */
+    .referral-input {
+      margin-top: 12px;
+      display: none;
+    }
+    .referral-input.visible { display: block; }
+    .referral-input input {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 16px;
+      color: var(--input-text);
+      outline: none;
+      transition: var(--transition);
+      -webkit-appearance: none;
+    }
+    .referral-input input::placeholder { color: var(--input-placeholder); }
+    .referral-input input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    /* ─── Location Select ────────────────── */
+    .location-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: calc(100dvh - 320px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 4px;
+    }
+
+    .location-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: var(--transition);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .location-card:active {
+      background: rgba(255,255,255,0.08);
+    }
+    .location-card.selected {
+      border-color: var(--yellow);
+      background: rgba(255,204,0,0.06);
+    }
+    .location-card-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    .location-card.selected .location-card-icon {
+      border-color: var(--yellow);
+      background: var(--yellow);
+    }
+    .location-card.selected .location-card-icon::after {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #000;
+    }
+    .location-card-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .location-card-name {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-2);
+      transition: var(--transition);
+    }
+    .location-card.selected .location-card-name {
+      color: var(--text-1);
+      font-weight: 500;
+    }
+    .location-card-type {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-3);
+    }
+
+    .location-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 12px 0 4px;
+    }
+
+    @media (min-width: 768px) {
+      .location-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        max-height: none;
+        overflow-y: visible;
+      }
+      .location-section-label { grid-column: 1 / -1; }
+    }
+
+    /* ─── Step 8: Thank You + Documents ─── */
+    .step-thankyou {
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      gap: 20px;
+      padding-top: 24px;
+    }
+    @media (min-width: 768px) {
+      .step-thankyou { justify-content: center; padding-top: 0; }
+    }
+    .thankyou-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(255,204,0,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+    .thankyou-icon svg {
+      width: 32px;
+      height: 32px;
+      color: var(--yellow);
+    }
+    .thankyou-title {
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: var(--text-1);
+    }
+    .thankyou-subtitle {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--text-2);
+      line-height: 1.5;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    .documents-section {
+      width: 100%;
+      margin-top: 16px;
+    }
+    .documents-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+    .document-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .document-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .document-card:active {
+      border-color: rgba(255,204,0,0.3);
+      background: rgba(255,255,255,0.08);
+    }
+    .document-card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255,204,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .document-card-icon svg {
+      width: 18px;
+      height: 18px;
+      color: var(--yellow);
+    }
+    .document-card-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .document-card-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-1);
+    }
+    .document-card-desc {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--text-3);
+    }
+    .document-card-action {
+      color: var(--text-3);
+      flex-shrink: 0;
+    }
+    .document-card-action svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Share actions */
+    .share-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      width: 100%;
+    }
+    .btn-share {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: var(--transition);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-share:active {
+      background: var(--surface-hover);
+      border-color: var(--yellow);
+      color: var(--yellow);
+    }
+    .btn-share svg { width: 18px; height: 18px; }
+
+    /* ─── Share Dialog ───────────────────── */
+    .share-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 24px;
+    }
+    .share-overlay.open { display: flex; }
+
+    .share-dialog {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(30,30,30,0.85);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 20px;
+      padding: 32px 28px 28px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+    }
+    .share-dialog-title {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-1);
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .share-dialog-subtitle {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text-3);
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    /* Toggle options */
+    .share-option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: var(--transition);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .share-option:active {
+      background: rgba(255,255,255,0.08);
+    }
+    .share-option.selected {
+      border-color: var(--yellow);
+      background: rgba(255,204,0,0.06);
+    }
+    .share-option-toggle {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+    .share-option.selected .share-option-toggle {
+      border-color: var(--yellow);
+      background: var(--yellow);
+    }
+    .share-option.selected .share-option-toggle::after {
+      content: '';
+      width: 10px;
+      height: 6px;
+      border-left: 2px solid #000;
+      border-bottom: 2px solid #000;
+      transform: rotate(-45deg) translateY(-1px);
+    }
+    .share-option-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .share-option-icon svg {
+      width: 18px;
+      height: 18px;
+      color: var(--yellow);
+    }
+    .share-option-text { flex: 1; min-width: 0; }
+    .share-option-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-1);
+    }
+    .share-option-value {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text-3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .share-dialog-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .btn-share-cancel {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: var(--transition);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-share-cancel:active { background: var(--surface); }
+    .btn-share-send {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: none;
+      background: var(--yellow);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: #000;
+      cursor: pointer;
+      transition: var(--transition);
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-share-send:active { opacity: 0.85; }
+    .btn-share-send svg { width: 16px; height: 16px; }
+    .btn-share-send:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Sent confirmation */
+    .share-sent {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 20px 0;
+    }
+    .share-sent.visible { display: flex; }
+    .share-sent-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255,204,0,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .share-sent-icon svg { width: 24px; height: 24px; color: var(--yellow); }
+    .share-sent-text {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-1);
+    }
+
+    @media (min-width: 768px) {
+      .document-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+    }
+
+    /* ─── Bottom Bar ─────────────────────── */
+    .bottom-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px 20px;
+      padding-bottom: max(14px, env(safe-area-inset-bottom));
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    .bottom-bar-buttons { display: contents; }
+    .bottom-bar-left { display: flex; align-items: center; }
+    .bottom-bar-right { display: flex; align-items: center; }
+    .progress-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .progress-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: var(--transition);
+    }
+    .progress-dot.active { background: var(--yellow); }
+    .progress-dot.completed { background: var(--yellow); opacity: 0.4; }
+
+    /* Mobile: icon-only circular buttons */
+    .btn-back {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-2);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      font-size: 0;
+      padding: 0;
+    }
+    .btn-back:active { background: var(--surface); }
+    .btn-back svg { width: 18px; height: 18px; }
+    .btn-back-label { display: none; }
+
+    .btn-next {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid var(--yellow);
+      background: transparent;
+      color: var(--yellow);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+      font-size: 0;
+      padding: 0;
+    }
+    .btn-next:active { background: rgba(255,204,0,0.08); }
+    .btn-next:disabled {
+      border-color: var(--border);
+      color: var(--text-3);
+      cursor: not-allowed;
+    }
+    .btn-next svg { width: 18px; height: 18px; }
+    .btn-next-label { display: none; }
+
+    .btn-submit {
+      height: 40px;
+      padding: 0 20px;
+      border-radius: 20px;
+      border: none;
+      background: var(--yellow);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: #000;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-submit:active { opacity: 0.85; transform: scale(0.97); }
+    .btn-submit svg { width: 16px; height: 16px; }
+
+    /* iPad: text labels on buttons, more padding */
+    @media (min-width: 768px) {
+      .bottom-bar {
+        padding: 20px 40px;
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+        justify-content: space-between;
+      }
+      .progress-dots { flex: 1; justify-content: center; }
+      .btn-back {
+        width: auto;
+        height: auto;
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 400;
+        font-family: inherit;
+        gap: 6px;
+      }
+      .btn-back-label { display: inline; }
+      .btn-next {
+        width: auto;
+        height: auto;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        font-family: inherit;
+        gap: 6px;
+      }
+      .btn-next-label { display: inline; }
+      .btn-submit {
+        height: auto;
+        border-radius: 10px;
+        padding: 10px 24px;
+      }
+    }
+
+    /* ─── Powered By ─────────────────────── */
+    .powered-by {
+      text-align: center;
+      padding: 8px 0;
+      padding-bottom: max(8px, env(safe-area-inset-bottom));
+      font-size: 10px;
+      color: rgba(255,255,255,0.15);
+      letter-spacing: 0.03em;
+    }
+    .powered-by a {
+      color: rgba(255,255,255,0.25);
+      text-decoration: none;
+    }
+
+    /* ─── Animations ─────────────────────── */
+    .fade-in {
+      animation: fadeIn 0.4s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── iPad-specific tweaks ───────────── */
+    @media (min-width: 1024px) {
+      .content { max-width: 720px; }
+      .welcome-title { font-size: 64px; }
+      .welcome-subtitle { font-size: 19px; max-width: 440px; }
+      .form-title { font-size: 28px; }
+      .question-title { font-size: 28px; }
+      .answer-card { padding: 22px 24px; }
+      .answer-card-label { font-size: 16px; }
+      .thankyou-title { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <div class="bg-pattern"></div>
+  <div class="bg-gradient-overlay"></div>
+  <div class="aurora-orbs">
+    <div class="aurora-orb aurora-orb-1"></div>
+    <div class="aurora-orb aurora-orb-2"></div>
+    <div class="aurora-orb aurora-orb-3"></div>
+  </div>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="logo">
+      <img src="assets/mustang-cat-logo.png" alt="Mustang CAT" />
+    </div>
+    <button class="btn-startover" id="btn-startover" onclick="startOver()" title="Start over">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182M2.985 19.644l3.181-3.183" /></svg>
+    </button>
+  </div>
+
+  <!-- Center -->
+  <div class="center">
+    <div class="content">
+
+      <!-- Step 0: Welcome -->
+      <div class="step step-welcome active" id="step-0">
+        <div class="welcome-title">Welcome to<br><span class="gradient-word">Open Interviews.</span></div>
+        <div class="welcome-subtitle">Thank you for coming in today. Please complete the information below before meeting with our hiring team.</div>
+        <button class="btn-begin" onclick="goToStep(1)">
+          Tap to Begin
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+        </button>
+      </div>
+
+      <!-- Step 1: Contact Form -->
+      <div class="step step-form" id="step-1">
+        <div class="form-header">
+          <h1 class="form-title">Contact Information</h1>
+          <p class="form-subtitle">We will use this to follow up with you.</p>
+        </div>
+        <div class="form-fields">
+          <div class="form-field" id="field-name-wrap">
+            <label>Full Name <span class="required">*</span></label>
+            <input type="text" id="field-name" placeholder="Full name" required autocomplete="name" oninput="clearFieldError('field-name-wrap')" />
+            <span class="field-error">Please enter your full name</span>
+          </div>
+          <div class="form-field" id="field-email-wrap">
+            <label>Email Address <span class="required">*</span></label>
+            <input type="email" id="field-email" placeholder="you@email.com" required autocomplete="email" oninput="clearFieldError('field-email-wrap')" />
+            <span class="field-error">Please enter a valid email address</span>
+          </div>
+          <div class="form-field" id="field-phone-wrap">
+            <label>Phone Number <span class="required">*</span></label>
+            <input type="tel" id="field-phone" placeholder="(555) 555-5555" required autocomplete="tel" oninput="clearFieldError('field-phone-wrap')" />
+            <span class="field-error">Please enter your phone number</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Interviewed in last 6 months? -->
+      <div class="step step-question" id="step-2">
+        <div class="question-header">
+          <div class="question-step-label">Question 1 of 6</div>
+          <div class="question-title">Have you interviewed with Mustang Cat within the last 6 months?</div>
+        </div>
+        <div class="answer-grid" data-question="q1">
+          <div class="answer-card" onclick="selectAnswer(this, 'q1')" data-value="yes">
+            <div class="answer-card-icon"></div>
+            <div class="answer-card-label">Yes</div>
+          </div>
+          <div class="answer-card" onclick="selectAnswer(this, 'q1')" data-value="no">
+            <div class="answer-card-icon"></div>
+            <div class="answer-card-label">No</div>
+          </div>
+        </div>
+        <div class="step-error" id="error-q1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg> Please select an answer</div>
+      </div>
+
+      <!-- Step 3: Already filled application? -->
+      <div class="step step-question" id="step-3">
+        <div class="question-header">
+          <div class="question-step-label">Question 2 of 6</div>
+          <div class="question-title">Have you already filled out an application with Mustang Cat?</div>
+        </div>
+        <div class="answer-grid" data-question="q2">
+          <div class="answer-card" onclick="selectAnswer(this, 'q2')" data-value="yes">
+            <div class="answer-card-icon"></div>
+            <div class="answer-card-label">Yes</div>
+          </div>
+          <div class="answer-card" onclick="selectAnswer(this, 'q2')" data-value="no">
+            <div class="answer-card-icon"></div>
+            <div class="answer-card-label">No</div>
+          </div>
+        </div>
+        <div class="step-error" id="error-q2"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg> Please select an answer</div>
+      </div>
+
+      <!-- Step 4: Aware of technician positions only? -->
+      <div class="step step-question" id="step-4">
+        <div class="question-header">
+          <div class="question-step-label">Question 3 of 6</div>
+          <div class="question-title">Are you aware that today's in-person interviews are for Technician positions only?</div>
+        </div>
+        <div class="answer-grid" data-question="q3">
+          <div class="answer-card" onclick="selectAnswer(this, 'q3')" data-value="yes">
+            <div class="answer-card-icon"></div>
+            <div class="answer-card-label">Yes</div>
+          </div>
+          <div class="answer-card" onclick="selectAnswer(this, 'q3')" data-value="no">
+            <div class="answer-card-icon"></div>
+            <div class="answer-card-label">No</div>
+          </div>
+        </div>
+        <div class="step-error" id="error-q3"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg> Please select an answer</div>
+      </div>
+
+      <!-- Step 5: Own basic mechanic tools? -->
+      <div class="step step-question" id="step-5">
+        <div class="question-header">
+          <div class="question-step-label">Question 4 of 6</div>
+          <div class="question-title">Do you have your own basic mechanic tools?</div>
+        </div>
+        <div class="answer-grid" data-question="q4">
+          <div class="answer-card" onclick="selectAnswer(this, 'q4')" data-value="yes">
+            <div class="answer-card-icon"></div>
+            <div class="answer-card-label">Yes</div>
+          </div>
+          <div class="answer-card" onclick="selectAnswer(this, 'q4')" data-value="no">
+            <div class="answer-card-icon"></div>
+            <div class="answer-card-label">No</div>
+          </div>
+          <div class="answer-card" onclick="selectAnswer(this, 'q4')" data-value="some">
+            <div class="answer-card-icon"></div>
+            <div class="answer-card-label">Some, but not a complete set</div>
+          </div>
+        </div>
+        <div class="step-error" id="error-q4"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg> Please select an answer</div>
+      </div>
+
+      <!-- Step 6: CAT specific experience? + Referral -->
+      <div class="step step-question" id="step-6">
+        <div class="question-header">
+          <div class="question-step-label">Question 5 of 6</div>
+          <div class="question-title">Do you have CAT (Caterpillar) specific experience?</div>
+        </div>
+        <div class="answer-grid" data-question="q5">
+          <div class="answer-card" onclick="selectAnswer(this, 'q5')" data-value="yes">
+            <div class="answer-card-icon"></div>
+            <div class="answer-card-label">Yes</div>
+          </div>
+          <div class="answer-card" onclick="selectAnswer(this, 'q5')" data-value="no">
+            <div class="answer-card-icon"></div>
+            <div class="answer-card-label">No</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px;">
+          <div class="question-title" style="font-size: 18px; margin-bottom: 16px;">Were you referred by a current Mustang Cat employee?</div>
+          <div class="answer-grid" data-question="q5b">
+            <div class="answer-card" onclick="selectAnswer(this, 'q5b'); showReferral(true)" data-value="yes">
+              <div class="answer-card-icon"></div>
+              <div class="answer-card-label">Yes</div>
+            </div>
+            <div class="answer-card" onclick="selectAnswer(this, 'q5b'); showReferral(false)" data-value="no">
+              <div class="answer-card-icon"></div>
+              <div class="answer-card-label">No</div>
+            </div>
+          </div>
+          <div class="referral-input" id="referral-input">
+            <input type="text" placeholder="Employee name who referred you" />
+          </div>
+        </div>
+        <div class="step-error" id="error-q5"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg> Please answer both questions</div>
+      </div>
+
+      <!-- Step 7: Location -->
+      <div class="step step-question" id="step-7">
+        <div class="question-header">
+          <div class="question-step-label">Question 6 of 6</div>
+          <div class="question-title">Which Mustang Cat location are you most interested in?</div>
+        </div>
+        <div class="location-grid" data-question="q6">
+          <div class="location-section-label">Service Locations</div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="houston">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Houston</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="beaumont">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Beaumont</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="bryan">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Bryan</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="elcampo">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">El Campo</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="lufkin">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Lufkin</div>
+            </div>
+          </div>
+
+          <div class="location-section-label">Rental Locations</div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="channel-view">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Channel View</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="deer-park">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Deer Park</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="league-city">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">League City</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="angleton">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Angleton</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="missouri-city">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Southwest / Missouri City</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="katy">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Katy</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="longdrive">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Longdrive</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="northwest">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Northwest</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="rosenberg">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Rosenberg</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="splendora">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Splendora</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="willis">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">Willis</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+          <div class="location-card" onclick="selectLocation(this)" data-value="iah">
+            <div class="location-card-icon"></div>
+            <div class="location-card-text">
+              <div class="location-card-name">IAH</div>
+              <div class="location-card-type">Rental</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-error" id="error-q6"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg> Please select a location</div>
+      </div>
+
+      <!-- Step 8: Thank You + Documents -->
+      <div class="step step-thankyou" id="step-8">
+        <div class="thankyou-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+        </div>
+        <div class="thankyou-title">Thank You!</div>
+        <div class="thankyou-subtitle">Thank you for coming to Open Interviews. A member of our team will be with you shortly.</div>
+
+        <div class="documents-section">
+          <div class="documents-label">Helpful Documents</div>
+          <div class="document-list">
+            <a class="document-card" href="#" onclick="openDocument('tool-list')">
+              <div class="document-card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17l-5.658 3.286a.75.75 0 01-1.087-.791l1.08-6.3-4.577-4.463a.75.75 0 01.416-1.28l6.325-.918L10.835 0a.75.75 0 011.33 0l2.826 5.724 6.325.918a.75.75 0 01.416 1.28l-4.577 4.463 1.08 6.3a.75.75 0 01-1.087.791L11.42 15.17z" /></svg>
+              </div>
+              <div class="document-card-text">
+                <div class="document-card-title">Required Tool List</div>
+                <div class="document-card-desc">Tools needed for technician roles</div>
+              </div>
+              <div class="document-card-action">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+              </div>
+            </a>
+            <a class="document-card" href="#" onclick="openDocument('holiday')">
+              <div class="document-card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" /></svg>
+              </div>
+              <div class="document-card-text">
+                <div class="document-card-title">Holiday Schedule</div>
+                <div class="document-card-desc">Company observed holidays</div>
+              </div>
+              <div class="document-card-action">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+              </div>
+            </a>
+            <a class="document-card" href="#" onclick="openDocument('payroll')">
+              <div class="document-card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </div>
+              <div class="document-card-text">
+                <div class="document-card-title">Payroll Schedule</div>
+                <div class="document-card-desc">Pay periods and dates</div>
+              </div>
+              <div class="document-card-action">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+              </div>
+            </a>
+            <a class="document-card" href="#" onclick="openDocument('benefits')">
+              <div class="document-card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+              </div>
+              <div class="document-card-text">
+                <div class="document-card-title">Summary of Benefits</div>
+                <div class="document-card-desc">Health, dental, vision and more</div>
+              </div>
+              <div class="document-card-action">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+              </div>
+            </a>
+            <a class="document-card" href="#" onclick="openDocument('careers')">
+              <div class="document-card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" /></svg>
+              </div>
+              <div class="document-card-text">
+                <div class="document-card-title">Careers Page</div>
+                <div class="document-card-desc">View all open positions</div>
+              </div>
+              <div class="document-card-action">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="share-actions">
+          <button class="btn-share" onclick="openShareDialog()">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" /></svg>
+            Send Documents to Myself
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 9: Final Thank You (after documents sent) -->
+      <div class="step step-thankyou" id="step-9">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;">
+          <div class="thankyou-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+          </div>
+          <div class="thankyou-title">You're All Set!</div>
+          <div class="thankyou-subtitle">A member of our team will be with you shortly. We look forward to meeting you.</div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /center -->
+
+  <!-- Share Dialog -->
+  <div class="share-overlay" id="share-overlay" onclick="if(event.target===this)closeShareDialog()">
+    <div class="share-dialog">
+      <div id="share-form-view">
+        <div class="share-dialog-title">Send Documents</div>
+        <div class="share-dialog-subtitle">Choose how you'd like to receive them</div>
+
+        <div class="share-option selected" id="share-opt-text" onclick="toggleShareOption('text')">
+          <div class="share-option-toggle"></div>
+          <div class="share-option-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+          </div>
+          <div class="share-option-text">
+            <div class="share-option-label">Text Message</div>
+            <div class="share-option-value" id="share-phone-display"></div>
+          </div>
+        </div>
+
+        <div class="share-option selected" id="share-opt-email" onclick="toggleShareOption('email')">
+          <div class="share-option-toggle"></div>
+          <div class="share-option-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
+          </div>
+          <div class="share-option-text">
+            <div class="share-option-label">Email</div>
+            <div class="share-option-value" id="share-email-display"></div>
+          </div>
+        </div>
+
+        <div class="share-dialog-actions">
+          <button class="btn-share-cancel" onclick="closeShareDialog()">Cancel</button>
+          <button class="btn-share-send" id="btn-share-send" onclick="sendDocuments()">
+            Send
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="share-sent" id="share-sent-view">
+        <div class="share-sent-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>
+        </div>
+        <div class="share-sent-text">Documents sent!</div>
+        <div style="font-size:13px;font-weight:300;color:var(--text-3);">Check your inbox shortly.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="bottom-bar" id="bottom-bar">
+    <div class="bottom-bar-buttons">
+      <div class="bottom-bar-left">
+        <button class="btn-back" id="btn-back" onclick="goBack()" style="visibility:hidden">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" /></svg>
+          <span class="btn-back-label">Back</span>
+        </button>
+      </div>
+      <div class="progress-dots" id="progress-dots"></div>
+      <div class="bottom-bar-right">
+        <button class="btn-next" id="btn-next" onclick="goNext()">
+          <span class="btn-next-label">Next</span>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="powered-by">Powered by <a href="#">Momentify</a></div>
+</div>
+
+<script>
+  var currentStep = 0;
+  var totalSteps = 9; // 0-8
+  var answers = {};
+
+  // Listen for sync messages from parent (dual bezel mode)
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'goToStep' && e.data.step !== currentStep) {
+      goToStep(e.data.step, true);
+    }
+  });
+
+  function goToStep(step, fromSync) {
+    // Hide current
+    var current = document.getElementById('step-' + currentStep);
+    if (current) current.classList.remove('active');
+
+    currentStep = step;
+
+    // Show new
+    var next = document.getElementById('step-' + currentStep);
+    if (next) {
+      next.classList.remove('fade-in');
+      next.classList.add('active');
+      void next.offsetWidth; // trigger reflow
+      next.classList.add('fade-in');
+    }
+
+    updateBottomBar();
+
+    // Scroll to top
+    document.querySelector('.center').scrollTop = 0;
+
+    // Broadcast to parent for dual-bezel sync
+    if (!fromSync && window.parent !== window) {
+      window.parent.postMessage({ type: 'goToStep', step: step }, '*');
+      // Also sync form data when leaving contact step
+      if (currentStep >= 1) {
+        var n = document.getElementById('field-name');
+        var em = document.getElementById('field-email');
+        var ph = document.getElementById('field-phone');
+        if (n && em && ph) {
+          window.parent.postMessage({
+            type: 'syncForm',
+            name: n.value,
+            email: em.value,
+            phone: ph.value
+          }, '*');
+        }
+      }
+    }
+  }
+
+  function updateBottomBar() {
+    var bar = document.getElementById('bottom-bar');
+    var back = document.getElementById('btn-back');
+    var next = document.getElementById('btn-next');
+    var dots = document.getElementById('progress-dots');
+
+    // Hide bottom bar on welcome (0), documents (8), and final thank you (9)
+    if (currentStep === 0 || currentStep === 8 || currentStep === 9) {
+      bar.style.display = 'none';
+      return;
+    }
+    bar.style.display = 'flex';
+
+    // Back button
+    back.style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+
+    // Progress dots (steps 1-7)
+    var dotCount = 7;
+    var html = '';
+    for (var i = 1; i <= dotCount; i++) {
+      var cls = 'progress-dot';
+      if (i === currentStep) cls += ' active';
+      else if (i < currentStep) cls += ' completed';
+      html += '<div class="' + cls + '"></div>';
+    }
+    dots.innerHTML = html;
+
+    // Show/hide start over button
+    var startoverBtn = document.getElementById('btn-startover');
+    if (startoverBtn) {
+      startoverBtn.style.display = (currentStep >= 1 && currentStep <= 8) ? 'flex' : 'none';
+    }
+
+    // Next button - change to Submit on last question
+    var nextContainer = document.querySelector('.bottom-bar-right');
+    if (currentStep === 7) {
+      nextContainer.innerHTML = '<button class="btn-submit" onclick="if(validateStep(7))goToStep(8)">Submit <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg></button>';
+    } else {
+      nextContainer.innerHTML = '<button class="btn-next" onclick="goNext()"><span class="btn-next-label">Next</span> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg></button>';
+    }
+  }
+
+  function goNext() {
+    if (currentStep < 8 && validateStep(currentStep)) {
+      goToStep(currentStep + 1);
+    }
+  }
+
+  function goBack() {
+    if (currentStep > 1) {
+      goToStep(currentStep - 1);
+    }
+  }
+
+  // ── Validation ──────────────────────────
+  function validateStep(step) {
+    clearAllErrors();
+
+    if (step === 1) {
+      return validateForm();
+    } else if (step === 2) {
+      return validateQuestion('q1');
+    } else if (step === 3) {
+      return validateQuestion('q2');
+    } else if (step === 4) {
+      return validateQuestion('q3');
+    } else if (step === 5) {
+      return validateQuestion('q4');
+    } else if (step === 6) {
+      var q5Valid = !!answers.q5;
+      var q5bValid = !!answers.q5b;
+      if (!q5Valid || !q5bValid) {
+        showStepError('error-q5');
+        return false;
+      }
+      return true;
+    } else if (step === 7) {
+      if (!answers.location) {
+        showStepError('error-q6');
+        return false;
+      }
+      return true;
+    }
+    return true;
+  }
+
+  function validateForm() {
+    var valid = true;
+    var nameVal = document.getElementById('field-name').value.trim();
+    var emailVal = document.getElementById('field-email').value.trim();
+    var phoneVal = document.getElementById('field-phone').value.trim();
+
+    if (!nameVal) {
+      document.getElementById('field-name-wrap').classList.add('has-error');
+      valid = false;
+    }
+    if (!emailVal || !isValidEmail(emailVal)) {
+      document.getElementById('field-email-wrap').classList.add('has-error');
+      valid = false;
+    }
+    if (!phoneVal) {
+      document.getElementById('field-phone-wrap').classList.add('has-error');
+      valid = false;
+    }
+
+    if (!valid) {
+      // Focus first error field
+      var firstError = document.querySelector('.form-field.has-error input');
+      if (firstError) firstError.focus();
+      shakeElement(document.querySelector('.form-fields'));
+    }
+    return valid;
+  }
+
+  function validateQuestion(key) {
+    if (!answers[key]) {
+      showStepError('error-' + key);
+      return false;
+    }
+    return true;
+  }
+
+  function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function showStepError(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.classList.add('visible');
+      shakeElement(el);
+    }
+  }
+
+  function clearFieldError(wrapId) {
+    document.getElementById(wrapId).classList.remove('has-error');
+  }
+
+  function clearAllErrors() {
+    document.querySelectorAll('.has-error').forEach(function(el) {
+      el.classList.remove('has-error');
+    });
+    document.querySelectorAll('.step-error.visible').forEach(function(el) {
+      el.classList.remove('visible');
+    });
+  }
+
+  function shakeElement(el) {
+    if (!el) return;
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+  }
+
+  // Listen for sync of selections from parent
+  window.addEventListener('message', function(e) {
+    if (e.data && e.data.type === 'selectAnswer') {
+      var cards = document.querySelectorAll('.answer-grid[data-question="' + e.data.question + '"] .answer-card');
+      cards.forEach(function(c) {
+        c.classList.remove('selected');
+        if (c.dataset.value === e.data.value) c.classList.add('selected');
+      });
+      answers[e.data.question] = e.data.value;
+      if (e.data.question === 'q5b') showReferral(e.data.value === 'yes');
+    }
+    if (e.data && e.data.type === 'selectLocation') {
+      document.querySelectorAll('.location-card').forEach(function(c) {
+        c.classList.remove('selected');
+        if (c.dataset.value === e.data.value) c.classList.add('selected');
+      });
+      answers.location = e.data.value;
+    }
+    if (e.data && e.data.type === 'syncForm') {
+      if (e.data.name) document.getElementById('field-name').value = e.data.name;
+      if (e.data.email) document.getElementById('field-email').value = e.data.email;
+      if (e.data.phone) document.getElementById('field-phone').value = e.data.phone;
+    }
+  });
+
+  function broadcastSync(type, data) {
+    if (window.parent !== window) {
+      window.parent.postMessage(Object.assign({ type: type }, data), '*');
+    }
+  }
+
+  function selectAnswer(el, question) {
+    // Deselect siblings
+    var grid = el.closest('.answer-grid');
+    grid.querySelectorAll('.answer-card').forEach(function(c) {
+      c.classList.remove('selected');
+    });
+    el.classList.add('selected');
+    answers[question] = el.dataset.value;
+
+    // Clear error for this question
+    clearAllErrors();
+
+    // Sync
+    broadcastSync('selectAnswer', { question: question, value: el.dataset.value });
+  }
+
+  function selectLocation(el) {
+    // Deselect all
+    document.querySelectorAll('.location-card').forEach(function(c) {
+      c.classList.remove('selected');
+    });
+    el.classList.add('selected');
+    answers.location = el.dataset.value;
+
+    // Clear error
+    clearAllErrors();
+
+    // Sync
+    broadcastSync('selectLocation', { value: el.dataset.value });
+  }
+
+  function showReferral(show) {
+    var ref = document.getElementById('referral-input');
+    if (show) {
+      ref.classList.add('visible');
+      ref.querySelector('input').focus();
+    } else {
+      ref.classList.remove('visible');
+    }
+  }
+
+  function startOver() {
+    // Clear all selections
+    document.querySelectorAll('.answer-card.selected, .location-card.selected').forEach(function(c) {
+      c.classList.remove('selected');
+    });
+    // Clear form fields
+    document.querySelectorAll('.form-field input, .referral-input input').forEach(function(inp) {
+      inp.value = '';
+    });
+    // Hide referral
+    var ref = document.getElementById('referral-input');
+    if (ref) ref.classList.remove('visible');
+    // Reset answers
+    answers = {};
+    // Go to step 0
+    goToStep(0);
+  }
+
+  function openDocument(type) {
+    // In production, these would link to actual documents
+    var urls = {
+      'tool-list': '#tool-list',
+      'holiday': '#holiday-schedule',
+      'payroll': '#payroll-schedule',
+      'benefits': '#benefits-summary',
+      'careers': 'https://www.mustangcat.com/careers'
+    };
+    // For prototype, show alert
+    if (type === 'careers') {
+      window.open(urls[type], '_blank');
+    } else {
+      alert('Document "' + type + '" would open here. In production, this links to the actual PDF/document.');
+    }
+  }
+
+  var shareState = { text: true, email: true };
+
+  function openShareDialog() {
+    var phone = document.getElementById('field-phone') ? document.getElementById('field-phone').value : '';
+    var email = document.getElementById('field-email') ? document.getElementById('field-email').value : '';
+
+    document.getElementById('share-phone-display').textContent = phone || 'No phone provided';
+    document.getElementById('share-email-display').textContent = email || 'No email provided';
+
+    // Reset to form view
+    document.getElementById('share-form-view').style.display = 'block';
+    document.getElementById('share-sent-view').classList.remove('visible');
+
+    // Pre-select both if values exist
+    shareState.text = !!phone;
+    shareState.email = !!email;
+    updateShareOptions();
+
+    document.getElementById('share-overlay').classList.add('open');
+  }
+
+  function closeShareDialog() {
+    document.getElementById('share-overlay').classList.remove('open');
+  }
+
+  function toggleShareOption(type) {
+    shareState[type] = !shareState[type];
+    updateShareOptions();
+  }
+
+  function updateShareOptions() {
+    var textOpt = document.getElementById('share-opt-text');
+    var emailOpt = document.getElementById('share-opt-email');
+    var sendBtn = document.getElementById('btn-share-send');
+
+    textOpt.classList.toggle('selected', shareState.text);
+    emailOpt.classList.toggle('selected', shareState.email);
+    sendBtn.disabled = !shareState.text && !shareState.email;
+  }
+
+  function sendDocuments() {
+    if (!shareState.text && !shareState.email) return;
+
+    // Show sent confirmation briefly, then close and go to final screen
+    document.getElementById('share-form-view').style.display = 'none';
+    document.getElementById('share-sent-view').classList.add('visible');
+
+    setTimeout(function() {
+      closeShareDialog();
+      goToStep(9);
+    }, 1500);
+  }
+
+  // Init
+  updateBottomBar();
+</script>
+</body>
+</html>

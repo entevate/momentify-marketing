@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momentify Explorer (Mustang CAT Interview) - Brand Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  body {
+    background: #0a0a0a;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ─── Client Password Gate ─────────────────────── */
+  #client-pw-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s ease;
+  }
+  #client-pw-gate.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .client-pw-box {
+    text-align: center;
+    max-width: 360px;
+    width: 100%;
+    padding: 0 24px;
+  }
+  .client-pw-logo { margin-bottom: 32px; }
+  .client-pw-logo img { height: 48px; width: auto; }
+  .client-pw-label {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+  }
+  .client-pw-input-row { display: flex; gap: 8px; }
+  .client-pw-input {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .client-pw-input:focus { border-color: #FFCC00; }
+  .client-pw-input.error {
+    border-color: #E5484D;
+    animation: client-shake 0.4s ease;
+  }
+  .client-pw-submit {
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 1px solid #FFCC00;
+    background: transparent;
+    color: #FFCC00;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+  .client-pw-submit:hover { background: #FFCC00; color: #000; }
+  .client-pw-error {
+    font-size: 12px;
+    color: #E5484D;
+    margin-top: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-family: 'Inter', sans-serif;
+  }
+  .client-pw-error.visible { opacity: 1; }
+  @keyframes client-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(4px); }
+  }
+
+  /* ─── Device Preview Controls ─────────────── */
+  .device-controls {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    gap: 4px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 4px;
+    z-index: 100;
+  }
+  .device-controls.visible { display: flex; }
+  .device-btn {
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .device-btn.active {
+    background: rgba(255,204,0,0.12);
+    color: #FFCC00;
+    font-weight: 500;
+  }
+  .device-btn:hover:not(.active) {
+    color: rgba(255,255,255,0.7);
+  }
+  .device-btn svg { width: 16px; height: 16px; }
+
+  /* ─── iPad Pro 12.9" Bezel ─────────────── */
+  #ipad-wrapper {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    width: 100vw;
+    height: 100vh;
+  }
+  #ipad-wrapper.visible { display: flex; }
+
+  .ipad-bezel {
+    position: relative;
+    width: 1398px;
+    height: 1056px;
+    background: #1a1a1a;
+    border-radius: 22px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.03),
+      0 30px 100px rgba(0,0,0,0.65),
+      0 6px 24px rgba(0,0,0,0.4),
+      inset 0 0.5px 0 rgba(255,255,255,0.08);
+    padding: 16px;
+    transform-origin: center center;
+  }
+
+  .ipad-screen {
+    width: 1366px;
+    height: 1024px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .ipad-screen iframe {
+    width: 1366px;
+    height: 1024px;
+    border: none;
+    display: block;
+  }
+
+  .ipad-camera {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #1e1e1e;
+    border: 0.5px solid rgba(255,255,255,0.06);
+  }
+
+  /* ─── iPhone Bezel ─────────────── */
+  #phone-wrapper {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    width: 100vw;
+    height: 100vh;
+  }
+  #phone-wrapper.visible { display: flex; }
+
+  .phone-bezel {
+    position: relative;
+    width: 430px;
+    height: 932px;
+    background: #1a1a1a;
+    border-radius: 50px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.03),
+      0 30px 100px rgba(0,0,0,0.65),
+      0 6px 24px rgba(0,0,0,0.4),
+      inset 0 0.5px 0 rgba(255,255,255,0.08);
+    padding: 14px;
+    transform-origin: center center;
+  }
+
+  .phone-screen {
+    width: 402px;
+    height: 904px;
+    border-radius: 38px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .phone-screen iframe {
+    width: 402px;
+    height: 904px;
+    border: none;
+    display: block;
+  }
+
+  .phone-notch {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 126px;
+    height: 34px;
+    background: #1a1a1a;
+    border-radius: 0 0 20px 20px;
+    z-index: 10;
+  }
+
+  .powered-by {
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .powered-by a {
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Client Password Gate -->
+<div id="client-pw-gate">
+  <div class="client-pw-box">
+    <div class="client-pw-logo">
+      <img src="assets/mustang-cat-logo.png" alt="Mustang CAT" />
+    </div>
+    <div class="client-pw-label">Enter password to continue</div>
+    <div class="client-pw-input-row">
+      <input type="password" class="client-pw-input" id="client-pw-input" placeholder="Password" autocomplete="off" autofocus>
+      <button class="client-pw-submit" id="client-pw-submit">Enter</button>
+    </div>
+    <div class="client-pw-error" id="client-pw-error">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- Device Toggle -->
+<div class="device-controls" id="device-controls">
+  <button class="device-btn active" id="btn-ipad" onclick="switchDevice('ipad')">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5h3m-6.75 2.25h10.5a2.25 2.25 0 002.25-2.25v-15a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 4.5v15a2.25 2.25 0 002.25 2.25z" /></svg>
+    iPad Pro
+  </button>
+  <button class="device-btn" id="btn-phone" onclick="switchDevice('phone')">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" /></svg>
+    Mobile
+  </button>
+</div>
+
+<!-- iPad Bezel -->
+<div id="ipad-wrapper">
+  <div class="ipad-bezel" id="ipad-bezel">
+    <div class="ipad-camera"></div>
+    <div class="ipad-screen">
+      <iframe id="ipad-frame" src="about:blank"></iframe>
+    </div>
+  </div>
+  <div class="powered-by">Prototype preview &mdash; Mustang CAT Open Interview</div>
+</div>
+
+<!-- Phone Bezel -->
+<div id="phone-wrapper">
+  <div class="phone-bezel" id="phone-bezel">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+      <iframe id="phone-frame" src="about:blank"></iframe>
+    </div>
+  </div>
+  <div class="powered-by">Mobile prototype preview &mdash; QR code scan experience</div>
+</div>
+
+<script>
+  var CLIENT_PASSWORD = 'mustangcat';
+  var currentDevice = 'ipad';
+
+  function checkClientPassword() {
+    var input = document.getElementById('client-pw-input');
+    var error = document.getElementById('client-pw-error');
+    if (input.value === CLIENT_PASSWORD) {
+      var gate = document.getElementById('client-pw-gate');
+      gate.classList.add('hidden');
+      setTimeout(function() { gate.style.display = 'none'; }, 400);
+      document.getElementById('device-controls').classList.add('visible');
+      switchDevice('ipad');
+    } else {
+      input.classList.add('error');
+      error.classList.add('visible');
+      setTimeout(function() { input.classList.remove('error'); }, 400);
+      input.select();
+    }
+  }
+
+  document.getElementById('client-pw-submit').addEventListener('click', checkClientPassword);
+  document.getElementById('client-pw-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') checkClientPassword();
+    document.getElementById('client-pw-error').classList.remove('visible');
+  });
+
+  function switchDevice(device) {
+    currentDevice = device;
+    var ipadW = document.getElementById('ipad-wrapper');
+    var phoneW = document.getElementById('phone-wrapper');
+    var btnIpad = document.getElementById('btn-ipad');
+    var btnPhone = document.getElementById('btn-phone');
+
+    ipadW.classList.remove('visible');
+    phoneW.classList.remove('visible');
+    btnIpad.classList.remove('active');
+    btnPhone.classList.remove('active');
+
+    if (device === 'ipad') {
+      ipadW.classList.add('visible');
+      btnIpad.classList.add('active');
+      if (document.getElementById('ipad-frame').src === 'about:blank') {
+        document.getElementById('ipad-frame').src = 'mustangcat-interview.html';
+      }
+      scaleBezel();
+    } else {
+      phoneW.classList.add('visible');
+      btnPhone.classList.add('active');
+      if (document.getElementById('phone-frame').src === 'about:blank') {
+        document.getElementById('phone-frame').src = 'mustangcat-interview.html';
+      }
+      scalePhone();
+    }
+  }
+
+  function scaleBezel() {
+    var bezel = document.getElementById('ipad-bezel');
+    if (!bezel) return;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var bw = 1398;
+    var bh = 1056;
+    var scaleX = (vw - 40) / bw;
+    var scaleY = (vh - 80) / bh;
+    var scale = Math.min(scaleX, scaleY, 1);
+    bezel.style.transform = 'scale(' + scale + ')';
+  }
+
+  function scalePhone() {
+    var bezel = document.getElementById('phone-bezel');
+    if (!bezel) return;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var bw = 430;
+    var bh = 932;
+    var scaleX = (vw - 40) / bw;
+    var scaleY = (vh - 80) / bh;
+    var scale = Math.min(scaleX, scaleY, 1);
+    bezel.style.transform = 'scale(' + scale + ')';
+  }
+
+  window.addEventListener('resize', function() {
+    if (currentDevice === 'ipad') scaleBezel();
+    else scalePhone();
+  });
+</script>
+
+</body>
+</html>

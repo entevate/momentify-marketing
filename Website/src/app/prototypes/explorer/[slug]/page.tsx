@@ -173,6 +173,10 @@ export default function ExplorerInstancePage() {
     );
   }
 
+  if (instance.bezel === "dual-iphone-ipad") {
+    return <DualBezel src={instance.prototypeFile} />;
+  }
+
   if (instance.bezel === "ipad-landscape") {
     return <IPadBezel src={instance.prototypeFile} />;
   }
@@ -195,6 +199,205 @@ export default function ExplorerInstancePage() {
         }}
         allow="fullscreen"
       />
+    </div>
+  );
+}
+
+function DualBezel({ src }: { src: string }) {
+  const [scale, setScale] = useState(1);
+  const ipadW = 1398;
+  const ipadH = 1056;
+  const phoneW = 430;
+  const phoneH = 932;
+  const gap = 48;
+  const totalW = ipadW + gap + phoneW;
+  const totalH = Math.max(ipadH, phoneH);
+
+  useEffect(() => {
+    function resize() {
+      const w = window.innerWidth - 80;
+      const h = window.innerHeight - 100;
+      const sx = w / totalW;
+      const sy = h / totalH;
+      setScale(Math.min(sx, sy, 1));
+    }
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, [totalW, totalH]);
+
+  // Relay all sync messages between iframes
+  useEffect(() => {
+    function handleMessage(e: MessageEvent) {
+      const syncTypes = ["goToStep", "selectAnswer", "selectLocation", "syncForm"];
+      if (e.data && syncTypes.includes(e.data.type)) {
+        const ipadFrame = document.getElementById("dual-ipad-frame") as HTMLIFrameElement;
+        const phoneFrame = document.getElementById("dual-phone-frame") as HTMLIFrameElement;
+        [ipadFrame, phoneFrame].forEach((frame) => {
+          if (frame?.contentWindow && e.source !== frame.contentWindow) {
+            frame.contentWindow.postMessage(e.data, "*");
+          }
+        });
+      }
+    }
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        overflow: "hidden",
+        background: "#0a0a0a",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: gap * scale,
+        }}
+      >
+        {/* iPhone Pro bezel */}
+        <div
+          style={{
+            width: phoneW * scale,
+            height: phoneH * scale,
+            flexShrink: 0,
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              width: phoneW,
+              height: phoneH,
+              background: "#1a1a1a",
+              borderRadius: 50,
+              border: "1.5px solid rgba(255,255,255,0.1)",
+              boxShadow:
+                "0 0 0 1px rgba(255,255,255,0.03), 0 30px 100px rgba(0,0,0,0.65), 0 6px 24px rgba(0,0,0,0.4), inset 0 0.5px 0 rgba(255,255,255,0.08)",
+              padding: 14,
+              transform: `scale(${scale})`,
+              transformOrigin: "top left",
+            }}
+          >
+            {/* Dynamic Island */}
+            <div
+              style={{
+                position: "absolute",
+                top: 18,
+                left: "50%",
+                transform: "translateX(-50%)",
+                width: 120,
+                height: 34,
+                background: "#000",
+                borderRadius: 20,
+                zIndex: 10,
+              }}
+            />
+            <div
+              style={{
+                width: 402,
+                height: 904,
+                borderRadius: 38,
+                overflow: "hidden",
+                background: "#000",
+              }}
+            >
+              <iframe
+                id="dual-phone-frame"
+                src={src}
+                style={{
+                  width: 402,
+                  height: 904,
+                  border: "none",
+                  display: "block",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* iPad Pro 12.9" landscape bezel */}
+        <div
+          style={{
+            width: ipadW * scale,
+            height: ipadH * scale,
+            flexShrink: 0,
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              width: ipadW,
+              height: ipadH,
+              background: "#1a1a1a",
+              borderRadius: 22,
+              border: "1.5px solid rgba(255,255,255,0.1)",
+              boxShadow:
+                "0 0 0 1px rgba(255,255,255,0.03), 0 30px 100px rgba(0,0,0,0.65), 0 6px 24px rgba(0,0,0,0.4), inset 0 0.5px 0 rgba(255,255,255,0.08)",
+              padding: 16,
+              transform: `scale(${scale})`,
+              transformOrigin: "top left",
+            }}
+          >
+            {/* Camera dot */}
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: 5,
+                transform: "translateY(-50%)",
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: "#1e1e1e",
+                border: "0.5px solid rgba(255,255,255,0.06)",
+              }}
+            />
+            <div
+              style={{
+                width: 1366,
+                height: 1024,
+                borderRadius: 6,
+                overflow: "hidden",
+                background: "#000",
+              }}
+            >
+              <iframe
+                id="dual-ipad-frame"
+                src={src}
+                style={{
+                  width: 1366,
+                  height: 1024,
+                  border: "none",
+                  display: "block",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        style={{
+          fontSize: 11,
+          color: "rgba(255,255,255,0.2)",
+          letterSpacing: "0.03em",
+          whiteSpace: "nowrap",
+          textAlign: "center",
+          fontFamily: "'Inter', sans-serif",
+          marginTop: 12,
+          flexShrink: 0,
+        }}
+      >
+        Mustang CAT Open Interview &mdash; iPhone Pro &amp; iPad Pro 12.9&quot;
+      </div>
     </div>
   );
 }

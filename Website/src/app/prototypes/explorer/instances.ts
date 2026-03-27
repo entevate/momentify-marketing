@@ -8,7 +8,7 @@ export interface ExplorerInstance {
   accentColor: string;
   createdAt: string;
   password?: string;
-  bezel?: "ipad-landscape";
+  bezel?: "ipad-landscape" | "dual-iphone-ipad";
   gateLogo?: string;
 }
 
@@ -94,5 +94,17 @@ export const instances: ExplorerInstance[] = [
     createdAt: "2025-03-25",
     password: "tradegroup2026",
     bezel: "ipad-landscape",
+  },
+  {
+    slug: "mustangcat-interview",
+    name: "Open Interview Walk-In",
+    company: "Mustang CAT",
+    industry: "Heavy Equipment",
+    prototypeFile: "/brand/mustangcat-interview.html",
+    logo: "/brand/assets/mustang-cat-logo.png",
+    accentColor: "#FFCC00",
+    createdAt: "2025-03-27",
+    password: "mustangcat",
+    bezel: "dual-iphone-ipad",
   },
 ];
