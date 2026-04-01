@@ -1184,6 +1184,16 @@ export default function HowItWorksContent() {
               viewport={{ once: true, amount: 0.15 }}
               variants={headerVariants}
             >
+              <motion.div variants={fadeUp} style={{ marginBottom: "16px" }}>
+                <img
+                  src="/icons/intelligence-ai.png"
+                  alt=""
+                  width={48}
+                  height={48}
+                  className="size-12 shrink-0 drop-shadow-[0_2px_10px_rgba(37,79,229,0.22)]"
+                  aria-hidden
+                />
+              </motion.div>
               <motion.p
                 variants={fadeUp}
                 style={{
@@ -1290,7 +1300,7 @@ export default function HowItWorksContent() {
                   <div className="flex items-center gap-2">
                     <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: TEAL }} />
                     <span style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "13px", color: DEEP_NAVY }}>
-                      AI Event Recap
+                      Intelligence Recap
                     </span>
                   </div>
                   <span
