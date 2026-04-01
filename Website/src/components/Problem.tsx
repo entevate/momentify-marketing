@@ -6,19 +6,15 @@ import { motion } from "framer-motion";
 
 const quotes = [
   {
-    color: "#061341",
     text: "We leave every event with a stack of cards and no idea which conversations actually matter.",
   },
   {
-    color: "#1A2E73",
     text: "Our team comes home with hundreds of badge scans and no idea what any of those conversations revealed.",
   },
   {
-    color: "#1A56DB",
     text: "Every event is a room full of opportunity. We just can't tell you how much of it we actually captured.",
   },
   {
-    color: "#00BBA5",
     text: "We run facility tours and recruiting events all year. Nobody can tell me what any of them actually produced.",
   },
 ];
@@ -227,7 +223,7 @@ export default function Problem() {
               <motion.div
                 key={quote.text}
                 variants={fadeUp}
-                className="relative rounded-xl p-5 bg-white overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
+                className="rounded-xl p-5 bg-white overflow-hidden transition-all duration-200 hover:-translate-y-0.5"
                 style={{
                   border: "1px solid #E5E9EF",
                   boxShadow: "0 1px 8px rgba(0,0,0,0.04)",
@@ -239,15 +235,8 @@ export default function Problem() {
                   e.currentTarget.style.boxShadow = "0 1px 8px rgba(0,0,0,0.04)";
                 }}
               >
-                {/* Left color bar */}
-                <div
-                  className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-xl"
-                  style={{ backgroundColor: quote.color }}
-                />
-
-                {/* Quote text */}
                 <p
-                  className="italic text-[14px] leading-[1.6] pl-3"
+                  className="italic text-[14px] leading-[1.6]"
                   style={{
                     fontFamily: "var(--font-inter)",
                     fontWeight: 400,
