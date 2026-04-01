@@ -23,6 +23,9 @@ const platformLinks = [
 
 const ICON_COLOR = "rgba(6,19,65,0.45)";
 
+/** Web app sign-in */
+const APP_LOGIN_URL = "https://web.momentifyapp.com/";
+
 const platformIcons: Record<string, React.ReactNode> = {
   workflow: (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -159,7 +162,15 @@ export default function Navigation() {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-4">
+            <a
+              href={APP_LOGIN_URL}
+              className={`text-[13px] font-medium px-5 py-2 rounded-md transition-all duration-300 bg-white text-charcoal hover:bg-white/95 ${
+                scrolled ? "border border-charcoal/12 shadow-sm" : "border border-white/30"
+              }`}
+            >
+              Log in
+            </a>
             <a
               href="/demo"
               className={`text-[13px] font-medium px-5 py-2 rounded-md transition-all duration-300 ${
@@ -224,9 +235,18 @@ export default function Navigation() {
                 <a href="/what-is-rox" className="block text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>What is ROX?</a>
                 <a href="/case-studies" className="block text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>Case Studies</a>
               </div>
-              <a href="/demo" className="block text-center bg-charcoal text-white text-sm font-medium px-6 py-3 rounded-md">
-                Schedule a Demo
-              </a>
+              <div className="flex flex-col gap-3">
+                <a
+                  href={APP_LOGIN_URL}
+                  className="block text-center bg-white text-charcoal text-sm font-medium px-6 py-3 rounded-md border border-charcoal/12"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Log in
+                </a>
+                <a href="/demo" className="block text-center bg-charcoal text-white text-sm font-medium px-6 py-3 rounded-md">
+                  Schedule a Demo
+                </a>
+              </div>
             </div>
           </motion.div>
         )}
