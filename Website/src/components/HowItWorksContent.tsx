@@ -681,7 +681,7 @@ export default function HowItWorksContent() {
       <section id="explorer" style={{ background: "#FFFFFF", padding: "100px 0" }}>
         <div className="mx-auto max-w-[1100px] px-6 lg:px-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Visual placeholder (left on desktop, below on mobile) */}
+            {/* Product visual — Momentify Explorer on tablet */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -689,8 +689,27 @@ export default function HowItWorksContent() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="order-2 lg:order-first"
             >
-              {/* Replace with Momentify Explorer iPad and mobile UI screenshots */}
-              <PlaceholderCard label="Momentify Explorer" height="480px" comment="Replace with Momentify Explorer iPad and mobile UI screenshots" />
+              <div
+                style={{
+                  borderRadius: "16px",
+                  height: "480px",
+                  overflow: "hidden",
+                  boxShadow: "0 8px 40px rgba(6,19,65,0.08)",
+                  background: "#0B113B",
+                }}
+              >
+                <img
+                  src="/how-it-works/momentify-explorer-showcase.png"
+                  alt="Person holding a tablet showing the Momentify Explorer app with goals and a solar farm background"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    objectPosition: "center",
+                    display: "block",
+                  }}
+                />
+              </div>
             </motion.div>
 
             {/* Copy (right on desktop, first on mobile) */}
