@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cat Defense Explorer - Tablet Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #000000;
+    overflow: hidden;
+  }
+
+  /* ─── iPad Pro 13" M4 Bezel ─────────────── */
+  #ipad-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .ipad-bezel {
+    position: relative;
+    width: 1398px;
+    height: 1056px;
+    background: #1a1a1a;
+    border-radius: 22px;
+    border: 1.5px solid rgba(255,255,255,0.1);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.03),
+      0 30px 100px rgba(0,0,0,0.65),
+      0 6px 24px rgba(0,0,0,0.4),
+      inset 0 0.5px 0 rgba(255,255,255,0.08);
+    padding: 16px;
+    transform-origin: center center;
+  }
+
+  .ipad-screen {
+    width: 1366px;
+    height: 1024px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .ipad-screen iframe {
+    width: 1366px;
+    height: 1024px;
+    border: none;
+    display: block;
+  }
+
+  .ipad-camera {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #1e1e1e;
+    border: 0.5px solid rgba(255,255,255,0.06);
+  }
+
+  .powered-by {
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    text-align: center;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div id="ipad-wrapper">
+  <div class="ipad-bezel" id="ipad-bezel">
+    <div class="ipad-camera"></div>
+    <div class="ipad-screen">
+      <iframe src="explorer-catdefense.html"></iframe>
+    </div>
+  </div>
+  <div class="powered-by">Cat Defense tablet preview (iPad Pro 13") &mdash; best viewed in landscape on desktop</div>
+</div>
+
+<script>
+  function scaleBezel() {
+    var bezel = document.getElementById('ipad-bezel');
+    if (!bezel) return;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var bw = 1398;
+    var bh = 1056;
+    var scaleX = (vw - 40) / bw;
+    var scaleY = (vh - 60) / bh;
+    var scale = Math.min(scaleX, scaleY, 1);
+    bezel.style.transform = 'scale(' + scale + ')';
+  }
+
+  scaleBezel();
+  window.addEventListener('resize', scaleBezel);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cat Defense Explorer - Kiosk Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #000000;
+    overflow: hidden;
+  }
+
+  /* ─── 16:9 Touch Screen Bezel ─────────────── */
+  #kiosk-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .kiosk-bezel {
+    position: relative;
+    width: 1952px;
+    height: 1112px;
+    background: #111;
+    border-radius: 12px;
+    border: 1.5px solid rgba(255,255,255,0.08);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.02),
+      0 30px 100px rgba(0,0,0,0.7),
+      0 6px 24px rgba(0,0,0,0.5),
+      inset 0 0.5px 0 rgba(255,255,255,0.06);
+    padding: 16px;
+    transform-origin: center center;
+  }
+
+  .kiosk-screen {
+    width: 1920px;
+    height: 1080px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .kiosk-screen iframe {
+    width: 1920px;
+    height: 1080px;
+    border: none;
+    display: block;
+  }
+
+  /* Webcam dot (top center) */
+  .kiosk-camera {
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #1a1a1a;
+    border: 0.5px solid rgba(255,255,255,0.04);
+  }
+
+  .powered-by {
+    font-size: 11px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    text-align: center;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<div id="kiosk-wrapper">
+  <div class="kiosk-bezel" id="kiosk-bezel">
+    <div class="kiosk-camera"></div>
+    <div class="kiosk-screen">
+      <iframe src="explorer-catdefense-kiosk.html"></iframe>
+    </div>
+  </div>
+  <div class="powered-by">Cat Defense kiosk preview (1920 &times; 1080) &mdash; best viewed on desktop</div>
+</div>
+
+<script>
+  function scaleBezel() {
+    var bezel = document.getElementById('kiosk-bezel');
+    if (!bezel) return;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var bw = 1952;
+    var bh = 1112;
+    var scaleX = (vw - 40) / bw;
+    var scaleY = (vh - 60) / bh;
+    var scale = Math.min(scaleX, scaleY, 1);
+    bezel.style.transform = 'scale(' + scale + ')';
+  }
+
+  scaleBezel();
+  window.addEventListener('resize', scaleBezel);
+</script>
+
+</body>
+</html>
