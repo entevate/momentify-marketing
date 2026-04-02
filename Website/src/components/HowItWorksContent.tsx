@@ -769,11 +769,30 @@ export default function HowItWorksContent() {
         </div>
       </section>
 
-      {/* ═══════════════════ 5. STEP 3 — MOMENTIFY INTELLIGENCE ═══════════════════ */}
-      <section id="intelligence" style={{ background: "#F8F9FC", padding: "100px 0" }}>
-        <div className="mx-auto max-w-[1100px] px-6 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Left: copy */}
+      {/* ═══════════════════ 5. STEP 3 — MOMENTIFY INTELLIGENCE (AI Insights) ═══════════════════ */}
+      <section
+        id="intelligence"
+        className="relative overflow-hidden"
+        style={{
+          backgroundImage: "linear-gradient(145deg, #EEF2FF 0%, #F5F7FF 100%)",
+          padding: "100px 0",
+        }}
+      >
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          viewBox="0 0 600 500"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="xMaxYMax slice"
+          aria-hidden="true"
+        >
+          <path d="M600 500 L600 180 L420 0 L220 0 L440 220 L440 500 Z" fill="#254FE5" fillOpacity="0.04" />
+          <path d="M600 500 L600 300 L380 80 L180 80 L380 280 L380 500 Z" fill="#1F3395" fillOpacity="0.03" />
+        </svg>
+
+        <div className="relative z-10 mx-auto max-w-[1100px] px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-12 lg:gap-16 items-center">
+            {/* Left: step + copy */}
             <motion.div
               initial="hidden"
               whileInView="visible"
@@ -783,6 +802,20 @@ export default function HowItWorksContent() {
               <motion.div variants={fadeUp}>
                 <StepBadge num="03" color={STEP_COLORS.intelligence} />
               </motion.div>
+              <motion.p
+                variants={fadeUp}
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  fontWeight: 600,
+                  fontSize: "11px",
+                  color: TEAL,
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase" as const,
+                  marginBottom: "16px",
+                }}
+              >
+                Momentify Intelligence
+              </motion.p>
               <motion.h2
                 variants={fadeUp}
                 className="leading-[1.1]"
@@ -792,23 +825,13 @@ export default function HowItWorksContent() {
                   fontSize: "clamp(28px, 4.5vw, 40px)",
                   color: DEEP_NAVY,
                   letterSpacing: "-0.02em",
-                  marginBottom: "8px",
-                }}
-              >
-                Analyze. Score. Prove.
-              </motion.h2>
-              <motion.p
-                variants={fadeUp}
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontWeight: 600,
-                  fontSize: "16px",
-                  color: STEP_COLORS.intelligence,
                   marginBottom: "24px",
                 }}
               >
-                Momentify Intelligence
-              </motion.p>
+                AI Insights. Auto-generated.
+                <br />
+                Actually useful.
+              </motion.h2>
               <motion.div variants={fadeUp}>
                 <p
                   style={{
@@ -820,7 +843,7 @@ export default function HowItWorksContent() {
                     marginBottom: "20px",
                   }}
                 >
-                  Momentify Intelligence is the analytics and ROX layer. It pulls together everything captured through Explorer and surfaces it in a real-time dashboard. Visitor counts, engagement depth, follow-up speed, and conversion rates are all tracked and scored.
+                  Momentify Intelligence already surfaces your ROX score in real time. AI Insights takes it further. After every experience, you receive an auto-generated summary tailored to your use case, with specific recommendations on which leads to follow up with and why.
                 </p>
                 <p
                   style={{
@@ -831,74 +854,130 @@ export default function HowItWorksContent() {
                     lineHeight: 1.75,
                   }}
                 >
-                  Your ROX score updates as the experience runs. You see what is working while you can still act on it. Not in a debrief three days later. In the moment, when it matters.
+                  Not a generic report. A summary that knows the difference between a trade show lead and a recruiting candidate. One that tells you what happened, what it means, and what to do next.
                 </p>
               </motion.div>
-              <motion.div variants={fadeUp}>
-                <BulletList
-                  color={STEP_COLORS.intelligence}
-                  items={[
-                    "Real-time ROX dashboard",
-                    "Lead temperature and intent scoring",
-                    "Experience-over-experience comparison",
-                    "Export and CRM integration",
-                  ]}
-                />
+
+              <motion.div variants={fadeUp} style={{ marginTop: "32px" }} className="space-y-5">
+                <div>
+                  <div className="flex items-center gap-3 mb-1">
+                    <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: TEAL, flexShrink: 0 }} />
+                    <span style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "14px", color: DEEP_NAVY }}>
+                      Event recap on close
+                    </span>
+                  </div>
+                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.5)", lineHeight: 1.5, paddingLeft: "18px" }}>
+                    Auto-generated summary the moment your experience ends. No manual writeup.
+                  </p>
+                </div>
+                <div>
+                  <div className="flex items-center gap-3 mb-1">
+                    <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: TEAL, flexShrink: 0 }} />
+                    <span style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "14px", color: DEEP_NAVY }}>
+                      Lead follow-up recommendations
+                    </span>
+                  </div>
+                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.5)", lineHeight: 1.5, paddingLeft: "18px" }}>
+                    Ranked list of who to contact first, based on engagement signals and intent data.
+                  </p>
+                </div>
               </motion.div>
             </motion.div>
 
-            {/* Right: dashboard placeholder with ROX badge */}
+            {/* Right: Intelligence recap mock */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.15 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
             >
-              {/* Replace with Momentify Intelligence dashboard screenshot */}
-              <PlaceholderCard
-                label="Momentify Intelligence"
-                height="420px"
-                comment="Replace with Momentify Intelligence dashboard screenshot"
-              />
-              {/* ROX score badge overlay */}
               <div
                 style={{
-                  position: "absolute",
-                  bottom: "20px",
-                  left: "20px",
                   background: "#FFFFFF",
-                  border: `1px solid ${STEP_COLORS.intelligence}`,
-                  borderRadius: "10px",
-                  padding: "12px 16px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  gap: "2px",
+                  border: "1px solid rgba(6,19,65,0.08)",
+                  borderRadius: "16px",
+                  padding: "28px 24px",
+                  boxShadow: "0 4px 24px rgba(6,19,65,0.06)",
+                  minHeight: "420px",
                 }}
               >
-                <span
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontWeight: 800,
-                    fontSize: "28px",
-                    color: STEP_COLORS.intelligence,
-                    lineHeight: 1,
-                  }}
-                >
-                  78
-                </span>
-                <span
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontWeight: 600,
-                    fontSize: "10px",
-                    color: STEP_COLORS.intelligence,
-                    letterSpacing: "0.12em",
-                  }}
-                >
-                  HIGH ROX
-                </span>
+                <div className="flex items-center justify-between" style={{ marginBottom: "24px" }}>
+                  <div className="flex items-center gap-2">
+                    <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: TEAL }} />
+                    <span style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "13px", color: DEEP_NAVY }}>
+                      Intelligence Recap
+                    </span>
+                  </div>
+                  <span
+                    className="inline-flex items-center gap-1.5"
+                    style={{
+                      fontFamily: "var(--font-inter)",
+                      fontWeight: 600,
+                      fontSize: "10px",
+                      color: "#FFFFFF",
+                      letterSpacing: "0.02em",
+                      borderRadius: "9999px",
+                      padding: "5px 12px 5px 10px",
+                      background: MOMENTIFY_BLUE,
+                      boxShadow: "0 1px 3px rgba(6, 19, 65, 0.12)",
+                    }}
+                  >
+                    <img
+                      src="/icons/crown-pro-filled.png"
+                      alt=""
+                      width={14}
+                      height={14}
+                      className="shrink-0 size-[14px]"
+                      aria-hidden
+                    />
+                    Pro Plan
+                  </span>
+                </div>
+
+                <div style={{ marginBottom: "20px" }}>
+                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "10px", color: "rgba(6,19,65,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: "8px" }}>
+                    Event Summary
+                  </p>
+                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.55)", lineHeight: 1.6 }}>
+                    347 visitors engaged across 2 days. Lead capture rate exceeded benchmark by 18%. Strongest engagement on Day 1 during morning sessions.
+                  </p>
+                </div>
+
+                <div style={{ height: "1px", background: "rgba(6,19,65,0.06)", marginBottom: "20px" }} />
+
+                <div style={{ marginBottom: "24px" }}>
+                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "10px", color: "rgba(6,19,65,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: "8px" }}>
+                    Key Recommendation
+                  </p>
+                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.55)", lineHeight: 1.6 }}>
+                    Follow up with 12 high-intent leads within 24 hours. Three visitors returned to the booth twice and requested pricing.
+                  </p>
+                </div>
+
+                <div style={{ height: "1px", background: "rgba(6,19,65,0.06)", marginBottom: "20px" }} />
+
+                <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "12px", color: "rgba(6,19,65,0.45)", marginBottom: "12px" }}>
+                  Top Leads to Follow Up With
+                </p>
+                <div className="space-y-3">
+                  {[
+                    { name: "Sarah M.", time: "Day 1, 10:42 AM" },
+                    { name: "James R.", time: "Day 1, 2:18 PM" },
+                    { name: "Lisa K.", time: "Day 2, 9:05 AM" },
+                  ].map((lead) => (
+                    <div key={lead.name} className="flex items-center justify-between">
+                      <span style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.5)" }}>
+                        {lead.name}
+                      </span>
+                      <div className="flex items-center gap-3">
+                        <span style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.3)" }}>
+                          {lead.time}
+                        </span>
+                        <FireIcon aria-hidden className="h-4 w-4 flex-shrink-0" style={{ color: FIRE_SOLID_RED }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </motion.div>
           </div>
@@ -1154,237 +1233,7 @@ export default function HowItWorksContent() {
         </div>
       </section>
 
-      {/* ═══════════════════ 8. AI INSIGHTS ═══════════════════ */}
-      <section
-        className="relative overflow-hidden"
-        style={{
-          backgroundImage: "linear-gradient(145deg, #EEF2FF 0%, #F5F7FF 100%)",
-          padding: "100px 0",
-        }}
-      >
-        {/* Geometric SVG overlay (frost) */}
-        <svg
-          className="pointer-events-none absolute inset-0 h-full w-full"
-          viewBox="0 0 600 500"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="xMaxYMax slice"
-          aria-hidden="true"
-        >
-          <path d="M600 500 L600 180 L420 0 L220 0 L440 220 L440 500 Z" fill="#254FE5" fillOpacity="0.04" />
-          <path d="M600 500 L600 300 L380 80 L180 80 L380 280 L380 500 Z" fill="#1F3395" fillOpacity="0.03" />
-        </svg>
-
-        <div className="relative z-10 mx-auto max-w-[1100px] px-6 lg:px-12">
-          <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] gap-12 lg:gap-16 items-center">
-            {/* Left: copy */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.15 }}
-              variants={headerVariants}
-            >
-              <motion.div variants={fadeUp} style={{ marginBottom: "16px" }}>
-                <img
-                  src="/icons/intelligence-ai.png"
-                  alt=""
-                  width={48}
-                  height={48}
-                  className="size-12 shrink-0 drop-shadow-[0_2px_10px_rgba(37,79,229,0.22)]"
-                  aria-hidden
-                />
-              </motion.div>
-              <motion.p
-                variants={fadeUp}
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontWeight: 600,
-                  fontSize: "11px",
-                  color: TEAL,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase" as const,
-                  marginBottom: "16px",
-                }}
-              >
-                Momentify Intelligence
-              </motion.p>
-              <motion.h2
-                variants={fadeUp}
-                className="leading-[1.1]"
-                style={{
-                  fontFamily: "var(--font-inter)",
-                  fontWeight: 500,
-                  fontSize: "clamp(28px, 4.5vw, 40px)",
-                  color: DEEP_NAVY,
-                  letterSpacing: "-0.02em",
-                  marginBottom: "24px",
-                }}
-              >
-                AI Insights. Auto-generated.
-                <br />
-                Actually useful.
-              </motion.h2>
-              <motion.div variants={fadeUp}>
-                <p
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontWeight: 400,
-                    fontSize: "16px",
-                    color: "rgba(6,19,65,0.55)",
-                    lineHeight: 1.75,
-                    marginBottom: "20px",
-                  }}
-                >
-                  Momentify Intelligence already surfaces your ROX score in real time. AI Insights takes it further. After every experience, you receive an auto-generated summary tailored to your use case, with specific recommendations on which leads to follow up with and why.
-                </p>
-                <p
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontWeight: 400,
-                    fontSize: "16px",
-                    color: "rgba(6,19,65,0.55)",
-                    lineHeight: 1.75,
-                  }}
-                >
-                  Not a generic report. A summary that knows the difference between a trade show lead and a recruiting candidate. One that tells you what happened, what it means, and what to do next.
-                </p>
-              </motion.div>
-
-              {/* Highlight rows */}
-              <motion.div variants={fadeUp} style={{ marginTop: "32px" }} className="space-y-5">
-                <div>
-                  <div className="flex items-center gap-3 mb-1">
-                    <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: TEAL, flexShrink: 0 }} />
-                    <span style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "14px", color: DEEP_NAVY }}>
-                      Event recap on close
-                    </span>
-                  </div>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.5)", lineHeight: 1.5, paddingLeft: "18px" }}>
-                    Auto-generated summary the moment your experience ends. No manual writeup.
-                  </p>
-                </div>
-                <div>
-                  <div className="flex items-center gap-3 mb-1">
-                    <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: TEAL, flexShrink: 0 }} />
-                    <span style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "14px", color: DEEP_NAVY }}>
-                      Lead follow-up recommendations
-                    </span>
-                  </div>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.5)", lineHeight: 1.5, paddingLeft: "18px" }}>
-                    Ranked list of who to contact first, based on engagement signals and intent data.
-                  </p>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Right: mock AI dashboard card */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              {/* Replace with actual Momentify Intelligence AI Insights screenshot when available */}
-              <div
-                style={{
-                  background: "#FFFFFF",
-                  border: "1px solid rgba(6,19,65,0.08)",
-                  borderRadius: "16px",
-                  padding: "28px 24px",
-                  boxShadow: "0 4px 24px rgba(6,19,65,0.06)",
-                  minHeight: "420px",
-                }}
-              >
-                {/* Header */}
-                <div className="flex items-center justify-between" style={{ marginBottom: "24px" }}>
-                  <div className="flex items-center gap-2">
-                    <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: TEAL }} />
-                    <span style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "13px", color: DEEP_NAVY }}>
-                      Intelligence Recap
-                    </span>
-                  </div>
-                  <span
-                    className="inline-flex items-center gap-1.5"
-                    style={{
-                      fontFamily: "var(--font-inter)",
-                      fontWeight: 600,
-                      fontSize: "10px",
-                      color: "#FFFFFF",
-                      letterSpacing: "0.02em",
-                      borderRadius: "9999px",
-                      padding: "5px 12px 5px 10px",
-                      background: MOMENTIFY_BLUE,
-                      boxShadow: "0 1px 3px rgba(6, 19, 65, 0.12)",
-                    }}
-                  >
-                    <img
-                      src="/icons/crown-pro-filled.png"
-                      alt=""
-                      width={14}
-                      height={14}
-                      className="shrink-0 size-[14px]"
-                      aria-hidden
-                    />
-                    Pro Plan
-                  </span>
-                </div>
-
-                {/* Summary block 1 */}
-                <div style={{ marginBottom: "20px" }}>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "10px", color: "rgba(6,19,65,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: "8px" }}>
-                    Event Summary
-                  </p>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.55)", lineHeight: 1.6 }}>
-                    347 visitors engaged across 2 days. Lead capture rate exceeded benchmark by 18%. Strongest engagement on Day 1 during morning sessions.
-                  </p>
-                </div>
-
-                {/* Divider */}
-                <div style={{ height: "1px", background: "rgba(6,19,65,0.06)", marginBottom: "20px" }} />
-
-                {/* Summary block 2 */}
-                <div style={{ marginBottom: "24px" }}>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "10px", color: "rgba(6,19,65,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: "8px" }}>
-                    Key Recommendation
-                  </p>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.55)", lineHeight: 1.6 }}>
-                    Follow up with 12 high-intent leads within 24 hours. Three visitors returned to the booth twice and requested pricing.
-                  </p>
-                </div>
-
-                {/* Divider */}
-                <div style={{ height: "1px", background: "rgba(6,19,65,0.06)", marginBottom: "20px" }} />
-
-                {/* Top leads to follow up with */}
-                <p style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "12px", color: "rgba(6,19,65,0.45)", marginBottom: "12px" }}>
-                  Top Leads to Follow Up With
-                </p>
-                <div className="space-y-3">
-                  {[
-                    { name: "Sarah M.", time: "Day 1, 10:42 AM" },
-                    { name: "James R.", time: "Day 1, 2:18 PM" },
-                    { name: "Lisa K.", time: "Day 2, 9:05 AM" },
-                  ].map((lead) => (
-                    <div key={lead.name} className="flex items-center justify-between">
-                      <span style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.5)" }}>
-                        {lead.name}
-                      </span>
-                      <div className="flex items-center gap-3">
-                        <span style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.3)" }}>
-                          {lead.time}
-                        </span>
-                        <FireIcon aria-hidden className="h-4 w-4 flex-shrink-0" style={{ color: FIRE_SOLID_RED }} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ 9. FINAL CTA ═══════════════════ */}
+      {/* ═══════════════════ 8. FINAL CTA ═══════════════════ */}
       <section
         className="relative overflow-hidden"
         style={{
@@ -1477,6 +1326,7 @@ export default function HowItWorksContent() {
               {/* Secondary */}
               <a
                 href="/what-is-rox"
+                aria-label="Calculate Your ROX"
                 className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[14px] py-2.5 sm:py-3.5 px-3 sm:px-7 transition-all duration-200"
                 style={{
                   fontFamily: "var(--font-inter)",
@@ -1493,7 +1343,17 @@ export default function HowItWorksContent() {
                   e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.20)";
                 }}
               >
-                Calculate Your ROX™
+                <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                  <span className="leading-none">Calculate Your</span>
+                  <img
+                    src="/rox-wordmark.png"
+                    alt=""
+                    width={44}
+                    height={20}
+                    className="h-[1.25em] w-auto translate-y-[0.14em] object-contain"
+                    aria-hidden
+                  />
+                </span>
               </a>
             </motion.div>
 

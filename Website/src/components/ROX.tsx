@@ -12,6 +12,20 @@ const tiers = [
   { color: "#0CF4DF", name: "Elite ROX", description: "Highly optimized across every category." },
 ];
 
+const calculateYourRoxLabel = (
+  <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+    <span className="leading-none">Calculate Your</span>
+    <img
+      src="/rox-wordmark.png"
+      alt=""
+      width={44}
+      height={20}
+      className="h-[1.25em] w-auto object-contain translate-y-[0.14em]"
+      aria-hidden
+    />
+  </span>
+);
+
 /* ── Stat card data with target values ───────────────── */
 
 const statCards = [
@@ -405,15 +419,15 @@ export default function ROX() {
           >
             <a
               href="/what-is-rox"
+              aria-label="Calculate Your ROX"
               className="inline-flex items-center justify-center font-semibold text-[13px] py-3 px-6 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]"
               style={{
                 background: "linear-gradient(135deg, #00BBA5, #1A56DB)",
                 color: "#FFFFFF",
                 fontFamily: "var(--font-inter)",
-                whiteSpace: "nowrap",
               }}
             >
-              Calculate Your ROX
+              {calculateYourRoxLabel}
             </a>
           </motion.div>
         </div>
@@ -454,13 +468,22 @@ export default function ROX() {
                 {score}
               </p>
               <p
-                className="mt-2 uppercase font-semibold text-[13px] tracking-[0.14em]"
+                className="mt-2 inline-flex items-center justify-center gap-1.5 font-semibold text-[13px] tracking-[0.14em]"
                 style={{
                   fontFamily: "var(--font-inter)",
                   color: "rgba(255, 255, 255, 0.5)",
                 }}
+                aria-label="ROX SCORE"
               >
-                ROX SCORE
+                <img
+                  src="/rox-wordmark.png"
+                  alt=""
+                  width={40}
+                  height={18}
+                  className="h-[1em] w-auto translate-y-[0.06em] object-contain opacity-50"
+                  aria-hidden
+                />
+                <span className="uppercase">Score</span>
               </p>
               <p
                 className="mt-0.5"
@@ -695,6 +718,7 @@ export default function ROX() {
           <motion.div variants={fadeUp} className="mt-10 flex items-center gap-6 flex-wrap">
             <a
               href="/what-is-rox"
+              aria-label="Calculate Your ROX"
               className="inline-flex items-center justify-center font-semibold text-[14px] py-3.5 px-7 rounded-lg transition-all duration-200 hover:opacity-90 hover:scale-[1.02]"
               style={{
                 background: "linear-gradient(135deg, #00BBA5, #1A56DB)",
@@ -702,7 +726,7 @@ export default function ROX() {
                 fontFamily: "var(--font-inter)",
               }}
             >
-              Calculate Your ROX
+              {calculateYourRoxLabel}
             </a>
             <p
               style={{

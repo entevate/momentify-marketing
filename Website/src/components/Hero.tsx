@@ -235,6 +235,7 @@ export default function Hero() {
               </a>
               <a
                 href="/what-is-rox"
+                aria-label="Calculate Your ROX"
                 className="inline-flex items-center justify-center font-semibold text-[11px] sm:text-[14px] text-white py-3.5 px-4 sm:px-7 rounded-lg transition-all duration-200 hover:bg-white/[0.08] sm:min-w-[200px]"
                 style={{
                   border: "1.5px solid rgba(255, 255, 255, 0.25)",
@@ -242,7 +243,17 @@ export default function Hero() {
                 onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.5)")}
                 onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.25)")}
               >
-                Calculate Your ROX™
+                <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                  <span className="leading-none">Calculate Your</span>
+                  <img
+                    src="/rox-wordmark.png"
+                    alt=""
+                    width={44}
+                    height={20}
+                    className="h-[1.25em] w-auto translate-y-[0.14em] object-contain"
+                    aria-hidden
+                  />
+                </span>
               </a>
             </motion.div>
 

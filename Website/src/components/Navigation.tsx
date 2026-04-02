@@ -16,9 +16,6 @@ const platformLinks = [
   { name: "How It Works", href: "/platform/how-it-works", description: "The four-step Momentify workflow", isRoute: true, icon: "workflow" as const },
   { name: "Integrations", href: "/platform/integrations", description: "Connect with your existing tools", isRoute: true, icon: "integrations" as const },
   { name: "Security", href: "/platform/security", description: "Enterprise-grade data protection", isRoute: true, icon: "security" as const },
-  { name: "Help Center", href: "https://intercom.help/momentifyapp/en/", description: "Guides, FAQs, and support resources", isRoute: false, icon: "help" as const },
-  { name: "System Status", href: "https://status.momentifyapp.com/", description: "Real-time platform availability", isRoute: false, icon: "status" as const },
-  { name: "Social Toolkit", href: "/social-toolkit", description: "Create branded social graphics", isRoute: true, icon: "toolkit" as const },
 ];
 
 const ICON_COLOR = "rgba(6,19,65,0.45)";
@@ -41,23 +38,6 @@ const platformIcons: Record<string, React.ReactNode> = {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M8 1.5L3 4v3.5c0 3.5 2.1 5.8 5 6.5 2.9-.7 5-3 5-6.5V4L8 1.5z" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M6 8l1.5 1.5L10 7" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ),
-  help: (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="8" cy="8" r="6" stroke={ICON_COLOR} strokeWidth="1.3" />
-      <path d="M6.5 6.5a1.5 1.5 0 012.8.8c0 1-1.3 1.2-1.3 2.2M8 12h.01" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ),
-  status: (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M1 8h3l1.5-4 3 8L10 6l1.5 2H15" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ),
-  toolkit: (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="2" width="12" height="10" rx="1.5" stroke={ICON_COLOR} strokeWidth="1.3" />
-      <path d="M2 5h12M5 5v7M11 5v7" stroke={ICON_COLOR} strokeWidth="1.3" strokeLinecap="round" />
     </svg>
   ),
 };
@@ -157,7 +137,26 @@ export default function Navigation() {
                 )}
               </AnimatePresence>
             </div>
-            <a href="/what-is-rox" className={`text-[13px] font-medium transition-colors duration-300 leading-none ${linkColor}`}>What is ROX?</a>
+            <a
+              href="/what-is-rox"
+              aria-label="What is ROX?"
+              className={`group inline-flex items-center gap-1 text-[13px] font-medium transition-colors duration-300 leading-none ${linkColor}`}
+            >
+              <span>What is</span>
+              <span className="inline-flex items-center gap-px">
+                <img
+                  src="/rox-wordmark.png"
+                  alt=""
+                  width={40}
+                  height={18}
+                  className={`h-[1em] w-auto translate-y-[0.06em] object-contain transition-opacity duration-300 ${
+                    scrolled ? "brightness-0 opacity-50 group-hover:opacity-100" : "opacity-60 group-hover:opacity-100"
+                  }`}
+                  aria-hidden
+                />
+                <span>?</span>
+              </span>
+            </a>
             <a href="/case-studies" className={`text-[13px] font-medium transition-colors duration-300 leading-none ${linkColor}`}>Case Studies</a>
           </div>
 
@@ -232,7 +231,25 @@ export default function Navigation() {
                 )}
               </div>
               <div className="border-t border-black/[0.06] pt-4 space-y-3">
-                <a href="/what-is-rox" className="block text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>What is ROX?</a>
+                <a
+                  href="/what-is-rox"
+                  aria-label="What is ROX?"
+                  className="flex items-center gap-1.5 text-charcoal/70 text-sm"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <span>What is</span>
+                  <span className="inline-flex items-center gap-px">
+                    <img
+                      src="/rox-wordmark.png"
+                      alt=""
+                      width={40}
+                      height={18}
+                      className="h-[1em] w-auto translate-y-[0.06em] object-contain brightness-0 opacity-70"
+                      aria-hidden
+                    />
+                    <span>?</span>
+                  </span>
+                </a>
                 <a href="/case-studies" className="block text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>Case Studies</a>
               </div>
               <div className="flex flex-col gap-3">

@@ -122,6 +122,7 @@ export default function FinalCTA() {
             {/* Secondary */}
             <a
               href="/what-is-rox"
+              aria-label="Calculate Your ROX"
               className="inline-flex items-center justify-center flex-1 sm:flex-initial text-[12px] sm:text-[14px] py-2.5 sm:py-3.5 px-3 sm:px-7 transition-all duration-200"
               style={{
                 fontFamily: "var(--font-inter)",
@@ -138,7 +139,17 @@ export default function FinalCTA() {
                 e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.20)";
               }}
             >
-              Calculate Your ROX™
+              <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                <span className="leading-none">Calculate Your</span>
+                <img
+                  src="/rox-wordmark.png"
+                  alt=""
+                  width={44}
+                  height={20}
+                  className="h-[1.25em] w-auto translate-y-[0.14em] object-contain"
+                  aria-hidden
+                />
+              </span>
             </a>
           </motion.div>
 

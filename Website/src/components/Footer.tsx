@@ -20,7 +20,6 @@ const companyLinks = [
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
   { label: "Schedule a Demo", href: "/demo" },
-  { label: "Social Toolkit", href: "/social-toolkit" },
 ];
 
 export default function Footer() {
