@@ -990,9 +990,22 @@ export default function HowItWorksContent() {
                   <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "10px", color: "rgba(6,19,65,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: "8px" }}>
                     Event Summary
                   </p>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.55)", lineHeight: 1.6 }}>
-                    347 visitors engaged across 2 days. Lead capture rate exceeded benchmark by 18%. Strongest engagement on Day 1 during morning sessions.
-                  </p>
+                  <ul
+                    style={{
+                      fontFamily: "var(--font-inter)",
+                      fontWeight: 400,
+                      fontSize: "13px",
+                      color: "rgba(6,19,65,0.55)",
+                      lineHeight: 1.6,
+                      margin: 0,
+                      paddingLeft: "1.15em",
+                      listStyleType: "disc",
+                    }}
+                  >
+                    <li style={{ marginBottom: "0.5em" }}>347 visitors engaged across 2 days.</li>
+                    <li style={{ marginBottom: "0.5em" }}>Lead capture rate exceeded benchmark by 18%.</li>
+                    <li>Strongest engagement on Day 1 during morning sessions.</li>
+                  </ul>
                 </div>
 
                 <div style={{ height: "1px", background: "rgba(6,19,65,0.06)", marginBottom: "20px" }} />
@@ -1001,9 +1014,21 @@ export default function HowItWorksContent() {
                   <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "10px", color: "rgba(6,19,65,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: "8px" }}>
                     Key Recommendation
                   </p>
-                  <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "13px", color: "rgba(6,19,65,0.55)", lineHeight: 1.6 }}>
-                    Follow up with 12 high-intent leads within 24 hours. Three visitors returned to the booth twice and requested pricing.
-                  </p>
+                  <ul
+                    style={{
+                      fontFamily: "var(--font-inter)",
+                      fontWeight: 400,
+                      fontSize: "13px",
+                      color: "rgba(6,19,65,0.55)",
+                      lineHeight: 1.6,
+                      margin: 0,
+                      paddingLeft: "1.15em",
+                      listStyleType: "disc",
+                    }}
+                  >
+                    <li style={{ marginBottom: "0.5em" }}>Follow up with 12 high-intent leads within 24 hours.</li>
+                    <li>Three visitors returned to the booth twice and requested pricing.</li>
+                  </ul>
                 </div>
 
                 <div style={{ height: "1px", background: "rgba(6,19,65,0.06)", marginBottom: "20px" }} />
