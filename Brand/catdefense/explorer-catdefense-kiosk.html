@@ -3885,7 +3885,7 @@
     .results-tab-panel { padding: 0; overflow: visible; }
     .results-tab-panel.active { display: block; }
     .results-controls { display: none; }
-    .results-tab-bar { display: none !important; height: 0; margin: 0; padding: 0; border: 0; }
+    [data-step="5"] .results-tab-bar { display: none !important; height: 0; margin: 0; padding: 0; border: 0; }
     /* Results tabs: hidden by default, only show on step 5 */
     .results-tabs { display: none !important; }
     [data-step="5"] .results-tabs { display: flex !important; }
@@ -3899,6 +3899,16 @@
 
     /* ─── Kiosk: Summary (step 6) ────────────────── */
     [data-step="6"] .bottom-bar { display: flex !important; }
+    [data-step="6"] .persistent-actions { display: none !important; }
+    [data-step="6"] #btn-back,
+    [data-step="6"] #btn-back-placeholder,
+    [data-step="6"] #btn-skip,
+    [data-step="6"] #btn-next { display: none !important; }
+    /* results-tab-bar moved into bottom-bar: hide on all steps except 6 */
+    .bottom-bar .results-tab-bar { display: none !important; }
+    [data-step="6"] .bottom-bar .results-tab-bar { display: flex !important; }
+    /* fix kiosk margin-left:auto on .btn-back pushing it right inside the tab bar */
+    .bottom-bar .results-tab-bar .btn-back { margin-left: 0 !important; margin-right: 0 !important; }
     .summary-body {
       max-height: 235px;
       overflow-y: auto;
@@ -6663,6 +6673,14 @@
         resultsTabs.style.left = '50%';
         resultsTabs.style.transform = 'translateX(-50%)';
         bottomBar.appendChild(resultsTabs);
+      }
+      // Move step-6 results-tab-bar (share buttons) into bottom bar
+      var summaryTabBar = document.querySelector('.step-6 .results-tab-bar');
+      if (bottomBar && summaryTabBar) {
+        summaryTabBar.style.flex = '1';
+        summaryTabBar.style.borderTop = 'none';
+        summaryTabBar.style.padding = '0';
+        bottomBar.appendChild(summaryTabBar);
       }
       // Move learn filters into bottom bar (centered, above results tabs)
       var learnFilters = document.getElementById('shared-learn-filters');
