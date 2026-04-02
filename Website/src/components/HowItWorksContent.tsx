@@ -5,6 +5,8 @@ import { ScanBarcode } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
+import ShinyText from "@/components/ShinyText";
+
 /* ── Animation variants (match codebase pattern) ───── */
 
 const headerVariants = {
@@ -896,20 +898,68 @@ export default function HowItWorksContent() {
                   background: "#FFFFFF",
                   border: "1px solid rgba(6,19,65,0.08)",
                   borderRadius: "16px",
-                  padding: "28px 24px",
+                  overflow: "hidden",
                   boxShadow: "0 4px 24px rgba(6,19,65,0.06)",
                   minHeight: "420px",
                 }}
               >
-                <div className="flex items-center justify-between" style={{ marginBottom: "24px" }}>
-                  <div className="flex items-center gap-2">
-                    <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: TEAL }} />
-                    <span style={{ fontFamily: "var(--font-inter)", fontWeight: 600, fontSize: "13px", color: DEEP_NAVY }}>
-                      Intelligence Recap
-                    </span>
+                <div
+                  style={{
+                    background: "linear-gradient(90deg, #1637AB 0%, #E83A5A 100%)",
+                    padding: "18px 20px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "14px",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "14px", minWidth: 0, flex: 1 }}>
+                    <div
+                      className="flex shrink-0 items-center justify-center rounded-full border border-white/28 bg-white/12"
+                      style={{ width: 44, height: 44 }}
+                    >
+                      <img
+                        src="/how-it-works/ai-sparkle-icon.png"
+                        alt=""
+                        width={20}
+                        height={20}
+                        className="size-5 object-contain"
+                        aria-hidden
+                      />
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <p
+                        style={{
+                          fontFamily: "var(--font-inter)",
+                          margin: 0,
+                          lineHeight: 1.25,
+                        }}
+                      >
+                        <ShinyText
+                          text="AI Event Summary"
+                          className="font-bold text-[15px] tracking-[-0.02em]"
+                          color="rgba(255,255,255,0.72)"
+                          shineColor="#ffffff"
+                          speed={2.5}
+                          spread={100}
+                        />
+                      </p>
+                      <p
+                        style={{
+                          fontFamily: "var(--font-inter)",
+                          fontWeight: 400,
+                          fontSize: "11px",
+                          color: "rgba(255,255,255,0.78)",
+                          marginTop: "4px",
+                          lineHeight: 1.35,
+                        }}
+                      >
+                        Powered by Momentify Intelligence
+                      </p>
+                    </div>
                   </div>
                   <span
-                    className="inline-flex items-center gap-1.5"
+                    className="inline-flex shrink-0 items-center gap-1.5"
                     style={{
                       fontFamily: "var(--font-inter)",
                       fontWeight: 600,
@@ -917,9 +967,10 @@ export default function HowItWorksContent() {
                       color: "#FFFFFF",
                       letterSpacing: "0.02em",
                       borderRadius: "9999px",
-                      padding: "5px 12px 5px 10px",
-                      background: MOMENTIFY_BLUE,
-                      boxShadow: "0 1px 3px rgba(6, 19, 65, 0.12)",
+                      padding: "6px 12px 6px 10px",
+                      background: "rgba(255,255,255,0.2)",
+                      border: "1px solid rgba(255,255,255,0.28)",
+                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.22)",
                     }}
                   >
                     <img
@@ -927,13 +978,14 @@ export default function HowItWorksContent() {
                       alt=""
                       width={14}
                       height={14}
-                      className="shrink-0 size-[14px]"
+                      className="shrink-0 size-[14px] opacity-95"
                       aria-hidden
                     />
                     Pro Plan
                   </span>
                 </div>
 
+                <div style={{ padding: "24px 24px 28px" }}>
                 <div style={{ marginBottom: "20px" }}>
                   <p style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "10px", color: "rgba(6,19,65,0.35)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: "8px" }}>
                     Event Summary
@@ -977,6 +1029,7 @@ export default function HowItWorksContent() {
                       </div>
                     </div>
                   ))}
+                </div>
                 </div>
               </div>
             </motion.div>
