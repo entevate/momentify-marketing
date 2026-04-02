@@ -3886,6 +3886,9 @@
     .results-tab-panel.active { display: block; }
     .results-controls { display: none; }
     .results-tab-bar { display: none !important; height: 0; margin: 0; padding: 0; border: 0; }
+    /* Results tabs: hidden by default, only show on step 5 */
+    .results-tabs { display: none !important; }
+    [data-step="5"] .results-tabs { display: flex !important; }
 
     /* ─── Kiosk: Content Library (step 7) ──────────── */
     [data-step="7"] .bottom-bar { display: flex !important; }
@@ -3900,6 +3903,15 @@
       max-height: 235px;
       overflow-y: auto;
     }
+
+    /* ─── Kiosk: Card Overlay ────────────────── */
+    /* Overlay lives outside .shell so it doesn't inherit the 150% zoom — scale text explicitly */
+    .card-overlay-type { font-size: 16px; }
+    .card-overlay-title { font-size: 52px; }
+    .card-overlay-desc { font-size: 24px; max-width: 680px; }
+    .card-overlay-bullets li { font-size: 20px; }
+    .card-overlay-close { width: 56px; height: 56px; }
+    .card-overlay-close svg { width: 26px; height: 26px; }
 
     /* Thank you */
     [data-step="8"] .top-bar { display: none !important; }
