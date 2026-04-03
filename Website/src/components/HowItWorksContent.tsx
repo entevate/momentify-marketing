@@ -380,27 +380,6 @@ function Step1Slideshow() {
    ════════════════════════════════════════════════════════ */
 
 export default function HowItWorksContent() {
-  const [activeStep, setActiveStep] = useState("web");
-
-  useEffect(() => {
-    const sectionIds = ["web", "explorer", "intelligence", "engage"];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveStep(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "-40% 0px -55% 0px" }
-    );
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <>
       {/* ═══════════════════ 1. HERO ═══════════════════ */}
@@ -487,37 +466,34 @@ export default function HowItWorksContent() {
             Follow-up closes the loop with <strong>Engage</strong>.
           </motion.p>
 
-          {/* Step nav pills */}
+          {/* Step nav pills — match Intelligence “Pro Plan” glass pill */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.32 }}
-            className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3"
+            className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3"
           >
-            {stepNav.map((step) => {
-              const isActive = activeStep === step.id;
-              return (
-                <a
-                  key={step.id}
-                  href={`#${step.id}`}
-                  className="transition-all duration-200"
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    fontWeight: 600,
-                    fontSize: "13px",
-                    color: isActive ? "#FFFFFF" : "rgba(255,255,255,0.4)",
-                    background: isActive ? step.color : "transparent",
-                    border: isActive
-                      ? `1px solid ${step.color}`
-                      : "1px solid rgba(255,255,255,0.15)",
-                    padding: "8px 20px",
-                    borderRadius: "20px",
-                  }}
-                >
-                  {step.label}
-                </a>
-              );
-            })}
+            {stepNav.map((step) => (
+              <a
+                key={step.id}
+                href={`#${step.id}`}
+                className="inline-flex shrink-0 items-center gap-1.5 transition-opacity duration-200 hover:opacity-95"
+                style={{
+                  fontFamily: "var(--font-inter)",
+                  fontWeight: 600,
+                  fontSize: "10px",
+                  letterSpacing: "0.02em",
+                  borderRadius: "9999px",
+                  padding: "6px 12px 6px 10px",
+                  color: "#FFFFFF",
+                  background: "rgba(255, 255, 255, 0.22)",
+                  border: "1px solid rgba(255, 255, 255, 0.32)",
+                  boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.22)",
+                }}
+              >
+                {step.label}
+              </a>
+            ))}
           </motion.div>
         </div>
       </section>
