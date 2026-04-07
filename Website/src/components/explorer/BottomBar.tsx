@@ -9,6 +9,7 @@ export default function BottomBar() {
   const currentStep = config.steps[session.currentStepIndex];
   const isRegistration = currentStep?.type === 'registration';
   const isResults = currentStep?.type === 'results';
+  const isTrait = currentStep?.type === 'trait-selection';
 
   // Find the summary step for the Done button
   const summaryStep = config.steps.find((s) => s.type === 'summary');
@@ -17,6 +18,18 @@ export default function BottomBar() {
     if (!session.visitorName) setVisitorName('Guest');
     nextStep();
   };
+
+  // Check if trait-selection step has valid selections
+  const traitHasSelection = (() => {
+    if (!isTrait || currentStep?.type !== 'trait-selection') return true;
+    const isSingle = currentStep.selectionMode === 'single';
+    if (isSingle) return !!session.selectedRole;
+    // Multi-select: check selectedTraits map first, then selectedInterests
+    const traitValues = session.selectedTraits[currentStep.id];
+    if (traitValues && traitValues.length > 0) return true;
+    if (session.selectedInterests.length > 0) return true;
+    return false;
+  })();
 
   return (
     <div className="exp-bottom-bar">
@@ -47,6 +60,16 @@ export default function BottomBar() {
       ) : isResults && summaryStep ? (
         <button className="exp-btn-next" onClick={() => goToStep(summaryStep.id)}>
           Done
+        </button>
+      ) : isTrait ? (
+        <button
+          className="exp-btn-next"
+          onClick={nextStep}
+          disabled={!traitHasSelection}
+          style={!traitHasSelection ? { opacity: 0.35, pointerEvents: 'none' } : undefined}
+        >
+          Next
+          <ChevronRight />
         </button>
       ) : (
         <button className="exp-btn-next" onClick={nextStep}>

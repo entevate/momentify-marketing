@@ -114,7 +114,7 @@ export const instances: ExplorerInstance[] = [
     industry: "Defense & Security",
     prototypeFile: "/brand/catdefense/explorer-catdefense.html",
     logo: "/brand/assets/cat-icon.png",
-    gateLogo: "/brand/assets/Caterpillar_logo.svg",
+    gateLogo: "/brand/assets/Caterpillar_logo_reverse.svg",
     accentColor: "#FFCC00",
     createdAt: "2025-04-01",
     password: "catdefense",
