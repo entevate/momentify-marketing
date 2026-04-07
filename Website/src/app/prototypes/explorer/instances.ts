@@ -127,10 +127,9 @@ export const instances: ExplorerInstance[] = [
     industry: "Healthcare Supply Chain",
     prototypeFile: "/explorer/clarium",
     logo: "/brand/assets/clarium-icon.png",
-    gateLogo: "/brand/assets/clarium-light.png",
+    gateLogo: "/brand/assets/clarium-dark.png",
     accentColor: "#4F46E5",
     createdAt: "2026-04-07",
     password: "clarium2026",
-    bezel: "ipad-landscape",
   },
 ];
