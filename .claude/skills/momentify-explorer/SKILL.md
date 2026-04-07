@@ -10,9 +10,20 @@ Create a fully branded, interactive Explorer prototype that matches the exact UX
 
 Invoke this skill when asked to create a new Explorer prototype, generate a new kiosk experience, or build an Explorer for a specific company.
 
-## Prerequisites
+## Input: Intake Form or Manual
 
-Before running, you MUST have the following information. Prompt the user for anything missing:
+There are two ways to provide inputs:
+
+### Option A: Intake Form (preferred)
+The user fills out the intake form at `/brand/explorer-builder`. This saves a JSON file to `.explorer-intake/{slug}/intake.json` along with uploaded logos and content files. To use a saved intake:
+
+1. Read the intake file: `.explorer-intake/{slug}/intake.json`
+2. It contains: companyName, industry, websiteUrl, contentFiles (paths), logos (paths), colors, password, screensaver, calculator, quickLinks
+3. Read any uploaded content files listed in `contentFiles` to extract content
+4. Logos are already saved to `Website/public/brand/assets/`
+
+### Option B: Manual (prompt for missing info)
+If no intake exists, prompt the user for the following:
 
 ### Required Inputs
 1. **Company Name** - Full company name (e.g., "Caterpillar", "Freeman")
@@ -23,7 +34,7 @@ Before running, you MUST have the following information. Prompt the user for any
 
 ### Optional Inputs
 6. **Links** - Quick links to show in the explorer (external URLs, product pages, etc.)
-7. **Calculators** - Any calculator to embed as an iframe (e.g., ROI calculator, cost estimator). Should be an existing URL that can be loaded in a frame, similar to the PHIL prototype's embedded calculator
+7. **Calculators** - An interactive calculator (e.g., ROI calculator, cost estimator) presented in a popup modal overlay. Can be an existing URL loaded in an iframe within the modal, or a custom-built calculator created as part of the prototype. Similar to the PHIL prototype's calculator but displayed in a modal rather than inline
 8. **Screensaver** - Optional idle screensaver (video, YouTube, Vimeo, or image). NOT enabled by default. Only add if the user specifically requests it
 9. **Password** - Access password for the prototype (default: generate one as `{companyslug}2026`)
 10. **Background Style** - Gradient with aurora orbs (default) or custom background image
@@ -200,7 +211,7 @@ The steps array MUST follow this exact order:
 
 **Optional features in the config:**
 - `features.screensaver`: Default `false`. Only set to `true` if user explicitly provides a screensaver asset. When enabled, add a `screensaver` object to the splash step config
-- `features.calculator`: Default `false`. Only set to `true` if user provides a calculator URL to embed as an iframe
+- `features.calculator`: Default `false`. Only set to `true` if user provides a calculator URL or requests a custom calculator. Calculator is presented in a popup modal overlay, not inline
 - Quick links: Only populate `features.quickLinks` if the user provides specific URLs
 
 ### Step 6: Register in the Explorer Route
@@ -267,7 +278,7 @@ After creating all files:
 9. **Aurora orbs MUST use rgba values with low opacity** (0.10-0.20) derived from brand colors
 10. **Do NOT automatically push to git** - only commit/push when asked
 11. **Screensaver is OFF by default** - only enable if user explicitly provides a screensaver asset
-12. **Calculator is OFF by default** - only enable if user provides an embeddable calculator URL (iframe src)
+12. **Calculator is OFF by default** - only enable if user provides a calculator URL or requests a custom-built calculator. Calculator MUST be presented in a popup modal overlay, not embedded inline
 13. **Quick Links are empty by default** - only populate if user provides specific URLs
 14. **Registration reminder on summary** - if user skipped or has incomplete required fields, prompt them to complete before sharing results
 

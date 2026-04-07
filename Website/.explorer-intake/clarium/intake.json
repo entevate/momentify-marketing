@@ -1,0 +1,30 @@
+{
+  "companyName": "Clarium",
+  "templateName": "",
+  "solutionType": "trade-shows",
+  "industry": "Financial Services",
+  "websiteUrl": "https://www.clariumhealth.com/",
+  "slug": "clarium",
+  "colors": {
+    "primary": "#4F46E5",
+    "secondary": "#005AFF"
+  },
+  "password": "clarium2026",
+  "screensaver": {
+    "enabled": false,
+    "url": ""
+  },
+  "calculator": {
+    "enabled": false,
+    "url": ""
+  },
+  "quickLinks": [],
+  "logos": {
+    "logo-dark": "/brand/assets/clarium-dark.png",
+    "logo-light": "/brand/assets/clarium-light.png",
+    "logo-icon": "/brand/assets/clarium-icon.png"
+  },
+  "contentFiles": [],
+  "status": "pending",
+  "createdAt": "2026-04-07T15:43:59.830Z"
+}
