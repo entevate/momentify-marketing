@@ -301,13 +301,18 @@ Add the new instance to `Website/src/app/prototypes/explorer/instances.ts`:
   industry: '{Industry}',
   prototypeFile: '/explorer/{slug}',  // Points to the React [id] route
   logo: '/brand/assets/{slug}-icon.{ext}',
-  gateLogo: '/brand/assets/{slug}-logo.{ext}',  // Optional, for password gate
+  gateLogo: '/brand/assets/{slug}-logo-reverse.{ext}',  // MUST be reverse/white logo for dark gate bg
   accentColor: '{primary_accent_color}',
   createdAt: '{YYYY-MM-DD}',
   password: '{slug}2026',
-  bezel: 'ipad-landscape',
 }
 ```
+
+**Important instance rules:**
+- **`gateLogo`** MUST be the reverse/white version of the logo (the gate has a dark background). If only a dark-on-light logo exists, create a reverse version with white fills.
+- **Do NOT set `bezel: 'ipad-landscape'`** on instances where `prototypeFile` points to a React route (`/explorer/{slug}`). The React route already renders its own `ExplorerBezelWrapper` -- adding `bezel` causes a double bezel. Only set `bezel` for instances pointing to static HTML files (`/brand/...html`).
+- The layout at `[slug]/layout.tsx` automatically generates `<title>` and OG metadata from the instance data (name, company, industry, accent color). No extra work needed.
+- A dynamic OG preview image is generated at `/api/prototypes/og?slug={slug}` showing the logo, name, industry, and accent-colored orbs.
 
 ### Step 8: Asset Checklist
 
@@ -341,6 +346,9 @@ After creating all files:
 12. **Calculator is OFF by default** - only enable if user provides a calculator URL or requests a custom-built calculator. Calculator MUST be presented in a popup modal overlay, not embedded inline
 13. **Quick Links are empty by default** - only populate if user provides specific URLs
 14. **Registration reminder on summary** - if user skipped or has incomplete required fields, prompt them to complete before sharing results
+15. **Next button is disabled on trait-selection steps** until at least one selection is made (single-select: role selected; multi-select: at least one interest). This is built into BottomBar.tsx and requires no config.
+16. **Gate logo must be the reverse/white version** -- the password gate has a dark background. Never use a dark-on-light logo for `gateLogo`.
+17. **Do NOT set `bezel` on React-route instances** -- React explorer routes (`/explorer/{slug}`) already render their own `ExplorerBezelWrapper`. Setting `bezel: 'ipad-landscape'` on the instance causes a double bezel. Only use `bezel` for static HTML prototypes.
 
 ## Reference Files
 
@@ -350,7 +358,10 @@ Read these files to understand the system before generating:
 - `Website/src/lib/explorer/theme.ts` - Theme color system
 - `Website/src/components/explorer/ExplorerShell.tsx` - Shell layout
 - `Website/src/components/explorer/ExplorerContext.tsx` - State management
+- `Website/src/components/explorer/BottomBar.tsx` - Navigation bar (skip/next/done logic, trait selection gating)
 - `Website/src/app/prototypes/explorer/instances.ts` - Instance registry
+- `Website/src/app/prototypes/explorer/[slug]/layout.tsx` - Per-prototype metadata (title, OG image)
+- `Website/src/app/api/prototypes/og/route.tsx` - Dynamic OG image generator
 
 ## Output Summary
 
