@@ -25,15 +25,20 @@ const ASSIGNEES = [
 ];
 
 export default function NotesDialog({ open, onClose }: NotesDialogProps) {
-  const { session, setLeadTemp, setNotes, setAssignee, showToast } = useExplorer();
+  const { config, session, setLeadTemp, setNotes, setAssignee, showToast, goToStep } = useExplorer();
   const [isRecording, setIsRecording] = useState(false);
   const [showAssigneeDropdown, setShowAssigneeDropdown] = useState(false);
 
   if (!open) return null;
 
   const handleSave = () => {
-    showToast('Notes saved');
     onClose();
+    showToast('Notes saved');
+    // Navigate to splash after saving
+    const splashStep = config.steps.find(s => s.type === 'splash');
+    if (splashStep) {
+      setTimeout(() => goToStep(splashStep.id), 1500);
+    }
   };
 
   return (

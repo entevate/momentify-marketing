@@ -2,6 +2,7 @@
 
 import { Star, User, Sparkles, CheckCircle2 } from 'lucide-react';
 import { useExplorer } from '@/components/explorer/ExplorerContext';
+import { getLucideIcon } from '@/components/explorer/ui/iconMap';
 import type { TraitSelectionStepConfig, TraitOption } from '@/lib/explorer/types';
 
 function TraitIcon({ option }: { option: TraitOption }) {
@@ -11,13 +12,17 @@ function TraitIcon({ option }: { option: TraitOption }) {
   if (option.iconType === 'svg' && option.icon) {
     return <span dangerouslySetInnerHTML={{ __html: option.icon }} />;
   }
-  // lucide or fallback: render Star as placeholder
+  if (option.iconType === 'lucide' && option.icon) {
+    const Icon = getLucideIcon(option.icon);
+    return <Icon />;
+  }
   return <Star />;
 }
 
 export default function TraitSelectionStep({ step }: { step: TraitSelectionStepConfig }) {
   const {
     session,
+    config,
     selectRole,
     toggleInterest,
     setSelectedTraits,
@@ -42,8 +47,6 @@ export default function TraitSelectionStep({ step }: { step: TraitSelectionStepC
   function handleCardClick(value: string) {
     if (isSingle) {
       selectRole(value);
-      // Auto-advance after single selection
-      setTimeout(() => nextStep(), 300);
     } else {
       toggleInterest(value);
     }
@@ -58,10 +61,44 @@ export default function TraitSelectionStep({ step }: { step: TraitSelectionStepC
     }
   }
 
+  // Helper: look up label from trait-selection step options by value
+  const getOptionLabel = (value: string): string => {
+    for (const s of config.steps) {
+      if (s.type === 'trait-selection') {
+        const match = s.options.find((o: { value: string; label: string }) => o.value === value);
+        if (match) return match.label;
+      }
+    }
+    return value;
+  };
+
+  // Build chips from previous steps only — no chips on the first trait-selection step
+  const firstTraitStep = config.steps.find(s => s.type === 'trait-selection');
+  const isFirstTraitStep = firstTraitStep?.id === step.id;
+  const showName = !isFirstTraitStep && !!session.visitorName;
+  const showRole = !isFirstTraitStep && !isSingle && !!session.selectedRole;
+  const hasChips = showName || showRole;
+
   return (
     <div>
-      {/* Header */}
+      {/* Header — chips sit INSIDE header, above the title */}
       <div className="exp-trait-header">
+        {hasChips && (
+          <div className="exp-selection-summary">
+            {showName && (
+              <span className="exp-summary-chip chip-name">
+                <User style={{ width: 12, height: 12 }} />
+                {session.visitorName}
+              </span>
+            )}
+            {showRole && (
+              <span className="exp-summary-chip chip-role">
+                <Sparkles style={{ width: 12, height: 12 }} />
+                {getOptionLabel(session.selectedRole!)}
+              </span>
+            )}
+          </div>
+        )}
         {step.showGreeting && session.visitorName && (
           <div className="exp-trait-greeting">
             Welcome, <strong>{session.visitorName}</strong>
@@ -71,37 +108,16 @@ export default function TraitSelectionStep({ step }: { step: TraitSelectionStepC
         <p className="exp-trait-subtitle">{step.subtitle}</p>
       </div>
 
-      {/* Select All */}
+      {/* Select All — positioned right, between header and grid */}
       {step.showSelectAll && (
-        <button
-          className={`exp-btn-select-all${allSelected ? ' active' : ''}`}
-          onClick={handleSelectAll}
-        >
-          {allSelected ? 'Deselect All' : 'Select All'}
-        </button>
-      )}
-
-      {/* Selection Summary Chips */}
-      {(session.visitorName || session.selectedRole || session.selectedInterests.length > 0) && (
-        <div className="exp-selection-summary">
-          {session.visitorName && (
-            <span className="exp-summary-chip chip-name">
-              <User style={{ width: 12, height: 12 }} />
-              {session.visitorName}
-            </span>
-          )}
-          {session.selectedRole && (
-            <span className="exp-summary-chip chip-role">
-              <Sparkles style={{ width: 12, height: 12 }} />
-              {session.selectedRole}
-            </span>
-          )}
-          {session.selectedInterests.map((interest) => (
-            <span className="exp-summary-chip chip-interest" key={interest}>
-              <CheckCircle2 style={{ width: 12, height: 12 }} />
-              {interest}
-            </span>
-          ))}
+        <div style={{ position: 'relative', maxWidth: 820, width: '100%', height: 0 }}>
+          <button
+            className={`exp-btn-select-all${allSelected ? ' active' : ''}`}
+            onClick={handleSelectAll}
+            style={{ position: 'absolute', bottom: 12, right: 0 }}
+          >
+            {allSelected ? 'Deselect All' : 'Select All'}
+          </button>
         </div>
       )}
 

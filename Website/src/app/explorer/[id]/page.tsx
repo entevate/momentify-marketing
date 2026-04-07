@@ -1,11 +1,14 @@
 import { notFound } from 'next/navigation';
 import ExplorerRenderer from '@/components/explorer/ExplorerRenderer';
+import ExplorerBezelWrapper from '@/components/explorer/ExplorerBezelWrapper';
 import { MOMENTIFY_DEFAULT_CONFIG } from '@/lib/explorer/defaults';
+import { CLARIUM_CONFIG } from '@/lib/explorer/configs/clarium';
 
-// For now, only the default config is available
-// Later this will fetch from Vercel KV/Blob
-const CONFIGS: Record<string, typeof MOMENTIFY_DEFAULT_CONFIG> = {
+import type { ExplorerConfig } from '@/lib/explorer/types';
+
+const CONFIGS: Record<string, ExplorerConfig> = {
   'momentify-default': MOMENTIFY_DEFAULT_CONFIG,
+  'clarium': CLARIUM_CONFIG,
 };
 
 export default async function ExplorerPage({ params }: { params: Promise<{ id: string }> }) {
@@ -17,7 +20,7 @@ export default async function ExplorerPage({ params }: { params: Promise<{ id: s
   }
 
   return (
-    <ExplorerRenderer config={config} />
+    <ExplorerBezelWrapper config={config} />
   );
 }
 

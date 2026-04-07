@@ -1,31 +1,9 @@
 'use client';
 
-import { Bookmark, BookmarkCheck, Zap, TrendingUp, Filter, BarChart2, Clock, Activity, Play, FileText, Headphones, Video, Cpu, Scan, Send, Repeat, GitMerge, Star, Target } from 'lucide-react';
+import { Bookmark, BookmarkCheck, Star } from 'lucide-react';
 import { useExplorer } from '@/components/explorer/ExplorerContext';
+import { getLucideIcon } from '@/components/explorer/ui/iconMap';
 import type { ContentCard } from '@/lib/explorer/types';
-
-// Map icon name strings to lucide components
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  'zap': Zap,
-  'trending-up': TrendingUp,
-  'filter': Filter,
-  'bar-chart-2': BarChart2,
-  'clock': Clock,
-  'activity': Activity,
-  'play': Play,
-  'file-text': FileText,
-  'headphones': Headphones,
-  'video': Video,
-  'cpu': Cpu,
-  'scan': Scan,
-  'send': Send,
-  'repeat': Repeat,
-  'git-merge': GitMerge,
-  'star': Star,
-  'target': Target,
-  'puzzle': Star,
-  'book-open': FileText,
-};
 
 interface ResultCardProps {
   card: ContentCard;
@@ -44,7 +22,7 @@ export default function ResultCard({ card, viewSize, onOpenOverlay }: ResultCard
     showToast(saved ? 'Removed from briefcase' : 'Saved to briefcase');
   };
 
-  const IconComponent = card.iconType === 'lucide' ? ICON_MAP[card.icon] : null;
+  const IconComponent = card.iconType === 'lucide' ? getLucideIcon(card.icon) : null;
 
   return (
     <div className="exp-result-card" onClick={() => onOpenOverlay?.(card)}>

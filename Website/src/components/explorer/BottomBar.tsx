@@ -4,7 +4,7 @@ import { useExplorer } from './ExplorerContext';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function BottomBar() {
-  const { config, session, nextStep, prevStep, goToStep, progressDots } = useExplorer();
+  const { config, session, nextStep, prevStep, goToStep, progressDots, setVisitorName } = useExplorer();
 
   const currentStep = config.steps[session.currentStepIndex];
   const isRegistration = currentStep?.type === 'registration';
@@ -12,6 +12,11 @@ export default function BottomBar() {
 
   // Find the summary step for the Done button
   const summaryStep = config.steps.find((s) => s.type === 'summary');
+
+  const handleSkipRegistration = () => {
+    if (!session.visitorName) setVisitorName('Guest');
+    nextStep();
+  };
 
   return (
     <div className="exp-bottom-bar">
@@ -29,9 +34,14 @@ export default function BottomBar() {
         ))}
       </div>
 
-      {isRegistration && config.registration.skipEnabled ? (
-        <button className="exp-btn-skip" onClick={nextStep}>
+      {isRegistration && config.registration.skipEnabled && !session.visitorName ? (
+        <button className="exp-btn-skip" onClick={handleSkipRegistration}>
           Skip
+          <ChevronRight />
+        </button>
+      ) : isRegistration && session.visitorName ? (
+        <button className="exp-btn-next" onClick={nextStep}>
+          Next
           <ChevronRight />
         </button>
       ) : isResults && summaryStep ? (

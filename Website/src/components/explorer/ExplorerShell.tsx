@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import './explorer.css';
 import { useExplorer } from './ExplorerContext';
 import TopBar from './TopBar';
@@ -23,23 +23,7 @@ import type { ContentCard } from '@/lib/explorer/types';
 export default function ExplorerShell() {
   const { config, session, themeVars, toastMessage, toastVisible, goToStep, resetSession } = useExplorer();
 
-  // Viewport scaling: render at 1366x1024 and scale to fit
   const shellRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-
-  const updateScale = useCallback(() => {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const sx = w / 1366;
-    const sy = h / 1024;
-    setScale(Math.min(sx, sy));
-  }, []);
-
-  useEffect(() => {
-    updateScale();
-    window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
-  }, [updateScale]);
 
   // Overlay state
   const [overlayCard, setOverlayCard] = useState<ContentCard | null>(null);
@@ -53,7 +37,11 @@ export default function ExplorerShell() {
   const isSplash = currentStep?.type === 'splash';
   const isThankYou = currentStep?.type === 'thank-you';
   const isRegistration = currentStep?.type === 'registration';
-  const hideBottomBar = isSplash || isThankYou;
+  const isResults = currentStep?.type === 'results';
+  const isSummary = currentStep?.type === 'summary';
+  const isContentLibrary = currentStep?.type === 'content-library';
+  // Results, summary, and content library have their own tab bar — hide main bottom bar
+  const hideBottomBar = isSplash || isThankYou || isResults || isSummary || isContentLibrary;
 
   const auroraOrbs = config.branding.auroraOrbs;
 
@@ -109,21 +97,11 @@ export default function ExplorerShell() {
   return (
     <div
       ref={shellRef}
-      style={{
-        width: '100vw',
-        height: '100vh',
-        overflow: 'hidden',
-        background: '#07081F',
-      }}
-    >
-    <div
       className="explorer-shell"
       style={{
         ...themeVars as React.CSSProperties,
         width: 1366,
         height: 1024,
-        transform: `scale(${scale})`,
-        transformOrigin: 'top left',
       }}
     >
       <div className="exp-shell-inner">
@@ -147,6 +125,7 @@ export default function ExplorerShell() {
           onOpenNotes={() => setNotesOpen(true)}
           onOpenVoice={() => setVoiceOpen(true)}
           onOpenMedia={() => setMediaOpen(true)}
+          onEndSession={() => setEndSessionOpen(true)}
         />
 
         {isSplash || isThankYou ? (
@@ -184,7 +163,6 @@ export default function ExplorerShell() {
       <NotesDialog open={notesOpen} onClose={() => setNotesOpen(false)} />
       <VoiceCaptureDialog open={voiceOpen} onClose={() => setVoiceOpen(false)} />
       <MediaCaptureDialog open={mediaOpen} onClose={() => setMediaOpen(false)} />
-    </div>
     </div>
   );
 }

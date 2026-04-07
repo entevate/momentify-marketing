@@ -3,6 +3,15 @@
 
 import type { BrandingConfig, ThemeColors } from './types';
 
+/** Convert hex color to rgba string */
+function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 /** Generates a CSS custom properties object for the explorer shell */
 export function generateThemeVars(
   branding: BrandingConfig,
@@ -42,8 +51,29 @@ export function generateThemeVars(
     '--exp-cta-text': branding.ctaTextColor,
     '--exp-gradient-word': branding.gradientWord,
 
+    // Accent tints (10% opacity versions for backgrounds)
+    '--exp-teal-10': hexToRgba(branding.colors.teal, 0.1),
+    '--exp-teal-30': hexToRgba(branding.colors.teal, 0.3),
+    '--exp-teal-40': hexToRgba(branding.colors.teal, 0.4),
+    '--exp-cyan-15': hexToRgba(branding.colors.primary, 0.15),
+
+    // Card selection states (derived from accent)
+    '--exp-card-active-border': hexToRgba(branding.colors.teal, 0.3),
+    '--exp-card-active-bg': 'rgba(255,255,255,0.08)',
+    '--exp-card-selected-border': hexToRgba(branding.colors.teal, 0.5),
+    '--exp-card-saved-bg': hexToRgba(branding.colors.teal, 0.1),
+
+    // Alert
+    '--exp-alert': '#E5484D',
+    '--exp-alert-border': 'rgba(229,72,77,0.25)',
+    '--exp-alert-active': 'rgba(229,72,77,0.4)',
+    '--exp-alert-bg': 'rgba(229,72,77,0.08)',
+
     // Transition
     '--exp-transition': '0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+
+    // Font
+    '--exp-font': branding.font ? `'${branding.font}', Inter, -apple-system, sans-serif` : "'Inter', -apple-system, sans-serif",
   };
 }
 

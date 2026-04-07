@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Search, LayoutGrid, Columns2, Square, Bookmark, BookmarkCheck } from 'lucide-react';
+import { Search, LayoutGrid, Columns2, Square, Bookmark, BookmarkCheck, Star, ChevronLeft } from 'lucide-react';
 import type { ContentLibraryStepConfig, ContentCard } from '@/lib/explorer/types';
 import { useExplorer } from '../ExplorerContext';
+import { getLucideIcon } from '../ui/iconMap';
 
 interface ContentLibraryStepProps {
   step: ContentLibraryStepConfig;
@@ -12,7 +13,7 @@ interface ContentLibraryStepProps {
 type SortMode = 'category' | 'alpha' | 'type';
 
 export default function ContentLibraryStep({ step }: ContentLibraryStepProps) {
-  const { config, session, toggleSaveCard, isCardSaved, setViewSize } = useExplorer();
+  const { config, session, toggleSaveCard, isCardSaved, setViewSize, prevStep, goToStep } = useExplorer();
   const [sortMode, setSortMode] = useState<SortMode>('category');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -126,9 +127,16 @@ export default function ContentLibraryStep({ step }: ContentLibraryStepProps) {
                 <div key={card.id} className="exp-result-card">
                   <div className="exp-card-top">
                     <div className="exp-card-icon">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <circle cx="12" cy="12" r="10" />
-                      </svg>
+                      {(() => {
+                        if (card.iconType === 'lucide' && card.icon) {
+                          const Icon = getLucideIcon(card.icon);
+                          return <Icon />;
+                        }
+                        if (card.iconType === 'image' && card.icon) {
+                          return <img src={card.icon} alt="" style={{ width: '100%', height: '100%' }} />;
+                        }
+                        return <Star />;
+                      })()}
                     </div>
                     <span className="exp-card-title">{card.title}</span>
                     <button
@@ -147,6 +155,21 @@ export default function ContentLibraryStep({ step }: ContentLibraryStepProps) {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Bottom bar */}
+      <div className="exp-results-tab-bar">
+        <button className="exp-btn-back" onClick={() => prevStep()}>
+          <ChevronLeft />
+          Back
+        </button>
+        <div />
+        <button className="exp-btn-next" onClick={() => {
+          const summaryStep = config.steps.find(s => s.type === 'summary');
+          if (summaryStep) goToStep(summaryStep.id);
+        }}>
+          Done
+        </button>
       </div>
     </div>
   );

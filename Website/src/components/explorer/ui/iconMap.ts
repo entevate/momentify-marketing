@@ -1,0 +1,258 @@
+/**
+ * Shared Lucide icon lookup map.
+ * Maps icon name strings (used in ExplorerConfig) to their React components.
+ */
+import {
+  Star,
+  Shield,
+  Presentation,
+  Boxes,
+  Banknote,
+  HeartPulse,
+  Server,
+  ShoppingCart,
+  MessageCircle,
+  AlertTriangle,
+  Repeat,
+  TrendingDown,
+  ClipboardList,
+  Eye,
+  Database,
+  PlayCircle,
+  Compass,
+  Zap,
+  TrendingUp,
+  Filter,
+  BarChart2,
+  Clock,
+  Activity,
+  Play,
+  FileText,
+  Headphones,
+  Video,
+  Cpu,
+  Scan,
+  Send,
+  GitMerge,
+  Target,
+  BookOpen,
+  Puzzle,
+  Rocket,
+  Bot,
+  LayoutDashboard,
+  Globe,
+  ListChecks,
+  CloudSnow,
+  Square,
+  LayoutGrid,
+  Columns2,
+  Briefcase,
+  Users,
+  Building2,
+  Truck,
+  Wrench,
+  Settings,
+  ChevronRight,
+  ArrowRight,
+  CheckCircle2,
+  CircleDot,
+  Lightbulb,
+  Flame,
+  Award,
+  MapPin,
+  Calendar,
+  Phone,
+  Mail,
+  Link,
+  ExternalLink,
+  Download,
+  Upload,
+  Share2,
+  Lock,
+  Unlock,
+  Search,
+  Info,
+  HelpCircle,
+  AlertOctagon,
+  XCircle,
+  MinusCircle,
+  PlusCircle,
+  RefreshCw,
+  RotateCw,
+  Layers,
+  Package,
+  Gauge,
+  LineChart,
+  PieChart,
+  BarChart3,
+  Workflow,
+  Network,
+  Cog,
+  Sparkles,
+  Crown,
+  Handshake,
+  DollarSign,
+  CreditCard,
+  Receipt,
+  FileBarChart,
+  FilePieChart,
+  Megaphone,
+  Radio,
+  Mic,
+  Camera,
+  Image,
+  Monitor,
+  Tablet,
+  Smartphone,
+  Wifi,
+  Cloud,
+  HardDrive,
+} from 'lucide-react';
+
+import type { ComponentType } from 'react';
+
+export const LUCIDE_ICON_MAP: Record<string, ComponentType<{ className?: string }>> = {
+  // Common role / trait icons
+  'shield': Shield,
+  'presentation': Presentation,
+  'boxes': Boxes,
+  'banknote': Banknote,
+  'heart-pulse': HeartPulse,
+  'server': Server,
+  'shopping-cart': ShoppingCart,
+  'message-circle': MessageCircle,
+
+  // Common interest / challenge icons
+  'alert-triangle': AlertTriangle,
+  'repeat': Repeat,
+  'trending-down': TrendingDown,
+  'clipboard-list': ClipboardList,
+  'eye': Eye,
+  'database': Database,
+  'play-circle': PlayCircle,
+  'compass': Compass,
+
+  // Content card icons
+  'zap': Zap,
+  'trending-up': TrendingUp,
+  'filter': Filter,
+  'bar-chart-2': BarChart2,
+  'clock': Clock,
+  'activity': Activity,
+  'play': Play,
+  'file-text': FileText,
+  'headphones': Headphones,
+  'video': Video,
+  'cpu': Cpu,
+  'scan': Scan,
+  'send': Send,
+  'git-merge': GitMerge,
+  'star': Star,
+  'target': Target,
+  'book-open': BookOpen,
+  'puzzle': Puzzle,
+  'rocket': Rocket,
+  'bot': Bot,
+  'layout-dashboard': LayoutDashboard,
+  'globe': Globe,
+  'list-checks': ListChecks,
+  'cloud-snow': CloudSnow,
+
+  // Layout / UI
+  'square': Square,
+  'layout-grid': LayoutGrid,
+  'columns-2': Columns2,
+
+  // People / org
+  'briefcase': Briefcase,
+  'users': Users,
+  'building-2': Building2,
+
+  // Industry
+  'truck': Truck,
+  'wrench': Wrench,
+  'settings': Settings,
+  'cog': Cog,
+
+  // Navigation
+  'chevron-right': ChevronRight,
+  'arrow-right': ArrowRight,
+
+  // Status
+  'check-circle-2': CheckCircle2,
+  'circle-dot': CircleDot,
+  'lightbulb': Lightbulb,
+  'flame': Flame,
+  'award': Award,
+
+  // Contact / location
+  'map-pin': MapPin,
+  'calendar': Calendar,
+  'phone': Phone,
+  'mail': Mail,
+  'link': Link,
+  'external-link': ExternalLink,
+
+  // Actions
+  'download': Download,
+  'upload': Upload,
+  'share-2': Share2,
+  'lock': Lock,
+  'unlock': Unlock,
+  'search': Search,
+  'info': Info,
+  'help-circle': HelpCircle,
+
+  // Alerts
+  'alert-octagon': AlertOctagon,
+  'x-circle': XCircle,
+  'minus-circle': MinusCircle,
+  'plus-circle': PlusCircle,
+
+  // Refresh / rotate
+  'refresh-cw': RefreshCw,
+  'rotate-cw': RotateCw,
+
+  // Data / analytics
+  'layers': Layers,
+  'package': Package,
+  'gauge': Gauge,
+  'line-chart': LineChart,
+  'pie-chart': PieChart,
+  'bar-chart-3': BarChart3,
+  'workflow': Workflow,
+  'network': Network,
+  'file-bar-chart': FileBarChart,
+  'file-pie-chart': FilePieChart,
+
+  // Business
+  'sparkles': Sparkles,
+  'crown': Crown,
+  'handshake': Handshake,
+  'dollar-sign': DollarSign,
+  'credit-card': CreditCard,
+  'receipt': Receipt,
+
+  // Media / communication
+  'megaphone': Megaphone,
+  'radio': Radio,
+  'mic': Mic,
+  'camera': Camera,
+  'image': Image,
+
+  // Devices
+  'monitor': Monitor,
+  'tablet': Tablet,
+  'smartphone': Smartphone,
+  'wifi': Wifi,
+  'cloud': Cloud,
+  'hard-drive': HardDrive,
+};
+
+/**
+ * Get a Lucide icon component by name string.
+ * Falls back to Star if the icon name is not found.
+ */
+export function getLucideIcon(name: string): ComponentType<{ className?: string }> {
+  return LUCIDE_ICON_MAP[name] || Star;
+}

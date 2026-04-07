@@ -1,6 +1,6 @@
 'use client';
 
-import { Briefcase, Mail, MessageSquare, QrCode, User, Sparkles, LayoutGrid, Columns2, Square, AlertCircle } from 'lucide-react';
+import { Bookmark, Briefcase, Mail, MessageSquare, QrCode, User, Sparkles, LayoutGrid, Columns2, Square, ChevronLeft } from 'lucide-react';
 import { useExplorer } from '@/components/explorer/ExplorerContext';
 import type { SummaryStepConfig, ContentCard } from '@/lib/explorer/types';
 import ResultCard from '@/components/explorer/ui/ResultCard';
@@ -20,21 +20,28 @@ export default function SummaryStep({ step, onOpenOverlay, onEndSession, onShare
     savedCount,
     setViewSize,
     goToStep,
+    prevStep,
   } = useExplorer();
 
   const viewSize = session.viewSize || 'small';
   const savedCards = getSavedCards();
 
-  // Check for incomplete registration (missing required fields)
-  const hasEmail = !!session.registeredEmail;
-  const hasName = !!session.visitorName;
-  const registrationIncomplete = !hasEmail || !hasName;
-  const registrationStepId = config.steps.find(s => s.type === 'registration')?.id;
 
   // Group saved cards by type
   const outcomes = savedCards.filter(c => c.cardType === 'outcome');
   const learn = savedCards.filter(c => c.cardType === 'learn');
   const solutions = savedCards.filter(c => c.cardType === 'solution');
+
+  // Helper: look up label from trait-selection step options by value
+  const getOptionLabel = (value: string): string => {
+    for (const s of config.steps) {
+      if (s.type === 'trait-selection') {
+        const match = s.options.find((o: { value: string; label: string }) => o.value === value);
+        if (match) return match.label;
+      }
+    }
+    return value;
+  };
 
   // Build selection summary chips
   const chips: { label: string; className: string }[] = [];
@@ -42,10 +49,10 @@ export default function SummaryStep({ step, onOpenOverlay, onEndSession, onShare
     chips.push({ label: session.visitorName, className: 'chip-name' });
   }
   if (session.selectedRole) {
-    chips.push({ label: session.selectedRole, className: 'chip-role' });
+    chips.push({ label: getOptionLabel(session.selectedRole), className: 'chip-role' });
   }
   session.selectedInterests.forEach(interest => {
-    chips.push({ label: interest, className: 'chip-interest' });
+    chips.push({ label: getOptionLabel(interest), className: 'chip-interest' });
   });
 
   const renderSection = (label: string, cards: ContentCard[]) => {
@@ -109,7 +116,7 @@ export default function SummaryStep({ step, onOpenOverlay, onEndSession, onShare
         <div className="exp-summary-body">
           {savedCount === 0 ? (
             <div className="exp-summary-empty">
-              <Briefcase />
+              <Bookmark />
               <span className="exp-summary-empty-text">No items saved yet</span>
             </div>
           ) : (
@@ -122,54 +129,12 @@ export default function SummaryStep({ step, onOpenOverlay, onEndSession, onShare
         </div>
       </div>
 
-      {/* Registration reminder */}
-      {registrationIncomplete && savedCount > 0 && (
-        <div
-          className="exp-registration-reminder"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            padding: '12px 20px',
-            borderRadius: 12,
-            background: 'var(--exp-surface)',
-            border: '1px solid var(--exp-border)',
-            marginBottom: 8,
-          }}
-        >
-          <AlertCircle style={{ width: 18, height: 18, color: 'var(--exp-cyan)', flexShrink: 0 }} />
-          <span style={{ fontSize: 14, color: 'var(--exp-text-2)', flex: 1 }}>
-            {!hasEmail && !hasName
-              ? 'Complete your registration to share results via email or text.'
-              : !hasEmail
-                ? 'Add your email to receive your personalized results.'
-                : 'Add your name so we can personalize your results.'}
-          </span>
-          {registrationStepId && (
-            <button
-              onClick={() => goToStep(registrationStepId)}
-              style={{
-                padding: '8px 16px',
-                borderRadius: 8,
-                border: '1px solid var(--exp-cyan)',
-                background: 'transparent',
-                color: 'var(--exp-cyan)',
-                fontSize: 13,
-                fontWeight: 500,
-                fontFamily: 'inherit',
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              Complete Info
-            </button>
-          )}
-        </div>
-      )}
-
       {/* Bottom bar */}
-      <div className="exp-results-tab-bar" style={{ padding: '20px 0' }}>
-        <div style={{ minWidth: 100 }} />
+      <div className="exp-results-tab-bar">
+        <button className="exp-btn-back" onClick={() => prevStep()}>
+          <ChevronLeft />
+          Back
+        </button>
 
         <div className={`exp-share-group${savedCount > 0 ? ' attention' : ''}`}>
           <button
