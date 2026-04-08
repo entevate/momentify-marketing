@@ -4,6 +4,7 @@ import ExplorerBezelWrapper from '@/components/explorer/ExplorerBezelWrapper';
 import { MOMENTIFY_DEFAULT_CONFIG } from '@/lib/explorer/defaults';
 import { CLARIUM_CONFIG } from '@/lib/explorer/configs/clarium';
 import { MAVEN_FP_CONFIG } from '@/lib/explorer/configs/maven-fp';
+import { CDK_CONFIG } from '@/lib/explorer/configs/cdk';
 
 import type { ExplorerConfig } from '@/lib/explorer/types';
 
@@ -11,6 +12,7 @@ const CONFIGS: Record<string, ExplorerConfig> = {
   'momentify-default': MOMENTIFY_DEFAULT_CONFIG,
   'clarium': CLARIUM_CONFIG,
   'maven-fp': MAVEN_FP_CONFIG,
+  'cdk': CDK_CONFIG,
 };
 
 export default async function ExplorerPage({ params }: { params: Promise<{ id: string }> }) {

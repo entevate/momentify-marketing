@@ -144,4 +144,16 @@ export const instances: ExplorerInstance[] = [
     createdAt: "2026-04-07",
     password: "mavenfp2026",
   },
+  {
+    slug: "cdk",
+    name: "CDK Global Explorer",
+    company: "CDK Global",
+    industry: "Automotive Technology",
+    prototypeFile: "/explorer/cdk",
+    logo: "/brand/assets/cdk-icon.jpeg",
+    gateLogo: "/brand/assets/cdk-logo-reverse.png",
+    accentColor: "#FFFFFF",
+    createdAt: "2026-04-08",
+    password: "cdk2026",
+  },
 ];
