@@ -156,4 +156,16 @@ export const instances: ExplorerInstance[] = [
     createdAt: "2026-04-08",
     password: "cdk2026",
   },
+  {
+    slug: "salesflowiq",
+    name: "SalesFlowIQ Explorer",
+    company: "SalesFlowIQ",
+    industry: "Sales Enablement",
+    prototypeFile: "/explorer/salesflowiq",
+    logo: "/brand/assets/salesflowiq-icon.png",
+    gateLogo: "/brand/assets/salesflowiq-logo-reverse.png",
+    accentColor: "#31B0E5",
+    createdAt: "2026-04-14",
+    password: "salesflowiq2026",
+  },
 ];
