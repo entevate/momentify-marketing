@@ -3,18 +3,58 @@
    ═══════════════════════════════════════════════════════════════ */
 
 const verticalLabels: Record<string, string> = {
+  // Trade Shows
   "heavy-equipment": "Heavy Equipment",
   "energy-infrastructure": "Energy, Infrastructure & Power",
   "aerospace-aviation": "Aerospace & Aviation",
+  // Recruiting
+  "tech-recruiting": "Technical Recruiting",
+  "campus-recruiting": "Campus & University Recruiting",
+  "skilled-trades": "Skilled Trades Recruiting",
+  // Field Sales
+  "territory-sales": "Territory Sales",
+  "enterprise-sales": "Enterprise Sales",
+  "channel-sales": "Channel & Distributor Sales",
+  // Facilities
+  "corporate-facilities": "Corporate Facilities",
+  "manufacturing-facilities": "Manufacturing Facilities",
+  // Events & Venues
+  "sports-entertainment": "Sports & Entertainment",
+  "conference-venues": "Conference & Convention Venues",
 }
 
 const verticalICPs: Record<string, string> = {
+  // Trade Shows
   "heavy-equipment":
     "VP of Marketing or VP of Sales at an OEM, large dealer group, or equipment dealer ($50M+ revenue, exhibits at 5+ shows per year)",
   "energy-infrastructure":
     "Marketing Director, Communications Lead, or VP of Marketing at a utility, grid operator, EPC contractor, data center operator, or power systems manufacturer",
   "aerospace-aviation":
     "Defense Marketing Lead, Business Development Director, or Government Relations Manager at a defense OEM, systems integrator, or government contractor",
+  // Recruiting
+  "tech-recruiting":
+    "VP of Talent Acquisition, Recruiting Director, or Employer Brand Manager at a technology company or staffing firm attending career fairs and recruiting events",
+  "campus-recruiting":
+    "University Relations Manager, Campus Recruiting Lead, or Early Talent Director running on-campus career events and info sessions",
+  "skilled-trades":
+    "Recruiting Manager, HR Director, or Workforce Development Lead at a manufacturing, construction, or trades company hosting hiring events and open interviews",
+  // Field Sales
+  "territory-sales":
+    "VP of Sales, Regional Sales Director, or Territory Manager running field demos, lunch-and-learns, and distributor events",
+  "enterprise-sales":
+    "Enterprise Account Executive, Strategic Sales Director, or CRO managing executive briefing centers, roadshows, and customer advisory boards",
+  "channel-sales":
+    "Channel Sales Director, Partner Marketing Manager, or Distribution VP managing dealer events, partner summits, and co-sell programs",
+  // Facilities
+  "corporate-facilities":
+    "Facilities Director, Workplace Experience Manager, or VP of Real Estate & Facilities managing visitor experiences and corporate event spaces",
+  "manufacturing-facilities":
+    "Plant Manager, Operations Director, or EHS Manager running facility tours, safety orientations, and plant-floor visitor programs",
+  // Events & Venues
+  "sports-entertainment":
+    "VP of Fan Experience, Venue Operations Director, or Chief Revenue Officer at a sports franchise, arena, or entertainment venue managing game-day and concert engagement",
+  "conference-venues":
+    "Convention Center GM, Director of Event Services, or VP of Sales at a hotel or conference venue managing exhibitor and attendee experiences",
 }
 
 type BuilderParams = {

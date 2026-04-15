@@ -14,6 +14,7 @@ import {
 } from "@/lib/gtm/data/trade-shows"
 import type { GTMLayer } from "@/lib/gtm/data/trade-shows"
 import ContentBuilder from "@/components/gtm/ContentBuilder"
+import ContentLibrary from "@/components/gtm/ContentLibrary"
 import CustomerJourneyMap from "@/components/gtm/CustomerJourneyMap"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
@@ -317,7 +318,7 @@ function ComparisonTable() {
 /* ── Main Page ── */
 function TradeShowsContent() {
   const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState<"framework" | "builder">(
+  const [activeTab, setActiveTab] = useState<"framework" | "builder" | "library">(
     searchParams.get("builder") === "true" ? "builder" : "framework"
   )
   const [motionIndex, setMotionIndex] = useState(0)
@@ -430,6 +431,7 @@ function TradeShowsContent() {
             [
               { key: "framework", label: "Framework", icon: null },
               { key: "builder", label: "Content Builder", icon: Sparkles },
+              { key: "library", label: "Library", icon: null },
             ] as const
           ).map((tab) => {
             const active = activeTab === tab.key
@@ -470,6 +472,10 @@ function TradeShowsContent() {
       {/* ── Tab Content ── */}
       {activeTab === "builder" ? (
         <ContentBuilder solution="trade-shows" solutionLabel="Trade Shows & Exhibits" />
+      ) : activeTab === "library" ? (
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 48px 80px" }}>
+          <ContentLibrary solution="trade-shows" solutionLabel="Trade Shows & Exhibits" />
+        </div>
       ) : (
         <div
           style={{

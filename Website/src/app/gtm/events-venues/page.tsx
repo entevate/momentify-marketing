@@ -14,6 +14,7 @@ import {
 } from "@/lib/gtm/data/events-venues"
 import type { GTMLayer } from "@/lib/gtm/data/events-venues"
 import ContentBuilder from "@/components/gtm/ContentBuilder"
+import ContentLibrary from "@/components/gtm/ContentLibrary"
 import CustomerJourneyMap from "@/components/gtm/CustomerJourneyMap"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
@@ -313,7 +314,7 @@ function ComparisonTable() {
 /* ── Main Page ── */
 function EventsVenuesContent() {
   const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState<"framework" | "builder">(
+  const [activeTab, setActiveTab] = useState<"framework" | "builder" | "library">(
     searchParams.get("builder") === "true" ? "builder" : "framework"
   )
   const [motionIndex, setMotionIndex] = useState(0)
@@ -425,6 +426,7 @@ function EventsVenuesContent() {
             [
               { key: "framework", label: "Framework", icon: null },
               { key: "builder", label: "Content Builder", icon: Sparkles },
+              { key: "library", label: "Library", icon: null },
             ] as const
           ).map((tab) => {
             const active = activeTab === tab.key
@@ -469,8 +471,13 @@ function EventsVenuesContent() {
           solutionLabel="Events & Venues"
           verticals={[
             { key: "sports-entertainment", label: "Sports & Entertainment" },
+            { key: "conference-venues", label: "Conference & Convention Venues" },
           ]}
         />
+      ) : activeTab === "library" ? (
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 48px 80px" }}>
+          <ContentLibrary solution="events-venues" solutionLabel="Events & Venues" />
+        </div>
       ) : (
         <div
           style={{

@@ -14,6 +14,7 @@ import {
 } from "@/lib/gtm/data/field-sales"
 import type { GTMLayer } from "@/lib/gtm/data/field-sales"
 import ContentBuilder from "@/components/gtm/ContentBuilder"
+import ContentLibrary from "@/components/gtm/ContentLibrary"
 import CustomerJourneyMap from "@/components/gtm/CustomerJourneyMap"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
@@ -313,7 +314,7 @@ function ComparisonTable() {
 /* ── Main Page ── */
 function FieldSalesContent() {
   const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState<"framework" | "builder">(
+  const [activeTab, setActiveTab] = useState<"framework" | "builder" | "library">(
     searchParams.get("builder") === "true" ? "builder" : "framework"
   )
   const [motionIndex, setMotionIndex] = useState(0)
@@ -425,6 +426,7 @@ function FieldSalesContent() {
             [
               { key: "framework", label: "Framework", icon: null },
               { key: "builder", label: "Content Builder", icon: Sparkles },
+              { key: "library", label: "Library", icon: null },
             ] as const
           ).map((tab) => {
             const active = activeTab === tab.key
@@ -464,7 +466,19 @@ function FieldSalesContent() {
 
       {/* ── Tab Content ── */}
       {activeTab === "builder" ? (
-        <ContentBuilder solution="field-sales" solutionLabel="Field Sales Enablement" />
+        <ContentBuilder
+          solution="field-sales"
+          solutionLabel="Field Sales Enablement"
+          verticals={[
+            { key: "territory-sales", label: "Territory Sales" },
+            { key: "enterprise-sales", label: "Enterprise Sales" },
+            { key: "channel-sales", label: "Channel & Distributor" },
+          ]}
+        />
+      ) : activeTab === "library" ? (
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 48px 80px" }}>
+          <ContentLibrary solution="field-sales" solutionLabel="Field Sales Enablement" />
+        </div>
       ) : (
         <div
           style={{
