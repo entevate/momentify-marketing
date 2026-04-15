@@ -66,12 +66,21 @@ type BuilderParams = {
   competitor?: string
 }
 
+const solutionPalettes: Record<string, { name: string; primary: string; light: string; dark: string; heroGrad: string; lightBg: string }> = {
+  "trade-shows": { name: "Violet", primary: "#6B21D4", light: "#9B5FE8", dark: "#2D0770", heroGrad: "linear-gradient(135deg, #2D0770, #4A0FA8 55%, #9B5FE8)", lightBg: "linear-gradient(145deg, #F8F4FF, #EDE6FF)" },
+  recruiting: { name: "Teal", primary: "#00BBA5", light: "#5FD9C2", dark: "#040E28", heroGrad: "linear-gradient(135deg, #040E28, #1A8A76 55%, #5FD9C2)", lightBg: "linear-gradient(145deg, #E8FDF8, #F0FFFC)" },
+  "field-sales": { name: "Amber", primary: "#C48A00", light: "#F2B33D", dark: "#1A1000", heroGrad: "linear-gradient(135deg, #1A1000, #8A5E00 55%, #F2B33D)", lightBg: "linear-gradient(145deg, #FFFAEE, #FFF5E0)" },
+  facilities: { name: "Indigo", primary: "#3A2073", light: "#5B4499", dark: "#0D0820", heroGrad: "linear-gradient(135deg, #0D0820, #3A2073 55%, #5B4499)", lightBg: "linear-gradient(145deg, #EEF0FF, #F4F5FF)" },
+  "events-venues": { name: "Crimson", primary: "#8F200A", light: "#F25E3D", dark: "#1A0400", heroGrad: "linear-gradient(135deg, #1A0400, #8F200A 55%, #F25E3D)", lightBg: "linear-gradient(145deg, #FFF2EE, #FFF7F5)" },
+}
+
 export function buildUserMessage(params: BuilderParams): string {
   const { solution, vertical, motion, contentType, additionalContext, competitor } = params
   const vertLabel = verticalLabels[vertical] || vertical
   const motionLabel = motion === "direct" ? "Direct to Customer" : "Channel Partners"
   const icpTitle = verticalICPs[vertical] || "event marketing decision-maker"
   const extra = additionalContext ? `\n\nSPECIFIC CONTEXT (incorporate this into every section of the output): ${additionalContext}` : ""
+  const palette = solutionPalettes[solution]
 
   switch (contentType) {
     case "cold-emails":
@@ -216,25 +225,35 @@ Solution: ${solution}
 Vertical: ${vertLabel}
 Motion: ${motionLabel}
 Target buyer: ${icpTitle}${extra}
-
+${palette ? `
+COLOR PALETTE (${palette.name} — use these exclusively, not generic Momentify cyan):
+- Primary: ${palette.primary}
+- Light accent: ${palette.light}
+- Dark: ${palette.dark}
+- Hero gradient: ${palette.heroGrad}
+- Light section background: ${palette.lightBg}
+- Eyebrow text: ${palette.primary} (not #00BBA5)
+- CTA buttons: ${palette.primary} background, white text
+- Icon tints, hover glows, active states: ${palette.light}
+` : ""}
 Output format:
 PAGE TITLE: [compelling page title]
 META DESCRIPTION: [under 160 characters, includes primary keyword]
 HERO SECTION:
-- Headline: [one sentence, problem-first]
-- Subhead: [one sentence, solution framing]
-- Primary CTA: [button text and destination]
-- Secondary CTA: [optional, lower commitment]
+- Headline: [one sentence, problem-first, font-weight 500]
+- Subhead: [one sentence, solution framing, font-weight 300]
+- Primary CTA: [button text and destination, pill shape with primary color background]
+- Secondary CTA: [optional, lower commitment, bordered style]
 
-SECTION 1 — THE PROBLEM: [3 to 4 sentences describing the buyer's pain in this vertical]
-SECTION 2 — THE APPROACH: [3 to 4 bullet points on how Momentify solves it, specific to this vertical and motion]
-SECTION 3 — PROOF: [1 to 2 relevant proof points with specific numbers]
-SECTION 4 — HOW IT WORKS: [3-step visual flow: Deploy, Capture, Act]
-SECTION 5 — CTA BLOCK: [headline, subhead, form fields to capture: name, email, company, role]
+SECTION 1 — THE PROBLEM (white background): [3 to 4 sentences describing the buyer's pain in this vertical. Body text left-aligned, 16px, Deep Navy at 55% opacity]
+SECTION 2 — THE APPROACH (light section background): [3 to 4 bullet points on how Momentify solves it, specific to this vertical and motion. Feature cards with white bg, 12px radius, primary color icon tint]
+SECTION 3 — PROOF (dark background #070E2B): [1 to 2 relevant proof points with specific numbers. Stat numbers 48px/800/white. Include ROX tier bar visualization]
+SECTION 4 — HOW IT WORKS (white background): [3-step visual flow: Deploy, Capture, Act. Numbered step circles with primary color gradient]
+SECTION 5 — CTA BLOCK (hero gradient background): [headline, subhead, form fields: name, email, title dropdown, upcoming events checkboxes. Form card with semi-transparent bg]
 
-DESIGN NOTES: [2 to 3 notes on visual direction, layout, and tone]
+DESIGN NOTES: [layout, font stack Inter 300-800, headline weight 500, subhead weight 300, card title weight 600. No em dashes. Scroll-reveal animations. Responsive at 768px]
 
-Rules: no em dashes, no buzzwords, every section should earn the next scroll. The page should convert a cold visitor in under 90 seconds of reading. Anchor the proof section and CTA in ROX language so the visitor leaves understanding that Momentify delivers measurable return, not just features.`
+Rules: no em dashes, no buzzwords, every section should earn the next scroll. The page should convert a cold visitor in under 90 seconds of reading. Anchor the proof section and CTA in ROX language so the visitor leaves understanding that Momentify delivers measurable return, not just features. All accent colors, CTAs, eyebrows, and interactive elements must use the solution palette above, not generic Momentify brand colors.`
 
     case "one-pager":
       return `Write a one-pager sales leave-behind for Momentify.
