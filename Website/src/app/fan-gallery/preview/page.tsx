@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 const PRESETS = [
-  { label: "Mobile", w: 375, h: 812 },
+  { label: "Mobile", w: 393, h: 852 },
   { label: "Tablet", w: 1024, h: 768 },
   { label: "Desktop", w: 1280, h: 800 },
 ];
@@ -194,11 +194,11 @@ function FanGalleryPreview() {
           border: `1px solid ${bezelBorder}`,
           position: "relative",
         }}>
-          {/* Phone notch */}
+          {/* Dynamic Island */}
           {isPhone && (
             <div style={{
               position: "absolute", top: 14, left: "50%", transform: "translateX(-50%)",
-              width: 80, height: 22, borderRadius: 12,
+              width: 36, height: 11, borderRadius: 6,
               background: theme === "dark" ? "#000" : "#1a1a1e",
             }} />
           )}
