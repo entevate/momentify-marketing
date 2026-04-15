@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Turn Game Day Moments Into Revenue Intelligence | Momentify Sports</title>
+  <meta name="description" content="Sports venues lose 73% of fan touchpoint value. Momentify's ROX framework turns every interaction into measurable revenue intelligence." />
+  <script>
+    window.BRAND_SKIP_AUTH = true;
+  </script>
+  <script>
+    (function(){var t=localStorage.getItem('mk-theme');if(t)document.documentElement.dataset.theme=t;})();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="/brand/brand-nav.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --deep-navy: #061341;
+      --midnight: #070E2B;
+      --plum: #1A0533;
+      --navy-mid: #1a2e73;
+      --cyan: #0CF4DF;
+      --tag-green: #0AA891;
+      --teal: #00bba5;
+      --gray-page: #F8F9FC;
+      --white: #FFFFFF;
+      --action-grad: linear-gradient(135deg, #0CF4DF, #1A56DB);
+      --depth-grad: linear-gradient(135deg, #1a2e73, #061341);
+      /* Events & Venues / Crimson solution palette */
+      --sol-primary: #F25E3D;
+      --sol-light: #F9A08E;
+      --sol-dark: #8F200A;
+      --sol-darker: #1A0400;
+      --sol-mid: #C23A1A;
+      --sol-cta: #F9A08E;
+      --sol-accent-bg: rgba(242,94,61,0.10);
+      --sol-hero-grad: linear-gradient(135deg, #1A0400 0%, #8F200A 55%, #F25E3D 100%);
+      --sol-cinematic-grad: linear-gradient(135deg, #040E28 0%, #0B0B3C 30%, #8F200A 60%, #040E28 100%);
+      --sol-light-grad: linear-gradient(145deg, #FFF2EE 0%, #FFF7F5 100%);
+      --text-primary: rgba(6,19,65,1.00);
+      --text-secondary: rgba(6,19,65,0.55);
+      --text-muted: rgba(6,19,65,0.40);
+      --text-faint: rgba(6,19,65,0.35);
+      --border-light: rgba(6,19,65,0.08);
+      --text-primary-dark: rgba(255,255,255,1.00);
+      --text-secondary-dark: rgba(255,255,255,0.65);
+      --text-muted-dark: rgba(255,255,255,0.50);
+      --text-faint-dark: rgba(255,255,255,0.35);
+      --border-dark: rgba(255,255,255,0.08);
+      --card-shadow: 0 1px 3px rgba(6,19,65,0.08), 0 4px 12px rgba(6,19,65,0.04);
+      --card-shadow-hover: 0 4px 16px rgba(6,19,65,0.12);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --radius-lg: 16px;
+      --transition: 0.2s ease;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      color: var(--text-primary);
+      background: var(--white);
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px;
+    }
+
+    .section { padding: 72px 0; }
+
+    /* Typography */
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--sol-light);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 16px;
+    }
+
+    .h1 {
+      font-size: 48px;
+      font-weight: 500;
+      line-height: 1.12;
+      margin-bottom: 20px;
+    }
+
+    .h2 {
+      font-size: 38px;
+      font-weight: 500;
+      line-height: 1.18;
+      margin-bottom: 20px;
+      color: var(--deep-navy);
+    }
+
+    .h3 {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--deep-navy);
+      margin-bottom: 8px;
+    }
+
+    .body-text {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .subhead {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      height: 44px;
+      padding: 0 28px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--sol-primary), var(--sol-light));
+      color: var(--white);
+    }
+    .btn-primary:hover { box-shadow: 0 4px 20px rgba(242,94,61,0.3); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.5); }
+
+    .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* ===================== HERO ===================== */
+    .hero {
+      position: relative;
+      background: var(--sol-hero-grad);
+      padding: 140px 0 100px;
+      overflow: hidden;
+    }
+    .hero .container { position: relative; z-index: 2; }
+    .hero .h1 { color: var(--white); max-width: 720px; }
+    .hero .subhead { color: var(--text-secondary-dark); max-width: 600px; margin-bottom: 32px; }
+
+    /* Arena lights grid overlay */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.04;
+    }
+    .hero-grid svg { width: 100%; height: 100%; }
+
+    /* Ambient orbs */
+    .hero-orb {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .hero-orb-1 {
+      background: radial-gradient(circle, #F25E3D, transparent 70%);
+      opacity: 0.12;
+      top: -10%;
+      right: -5%;
+    }
+    .hero-orb-2 {
+      background: radial-gradient(circle, #8F200A, transparent 70%);
+      opacity: 0.08;
+      bottom: -20%;
+      left: 10%;
+    }
+
+    .hero-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .hero-logo img { height: 28px; }
+    .hero-badge {
+      background: rgba(242,94,61,0.15);
+      border: 1px solid rgba(242,94,61,0.3);
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--sol-light);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ===================== PROBLEM ===================== */
+    .problem { background: var(--white); }
+    .problem .body-text { max-width: 720px; margin-bottom: 40px; }
+    .problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+    .pain-card {
+      background: var(--white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--card-shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .pain-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--card-shadow-hover);
+    }
+    .pain-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--sol-accent-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .pain-card-icon svg { width: 20px; height: 20px; stroke: var(--sol-primary); stroke-width: 1.5; fill: none; }
+    .pain-card .h3 { font-size: 18px; }
+    .pain-card .body-text { font-size: 14px; line-height: 1.65; }
+
+    /* ===================== APPROACH ===================== */
+    .approach { background: var(--sol-light-grad); }
+    .approach .body-text { max-width: 600px; margin-bottom: 40px; }
+    .approach-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+
+    .approach-card {
+      background: var(--white);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius);
+      padding: 32px;
+      box-shadow: var(--card-shadow);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .approach-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--card-shadow-hover);
+    }
+    .approach-card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-sm);
+      background: var(--sol-accent-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .approach-card-icon svg { width: 22px; height: 22px; stroke: var(--sol-primary); stroke-width: 1.5; fill: none; }
+    .approach-card .body-text { font-size: 14px; line-height: 1.65; }
+
+    /* ===================== PROOF ===================== */
+    .proof {
+      background: var(--sol-cinematic-grad);
+      padding: 80px 0;
+    }
+    .proof .eyebrow { margin-bottom: 12px; }
+    .proof .h2 { color: var(--white); margin-bottom: 48px; }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-bottom: 56px;
+    }
+    .stat-block { text-align: left; }
+    .stat-number {
+      font-size: 52px;
+      font-weight: 500;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-muted-dark);
+      line-height: 1.5;
+    }
+
+    /* ROX Tier Bar */
+    .rox-bar-wrapper { max-width: 800px; }
+    .rox-bar-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    .rox-bar {
+      display: flex;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .rox-segment-critical { flex: 40; background: #E5484D; }
+    .rox-segment-optimize { flex: 30; background: #F2B33D; }
+    .rox-segment-high { flex: 15; background: #00BBA5; }
+    .rox-segment-elite { flex: 15; background: linear-gradient(90deg, #0CF4DF, #1A56DB); }
+
+    .rox-labels {
+      display: flex;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-faint-dark);
+    }
+    .rox-labels span { line-height: 1.4; }
+    .rox-labels .seg-critical { flex: 40; }
+    .rox-labels .seg-optimize { flex: 30; }
+    .rox-labels .seg-high { flex: 15; }
+    .rox-labels .seg-elite { flex: 15; text-align: right; }
+
+    /* ===================== HOW IT WORKS ===================== */
+    .how-it-works { background: var(--white); }
+    .how-it-works .body-text.section-sub { max-width: 560px; margin-bottom: 48px; }
+
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+      position: relative;
+    }
+
+    /* Connecting line */
+    .steps-row::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: calc(33.33% / 2 + 20px);
+      right: calc(33.33% / 2 + 20px);
+      height: 2px;
+      border-top: 2px dashed rgba(6,19,65,0.12);
+    }
+
+    .step { position: relative; }
+    .step-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sol-primary), var(--sol-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+    .step .h3 { font-size: 20px; margin-bottom: 10px; }
+    .step .body-text { font-size: 14px; line-height: 1.65; }
+
+    /* ===================== CTA FORM ===================== */
+    .cta-section {
+      background: linear-gradient(135deg, var(--sol-dark), #040E28);
+      padding: 80px 0;
+    }
+    .cta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .cta-text .h2 { color: var(--white); max-width: 420px; }
+    .cta-text .body-text { color: var(--text-secondary-dark); max-width: 400px; }
+
+    .form-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary-dark);
+      margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%;
+      height: 42px;
+      padding: 0 14px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--white);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .form-input::placeholder { color: var(--text-faint-dark); }
+    .form-input:focus { border-color: var(--sol-light); }
+
+    .btn-submit {
+      width: 100%;
+      height: 48px;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--sol-primary), var(--sol-light));
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .btn-submit:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(242,94,61,0.3);
+    }
+
+    .form-fine-print {
+      font-size: 12px;
+      color: var(--text-faint-dark);
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    .form-success {
+      display: none;
+      text-align: left;
+      padding: 24px 0;
+    }
+    .form-success.active { display: block; }
+    .form-success .h3 { color: var(--white); font-size: 22px; margin-bottom: 12px; }
+    .form-success .body-text { color: var(--text-secondary-dark); }
+    .form-success .success-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(12,244,223,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .form-success .success-icon svg { width: 24px; height: 24px; stroke: var(--sol-light); stroke-width: 2; fill: none; }
+
+    /* ===================== FOOTER ===================== */
+    .site-footer {
+      background: var(--midnight);
+      padding: 32px 0;
+      border-top: 1px solid var(--border-dark);
+    }
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-inner img { height: 20px; opacity: 0.5; }
+    .footer-copy {
+      font-size: 12px;
+      color: var(--text-faint-dark);
+    }
+
+    /* ===================== SCROLL REVEAL ===================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reveal.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-d1 { transition-delay: 0.08s; }
+    .reveal-d2 { transition-delay: 0.16s; }
+    .reveal-d3 { transition-delay: 0.24s; }
+    .reveal-d4 { transition-delay: 0.32s; }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 768px) {
+      .container { padding: 0 24px; }
+      .section { padding: 56px 0; }
+
+      .hero { padding: 120px 0 72px; }
+      .h1 { font-size: 32px; }
+      .h2 { font-size: 28px; }
+
+      .problem-grid { grid-template-columns: 1fr; }
+      .approach-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr; gap: 32px; }
+      .stat-number { font-size: 40px; }
+
+      .steps-row {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+      .steps-row::before { display: none; }
+
+      .cta-section { padding: 56px 0; }
+      .cta-grid { grid-template-columns: 1fr; gap: 40px; }
+
+      .btn-group { flex-direction: column; }
+      .btn-group .btn { width: 100%; }
+
+      .hero-logo img { height: 22px; }
+
+      .rox-labels { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <script src="/brand/brand-nav.js"></script>
+  <script>
+    // Fix brand-nav.js relative asset paths for /gtm/ subdirectory
+    (function() {
+      document.querySelectorAll('img').forEach(function(img) {
+        if (img.src.indexOf('/gtm/assets/') !== -1) {
+          img.src = img.src.replace('/gtm/assets/', '/brand/assets/');
+        }
+      });
+      document.querySelectorAll('svg image').forEach(function(img) {
+        var href = img.getAttribute('href') || img.getAttributeNS('http://www.w3.org/1999/xlink', 'href');
+        if (href && href.indexOf('assets/') === 0) {
+          img.setAttribute('href', '/brand/' + href);
+        }
+      });
+    })();
+  </script>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="hero">
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <div class="hero-grid">
+      <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="arena-grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+            <path d="M0 30h60M30 0v60" stroke="#fff" stroke-width="0.3" fill="none" />
+            <circle cx="30" cy="30" r="1.5" fill="#fff" opacity="0.6" />
+            <circle cx="0" cy="0" r="1" fill="#fff" opacity="0.3" />
+            <circle cx="60" cy="0" r="1" fill="#fff" opacity="0.3" />
+            <circle cx="0" cy="60" r="1" fill="#fff" opacity="0.3" />
+            <circle cx="60" cy="60" r="1" fill="#fff" opacity="0.3" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#arena-grid)" />
+      </svg>
+    </div>
+    <div class="container">
+      <div class="hero-logo">
+        <img src="/brand/assets/Momentify-Logo_Reverse.svg" alt="Momentify" />
+        <span class="hero-badge">Sports &amp; Venues</span>
+      </div>
+      <p class="eyebrow">Revenue Intelligence for Sports Venues</p>
+      <h1 class="h1">Sports venues capture less than 30% of available fan intelligence across game days and events.</h1>
+      <p class="subhead">Momentify turns every interaction into scored intelligence that drives season ticket sales, sponsorship value, and fan lifetime value.</p>
+      <div class="btn-group">
+        <a href="#rox-form" class="btn btn-primary">See ROX in Action</a>
+        <a href="#approach" class="btn btn-secondary">Download Sports Intelligence Brief</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PROBLEM ==================== -->
+  <section class="problem section">
+    <div class="container">
+      <p class="eyebrow reveal" style="color: var(--sol-primary);">The Problem</p>
+      <h2 class="h2 reveal">50+ events a year. Most of the intelligence walks out the door.</h2>
+      <p class="body-text reveal">Your venue hosts 50+ events annually. Fans interact with sponsors, concessions, merchandise, and premium experiences throughout each event. Most venues capture basic attendance and transaction data, but lose the engagement intelligence that drives the next purchase decision. Revenue opportunities walk out the door after every game.</p>
+
+      <div class="problem-grid">
+        <div class="pain-card reveal reveal-d1">
+          <div class="pain-card-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+              <path d="M16 7V5a4 4 0 0 0-8 0v2" />
+            </svg>
+          </div>
+          <h3 class="h3">Sponsorship ROI is unproven</h3>
+          <p class="body-text">Teams can't prove sponsorship ROI beyond foot traffic. Sponsors want engagement data, but all you have is headcount and banner impressions.</p>
+        </div>
+        <div class="pain-card reveal reveal-d2">
+          <div class="pain-card-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
+          </div>
+          <h3 class="h3">Experience investments lack outcomes</h3>
+          <p class="body-text">Fan experience investments don't connect to measurable outcomes. You know what you spent on premium zones, but not what they produced.</p>
+        </div>
+        <div class="pain-card reveal reveal-d3">
+          <div class="pain-card-icon">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+          </div>
+          <h3 class="h3">Engagement data expires fast</h3>
+          <p class="body-text">Game day intelligence has a short shelf life. Without real-time scoring, your revenue teams are working from stale data by Monday morning.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== APPROACH ==================== -->
+  <section id="approach" class="approach section">
+    <div class="container">
+      <p class="eyebrow reveal" style="color: var(--sol-primary);">The Approach</p>
+      <h2 class="h2 reveal">Four layers of venue intelligence.</h2>
+      <p class="body-text reveal">Each layer builds on the last. Together, they give your venue a complete picture of fan engagement and revenue attribution.</p>
+
+      <div class="approach-grid">
+        <div class="approach-card reveal reveal-d1">
+          <div class="approach-card-icon">
+            <!-- Signal/Radar icon -->
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12C2 6.48 6.48 2 12 2" />
+              <path d="M5 12c0-3.87 3.13-7 7-7" />
+              <path d="M8 12a4 4 0 0 1 4-4" />
+              <circle cx="12" cy="12" r="1" fill="var(--sol-primary)" />
+            </svg>
+          </div>
+          <h3 class="h3">Intelligence Layer</h3>
+          <p class="body-text">Deploy across all fan touchpoints during events. Sponsor activations, concession interactions, premium experience engagement, and merchandise displays become intelligence capture points.</p>
+        </div>
+        <div class="approach-card reveal reveal-d2">
+          <div class="approach-card-icon">
+            <!-- Gauge icon -->
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12" />
+              <path d="M12 12l4-6" />
+              <circle cx="12" cy="12" r="2" />
+            </svg>
+          </div>
+          <h3 class="h3">ROX Scoring</h3>
+          <p class="body-text">Every interaction receives a Return on Experience score across Lead Capture Efficiency, Engagement Quality, Follow-Up Speed, and Conversion Effectiveness. Know which touchpoints drive season ticket conversions.</p>
+        </div>
+        <div class="approach-card reveal reveal-d3">
+          <div class="approach-card-icon">
+            <!-- Grid/Multi icon -->
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+          </div>
+          <h3 class="h3">Portfolio View</h3>
+          <p class="body-text">Unify intelligence across your entire event calendar. Compare sponsor activation performance across games. Measure fan journey progression from single game to season ticket holder.</p>
+        </div>
+        <div class="approach-card reveal reveal-d4">
+          <div class="approach-card-icon">
+            <!-- Attribution/Connect icon -->
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 3v6l6 3 6-3V3" />
+              <path d="M6 9v6l6 3 6-3V9" />
+            </svg>
+          </div>
+          <h3 class="h3">Revenue Attribution</h3>
+          <p class="body-text">Connect game day engagement to downstream revenue. Prove which experiences drive premium seat upgrades, merchandise purchases, and sponsorship engagement.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PROOF ==================== -->
+  <section class="proof section">
+    <div class="container">
+      <p class="eyebrow reveal">Results</p>
+      <h2 class="h2 reveal">What ROX methodology delivers for venues.</h2>
+
+      <div class="stats-row">
+        <div class="stat-block reveal reveal-d1">
+          <div class="stat-number">$15M</div>
+          <p class="stat-label">Attributed revenue intelligence generated across 40 events in one season using Momentify's ROX framework.</p>
+        </div>
+        <div class="stat-block reveal reveal-d2">
+          <div class="stat-number">60%</div>
+          <p class="stat-label">Year-over-year improvement in sponsor activation ROX scores, leading to 15% higher sponsorship renewals.</p>
+        </div>
+        <div class="stat-block reveal reveal-d3">
+          <div class="stat-number">40%</div>
+          <p class="stat-label">Conversion rate from single-game visitors to season ticket prospects at premium touchpoints with Elite ROX status.</p>
+        </div>
+      </div>
+
+      <div class="rox-bar-wrapper reveal">
+        <p class="rox-bar-label">ROX Performance Tiers</p>
+        <div class="rox-bar">
+          <div class="rox-segment-critical"></div>
+          <div class="rox-segment-optimize"></div>
+          <div class="rox-segment-high"></div>
+          <div class="rox-segment-elite"></div>
+        </div>
+        <div class="rox-labels">
+          <span class="seg-critical">0-39 Critical Gap</span>
+          <span class="seg-optimize">40-69 Needs Optimization</span>
+          <span class="seg-high">70-84 High ROX</span>
+          <span class="seg-elite">85-100 Elite ROX</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== HOW IT WORKS ==================== -->
+  <section class="how-it-works section">
+    <div class="container">
+      <p class="eyebrow reveal" style="color: var(--sol-primary);">How It Works</p>
+      <h2 class="h2 reveal">Three steps. Full game day visibility.</h2>
+      <p class="body-text section-sub reveal">From your existing venue infrastructure to actionable revenue intelligence. No hardware overhaul. No workflow disruption.</p>
+
+      <div class="steps-row">
+        <div class="step reveal reveal-d1">
+          <div class="step-number">1</div>
+          <h3 class="h3">Deploy</h3>
+          <p class="body-text">Intelligence capture goes live across sponsor zones, concessions, premium areas, and merchandise locations during events.</p>
+        </div>
+        <div class="step reveal reveal-d2">
+          <div class="step-number">2</div>
+          <h3 class="h3">Capture</h3>
+          <p class="body-text">Every fan interaction gets scored using the ROX framework across the four performance dimensions: Lead Capture, Engagement Quality, Follow-Up Speed, and Conversion Effectiveness.</p>
+        </div>
+        <div class="step reveal reveal-d3">
+          <div class="step-number">3</div>
+          <h3 class="h3">Act</h3>
+          <p class="body-text">Revenue teams follow up on high-ROX interactions within hours. Sponsors receive engagement intelligence reports. Season ticket teams prioritize prospects based on engagement scores.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CTA FORM ==================== -->
+  <section id="rox-form" class="cta-section">
+    <div class="container">
+      <div class="cta-grid">
+        <div class="cta-text">
+          <p class="eyebrow reveal">Get Started</p>
+          <h2 class="h2 reveal">Get Your Venue's ROX Intelligence Brief</h2>
+          <p class="subhead reveal" style="color: var(--text-secondary-dark);">See how your current fan touchpoints score using the ROX framework. 15-minute analysis of your next event.</p>
+        </div>
+        <div class="form-card reveal">
+          <form id="rox-form-el">
+            <div class="form-group">
+              <label class="form-label" for="name">Name</label>
+              <input class="form-input" type="text" id="name" name="name" placeholder="Jane Smith" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="email">Email</label>
+              <input class="form-input" type="email" id="email" name="email" placeholder="jane@venue.com" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="venue">Venue / Team</label>
+              <input class="form-input" type="text" id="venue" name="venue" placeholder="Arena name or team" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="role">Role</label>
+              <input class="form-input" type="text" id="role" name="role" placeholder="VP Revenue, Sponsorship Director, etc." required />
+            </div>
+            <button class="btn-submit" type="submit">Get Your ROX Brief</button>
+            <p class="form-fine-print">No commitment. We will analyze your venue's touchpoints and share a custom ROX projection.</p>
+          </form>
+          <div class="form-success" id="form-success">
+            <div class="success-icon">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            </div>
+            <h3 class="h3">Request received.</h3>
+            <p class="body-text">We will review your venue's event calendar and send your custom ROX Intelligence Brief within two business days.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-inner">
+        <img src="/brand/assets/Momentify-Logo_Reverse.svg" alt="Momentify" />
+        <span class="footer-copy">&copy; 2026 Momentify. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    (function() {
+      var els = document.querySelectorAll('.reveal');
+      if (!els.length) return;
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      els.forEach(function(el) { observer.observe(el); });
+    })();
+
+    // Form submit
+    (function() {
+      var form = document.getElementById('rox-form-el');
+      var success = document.getElementById('form-success');
+      if (!form) return;
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        form.style.display = 'none';
+        success.classList.add('active');
+      });
+    })();
+  </script>
+</body>
+</html>
