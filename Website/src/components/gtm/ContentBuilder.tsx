@@ -1918,126 +1918,174 @@ export default function ContentBuilder({
               )}
             </div>
 
-            {/* Infographic preview and edit */}
-            {isInfographic && infographicExists && (
-              <div style={{
-                marginTop: 20,
-                padding: 20,
-                borderRadius: 10,
-                border: "1px solid var(--gtm-border)",
-                background: "var(--gtm-bg-card)",
-                transition: "all 200ms ease",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                  <span style={{
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: "var(--gtm-text-primary)",
-                    fontFamily: font,
-                  }}>
-                    Preview
-                  </span>
-                  <button
-                    onClick={() => setIsEditingInfographic(true)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                      padding: "6px 12px",
-                      borderRadius: 6,
-                      border: "1px solid var(--gtm-border)",
-                      background: "transparent",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      fontFamily: font,
-                      color: "var(--gtm-text-muted)",
-                      cursor: "pointer",
-                      transition: "all 150ms ease",
-                    }}
-                  >
-                    <Edit2 size={12} /> Edit
-                  </button>
-                </div>
-                <iframe
-                  src={`/api/gtm/infographic-preview?solution=${solution}`}
-                  style={{
-                    width: "100%",
-                    height: 600,
-                    borderRadius: 6,
-                    border: "1px solid var(--gtm-border)",
-                    background: "#fff",
-                  }}
-                  title="Infographic preview"
-                />
-              </div>
-            )}
-
-            {/* Claude Code prompt for infographics */}
+            {/* Infographic - Generate Now button + Preview + Build with Claude Code */}
             {isInfographic && output && (
-              <div style={{
-                marginTop: 20,
-                padding: 20,
-                borderRadius: 10,
-                border: "1px solid var(--gtm-border)",
-                background: "var(--gtm-bg-card)",
-                transition: "all 200ms ease",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                  <span style={{
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: "var(--gtm-text-primary)",
-                    fontFamily: font,
+              <>
+                {/* Generate Now button - only show if not yet generated */}
+                {!infographicExists && (
+                  <div style={{
+                    marginTop: 20,
+                    padding: 16,
+                    borderRadius: 10,
+                    border: "1px solid var(--gtm-border)",
+                    background: "var(--gtm-bg-card)",
                   }}>
-                    Build with Claude Code
-                  </span>
-                  <button
-                    onClick={() => {
-                      const prompt = `Build an infographic HTML page at Brand/gtm/${solution}-infographic.html using the rox-infographic.html reference implementation at Brand/rox-infographic.html. Follow the same structure: self-contained HTML, inline CSS, no build tools. Use the brand tokens from the brief below. Render as a single-page infographic with all sections (title, eyebrow, headline, subhead, gauge section, categories grid, footer CTA) laid out vertically.\n\nHere is the generated brief:\n\n${output}`
-                      navigator.clipboard.writeText(prompt)
-                      setPromptCopied(true)
-                      setTimeout(() => setPromptCopied(false), 2000)
-                    }}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                      padding: "6px 12px",
-                      borderRadius: 6,
-                      border: "1px solid var(--gtm-border)",
-                      background: promptCopied ? "var(--gtm-accent-bg)" : "transparent",
-                      fontSize: 12,
-                      fontWeight: 600,
-                      fontFamily: font,
-                      color: promptCopied ? "var(--gtm-accent)" : "var(--gtm-text-muted)",
-                      cursor: "pointer",
-                      transition: "all 150ms ease",
-                    }}
-                  >
-                    {promptCopied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> Copy Prompt</>}
-                  </button>
-                </div>
-                <p style={{
-                  fontSize: 12,
-                  color: "var(--gtm-text-muted)",
-                  fontFamily: font,
-                  lineHeight: 1.6,
-                  margin: 0,
-                }}>
-                  Copy this prompt and paste it into Claude Code to generate a full HTML infographic from the brief above. It references <code style={{ fontSize: 11, background: "var(--gtm-bg-page)", padding: "1px 4px", borderRadius: 3 }}>rox-infographic.html</code> as the template.
-                </p>
-              </div>
-            )}
+                    <button
+                      onClick={() => handleGenerateAssetHtml("infographic")}
+                      disabled={generatingAsset === "infographic"}
+                      style={{
+                        width: "100%",
+                        padding: "12px 16px",
+                        borderRadius: 6,
+                        border: "none",
+                        background: "var(--gtm-accent)",
+                        fontSize: 14,
+                        fontWeight: 600,
+                        fontFamily: font,
+                        color: "#fff",
+                        cursor: generatingAsset === "infographic" ? "not-allowed" : "pointer",
+                        opacity: generatingAsset === "infographic" ? 0.6 : 1,
+                        transition: "all 150ms ease",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 8,
+                      }}
+                    >
+                      {generatingAsset === "infographic" ? (
+                        <>
+                          <RotateCw size={14} style={{ animation: "spin 1s linear infinite" }} />
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles size={14} />
+                          Generate Now
+                        </>
+                      )}
+                    </button>
+                    {assetGenerationError && (
+                      <p style={{ color: "var(--gtm-error)", fontSize: 12, marginTop: 8, margin: 0 }}>
+                        {assetGenerationError}
+                      </p>
+                    )}
+                  </div>
+                )}
 
-            {/* Infographic editor modal */}
-            {isInfographic && isEditingInfographic && (
-              <InfographicEditor
-                solution={solution}
-                output={output}
-                onClose={() => setIsEditingInfographic(false)}
-                onRegenerate={handleInfographicRegenerate}
-                isLoading={infographicLoading}
-              />
+                {/* Preview section - only show if generated */}
+                {infographicExists && (
+                  <div style={{
+                    marginTop: 20,
+                    padding: 20,
+                    borderRadius: 10,
+                    border: "1px solid var(--gtm-border)",
+                    background: "var(--gtm-bg-card)",
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "var(--gtm-text-primary)", fontFamily: font }}>
+                        Preview
+                      </span>
+                      <button
+                        onClick={() => setIsEditingInfographic(true)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                          padding: "6px 12px",
+                          borderRadius: 6,
+                          border: "1px solid var(--gtm-border)",
+                          background: "transparent",
+                          fontSize: 12,
+                          fontWeight: 600,
+                          fontFamily: font,
+                          color: "var(--gtm-text-muted)",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <Edit2 size={12} />
+                        Edit
+                      </button>
+                    </div>
+                    <iframe
+                      src={`/api/gtm/infographic-preview?solution=${solution}`}
+                      style={{
+                        width: "100%",
+                        height: 600,
+                        borderRadius: 6,
+                        border: "1px solid var(--gtm-border)",
+                        background: "#fff",
+                      }}
+                      title="Infographic preview"
+                    />
+                  </div>
+                )}
+
+                {/* Build with Claude Code - always shown as fallback */}
+                <div style={{
+                  marginTop: 20,
+                  padding: 20,
+                  borderRadius: 10,
+                  border: "1px solid var(--gtm-border)",
+                  background: "var(--gtm-bg-card)",
+                  transition: "all 200ms ease",
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                    <span style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "var(--gtm-text-primary)",
+                      fontFamily: font,
+                    }}>
+                      Build with Claude Code
+                    </span>
+                    <button
+                      onClick={() => {
+                        const prompt = `Build an infographic HTML page at Brand/gtm/${solution}-infographic.html using the rox-infographic.html reference implementation at Brand/rox-infographic.html. Follow the same structure: self-contained HTML, inline CSS, no build tools. Use the brand tokens from the brief below. Render as a single-page infographic with all sections (title, eyebrow, headline, subhead, gauge section, categories grid, footer CTA) laid out vertically.\n\nHere is the generated brief:\n\n${output}`
+                        navigator.clipboard.writeText(prompt)
+                        setPromptCopied(true)
+                        setTimeout(() => setPromptCopied(false), 2000)
+                      }}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        padding: "6px 12px",
+                        borderRadius: 6,
+                        border: "1px solid var(--gtm-border)",
+                        background: promptCopied ? "var(--gtm-accent-bg)" : "transparent",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        fontFamily: font,
+                        color: promptCopied ? "var(--gtm-accent)" : "var(--gtm-text-muted)",
+                        cursor: "pointer",
+                        transition: "all 150ms ease",
+                      }}
+                    >
+                      {promptCopied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> Copy Prompt</>}
+                    </button>
+                  </div>
+                  <p style={{
+                    fontSize: 12,
+                    color: "var(--gtm-text-muted)",
+                    fontFamily: font,
+                    lineHeight: 1.6,
+                    margin: 0,
+                  }}>
+                    Copy this prompt and paste it into Claude Code to generate a full HTML infographic from the brief above. It references <code style={{ fontSize: 11, background: "var(--gtm-bg-page)", padding: "1px 4px", borderRadius: 3 }}>rox-infographic.html</code> as the template.
+                  </p>
+                </div>
+
+                {/* Editor modal */}
+                {isEditingInfographic && (
+                  <InfographicEditor
+                    solution={solution}
+                    output={output}
+                    onClose={() => setIsEditingInfographic(false)}
+                    onRegenerate={handleInfographicRegenerate}
+                    isLoading={infographicLoading}
+                  />
+                )}
+              </>
             )}
 
             {/* Claude Code prompt for microsites */}
