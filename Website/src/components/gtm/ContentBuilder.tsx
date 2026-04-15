@@ -322,9 +322,10 @@ export default function ContentBuilder({
   const infographicRef = useRef<HTMLDivElement>(null)
 
   const isSocialPost = selectedContent === "social-post"
-  const isSlideContent = selectedContent === "pitch-deck" || selectedContent === "carousel"
+  const isSlideContent = selectedContent === "pitch-deck"
+  const isCarousel = selectedContent === "carousel"
   const isInfographic = selectedContent === "infographic"
-  const hasSlides = isSlideContent || isInfographic
+  const hasSlides = isSlideContent
   const brandId = solutionToBrandId[solution] || "momentify"
   const brand = useMemo(() => getBrand(brandId), [brandId])
 
@@ -374,7 +375,7 @@ export default function ContentBuilder({
           setPlatformContent(parsed)
           setGraphicStage("template")
         }
-        if (selectedContent === "pitch-deck" || selectedContent === "infographic" || selectedContent === "carousel") {
+        if (selectedContent === "pitch-deck" || selectedContent === "carousel") {
           const parsed = parsePitchDeck(raw)
           setSlides(parsed)
           setCurrentSlide(0)
@@ -1190,95 +1191,8 @@ export default function ContentBuilder({
               </div>
             )}
 
-            {/* Infographic: all panels stacked vertically as single image */}
-            {isInfographic && slides.length > 0 && (
-              <div style={{ marginTop: 20 }}>
-                <div
-                  style={{
-                    background: "var(--gtm-bg-card)",
-                    borderRadius: 10,
-                    padding: 20,
-                    border: "1px solid var(--gtm-border)",
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--gtm-text-primary)", fontFamily: font }}>
-                      Infographic ({slides.length} panels)
-                    </span>
-                    <button
-                      onClick={async () => {
-                        if (!infographicRef.current || downloading) return
-                        setDownloading(true)
-                        try {
-                          const canvas = await html2canvas(infographicRef.current, {
-                            scale: 2,
-                            useCORS: true,
-                            backgroundColor: null,
-                          })
-                          const link = document.createElement("a")
-                          link.download = `momentify-infographic-${solution}.png`
-                          link.href = canvas.toDataURL("image/png")
-                          link.click()
-                        } catch {
-                          // Fallback: alert user
-                        } finally {
-                          setDownloading(false)
-                        }
-                      }}
-                      style={{
-                        display: "flex", alignItems: "center", gap: 6, padding: "6px 14px", borderRadius: 6,
-                        border: "1px solid var(--gtm-border)", background: downloading ? "var(--gtm-accent-bg)" : "transparent",
-                        fontSize: 12, fontWeight: 600, fontFamily: font,
-                        color: downloading ? "var(--gtm-accent)" : "var(--gtm-text-muted)",
-                        cursor: downloading ? "wait" : "pointer", transition: "all 150ms ease",
-                      }}
-                    >
-                      {downloading ? "Generating..." : "Download PNG"}
-                    </button>
-                  </div>
-                  <div
-                    ref={infographicRef}
-                    style={{ display: "flex", flexDirection: "column", gap: 0, borderRadius: 8, overflow: "hidden", border: "1px solid var(--gtm-border)" }}
-                  >
-                    {slides.map((slide, i) => {
-                      const preset = slidePresets[slide.layout || "center"] || slidePresets.center
-                      const bgIdx = slideBgIndices[i] ?? 0
-                      const slideBg = brand.backgrounds[bgIdx] || brand.backgrounds[0]
-                      return (
-                        <CanvasEditor
-                          key={i}
-                          aspectRatio="16:9"
-                          background={slideBg}
-                          brandId={brandId}
-                          headline={slide.headline}
-                          subhead={slide.subhead}
-                          bodyCopy={slide.body}
-                          textPosition={preset.textPosition}
-                          showLogo={i === 0}
-                          logoVariant="auto"
-                          logoScale={100}
-                          showUrl={i === slides.length - 1}
-                          urlScale={100}
-                          headlineFontSize={preset.headlineFontSize}
-                          headlineFontWeight={preset.headlineFontWeight}
-                          subheadFontSize={preset.subheadFontSize}
-                          subheadFontWeight={300}
-                          bodyFontSize={preset.bodyFontSize}
-                          bodyFontWeight={300}
-                          headlineAlign="left"
-                          subheadAlign="left"
-                          bodyAlign="left"
-                          layoutMargin={60}
-                        />
-                      )
-                    })}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Slide deck viewer for pitch-deck, carousel */}
-            {isSlideContent && slides.length > 0 && (
+            {/* Slide deck viewer for pitch-deck only */}
+            {isSlideContent && !isCarousel && slides.length > 0 && (
               <div style={{ marginTop: 20 }}>
                 <div
                   style={{
@@ -1434,6 +1348,165 @@ export default function ContentBuilder({
                       {copied ? <><Check size={14} /> Copied!</> : <><Copy size={14} /> Copy for Google Slides</>}
                     </button>
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* Carousel viewer: grid of square social graphics with navigation and series caption */}
+            {isCarousel && slides.length > 0 && (
+              <div style={{ marginTop: 20 }}>
+                <div
+                  style={{
+                    background: "var(--gtm-bg-card)",
+                    borderRadius: 10,
+                    padding: 20,
+                    border: "1px solid var(--gtm-border)",
+                  }}
+                >
+                  {/* Carousel header */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--gtm-text-primary)", fontFamily: font }}>
+                      Card {currentSlide + 1} of {slides.length}
+                      {slides[currentSlide]?.title && (
+                        <span style={{ fontWeight: 400, color: "var(--gtm-text-muted)", marginLeft: 8 }}>
+                          {slides[currentSlide].title}
+                        </span>
+                      )}
+                    </span>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      {/* Background swatches for current card */}
+                      {brand.backgrounds.map((bg, i) => (
+                        <button
+                          key={bg.id}
+                          onClick={() => {
+                            const updated = [...slideBgIndices]
+                            updated[currentSlide] = i
+                            setSlideBgIndices(updated)
+                          }}
+                          title={bg.label}
+                          style={{
+                            width: 20,
+                            height: 20,
+                            borderRadius: 5,
+                            background: bg.gradient,
+                            border: (slideBgIndices[currentSlide] ?? 0) === i ? "2px solid var(--gtm-accent)" : "2px solid transparent",
+                            cursor: "pointer",
+                            transition: "border-color 150ms ease",
+                          }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Carousel canvas: square 1:1 aspect ratio */}
+                  <div style={{ borderRadius: 8, overflow: "hidden", border: "1px solid var(--gtm-border)", marginBottom: 12 }}>
+                    {(() => {
+                      const slide = slides[currentSlide]
+                      const preset = slidePresets[slide?.layout || "center"] || slidePresets.center
+                      const bgIdx = slideBgIndices[currentSlide] ?? 0
+                      const slideBg = brand.backgrounds[bgIdx] || brand.backgrounds[0]
+                      return (
+                        <CanvasEditor
+                          aspectRatio="1:1"
+                          background={slideBg}
+                          brandId={brandId}
+                          headline={slide?.headline || ""}
+                          subhead={slide?.subhead || ""}
+                          bodyCopy={slide?.body || ""}
+                          textPosition={preset.textPosition}
+                          showLogo={preset.showLogo}
+                          logoVariant="auto"
+                          logoScale={80}
+                          showUrl={false}
+                          urlScale={100}
+                          headlineFontSize={preset.headlineFontSize}
+                          headlineFontWeight={preset.headlineFontWeight}
+                          subheadFontSize={preset.subheadFontSize}
+                          subheadFontWeight={300}
+                          bodyFontSize={preset.bodyFontSize}
+                          bodyFontWeight={300}
+                          headlineAlign="left"
+                          subheadAlign="left"
+                          bodyAlign="left"
+                          layoutMargin={40}
+                        />
+                      )
+                    })()}
+                  </div>
+
+                  {/* Navigation controls */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 16 }}>
+                    <button
+                      onClick={() => setCurrentSlide((p) => Math.max(0, p - 1))}
+                      disabled={currentSlide === 0}
+                      style={{
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        width: 32, height: 32, borderRadius: 6,
+                        border: "1px solid var(--gtm-border)", background: "transparent",
+                        color: currentSlide === 0 ? "var(--gtm-text-faint)" : "var(--gtm-text-primary)",
+                        cursor: currentSlide === 0 ? "not-allowed" : "pointer",
+                        opacity: currentSlide === 0 ? 0.4 : 1,
+                        transition: "all 150ms ease",
+                      }}
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+
+                    {/* Card dots */}
+                    {slides.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setCurrentSlide(i)}
+                        style={{
+                          width: i === currentSlide ? 24 : 8,
+                          height: 8,
+                          borderRadius: 4,
+                          border: "none",
+                          background: i === currentSlide ? "var(--gtm-accent)" : "var(--gtm-border)",
+                          cursor: "pointer",
+                          transition: "all 200ms ease",
+                        }}
+                      />
+                    ))}
+
+                    <button
+                      onClick={() => setCurrentSlide((p) => Math.min(slides.length - 1, p + 1))}
+                      disabled={currentSlide === slides.length - 1}
+                      style={{
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        width: 32, height: 32, borderRadius: 6,
+                        border: "1px solid var(--gtm-border)", background: "transparent",
+                        color: currentSlide === slides.length - 1 ? "var(--gtm-text-faint)" : "var(--gtm-text-primary)",
+                        cursor: currentSlide === slides.length - 1 ? "not-allowed" : "pointer",
+                        opacity: currentSlide === slides.length - 1 ? 0.4 : 1,
+                        transition: "all 150ms ease",
+                      }}
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+
+                  {/* Series caption (shown below all cards for context) */}
+                  {output && (
+                    <div style={{
+                      padding: 12,
+                      background: "var(--gtm-bg-page)",
+                      borderRadius: 6,
+                      fontSize: 12,
+                      color: "var(--gtm-text-muted)",
+                      fontFamily: font,
+                      lineHeight: 1.5,
+                      borderLeft: "3px solid var(--gtm-accent)",
+                      paddingLeft: 12,
+                    }}>
+                      <p style={{ margin: "0 0 8px 0", fontWeight: 600, color: "var(--gtm-text-primary)" }}>
+                        Series Caption:
+                      </p>
+                      <p style={{ margin: 0, whiteSpace: "pre-wrap" }}>
+                        {output.split('\n').find(line => line.startsWith('SERIES_CAPTION:'))?.replace('SERIES_CAPTION:', '').trim() || "Caption will appear here after generation"}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -1749,6 +1822,63 @@ export default function ContentBuilder({
                 </span>
               )}
             </div>
+
+            {/* Claude Code prompt for infographics */}
+            {isInfographic && output && (
+              <div style={{
+                marginTop: 20,
+                padding: 20,
+                borderRadius: 10,
+                border: "1px solid var(--gtm-border)",
+                background: "var(--gtm-bg-card)",
+                transition: "all 200ms ease",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                  <span style={{
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: "var(--gtm-text-primary)",
+                    fontFamily: font,
+                  }}>
+                    Build with Claude Code
+                  </span>
+                  <button
+                    onClick={() => {
+                      const prompt = `Build an infographic HTML page at Brand/gtm/${solution}-infographic.html using the rox-infographic.html reference implementation at Brand/rox-infographic.html. Follow the same structure: self-contained HTML, inline CSS, no build tools. Use the brand tokens from the brief below. Render as a single-page infographic with all sections (title, eyebrow, headline, subhead, gauge section, categories grid, footer CTA) laid out vertically.\n\nHere is the generated brief:\n\n${output}`
+                      navigator.clipboard.writeText(prompt)
+                      setPromptCopied(true)
+                      setTimeout(() => setPromptCopied(false), 2000)
+                    }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: "6px 12px",
+                      borderRadius: 6,
+                      border: "1px solid var(--gtm-border)",
+                      background: promptCopied ? "var(--gtm-accent-bg)" : "transparent",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      fontFamily: font,
+                      color: promptCopied ? "var(--gtm-accent)" : "var(--gtm-text-muted)",
+                      cursor: "pointer",
+                      transition: "all 150ms ease",
+                    }}
+                  >
+                    {promptCopied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> Copy Prompt</>}
+                  </button>
+                </div>
+                <p style={{
+                  fontSize: 12,
+                  color: "var(--gtm-text-muted)",
+                  fontFamily: font,
+                  lineHeight: 1.6,
+                  margin: 0,
+                }}>
+                  Copy this prompt and paste it into Claude Code to generate a full HTML infographic from the brief above. It references <code style={{ fontSize: 11, background: "var(--gtm-bg-page)", padding: "1px 4px", borderRadius: 3 }}>rox-infographic.html</code> as the template.
+                </p>
+              </div>
+            )}
 
             {/* Claude Code prompt for microsites */}
             {selectedContent === "microsite" && output && (

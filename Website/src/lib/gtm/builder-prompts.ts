@@ -432,6 +432,8 @@ SUBHEAD: [one sentence with a low-friction CTA]
 BODY:
 LAYOUT: title
 
+SERIES_CAPTION: [A 1-2 sentence caption for the entire carousel that can be posted as the series post text on LinkedIn/Twitter. Should work as a standalone social post that encourages people to swipe through all 6 cards. Include a light CTA if natural.]
+
 Rules: no em dashes, no buzzwords. Each card should be valuable on its own. Mix data points, practical tips, and ROX insights. The cover card should create curiosity. The CTA card should feel like a natural conclusion, not a hard sell.`
 
     case "one-pager":
