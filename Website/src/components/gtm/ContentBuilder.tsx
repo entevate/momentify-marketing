@@ -1933,6 +1933,7 @@ export default function ContentBuilder({
                     <button
                       onClick={() => handleGenerateAssetHtml("infographic")}
                       disabled={generatingAsset === "infographic"}
+                      aria-label="Generate infographic"
                       style={{
                         width: "100%",
                         padding: "12px 16px",
@@ -1965,7 +1966,7 @@ export default function ContentBuilder({
                       )}
                     </button>
                     {assetGenerationError && (
-                      <p style={{ color: "var(--gtm-error)", fontSize: 12, marginTop: 8, margin: 0 }}>
+                      <p style={{ color: "var(--gtm-error)", fontSize: 12, margin: "8px 0 0 0" }}>
                         {assetGenerationError}
                       </p>
                     )}
@@ -1987,6 +1988,7 @@ export default function ContentBuilder({
                       </span>
                       <button
                         onClick={() => setIsEditingInfographic(true)}
+                        aria-label="Edit infographic content"
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -2008,6 +2010,7 @@ export default function ContentBuilder({
                     </div>
                     <iframe
                       src={`/api/gtm/infographic-preview?solution=${solution}`}
+                      sandbox="allow-same-origin"
                       style={{
                         width: "100%",
                         height: 600,
@@ -2045,6 +2048,7 @@ export default function ContentBuilder({
                         setPromptCopied(true)
                         setTimeout(() => setPromptCopied(false), 2000)
                       }}
+                      aria-label="Copy infographic prompt to clipboard"
                       style={{
                         display: "flex",
                         alignItems: "center",
