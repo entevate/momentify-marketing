@@ -251,12 +251,19 @@ function parsePitchDeck(raw: string): SlideData[] {
     const bodyMatch = section.match(/BODY:\s*([\s\S]*?)(?=LAYOUT:|$)/i)
     const layoutMatch = section.match(/LAYOUT:\s*(\w+)/i)
 
+    // Post-process body: ensure bullets and numbered items are on separate lines
+    let body = bodyMatch?.[1]?.trim() || ""
+    body = body
+      .replace(/([^\n])([•●▪▸-]\s)/g, "$1\n$2")       // newline before bullet chars
+      .replace(/([^\n])(\d+[\.\)]\s)/g, "$1\n$2")      // newline before numbered items
+      .replace(/\n{3,}/g, "\n\n")                        // collapse excess newlines
+
     slides.push({
       number: slideNum,
       title: slideTitle,
       headline: headlineMatch?.[1]?.trim() || "",
       subhead: subheadMatch?.[1]?.trim() || "",
-      body: bodyMatch?.[1]?.trim() || "",
+      body,
       layout: (layoutMatch?.[1]?.trim() as SlideData["layout"]) || "center",
     })
   }
@@ -310,7 +317,9 @@ export default function ContentBuilder({
   const [slideBgIndices, setSlideBgIndices] = useState<number[]>([])
 
   const isSocialPost = selectedContent === "social-post"
-  const isPitchDeck = selectedContent === "pitch-deck" || selectedContent === "infographic" || selectedContent === "carousel"
+  const isSlideContent = selectedContent === "pitch-deck" || selectedContent === "carousel"
+  const isInfographic = selectedContent === "infographic"
+  const hasSlides = isSlideContent || isInfographic
   const brandId = solutionToBrandId[solution] || "momentify"
   const brand = useMemo(() => getBrand(brandId), [brandId])
 
@@ -1176,8 +1185,62 @@ export default function ContentBuilder({
               </div>
             )}
 
-            {/* Slide deck viewer for pitch-deck, infographic, carousel */}
-            {isPitchDeck && slides.length > 0 && (
+            {/* Infographic: all panels stacked vertically */}
+            {isInfographic && slides.length > 0 && (
+              <div style={{ marginTop: 20 }}>
+                <div
+                  style={{
+                    background: "var(--gtm-bg-card)",
+                    borderRadius: 10,
+                    padding: 20,
+                    border: "1px solid var(--gtm-border)",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--gtm-text-primary)", fontFamily: font }}>
+                      Infographic Preview ({slides.length} panels)
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 0, borderRadius: 8, overflow: "hidden", border: "1px solid var(--gtm-border)" }}>
+                    {slides.map((slide, i) => {
+                      const preset = slidePresets[slide.layout || "center"] || slidePresets.center
+                      const bgIdx = slideBgIndices[i] ?? 0
+                      const slideBg = brand.backgrounds[bgIdx] || brand.backgrounds[0]
+                      return (
+                        <CanvasEditor
+                          key={i}
+                          aspectRatio="16:9"
+                          background={slideBg}
+                          brandId={brandId}
+                          headline={slide.headline}
+                          subhead={slide.subhead}
+                          bodyCopy={slide.body}
+                          textPosition={preset.textPosition}
+                          showLogo={i === 0}
+                          logoVariant="auto"
+                          logoScale={100}
+                          showUrl={i === slides.length - 1}
+                          urlScale={100}
+                          headlineFontSize={preset.headlineFontSize}
+                          headlineFontWeight={preset.headlineFontWeight}
+                          subheadFontSize={preset.subheadFontSize}
+                          subheadFontWeight={300}
+                          bodyFontSize={preset.bodyFontSize}
+                          bodyFontWeight={300}
+                          headlineAlign="left"
+                          subheadAlign="left"
+                          bodyAlign="left"
+                          layoutMargin={60}
+                        />
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Slide deck viewer for pitch-deck, carousel */}
+            {isSlideContent && slides.length > 0 && (
               <div style={{ marginTop: 20 }}>
                 <div
                   style={{
@@ -1307,6 +1370,30 @@ export default function ContentBuilder({
                       }}
                     >
                       <ChevronRight size={16} />
+                    </button>
+                  </div>
+
+                  {/* Download / Export actions */}
+                  <div style={{ display: "flex", gap: 8, marginTop: 12, justifyContent: "center" }}>
+                    <button
+                      onClick={() => {
+                        // Build structured slide text for Google Slides paste
+                        const slideText = slides.map((s, i) =>
+                          `--- Slide ${i + 1}: ${s.title} ---\n${s.headline}\n${s.subhead}${s.body ? "\n" + s.body : ""}`
+                        ).join("\n\n")
+                        navigator.clipboard.writeText(slideText)
+                        setCopied(true)
+                        setTimeout(() => setCopied(false), 2000)
+                      }}
+                      style={{
+                        display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 6,
+                        border: "1px solid var(--gtm-border)", background: "transparent",
+                        fontSize: 12, fontWeight: 600, fontFamily: font,
+                        color: copied ? "var(--gtm-accent)" : "var(--gtm-text-muted)",
+                        cursor: "pointer", transition: "all 150ms ease",
+                      }}
+                    >
+                      {copied ? <><Check size={14} /> Copied!</> : <><Copy size={14} /> Copy for Google Slides</>}
                     </button>
                   </div>
                 </div>
