@@ -81,7 +81,7 @@ Target:
 - Solution: ${solution}
 - GTM Motion: ${motionLabel}
 - Vertical: ${vertLabel}
-- Buyer: ${icpTitle}
+- Buyer: ${icpTitle}${extra}
 
 Sequence rules:
 - Touch 1 (Day 0): Lead with the industry pain. No product pitch. Soft CTA only (ROX Audit or ROX Calculator link).
@@ -95,28 +95,43 @@ CTA: [call to action]
 
 Reference the prospect's likely ROX gap. Position ROX as the lens through which they should evaluate their current event performance.
 
-Rules: no em dashes, no buzzwords, under 150 words per email, sound like a real person wrote it.${extra}`
+Rules: no em dashes, no buzzwords, under 150 words per email, sound like a real person wrote it.`
 
-    case "linkedin-post":
-      return `Write a LinkedIn post for Momentify targeting ${vertLabel} event marketers.
+    case "social-post":
+      return `Write a social media post for Momentify targeting ${vertLabel} event marketers. Generate THREE versions: one for LinkedIn, one for Instagram, and one for Twitter/X.
 
 Motion: ${motionLabel}
-Angle: derive from the ${vertLabel} vertical and ${motionLabel} motion context.
+Angle: derive from the ${vertLabel} vertical and ${motionLabel} motion context.${extra}
 
-Rules:
-- 150 to 250 words
-- Lead with a sharp observation or question. Not a company announcement
-- Do not start with "I" or "We"
-- No hashtag spam. Maximum 3 relevant hashtags at the end
-- End with a question or non-salesy CTA that drives comments
-- Include a ROX insight or metric when relevant
-- No em dashes, no buzzwords${extra}`
+For each platform version, also extract a HEADLINE (under 12 words, punchy) and SUBHEAD (one sentence) that could be used on a branded graphic.
+
+Output format (use these exact markers):
+
+---LINKEDIN---
+HEADLINE: [graphic headline]
+SUBHEAD: [graphic subhead]
+POST:
+[150 to 250 words. Lead with a sharp observation or question. Not a company announcement. Do not start with "I" or "We". Maximum 3 relevant hashtags at the end. End with a question or non-salesy CTA.]
+
+---INSTAGRAM---
+HEADLINE: [graphic headline]
+SUBHEAD: [graphic subhead]
+POST:
+[80 to 150 words. More visual-first language. Shorter paragraphs. 5 to 8 relevant hashtags at the end. Conversational tone.]
+
+---TWITTER---
+HEADLINE: [graphic headline]
+SUBHEAD: [graphic subhead]
+POST:
+[Under 280 characters. Sharp and direct. One hashtag maximum. Can be a question, stat, or bold claim.]
+
+Rules across all: no em dashes, no buzzwords, include a ROX insight or metric when relevant.`
 
     case "linkedin-dm":
       return `Write a 3-message LinkedIn DM sequence for Momentify.
 
 Target: ${icpTitle} at a ${vertLabel} company
-Motion: ${motionLabel}
+Motion: ${motionLabel}${extra}
 
 DM 1: Genuine opener referencing something specific about their role or company context. One sharp question about their post-event process. No pitch whatsoever.
 
@@ -124,14 +139,14 @@ DM 2 (Day 5, no reply): Share one useful resource (ROX Audit or relevant guide) 
 
 DM 3 (if they engage): Move to a call or offer to send the relevant case study directly. Keep it short and warm.
 
-Rules: no em dashes, sound human, DM 1 must feel researched not templated. Weave in a ROX-related question or insight naturally. Do not force ROX language into the opener.${extra}`
+Rules: no em dashes, sound human, DM 1 must feel researched not templated. Weave in a ROX-related question or insight naturally. Do not force ROX language into the opener.`
 
     case "lead-magnet":
       return `Write a full content outline for a Momentify lead magnet.
 
 Solution: ${solution}
 Vertical: ${vertLabel}
-Motion: ${motionLabel}
+Motion: ${motionLabel}${extra}
 
 Output format:
 TITLE: [compelling title]
@@ -143,14 +158,14 @@ GATE REQUIREMENT: [what information to ask for. Name, email, company, role]
 
 This outline should be detailed enough for a designer and copywriter to execute without additional briefing.
 
-Rules: no em dashes, no buzzwords, every section should deliver standalone value. Ground the lead magnet in ROX methodology so the reader walks away understanding how to measure their event ROI through the ROX lens.${extra}`
+Rules: no em dashes, no buzzwords, every section should deliver standalone value. Ground the lead magnet in ROX methodology so the reader walks away understanding how to measure their event ROI through the ROX lens.`
 
     case "discovery-script":
       return `Write a discovery call script for a Momentify sales rep.
 
 Target: ${icpTitle}
 Solution: ${solution}
-Motion: ${motionLabel}
+Motion: ${motionLabel}${extra}
 
 Output format:
 OPENING: [30-second opener that earns the conversation]
@@ -159,14 +174,14 @@ TRANSITION: [how to move from discovery to showing Momentify. One paragraph]
 TOP OBJECTIONS: [3 objections with specific responses using Momentify positioning]
 SOFT CLOSE: [how to end the call with a clear next step]
 
-Rules: no em dashes, conversational tone, questions should make the buyer feel understood not interrogated. Responses to objections should never be defensive. Use ROX dimensions as a discovery framework to uncover gaps in the buyer's current measurement approach.${extra}`
+Rules: no em dashes, conversational tone, questions should make the buyer feel understood not interrogated. Responses to objections should never be defensive. Use ROX dimensions as a discovery framework to uncover gaps in the buyer's current measurement approach.`
 
     case "partner-pitch":
       return `Write a partner pitch narrative for Momentify targeting exhibit agencies and event companies.
 
 Partner type: ${motion === "partner" ? "Freeman-type agency, association, or dealer network" : "channel partner"} based on ${vertLabel} vertical
 Solution: ${solution}
-Vertical: ${vertLabel}
+Vertical: ${vertLabel}${extra}
 
 Output format:
 OPENING PARAGRAPH: Their problem. Clients asking what the show returned, no defensible answer
@@ -174,14 +189,14 @@ SECOND PARAGRAPH: The co-sell model. Partner delivers the experience, Momentify 
 THIRD PARAGRAPH: The ask. 30-minute briefing, no pitch, just the model
 ONE-LINER: A sentence the partner can use with their own clients to introduce Momentify
 
-Rules: no em dashes, no buzzwords, sound like a business development conversation not a marketing pitch. Lead with their business outcome, not Momentify features. Frame the co-sell value through ROX: the partner gets a defensible ROI story to bring back to their clients.${extra}`
+Rules: no em dashes, no buzzwords, sound like a business development conversation not a marketing pitch. Lead with their business outcome, not Momentify features. Frame the co-sell value through ROX: the partner gets a defensible ROI story to bring back to their clients.`
 
     case "battle-card":
       return `Write a competitive battle card for Momentify sales reps.
 
 Competitor: ${competitor || "Cvent"}
 Solution context: ${solution}
-Vertical: ${vertLabel}
+Vertical: ${vertLabel}${extra}
 
 Output format:
 COMPETITOR SNAPSHOT: 2 sentences on what this competitor actually does and who buys it
@@ -192,7 +207,7 @@ OUR ADVANTAGE: 3 specific Momentify advantages that matter in this vertical
 KILLER QUESTION: One question to ask the buyer that reframes the conversation in Momentify's favor
 PROOF POINT TO USE: The most relevant Momentify proof point for this competitive situation
 
-Rules: be honest about competitor strengths. Reps trust a balanced kill sheet more than a one-sided one. No em dashes. Keep each section tight and scannable. Frame competitive advantages through the lens of ROX measurement. The killer question should expose the competitor's inability to deliver measurable engagement outcomes.${extra}`
+Rules: be honest about competitor strengths. Reps trust a balanced kill sheet more than a one-sided one. No em dashes. Keep each section tight and scannable. Frame competitive advantages through the lens of ROX measurement. The killer question should expose the competitor's inability to deliver measurable engagement outcomes.`
 
     case "microsite":
       return `Write a complete microsite brief for Momentify.
@@ -200,7 +215,7 @@ Rules: be honest about competitor strengths. Reps trust a balanced kill sheet mo
 Solution: ${solution}
 Vertical: ${vertLabel}
 Motion: ${motionLabel}
-Target buyer: ${icpTitle}
+Target buyer: ${icpTitle}${extra}
 
 Output format:
 PAGE TITLE: [compelling page title]
@@ -219,9 +234,7 @@ SECTION 5 — CTA BLOCK: [headline, subhead, form fields to capture: name, email
 
 DESIGN NOTES: [2 to 3 notes on visual direction, layout, and tone]
 
-Rules: no em dashes, no buzzwords, every section should earn the next scroll. The page should convert a cold visitor in under 90 seconds of reading. Anchor the proof section and CTA in ROX language so the visitor leaves understanding that Momentify delivers measurable return, not just features.
-
-${extra}`
+Rules: no em dashes, no buzzwords, every section should earn the next scroll. The page should convert a cold visitor in under 90 seconds of reading. Anchor the proof section and CTA in ROX language so the visitor leaves understanding that Momentify delivers measurable return, not just features.`
 
     case "one-pager":
       return `Write a one-pager sales leave-behind for Momentify.
@@ -229,7 +242,7 @@ ${extra}`
 Solution: ${solution}
 Vertical: ${vertLabel}
 Motion: ${motionLabel}
-Target buyer: ${icpTitle}
+Target buyer: ${icpTitle}${extra}
 
 This one-pager will be left behind after a sales meeting or sent as a follow-up PDF. It must stand alone without a presenter.
 
@@ -257,9 +270,7 @@ CALL TO ACTION:
 
 DESIGN NOTES: [layout guidance — single page, front only, print-ready at 8.5x11]
 
-Rules: no em dashes, no buzzwords, under 400 words total. Every word must earn its place. This is a leave-behind, not a brochure. It should make the buyer want to forward it to their boss. The ROX Framework section should be the anchor of the page, making the measurement story impossible to ignore.
-
-${extra}`
+Rules: no em dashes, no buzzwords, under 400 words total. Every word must earn its place. This is a leave-behind, not a brochure. It should make the buyer want to forward it to their boss. The ROX Framework section should be the anchor of the page, making the measurement story impossible to ignore.`
 
     default:
       return `Write GTM content for Momentify targeting the ${vertLabel} vertical.${extra}`

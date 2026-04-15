@@ -8,6 +8,7 @@ import {
   Check,
   Clock,
   Zap,
+  X as XIcon,
 } from "lucide-react"
 import type { CalendarTask } from "@/lib/gtm/calendar-types"
 import { taskCategories, solutionMeta } from "@/lib/gtm/calendar-categories"
@@ -19,6 +20,7 @@ interface TaskCardProps {
   variant: "compact" | "full"
   onToggleComplete: (taskId: string) => void
   onClick: (task: CalendarTask) => void
+  onDelete?: (taskId: string) => void
   isDragging?: boolean
 }
 
@@ -27,8 +29,10 @@ export default function TaskCard({
   variant,
   onToggleComplete,
   onClick,
+  onDelete,
   isDragging = false,
 }: TaskCardProps) {
+  const [hovered, setHovered] = React.useState(false)
   const {
     attributes,
     listeners,
@@ -49,6 +53,7 @@ export default function TaskCard({
       ref={setNodeRef}
       style={{
         fontFamily: font,
+        position: "relative",
         background: "var(--gtm-bg-card)",
         border: "1px solid var(--gtm-border)",
         borderRadius: isCompact ? 8 : 12,
@@ -64,16 +69,38 @@ export default function TaskCard({
         boxShadow: isDragging ? "var(--gtm-shadow-hover)" : "var(--gtm-shadow)",
       }}
       onMouseEnter={(e) => {
+        setHovered(true)
         if (!isDragging) {
           e.currentTarget.style.boxShadow = "var(--gtm-shadow-hover)"
           e.currentTarget.style.borderColor = "var(--gtm-cyan)"
         }
       }}
       onMouseLeave={(e) => {
+        setHovered(false)
         e.currentTarget.style.boxShadow = isDragging ? "var(--gtm-shadow-hover)" : "var(--gtm-shadow)"
         e.currentTarget.style.borderColor = "var(--gtm-border)"
       }}
     >
+      {/* Delete button on hover */}
+      {onDelete && hovered && !isDragging && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onDelete(task.id) }}
+          title="Delete task"
+          style={{
+            position: "absolute", top: isCompact ? 2 : 4, right: isCompact ? 2 : 4,
+            width: isCompact ? 18 : 22, height: isCompact ? 18 : 22,
+            borderRadius: 4, border: "none", background: "rgba(239,68,68,0.1)",
+            color: "#ef4444", cursor: "pointer", display: "flex",
+            alignItems: "center", justifyContent: "center", padding: 0,
+            transition: "all 150ms ease", zIndex: 2,
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.2)" }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(239,68,68,0.1)" }}
+        >
+          <XIcon size={isCompact ? 10 : 12} />
+        </button>
+      )}
+
       {/* Drag handle */}
       <div
         {...attributes}

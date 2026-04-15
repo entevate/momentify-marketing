@@ -13,6 +13,7 @@ interface CalendarViewProps {
   currentMonth: Date
   onToggleComplete: (taskId: string) => void
   onTaskClick: (task: CalendarTask) => void
+  onDeleteTask?: (taskId: string) => void
 }
 
 function getCalendarDays(month: Date): string[] {
@@ -65,6 +66,7 @@ export default function CalendarView({
   currentMonth,
   onToggleComplete,
   onTaskClick,
+  onDeleteTask,
 }: CalendarViewProps) {
   const days = getCalendarDays(currentMonth)
   const todayISO = getTodayISO()
@@ -121,6 +123,7 @@ export default function CalendarView({
             isWeekend={isWeekendDate(date)}
             onToggleComplete={onToggleComplete}
             onTaskClick={onTaskClick}
+            onDeleteTask={onDeleteTask}
           />
         ))}
       </div>

@@ -11,6 +11,7 @@ interface ListViewProps {
   tasks: CalendarTask[]
   onToggleComplete: (taskId: string) => void
   onTaskClick: (task: CalendarTask) => void
+  onDeleteTask?: (taskId: string) => void
 }
 
 function formatDateHeader(dateStr: string): string {
@@ -36,6 +37,7 @@ export default function ListView({
   tasks,
   onToggleComplete,
   onTaskClick,
+  onDeleteTask,
 }: ListViewProps) {
   const grouped = groupByDate(tasks)
   const sortedDates = Object.keys(grouped).sort()
@@ -106,6 +108,7 @@ export default function ListView({
                     variant="full"
                     onToggleComplete={onToggleComplete}
                     onClick={onTaskClick}
+                    onDelete={onDeleteTask}
                   />
                 ))}
               </div>

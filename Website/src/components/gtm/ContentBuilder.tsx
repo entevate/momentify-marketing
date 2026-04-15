@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useRef, useMemo } from "react"
 import {
   Sparkles,
   Lock,
   FileText,
-  Linkedin,
+  Share2,
   MessageSquare,
   BookOpen,
   Phone,
@@ -20,9 +20,47 @@ import {
   ThumbsDown,
   BookmarkCheck,
   CalendarPlus,
+  ExternalLink,
+  Terminal,
 } from "lucide-react"
+import CanvasEditor from "@/components/social-toolkit/CanvasEditor"
+import {
+  type AspectRatio,
+  type BackgroundDef,
+  getBrand,
+} from "@/components/social-toolkit/backgroundData"
+import { buildAssetPrompt } from "@/lib/gtm/asset-prompts"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
+
+/** Map solution IDs to brand IDs for CanvasEditor */
+const solutionToBrandId: Record<string, string> = {
+  "trade-shows": "trade-shows",
+  recruiting: "recruiting",
+  "field-sales": "field-sales",
+  facilities: "facilities",
+  "events-venues": "venues",
+}
+
+type Platform = "linkedin" | "instagram" | "twitter"
+
+const platformConfig: Record<Platform, { label: string; aspect: AspectRatio; fontScale: number; marginScale: number; logoScale: number }> = {
+  linkedin: { label: "LinkedIn", aspect: "1.91:1", fontScale: 0.696, marginScale: 1.0, logoScale: 100 },
+  instagram: { label: "Instagram", aspect: "4:5", fontScale: 1.09, marginScale: 1.5, logoScale: 127 },
+  twitter: { label: "Twitter/X", aspect: "16:9", fontScale: 0.66, marginScale: 1.0, logoScale: 100 },
+}
+
+interface PlatformContent {
+  headline: string
+  subhead: string
+  post: string
+}
+
+interface GraphicState {
+  stage: "none" | "template" | "captured"
+  backgroundIndex: number
+  thumbnail: string | null
+}
 
 export const contentTypes = [
   {
@@ -32,10 +70,10 @@ export const contentTypes = [
     icon: FileText,
   },
   {
-    key: "linkedin-post",
-    label: "LinkedIn Post",
-    desc: "Single post, 150-250 words",
-    icon: Linkedin,
+    key: "social-post",
+    label: "Social Post",
+    desc: "3 platform versions with branded graphic",
+    icon: Share2,
   },
   {
     key: "linkedin-dm",
@@ -113,6 +151,38 @@ function FieldLabel({ label, optional }: { label: string; optional?: boolean }) 
   )
 }
 
+/** Parse structured multi-platform response */
+function parseSocialOutput(raw: string): Record<Platform, PlatformContent> {
+  const result: Record<Platform, PlatformContent> = {
+    linkedin: { headline: "", subhead: "", post: "" },
+    instagram: { headline: "", subhead: "", post: "" },
+    twitter: { headline: "", subhead: "", post: "" },
+  }
+
+  const platformMap: Record<string, Platform> = {
+    "LINKEDIN": "linkedin",
+    "INSTAGRAM": "instagram",
+    "TWITTER": "twitter",
+  }
+
+  for (const [marker, platform] of Object.entries(platformMap)) {
+    const regex = new RegExp(`---${marker}---([\\s\\S]*?)(?=---[A-Z]+---|$)`)
+    const match = raw.match(regex)
+    if (!match) continue
+
+    const section = match[1]
+    const headlineMatch = section.match(/HEADLINE:\s*(.+)/i)
+    const subheadMatch = section.match(/SUBHEAD:\s*(.+)/i)
+    const postMatch = section.match(/POST:\s*([\s\S]*?)$/i)
+
+    if (headlineMatch) result[platform].headline = headlineMatch[1].trim()
+    if (subheadMatch) result[platform].subhead = subheadMatch[1].trim()
+    if (postMatch) result[platform].post = postMatch[1].trim()
+  }
+
+  return result
+}
+
 export default function ContentBuilder({
   solution,
   solutionLabel,
@@ -139,6 +209,23 @@ export default function ContentBuilder({
   const [scheduleDate, setScheduleDate] = useState("")
   const [scheduled, setScheduled] = useState(false)
   const [promptCopied, setPromptCopied] = useState(false)
+  const [assetPromptCopied, setAssetPromptCopied] = useState(false)
+  const [showAssetPrompt, setShowAssetPrompt] = useState(false)
+
+  // Social post state
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform>("linkedin")
+  const [platformContent, setPlatformContent] = useState<Record<Platform, PlatformContent> | null>(null)
+
+  // Graphic state
+  const [graphicStage, setGraphicStage] = useState<"none" | "template" | "captured">("none")
+  const [selectedBgIndex, setSelectedBgIndex] = useState(0)
+
+  // Per-platform graphic cache (ref to avoid stale closures)
+  const platformGraphicsRef = useRef<Record<string, GraphicState>>({})
+
+  const isSocialPost = selectedContent === "social-post"
+  const brandId = solutionToBrandId[solution] || "momentify"
+  const brand = useMemo(() => getBrand(brandId), [brandId])
 
   const canGenerate =
     motion !== null &&
@@ -153,6 +240,10 @@ export default function ContentBuilder({
     setError("")
     setOutput("")
     setFeedback(null)
+    setPlatformContent(null)
+    setGraphicStage("none")
+    setSelectedBgIndex(0)
+    platformGraphicsRef.current = {}
 
     try {
       const res = await fetch("/api/gtm/generate", {
@@ -172,20 +263,54 @@ export default function ContentBuilder({
       if (data.error) {
         setError(data.error)
       } else {
-        setOutput(data.content || "")
+        const raw = data.content || ""
+        setOutput(raw)
+        if (selectedContent === "social-post") {
+          const parsed = parseSocialOutput(raw)
+          setPlatformContent(parsed)
+        }
       }
     } catch {
       setError("Generation failed. Please try again.")
     } finally {
       setLoading(false)
     }
-  }, [canGenerate, solution, vertical, motion, selectedContent, context, competitor])
+  }, [canGenerate, solution, vertical, motion, selectedContent, context, competitor, verticals])
+
+  const currentPlatformText = useMemo(() => {
+    if (!isSocialPost || !platformContent) return output
+    return platformContent[selectedPlatform]?.post || output
+  }, [isSocialPost, platformContent, selectedPlatform, output])
+
+  const currentHeadline = platformContent?.[selectedPlatform]?.headline || ""
+  const currentSubhead = platformContent?.[selectedPlatform]?.subhead || ""
 
   const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(output)
+    navigator.clipboard.writeText(isSocialPost ? currentPlatformText : output)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
-  }, [output])
+  }, [output, currentPlatformText, isSocialPost])
+
+  const handlePlatformSwitch = useCallback((newPlatform: Platform) => {
+    // Save current platform's graphic state
+    platformGraphicsRef.current[selectedPlatform] = {
+      stage: graphicStage,
+      backgroundIndex: selectedBgIndex,
+      thumbnail: null,
+    }
+
+    // Restore new platform's cached state or reset
+    const cached = platformGraphicsRef.current[newPlatform]
+    if (cached) {
+      setGraphicStage(cached.stage)
+      setSelectedBgIndex(cached.backgroundIndex)
+    } else {
+      setGraphicStage("none")
+      setSelectedBgIndex(0)
+    }
+
+    setSelectedPlatform(newPlatform)
+  }, [selectedPlatform, graphicStage, selectedBgIndex])
 
   const handleSave = useCallback(async () => {
     if (!output || !motion || !selectedContent) return
@@ -197,7 +322,7 @@ export default function ContentBuilder({
       contentType: selectedContent,
       motion,
       solution,
-      content: output,
+      content: isSocialPost ? currentPlatformText : output,
       createdAt: new Date().toISOString(),
       tags,
     }
@@ -216,7 +341,7 @@ export default function ContentBuilder({
     } catch {
       // Fall through silently
     }
-  }, [output, motion, vertical, selectedContent, solution, onLibraryChange])
+  }, [output, motion, vertical, selectedContent, solution, onLibraryChange, isSocialPost, currentPlatformText])
 
   const handleSchedule = useCallback(async () => {
     if (!scheduleDate || !output || !motion || !selectedContent) return
@@ -272,6 +397,10 @@ export default function ContentBuilder({
   const contentTypeLabel =
     contentTypes.find((c) => c.key === selectedContent)?.label || ""
 
+  // Graphic config for current platform
+  const platformCfg = platformConfig[selectedPlatform]
+  const currentBg: BackgroundDef | null = brand.backgrounds[selectedBgIndex] || brand.backgrounds[0]
+
   return (
     <div
       style={{
@@ -279,7 +408,7 @@ export default function ContentBuilder({
         minHeight: "calc(100vh - 200px)",
       }}
     >
-      {/* ── Left Panel: Controls ── */}
+      {/* Left Panel: Controls */}
       <div
         style={{
           width: 300,
@@ -585,7 +714,7 @@ export default function ContentBuilder({
         )}
       </div>
 
-      {/* ── Right Panel: Output ── */}
+      {/* Right Panel: Output */}
       <div
         style={{
           flex: 1,
@@ -596,7 +725,6 @@ export default function ContentBuilder({
         }}
       >
         {loading ? (
-          /* Loading state */
           <div style={{ padding: "60px 0" }}>
             {[1, 2, 3].map((n) => (
               <div
@@ -625,7 +753,6 @@ export default function ContentBuilder({
             <style>{`@keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }`}</style>
           </div>
         ) : output ? (
-          /* Output state */
           <div>
             {/* Header row */}
             <div
@@ -733,6 +860,37 @@ export default function ContentBuilder({
               </div>
             </div>
 
+            {/* Platform selector for social posts */}
+            {isSocialPost && platformContent && (
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ display: "flex", gap: 4 }}>
+                  {(Object.keys(platformConfig) as Platform[]).map((p) => {
+                    const active = selectedPlatform === p
+                    return (
+                      <button
+                        key={p}
+                        onClick={() => handlePlatformSwitch(p)}
+                        style={{
+                          padding: "6px 16px",
+                          borderRadius: 6,
+                          fontSize: 12,
+                          fontWeight: 600,
+                          fontFamily: font,
+                          cursor: "pointer",
+                          border: active ? "1px solid var(--gtm-accent)" : "1px solid var(--gtm-border)",
+                          background: active ? "var(--gtm-accent-bg)" : "transparent",
+                          color: active ? "var(--gtm-accent)" : "var(--gtm-text-muted)",
+                          transition: "all 150ms ease",
+                        }}
+                      >
+                        {platformConfig[p].label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Output body */}
             <div
               style={{
@@ -755,9 +913,96 @@ export default function ContentBuilder({
                   transition: "color 200ms ease",
                 }}
               >
-                {output}
+                {isSocialPost && platformContent ? currentPlatformText : output}
               </pre>
             </div>
+
+            {/* Branded graphic for social posts */}
+            {isSocialPost && platformContent && (
+              <div style={{ marginTop: 20 }}>
+                {graphicStage === "none" ? (
+                  <button
+                    onClick={() => setGraphicStage("template")}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: "10px 16px",
+                      borderRadius: 8,
+                      border: "1px solid var(--gtm-border)",
+                      background: "var(--gtm-bg-card)",
+                      fontSize: 13,
+                      fontWeight: 600,
+                      fontFamily: font,
+                      color: "var(--gtm-text-primary)",
+                      cursor: "pointer",
+                      transition: "all 150ms ease",
+                    }}
+                  >
+                    <Sparkles size={14} /> Generate Graphic
+                  </button>
+                ) : (
+                  <div
+                    style={{
+                      background: "var(--gtm-bg-card)",
+                      borderRadius: 10,
+                      padding: 20,
+                      border: "1px solid var(--gtm-border)",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "var(--gtm-text-primary)", fontFamily: font }}>
+                        Branded Graphic ({platformCfg.label} - {platformCfg.aspect})
+                      </span>
+                      <div style={{ display: "flex", gap: 4 }}>
+                        {brand.backgrounds.map((bg, i) => (
+                          <button
+                            key={bg.id}
+                            onClick={() => setSelectedBgIndex(i)}
+                            title={bg.label}
+                            style={{
+                              width: 24,
+                              height: 24,
+                              borderRadius: 6,
+                              background: bg.gradient,
+                              border: i === selectedBgIndex ? "2px solid var(--gtm-accent)" : "2px solid transparent",
+                              cursor: "pointer",
+                              transition: "border-color 150ms ease",
+                            }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div style={{ borderRadius: 8, overflow: "hidden", border: "1px solid var(--gtm-border)" }}>
+                      <CanvasEditor
+                        aspectRatio={platformCfg.aspect}
+                        background={currentBg}
+                        brandId={brandId}
+                        headline={currentHeadline}
+                        subhead={currentSubhead}
+                        bodyCopy=""
+                        textPosition="center"
+                        showLogo={true}
+                        logoVariant="auto"
+                        logoScale={platformCfg.logoScale}
+                        showUrl={false}
+                        urlScale={100}
+                        headlineFontSize={Math.round(108 * platformCfg.fontScale)}
+                        headlineFontWeight={600}
+                        subheadFontSize={Math.round(44 * platformCfg.fontScale)}
+                        subheadFontWeight={300}
+                        bodyFontSize={Math.round(18 * platformCfg.fontScale)}
+                        bodyFontWeight={300}
+                        headlineAlign="left"
+                        subheadAlign="left"
+                        bodyAlign="left"
+                        layoutMargin={Math.round(60 * platformCfg.marginScale)}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Feedback row */}
             <div
@@ -820,6 +1065,158 @@ export default function ContentBuilder({
                 Review all content before sending.
               </span>
             </div>
+
+            {/* Deployment actions */}
+            {isSocialPost && platformContent && (
+              <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+                {selectedPlatform === "linkedin" && (
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(currentPlatformText)
+                      window.open("https://www.linkedin.com/feed/", "_blank")
+                    }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 6,
+                      border: "1px solid var(--gtm-border)", background: "transparent", fontSize: 12,
+                      fontWeight: 600, fontFamily: font, color: "var(--gtm-text-muted)", cursor: "pointer",
+                      transition: "all 150ms ease",
+                    }}
+                  >
+                    <ExternalLink size={14} /> Copy for LinkedIn
+                  </button>
+                )}
+                {selectedPlatform === "twitter" && (
+                  <button
+                    onClick={() => {
+                      const text = encodeURIComponent(currentPlatformText)
+                      window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank")
+                    }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 6,
+                      border: "1px solid var(--gtm-border)", background: "transparent", fontSize: 12,
+                      fontWeight: 600, fontFamily: font, color: "var(--gtm-text-muted)", cursor: "pointer",
+                      transition: "all 150ms ease",
+                    }}
+                  >
+                    <ExternalLink size={14} /> Copy for Twitter/X
+                  </button>
+                )}
+                {selectedPlatform === "instagram" && (
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(currentPlatformText)
+                      setCopied(true)
+                      setTimeout(() => setCopied(false), 2000)
+                    }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 6,
+                      border: "1px solid var(--gtm-border)", background: "transparent", fontSize: 12,
+                      fontWeight: 600, fontFamily: font, color: "var(--gtm-text-muted)", cursor: "pointer",
+                      transition: "all 150ms ease",
+                    }}
+                  >
+                    <Copy size={14} /> Copy for Instagram
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Non-social deployment actions */}
+            {!isSocialPost && output && (
+              <div style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap" }}>
+                {selectedContent === "cold-emails" && (
+                  <button
+                    onClick={() => { navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 2000) }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 6,
+                      border: "1px solid var(--gtm-border)", background: "transparent", fontSize: 12,
+                      fontWeight: 600, fontFamily: font, color: "var(--gtm-text-muted)", cursor: "pointer",
+                      transition: "all 150ms ease",
+                    }}
+                  >
+                    <Copy size={14} /> Copy to Email Platform
+                  </button>
+                )}
+                {selectedContent === "linkedin-dm" && (
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(output)
+                      window.open("https://www.linkedin.com/sales/", "_blank")
+                    }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 6,
+                      border: "1px solid var(--gtm-border)", background: "transparent", fontSize: 12,
+                      fontWeight: 600, fontFamily: font, color: "var(--gtm-text-muted)", cursor: "pointer",
+                      transition: "all 150ms ease",
+                    }}
+                  >
+                    <ExternalLink size={14} /> Copy DM Sequence
+                  </button>
+                )}
+                {["lead-magnet", "partner-pitch", "battle-card", "discovery-script", "one-pager", "microsite"].includes(selectedContent!) && (
+                  <button
+                    onClick={() => setShowAssetPrompt(!showAssetPrompt)}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 6,
+                      border: showAssetPrompt ? "1px solid var(--gtm-accent)" : "1px solid var(--gtm-border)",
+                      background: showAssetPrompt ? "var(--gtm-accent-bg)" : "transparent", fontSize: 12,
+                      fontWeight: 600, fontFamily: font,
+                      color: showAssetPrompt ? "var(--gtm-accent)" : "var(--gtm-text-muted)", cursor: "pointer",
+                      transition: "all 150ms ease",
+                    }}
+                  >
+                    <Terminal size={14} /> {showAssetPrompt ? "Hide Asset Prompt" : "Generate Asset Prompt"}
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Asset prompt display */}
+            {showAssetPrompt && selectedContent && output && (
+              <div style={{
+                marginTop: 16,
+                padding: 20,
+                borderRadius: 10,
+                border: "1px solid var(--gtm-border)",
+                background: "var(--gtm-bg-card)",
+                transition: "all 200ms ease",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: "var(--gtm-text-primary)", fontFamily: font }}>
+                    Claude Code Prompt
+                  </span>
+                  <button
+                    onClick={() => {
+                      const prompt = buildAssetPrompt(selectedContent, solution, output)
+                      navigator.clipboard.writeText(prompt)
+                      setAssetPromptCopied(true)
+                      setTimeout(() => setAssetPromptCopied(false), 2000)
+                    }}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 6, padding: "6px 12px", borderRadius: 6,
+                      border: "1px solid var(--gtm-border)",
+                      background: assetPromptCopied ? "var(--gtm-accent-bg)" : "transparent",
+                      fontSize: 12, fontWeight: 600, fontFamily: font,
+                      color: assetPromptCopied ? "var(--gtm-accent)" : "var(--gtm-text-muted)",
+                      cursor: "pointer", transition: "all 150ms ease",
+                    }}
+                  >
+                    {assetPromptCopied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> Copy Prompt</>}
+                  </button>
+                </div>
+                <pre style={{
+                  whiteSpace: "pre-wrap", wordBreak: "break-word", fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 11, lineHeight: 1.6, color: "var(--gtm-text-muted)", margin: 0,
+                  maxHeight: 300, overflow: "auto", padding: 12, borderRadius: 6,
+                  background: "var(--gtm-bg-page)", border: "1px solid var(--gtm-border)",
+                }}>
+                  {buildAssetPrompt(selectedContent, solution, output)}
+                </pre>
+                <p style={{ fontSize: 11, color: "var(--gtm-text-faint)", fontFamily: font, marginTop: 8, margin: "8px 0 0" }}>
+                  Copy this prompt and paste it into Claude Code to generate a branded asset from the brief above.
+                </p>
+              </div>
+            )}
 
             {/* Save & Schedule actions */}
             <div style={{ display: "flex", gap: 8, marginTop: 16 }}>

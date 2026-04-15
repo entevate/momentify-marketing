@@ -135,6 +135,21 @@ export default function CalendarPage() {
     setSelectedCategories([])
   }, [])
 
+  const handleDeleteTask = useCallback((taskId: string) => {
+    setTasks((prev) => prev.filter((t) => t.id !== taskId))
+    fetch(`/api/gtm/calendar/${taskId}`, { method: "DELETE" }).catch(() => {})
+  }, [])
+
+  const handleEditTask = useCallback((updatedTask: CalendarTask) => {
+    setTasks((prev) => prev.map((t) => t.id === updatedTask.id ? updatedTask : t))
+    fetch(`/api/gtm/calendar/${updatedTask.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedTask),
+    }).catch(() => {})
+    setSelectedTask(updatedTask)
+  }, [])
+
   const handleResetTasks = useCallback(() => {
     // Delete all current tasks from KV
     for (const task of tasks) {
@@ -343,12 +358,14 @@ export default function CalendarPage() {
             currentMonth={currentMonth}
             onToggleComplete={handleToggleComplete}
             onTaskClick={handleTaskClick}
+            onDeleteTask={handleDeleteTask}
           />
         ) : (
           <ListView
             tasks={filteredTasks}
             onToggleComplete={handleToggleComplete}
             onTaskClick={handleTaskClick}
+            onDeleteTask={handleDeleteTask}
           />
         )}
 
@@ -371,6 +388,8 @@ export default function CalendarPage() {
         task={selectedTask}
         onClose={() => setSelectedTask(null)}
         onToggleComplete={handleToggleComplete}
+        onEditTask={handleEditTask}
+        onDeleteTask={handleDeleteTask}
       />
     </div>
   )

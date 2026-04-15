@@ -15,6 +15,7 @@ interface DayColumnProps {
   isWeekend: boolean
   onToggleComplete: (taskId: string) => void
   onTaskClick: (task: CalendarTask) => void
+  onDeleteTask?: (taskId: string) => void
 }
 
 export default function DayColumn({
@@ -24,6 +25,7 @@ export default function DayColumn({
   isWeekend,
   onToggleComplete,
   onTaskClick,
+  onDeleteTask,
 }: DayColumnProps) {
   const { isOver, setNodeRef } = useDroppable({ id: date })
   const [hovered, setHovered] = useState(false)
@@ -79,6 +81,7 @@ export default function DayColumn({
               variant="compact"
               onToggleComplete={onToggleComplete}
               onClick={onTaskClick}
+              onDelete={onDeleteTask}
             />
           ))}
         </div>
