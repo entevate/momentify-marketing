@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useRef, useMemo } from "react"
+import React, { useState, useCallback, useRef, useMemo } from "react"
 import {
   Sparkles,
   Lock,
@@ -268,6 +268,7 @@ export default function ContentBuilder({
         if (selectedContent === "social-post") {
           const parsed = parseSocialOutput(raw)
           setPlatformContent(parsed)
+          setGraphicStage("template")
         }
       }
     } catch {
@@ -299,13 +300,13 @@ export default function ContentBuilder({
       thumbnail: null,
     }
 
-    // Restore new platform's cached state or reset
+    // Restore new platform's cached state or show fresh template
     const cached = platformGraphicsRef.current[newPlatform]
     if (cached) {
       setGraphicStage(cached.stage)
       setSelectedBgIndex(cached.backgroundIndex)
     } else {
-      setGraphicStage("none")
+      setGraphicStage(platformContent ? "template" : "none")
       setSelectedBgIndex(0)
     }
 
@@ -526,66 +527,118 @@ export default function ContentBuilder({
               const selected = selectedContent === ct.key
               const Icon = ct.icon
               return (
-                <button
-                  key={ct.key}
-                  onClick={() => {
-                    setSelectedContent(ct.key)
-                    if (ct.key !== "battle-card") setCompetitor(null)
-                  }}
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: 10,
-                    padding: "12px 14px",
-                    borderRadius: 8,
-                    textAlign: "left",
-                    cursor: "pointer",
-                    border: selected
-                      ? "1px solid var(--gtm-border)"
-                      : "1px solid var(--gtm-border)",
-                    borderLeft: selected
-                      ? "2px solid var(--gtm-accent)"
-                      : "1px solid var(--gtm-border)",
-                    background: selected
-                      ? "var(--gtm-accent-bg)"
-                      : "transparent",
-                    transition: "all 150ms ease",
-                  }}
-                >
-                  <Icon
-                    size={16}
-                    style={{
-                      color: "var(--gtm-accent)",
-                      marginTop: 1,
-                      flexShrink: 0,
+                <React.Fragment key={ct.key}>
+                  <button
+                    onClick={() => {
+                      setSelectedContent(ct.key)
+                      if (ct.key !== "battle-card") setCompetitor(null)
                     }}
-                  />
-                  <div>
-                    <p
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: 10,
+                      padding: "12px 14px",
+                      borderRadius: 8,
+                      textAlign: "left",
+                      cursor: "pointer",
+                      border: selected
+                        ? "1px solid var(--gtm-border)"
+                        : "1px solid var(--gtm-border)",
+                      borderLeft: selected
+                        ? "2px solid var(--gtm-accent)"
+                        : "1px solid var(--gtm-border)",
+                      background: selected
+                        ? "var(--gtm-accent-bg)"
+                        : "transparent",
+                      transition: "all 150ms ease",
+                    }}
+                  >
+                    <Icon
+                      size={16}
                       style={{
-                        fontSize: 13,
-                        fontWeight: 700,
-                        color: "var(--gtm-text-primary)",
-                        fontFamily: font,
-                        margin: 0,
-                        transition: "color 200ms ease",
+                        color: "var(--gtm-accent)",
+                        marginTop: 1,
+                        flexShrink: 0,
                       }}
-                    >
-                      {ct.label}
-                    </p>
-                    <p
-                      style={{
-                        fontSize: 11,
-                        color: "var(--gtm-text-muted)",
-                        fontFamily: font,
-                        margin: "2px 0 0",
-                        transition: "color 200ms ease",
-                      }}
-                    >
-                      {ct.desc}
-                    </p>
-                  </div>
-                </button>
+                    />
+                    <div>
+                      <p
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 700,
+                          color: "var(--gtm-text-primary)",
+                          fontFamily: font,
+                          margin: 0,
+                          transition: "color 200ms ease",
+                        }}
+                      >
+                        {ct.label}
+                      </p>
+                      <p
+                        style={{
+                          fontSize: 11,
+                          color: "var(--gtm-text-muted)",
+                          fontFamily: font,
+                          margin: "2px 0 0",
+                          transition: "color 200ms ease",
+                        }}
+                      >
+                        {ct.desc}
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Platform sub-selector inline under Social Post */}
+                  {ct.key === "social-post" && selected && (
+                    <div style={{ marginLeft: 26, marginTop: -2, marginBottom: 2 }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                        {(Object.keys(platformConfig) as Platform[]).map((p) => {
+                          const active = selectedPlatform === p
+                          const cfg = platformConfig[p]
+                          const charNote = p === "linkedin" ? "150-250 words" : p === "instagram" ? "80-150 words" : "280 chars max"
+                          return (
+                            <button
+                              key={p}
+                              onClick={() => setSelectedPlatform(p)}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                padding: "5px 10px",
+                                borderRadius: 6,
+                                fontSize: 11,
+                                fontWeight: 600,
+                                fontFamily: font,
+                                cursor: "pointer",
+                                border: active
+                                  ? "1px solid var(--gtm-accent)"
+                                  : "1px solid var(--gtm-border)",
+                                background: active
+                                  ? "var(--gtm-accent-bg)"
+                                  : "transparent",
+                                color: active
+                                  ? "var(--gtm-accent)"
+                                  : "var(--gtm-text-muted)",
+                                transition: "all 150ms ease",
+                              }}
+                            >
+                              <span>{cfg.label}</span>
+                              <span style={{ fontSize: 10, fontWeight: 400, opacity: 0.7 }}>
+                                {charNote} / {cfg.aspect}
+                              </span>
+                            </button>
+                          )
+                        })}
+                      </div>
+                      <p style={{
+                        fontSize: 10, color: "var(--gtm-text-faint)", fontFamily: font,
+                        marginTop: 4, lineHeight: 1.4, marginBottom: 0,
+                      }}>
+                        All 3 generate together. This sets the default view.
+                      </p>
+                    </div>
+                  )}
+                </React.Fragment>
               )
             })}
           </div>
@@ -626,74 +679,6 @@ export default function ContentBuilder({
             </div>
           )}
 
-          {/* Platform sub-selector for social posts */}
-          {selectedContent === "social-post" && (
-            <div style={{ marginTop: 10 }}>
-              <p style={{
-                fontSize: 10,
-                fontWeight: 600,
-                color: "var(--gtm-text-faint)",
-                letterSpacing: "0.08em",
-                fontFamily: font,
-                marginBottom: 6,
-                textTransform: "uppercase",
-              }}>
-                Show first
-              </p>
-              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                {(Object.keys(platformConfig) as Platform[]).map((p) => {
-                  const active = selectedPlatform === p
-                  const cfg = platformConfig[p]
-                  const charNote = p === "linkedin" ? "150-250 words" : p === "instagram" ? "80-150 words" : "280 chars max"
-                  return (
-                    <button
-                      key={p}
-                      onClick={() => setSelectedPlatform(p)}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "7px 10px",
-                        borderRadius: 6,
-                        fontSize: 12,
-                        fontWeight: 600,
-                        fontFamily: font,
-                        cursor: "pointer",
-                        border: active
-                          ? "1px solid var(--gtm-accent)"
-                          : "1px solid var(--gtm-border)",
-                        background: active
-                          ? "var(--gtm-accent-bg)"
-                          : "transparent",
-                        color: active
-                          ? "var(--gtm-accent)"
-                          : "var(--gtm-text-muted)",
-                        transition: "all 150ms ease",
-                      }}
-                    >
-                      <span>{cfg.label}</span>
-                      <span style={{
-                        fontSize: 10,
-                        fontWeight: 400,
-                        opacity: 0.7,
-                      }}>
-                        {charNote} / {cfg.aspect}
-                      </span>
-                    </button>
-                  )
-                })}
-              </div>
-              <p style={{
-                fontSize: 10,
-                color: "var(--gtm-text-faint)",
-                fontFamily: font,
-                marginTop: 6,
-                lineHeight: 1.4,
-              }}>
-                All 3 versions generate together. This sets the default view.
-              </p>
-            </div>
-          )}
         </div>
 
         {/* Additional Context */}
@@ -1222,7 +1207,7 @@ export default function ContentBuilder({
                     <ExternalLink size={14} /> Copy DM Sequence
                   </button>
                 )}
-                {["lead-magnet", "partner-pitch", "battle-card", "discovery-script", "one-pager", "microsite"].includes(selectedContent!) && (
+                {["lead-magnet", "partner-pitch", "battle-card", "discovery-script", "one-pager"].includes(selectedContent!) && (
                   <button
                     onClick={() => setShowAssetPrompt(!showAssetPrompt)}
                     style={{

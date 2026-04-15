@@ -252,6 +252,9 @@ const CanvasEditor = forwardRef<HTMLDivElement, CanvasEditorProps>(
                         color: textColor,
                         letterSpacing: "-0.02em",
                         textAlign: headlineAlign,
+                        textWrap: "balance" as React.CSSProperties["textWrap"],
+                        widows: 2,
+                        orphans: 2,
                       }}
                     >
                       {headline}
@@ -267,6 +270,9 @@ const CanvasEditor = forwardRef<HTMLDivElement, CanvasEditorProps>(
                         color: textColor,
                         opacity: 0.85,
                         textAlign: subheadAlign,
+                        textWrap: "pretty" as React.CSSProperties["textWrap"],
+                        widows: 2,
+                        orphans: 2,
                       }}
                     >
                       {subhead}
