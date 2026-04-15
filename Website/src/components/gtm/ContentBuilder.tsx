@@ -2092,61 +2092,114 @@ export default function ContentBuilder({
               </>
             )}
 
-            {/* Claude Code prompt for microsites */}
+            {/* Microsite section with Generate Now button */}
             {selectedContent === "microsite" && output && (
-              <div style={{
-                marginTop: 20,
-                padding: 20,
-                borderRadius: 10,
-                border: "1px solid var(--gtm-border)",
-                background: "var(--gtm-bg-card)",
-                transition: "all 200ms ease",
-              }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-                  <span style={{
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: "var(--gtm-text-primary)",
-                    fontFamily: font,
-                  }}>
-                    Build with Claude Code
-                  </span>
+              <>
+                {/* Generate Now button */}
+                <div style={{
+                  marginTop: 20,
+                  padding: 16,
+                  borderRadius: 10,
+                  border: "1px solid var(--gtm-border)",
+                  background: "var(--gtm-bg-card)",
+                }}>
                   <button
-                    onClick={() => {
-                      const prompt = `Build a microsite HTML page at Brand/gtm/${solution}-${vertical || "general"}.html using the panelmatic.html reference implementation at Brand/gtm/panelmatic.html. Follow the same structure: self-contained HTML, inline CSS, no build tools. Use the brand tokens from the brief below. Include all sections (Hero, Problem, Approach, Proof, How It Works, CTA + Form). Add scroll-reveal animations and responsive mobile styles.\n\nHere is the generated brief:\n\n${output}`
-                      navigator.clipboard.writeText(prompt)
-                      setPromptCopied(true)
-                      setTimeout(() => setPromptCopied(false), 2000)
-                    }}
+                    onClick={() => handleGenerateAssetHtml("microsite")}
+                    disabled={generatingAsset === "microsite"}
+                    aria-label="Generate microsite"
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                      padding: "6px 12px",
+                      width: "100%",
+                      padding: "12px 16px",
                       borderRadius: 6,
-                      border: "1px solid var(--gtm-border)",
-                      background: promptCopied ? "var(--gtm-accent-bg)" : "transparent",
-                      fontSize: 12,
+                      border: "none",
+                      background: "var(--gtm-accent)",
+                      fontSize: 14,
                       fontWeight: 600,
                       fontFamily: font,
-                      color: promptCopied ? "var(--gtm-accent)" : "var(--gtm-text-muted)",
-                      cursor: "pointer",
+                      color: "#fff",
+                      cursor: generatingAsset === "microsite" ? "not-allowed" : "pointer",
+                      opacity: generatingAsset === "microsite" ? 0.6 : 1,
                       transition: "all 150ms ease",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 8,
                     }}
                   >
-                    {promptCopied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> Copy Prompt</>}
+                    {generatingAsset === "microsite" ? (
+                      <>
+                        <RotateCw size={14} style={{ animation: "spin 1s linear infinite" }} />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles size={14} />
+                        Generate Now
+                      </>
+                    )}
                   </button>
+                  {assetGenerationError && (
+                    <p style={{ color: "var(--gtm-error)", fontSize: 12, margin: "8px 0 0 0" }}>
+                      {assetGenerationError}
+                    </p>
+                  )}
                 </div>
-                <p style={{
-                  fontSize: 12,
-                  color: "var(--gtm-text-muted)",
-                  fontFamily: font,
-                  lineHeight: 1.6,
-                  margin: 0,
+
+                {/* Build with Claude Code - fallback option */}
+                <div style={{
+                  marginTop: 20,
+                  padding: 20,
+                  borderRadius: 10,
+                  border: "1px solid var(--gtm-border)",
+                  background: "var(--gtm-bg-card)",
+                  transition: "all 200ms ease",
                 }}>
-                  Copy this prompt and paste it into Claude Code to generate a full HTML microsite from the brief above. It references <code style={{ fontSize: 11, background: "var(--gtm-bg-page)", padding: "1px 4px", borderRadius: 3 }}>panelmatic.html</code> as the template.
-                </p>
-              </div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                    <span style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "var(--gtm-text-primary)",
+                      fontFamily: font,
+                    }}>
+                      Build with Claude Code
+                    </span>
+                    <button
+                      onClick={() => {
+                        const prompt = `Build a microsite HTML page at Brand/gtm/${solution}-${vertical || "general"}.html using the panelmatic.html reference implementation at Brand/gtm/panelmatic.html. Follow the same structure: self-contained HTML, inline CSS, no build tools. Use the brand tokens from the brief below. Include all sections (Hero, Problem, Approach, Proof, How It Works, CTA + Form). Add scroll-reveal animations and responsive mobile styles.\n\nHere is the generated brief:\n\n${output}`
+                        navigator.clipboard.writeText(prompt)
+                        setPromptCopied(true)
+                        setTimeout(() => setPromptCopied(false), 2000)
+                      }}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        padding: "6px 12px",
+                        borderRadius: 6,
+                        border: "1px solid var(--gtm-border)",
+                        background: promptCopied ? "var(--gtm-accent-bg)" : "transparent",
+                        fontSize: 12,
+                        fontWeight: 600,
+                        fontFamily: font,
+                        color: promptCopied ? "var(--gtm-accent)" : "var(--gtm-text-muted)",
+                        cursor: "pointer",
+                        transition: "all 150ms ease",
+                      }}
+                    >
+                      {promptCopied ? <><Check size={12} /> Copied!</> : <><Copy size={12} /> Copy Prompt</>}
+                    </button>
+                  </div>
+                  <p style={{
+                    fontSize: 12,
+                    color: "var(--gtm-text-muted)",
+                    fontFamily: font,
+                    lineHeight: 1.6,
+                    margin: 0,
+                  }}>
+                    Copy this prompt and paste it into Claude Code to generate a full HTML microsite from the brief above. It references <code style={{ fontSize: 11, background: "var(--gtm-bg-page)", padding: "1px 4px", borderRadius: 3 }}>panelmatic.html</code> as the template.
+                  </p>
+                </div>
+              </>
             )}
           </div>
         ) : (
