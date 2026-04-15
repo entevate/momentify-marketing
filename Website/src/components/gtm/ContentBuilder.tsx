@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useCallback, useRef, useMemo } from "react"
+import React, { useState, useCallback, useRef, useMemo, useEffect } from "react"
 import {
   Sparkles,
   Lock,
@@ -27,8 +27,10 @@ import {
   Terminal,
   ChevronLeft,
   ChevronRight,
+  Edit2,
 } from "lucide-react"
 import CanvasEditor from "@/components/social-toolkit/CanvasEditor"
+import InfographicEditor from "./InfographicEditor"
 import {
   type AspectRatio,
   type BackgroundDef,
@@ -333,6 +335,15 @@ export default function ContentBuilder({
   // Infographic capture ref
   const infographicRef = useRef<HTMLDivElement>(null)
 
+  // Infographic preview and edit state
+  const [infographicExists, setInfographicExists] = useState(false)
+  const [isEditingInfographic, setIsEditingInfographic] = useState(false)
+  const [infographicLoading, setInfographicLoading] = useState(false)
+
+  // Asset generation state
+  const [generatingAsset, setGeneratingAsset] = useState<string | null>(null)
+  const [assetGenerationError, setAssetGenerationError] = useState<string | null>(null)
+
   const isSocialPost = selectedContent === "social-post"
   const isSlideContent = selectedContent === "pitch-deck"
   const isCarousel = selectedContent === "carousel"
@@ -340,6 +351,16 @@ export default function ContentBuilder({
   const hasSlides = isSlideContent
   const brandId = solutionToBrandId[solution] || "momentify"
   const brand = useMemo(() => getBrand(brandId), [brandId])
+
+  // Check if infographic exists when content type or solution changes
+  useEffect(() => {
+    if (selectedContent === "infographic" && solution) {
+      fetch(`/api/gtm/infographic-check?solution=${solution}`)
+        .then((res) => res.json())
+        .then((data) => setInfographicExists(data.exists))
+        .catch(() => setInfographicExists(false))
+    }
+  }, [selectedContent, solution])
 
   const canGenerate =
     motion !== null &&
@@ -437,6 +458,47 @@ export default function ContentBuilder({
 
     setSelectedPlatform(newPlatform)
   }, [selectedPlatform, graphicStage, selectedBgIndex])
+
+  const handleInfographicRegenerate = useCallback(async (modifiedContent: string) => {
+    setInfographicLoading(true)
+    try {
+      const prompt = `Build an updated infographic HTML page at Brand/gtm/${solution}-infographic.html with these modifications:\n\n${modifiedContent}`
+      navigator.clipboard.writeText(prompt)
+      alert("Updated prompt copied! Paste into Claude Code to regenerate.")
+    } finally {
+      setInfographicLoading(false)
+    }
+  }, [solution])
+
+  const handleGenerateAssetHtml = useCallback(async (assetType: string) => {
+    setGeneratingAsset(assetType)
+    setAssetGenerationError(null)
+    try {
+      const res = await fetch("/api/gtm/generate-asset-html", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brief: output,
+          assetType,
+          solution,
+        }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        // For infographic, update preview state so it shows
+        if (assetType === "infographic") {
+          setInfographicExists(true)
+        }
+        // TODO: Add toast notification "Generated successfully!" here later
+      } else {
+        setAssetGenerationError(data.error || "Generation failed")
+      }
+    } catch (error) {
+      setAssetGenerationError("Network error during generation")
+    } finally {
+      setGeneratingAsset(null)
+    }
+  }, [output, solution])
 
   const handleSave = useCallback(async () => {
     if (!output || !motion || !selectedContent) return
@@ -1856,6 +1918,60 @@ export default function ContentBuilder({
               )}
             </div>
 
+            {/* Infographic preview and edit */}
+            {isInfographic && infographicExists && (
+              <div style={{
+                marginTop: 20,
+                padding: 20,
+                borderRadius: 10,
+                border: "1px solid var(--gtm-border)",
+                background: "var(--gtm-bg-card)",
+                transition: "all 200ms ease",
+              }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                  <span style={{
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: "var(--gtm-text-primary)",
+                    fontFamily: font,
+                  }}>
+                    Preview
+                  </span>
+                  <button
+                    onClick={() => setIsEditingInfographic(true)}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: "6px 12px",
+                      borderRadius: 6,
+                      border: "1px solid var(--gtm-border)",
+                      background: "transparent",
+                      fontSize: 12,
+                      fontWeight: 600,
+                      fontFamily: font,
+                      color: "var(--gtm-text-muted)",
+                      cursor: "pointer",
+                      transition: "all 150ms ease",
+                    }}
+                  >
+                    <Edit2 size={12} /> Edit
+                  </button>
+                </div>
+                <iframe
+                  src={`/api/gtm/infographic-preview?solution=${solution}`}
+                  style={{
+                    width: "100%",
+                    height: 600,
+                    borderRadius: 6,
+                    border: "1px solid var(--gtm-border)",
+                    background: "#fff",
+                  }}
+                  title="Infographic preview"
+                />
+              </div>
+            )}
+
             {/* Claude Code prompt for infographics */}
             {isInfographic && output && (
               <div style={{
@@ -1911,6 +2027,17 @@ export default function ContentBuilder({
                   Copy this prompt and paste it into Claude Code to generate a full HTML infographic from the brief above. It references <code style={{ fontSize: 11, background: "var(--gtm-bg-page)", padding: "1px 4px", borderRadius: 3 }}>rox-infographic.html</code> as the template.
                 </p>
               </div>
+            )}
+
+            {/* Infographic editor modal */}
+            {isInfographic && isEditingInfographic && (
+              <InfographicEditor
+                solution={solution}
+                output={output}
+                onClose={() => setIsEditingInfographic(false)}
+                onRegenerate={handleInfographicRegenerate}
+                isLoading={infographicLoading}
+              />
             )}
 
             {/* Claude Code prompt for microsites */}
