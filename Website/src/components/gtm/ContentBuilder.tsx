@@ -24,7 +24,7 @@ import {
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
 
-const contentTypes = [
+export const contentTypes = [
   {
     key: "cold-emails",
     label: "Cold Outreach Emails",
