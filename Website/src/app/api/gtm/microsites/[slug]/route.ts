@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { kv } from "@vercel/kv"
 import { put, del } from "@vercel/blob"
 import { KV, requireGtmAuth, type MicrositeRecord } from "@/lib/gtm/content-types"
+import { stripBrandNav } from "../route"
 
 const token = process.env.BLOB_READ_WRITE_TOKEN || ""
 
@@ -43,8 +44,9 @@ export async function PUT(
 
     const body = await request.json() as { html: string; title?: string; description?: string }
 
-    // Upload new HTML to Blob (overwrites existing)
-    const blob = await put(`gtm/microsites/${slug}.html`, body.html, {
+    // Strip brand-nav and upload to Blob (overwrites existing)
+    const cleanHtml = stripBrandNav(body.html)
+    const blob = await put(`gtm/microsites/${slug}.html`, cleanHtml, {
       access: "public",
       addRandomSuffix: false,
       allowOverwrite: true,
@@ -65,7 +67,7 @@ export async function PUT(
     return NextResponse.json({ success: true, blobUrl: blob.url })
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to re-publish", details: String(error) },
+      { error: "Failed to re-publish" },
       { status: 500 }
     )
   }
@@ -97,7 +99,7 @@ export async function DELETE(
     return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to unpublish", details: String(error) },
+      { error: "Failed to unpublish" },
       { status: 500 }
     )
   }

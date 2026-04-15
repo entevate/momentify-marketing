@@ -6,7 +6,7 @@ import { KV, requireGtmAuth, type MicrositeRecord } from "@/lib/gtm/content-type
 const token = process.env.BLOB_READ_WRITE_TOKEN || ""
 
 // Strip brand-nav and internal tooling scripts from HTML
-function stripBrandNav(html: string): string {
+export function stripBrandNav(html: string): string {
   return html
     // Remove brand-nav CSS link
     .replace(/<link[^>]*brand-nav\.css[^>]*\/?>/gi, "")
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true, slug, blobUrl: blob.url })
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to publish microsite", details: String(error) },
+      { error: "Failed to publish microsite" },
       { status: 500 }
     )
   }

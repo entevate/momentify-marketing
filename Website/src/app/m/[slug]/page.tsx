@@ -1,18 +1,7 @@
 import { kv } from "@vercel/kv"
 import { notFound } from "next/navigation"
 import type { Metadata } from "next"
-
-interface MicrositeRecord {
-  slug: string
-  title: string
-  description?: string
-  solution: string
-  blobUrl: string
-  contentId?: string
-  publishedAt: string
-}
-
-const KV_KEY = (slug: string) => `gtm:microsite:${slug}`
+import { KV, type MicrositeRecord } from "@/lib/gtm/content-types"
 
 export async function generateMetadata({
   params,
@@ -21,7 +10,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params
   try {
-    const record = await kv.get<MicrositeRecord>(KV_KEY(slug))
+    const record = await kv.get<MicrositeRecord>(KV.microsite(slug))
     if (!record) return {}
     return {
       title: record.title,
@@ -41,7 +30,7 @@ export default async function MicrositePage({
 
   let record: MicrositeRecord | null = null
   try {
-    record = await kv.get<MicrositeRecord>(KV_KEY(slug))
+    record = await kv.get<MicrositeRecord>(KV.microsite(slug))
   } catch {
     // KV unavailable
   }
@@ -52,6 +41,7 @@ export default async function MicrositePage({
     <iframe
       src={record.blobUrl}
       title={record.title}
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
       style={{
         position: "fixed",
         inset: 0,

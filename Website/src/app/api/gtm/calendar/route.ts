@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ id: task.id, success: true })
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to create task", details: String(error) },
+      { error: "Failed to create task" },
       { status: 500 }
     )
   }
@@ -59,9 +59,13 @@ export async function PUT(request: Request) {
   }
 
   try {
-    const tasks = await request.json() as CalendarTask[]
+    const tasks = await request.json()
 
-    for (const task of tasks) {
+    if (!Array.isArray(tasks)) {
+      return NextResponse.json({ error: "Expected array of tasks" }, { status: 400 })
+    }
+
+    for (const task of tasks as CalendarTask[]) {
       await kv.set(KV.calendar(task.id), task)
       await kv.sadd(KV.calendarIndex, task.id)
     }
@@ -69,7 +73,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ success: true, count: tasks.length })
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to bulk update tasks", details: String(error) },
+      { error: "Failed to bulk update tasks" },
       { status: 500 }
     )
   }

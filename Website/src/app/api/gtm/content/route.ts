@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ id: item.id, success: true })
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to save content", details: String(error) },
+      { error: "Failed to save content" },
       { status: 500 }
     )
   }

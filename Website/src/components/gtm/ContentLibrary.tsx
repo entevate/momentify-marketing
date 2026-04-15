@@ -3,19 +3,9 @@
 import { useState, useEffect, useCallback } from "react"
 import { Copy, Check, Trash2, Eye, X, Bookmark } from "lucide-react"
 import { contentTypes } from "./ContentBuilder"
+import type { ContentItem } from "@/lib/gtm/content-types"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
-
-interface ContentItem {
-  id: string
-  contentType: string
-  platform?: string
-  motion: "direct" | "partner"
-  solution: string
-  content: string
-  createdAt: string
-  tags: string[]
-}
 
 function formatDate(iso: string): string {
   const d = new Date(iso)

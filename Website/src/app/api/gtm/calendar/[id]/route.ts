@@ -25,7 +25,7 @@ export async function PUT(
     return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to update task", details: String(error) },
+      { error: "Failed to update task" },
       { status: 500 }
     )
   }
@@ -47,7 +47,7 @@ export async function DELETE(
     return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to delete task", details: String(error) },
+      { error: "Failed to delete task" },
       { status: 500 }
     )
   }

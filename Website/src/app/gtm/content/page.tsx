@@ -19,30 +19,9 @@ import {
   Globe,
   FileBarChart,
 } from "lucide-react"
+import type { ContentItem, MicrositeRecord } from "@/lib/gtm/content-types"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
-
-interface ContentItem {
-  id: string
-  contentType: string
-  platform?: string
-  motion: "direct" | "partner"
-  solution: string
-  content: string
-  blobUrl?: string
-  createdAt: string
-  tags: string[]
-}
-
-interface MicrositeRecord {
-  slug: string
-  title: string
-  description?: string
-  solution: string
-  blobUrl: string
-  contentId?: string
-  publishedAt: string
-}
 
 const solutionTabs = [
   { key: "all", label: "All" },

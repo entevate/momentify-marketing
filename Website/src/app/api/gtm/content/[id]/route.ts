@@ -49,7 +49,7 @@ export async function DELETE(
     return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to delete content", details: String(error) },
+      { error: "Failed to delete content" },
       { status: 500 }
     )
   }
