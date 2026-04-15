@@ -71,7 +71,7 @@ export function buildUserMessage(params: BuilderParams): string {
   const vertLabel = verticalLabels[vertical] || vertical
   const motionLabel = motion === "direct" ? "Direct to Customer" : "Channel Partners"
   const icpTitle = verticalICPs[vertical] || "event marketing decision-maker"
-  const extra = additionalContext ? `\n\nAdditional context: ${additionalContext}` : ""
+  const extra = additionalContext ? `\n\nSPECIFIC CONTEXT (incorporate this into every section of the output): ${additionalContext}` : ""
 
   switch (contentType) {
     case "cold-emails":
