@@ -35,6 +35,7 @@ import {
   getBrand,
 } from "@/components/social-toolkit/backgroundData"
 import { buildAssetPrompt } from "@/lib/gtm/asset-prompts"
+import html2canvas from "html2canvas"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
 
@@ -315,6 +316,10 @@ export default function ContentBuilder({
   const [slides, setSlides] = useState<SlideData[]>([])
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slideBgIndices, setSlideBgIndices] = useState<number[]>([])
+  const [downloading, setDownloading] = useState(false)
+
+  // Infographic capture ref
+  const infographicRef = useRef<HTMLDivElement>(null)
 
   const isSocialPost = selectedContent === "social-post"
   const isSlideContent = selectedContent === "pitch-deck" || selectedContent === "carousel"
@@ -1185,7 +1190,7 @@ export default function ContentBuilder({
               </div>
             )}
 
-            {/* Infographic: all panels stacked vertically */}
+            {/* Infographic: all panels stacked vertically as single image */}
             {isInfographic && slides.length > 0 && (
               <div style={{ marginTop: 20 }}>
                 <div
@@ -1198,10 +1203,43 @@ export default function ContentBuilder({
                 >
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
                     <span style={{ fontSize: 13, fontWeight: 700, color: "var(--gtm-text-primary)", fontFamily: font }}>
-                      Infographic Preview ({slides.length} panels)
+                      Infographic ({slides.length} panels)
                     </span>
+                    <button
+                      onClick={async () => {
+                        if (!infographicRef.current || downloading) return
+                        setDownloading(true)
+                        try {
+                          const canvas = await html2canvas(infographicRef.current, {
+                            scale: 2,
+                            useCORS: true,
+                            backgroundColor: null,
+                          })
+                          const link = document.createElement("a")
+                          link.download = `momentify-infographic-${solution}.png`
+                          link.href = canvas.toDataURL("image/png")
+                          link.click()
+                        } catch {
+                          // Fallback: alert user
+                        } finally {
+                          setDownloading(false)
+                        }
+                      }}
+                      style={{
+                        display: "flex", alignItems: "center", gap: 6, padding: "6px 14px", borderRadius: 6,
+                        border: "1px solid var(--gtm-border)", background: downloading ? "var(--gtm-accent-bg)" : "transparent",
+                        fontSize: 12, fontWeight: 600, fontFamily: font,
+                        color: downloading ? "var(--gtm-accent)" : "var(--gtm-text-muted)",
+                        cursor: downloading ? "wait" : "pointer", transition: "all 150ms ease",
+                      }}
+                    >
+                      {downloading ? "Generating..." : "Download PNG"}
+                    </button>
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 0, borderRadius: 8, overflow: "hidden", border: "1px solid var(--gtm-border)" }}>
+                  <div
+                    ref={infographicRef}
+                    style={{ display: "flex", flexDirection: "column", gap: 0, borderRadius: 8, overflow: "hidden", border: "1px solid var(--gtm-border)" }}
+                  >
                     {slides.map((slide, i) => {
                       const preset = slidePresets[slide.layout || "center"] || slidePresets.center
                       const bgIdx = slideBgIndices[i] ?? 0
