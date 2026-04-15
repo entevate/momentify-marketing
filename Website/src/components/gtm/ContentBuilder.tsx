@@ -625,6 +625,75 @@ export default function ContentBuilder({
               })}
             </div>
           )}
+
+          {/* Platform sub-selector for social posts */}
+          {selectedContent === "social-post" && (
+            <div style={{ marginTop: 10 }}>
+              <p style={{
+                fontSize: 10,
+                fontWeight: 600,
+                color: "var(--gtm-text-faint)",
+                letterSpacing: "0.08em",
+                fontFamily: font,
+                marginBottom: 6,
+                textTransform: "uppercase",
+              }}>
+                Show first
+              </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                {(Object.keys(platformConfig) as Platform[]).map((p) => {
+                  const active = selectedPlatform === p
+                  const cfg = platformConfig[p]
+                  const charNote = p === "linkedin" ? "150-250 words" : p === "instagram" ? "80-150 words" : "280 chars max"
+                  return (
+                    <button
+                      key={p}
+                      onClick={() => setSelectedPlatform(p)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: "7px 10px",
+                        borderRadius: 6,
+                        fontSize: 12,
+                        fontWeight: 600,
+                        fontFamily: font,
+                        cursor: "pointer",
+                        border: active
+                          ? "1px solid var(--gtm-accent)"
+                          : "1px solid var(--gtm-border)",
+                        background: active
+                          ? "var(--gtm-accent-bg)"
+                          : "transparent",
+                        color: active
+                          ? "var(--gtm-accent)"
+                          : "var(--gtm-text-muted)",
+                        transition: "all 150ms ease",
+                      }}
+                    >
+                      <span>{cfg.label}</span>
+                      <span style={{
+                        fontSize: 10,
+                        fontWeight: 400,
+                        opacity: 0.7,
+                      }}>
+                        {charNote} / {cfg.aspect}
+                      </span>
+                    </button>
+                  )
+                })}
+              </div>
+              <p style={{
+                fontSize: 10,
+                color: "var(--gtm-text-faint)",
+                fontFamily: font,
+                marginTop: 6,
+                lineHeight: 1.4,
+              }}>
+                All 3 versions generate together. This sets the default view.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Additional Context */}
