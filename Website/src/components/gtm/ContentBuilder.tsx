@@ -965,6 +965,9 @@ export default function ContentBuilder({
                   color: "var(--gtm-text-primary)",
                   margin: 0,
                   transition: "color 200ms ease",
+                  textWrap: "pretty" as React.CSSProperties["textWrap"],
+                  widows: 2,
+                  orphans: 2,
                 }}
               >
                 {isSocialPost && platformContent ? currentPlatformText : output}
