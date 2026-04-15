@@ -222,13 +222,14 @@ const slidePresets: Record<string, {
   headlineFontSize: number
   headlineFontWeight: number
   subheadFontSize: number
+  bodyFontSize: number
   showLogo: boolean
   showUrl: boolean
   useDarkBg: boolean
 }> = {
-  title: { textPosition: "center", headlineFontSize: 72, headlineFontWeight: 600, subheadFontSize: 32, showLogo: true, showUrl: true, useDarkBg: true },
-  top: { textPosition: "top", headlineFontSize: 56, headlineFontWeight: 600, subheadFontSize: 28, showLogo: false, showUrl: false, useDarkBg: false },
-  center: { textPosition: "center", headlineFontSize: 64, headlineFontWeight: 700, subheadFontSize: 30, showLogo: false, showUrl: false, useDarkBg: true },
+  title: { textPosition: "center", headlineFontSize: 80, headlineFontWeight: 500, subheadFontSize: 36, bodyFontSize: 24, showLogo: true, showUrl: true, useDarkBg: true },
+  top: { textPosition: "top", headlineFontSize: 52, headlineFontWeight: 500, subheadFontSize: 28, bodyFontSize: 24, showLogo: false, showUrl: false, useDarkBg: false },
+  center: { textPosition: "center", headlineFontSize: 72, headlineFontWeight: 700, subheadFontSize: 32, bodyFontSize: 24, showLogo: false, showUrl: false, useDarkBg: true },
 }
 
 /** Parse structured pitch deck response into slides */
@@ -1246,7 +1247,7 @@ export default function ContentBuilder({
                           headlineFontWeight={preset.headlineFontWeight}
                           subheadFontSize={preset.subheadFontSize}
                           subheadFontWeight={300}
-                          bodyFontSize={18}
+                          bodyFontSize={preset.bodyFontSize}
                           bodyFontWeight={300}
                           headlineAlign="left"
                           subheadAlign="left"

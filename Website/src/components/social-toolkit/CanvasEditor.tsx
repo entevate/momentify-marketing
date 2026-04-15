@@ -291,6 +291,7 @@ const CanvasEditor = forwardRef<HTMLDivElement, CanvasEditorProps>(
                         textAlign: bodyAlign,
                         marginLeft: bodyAlign === "right" ? "auto" : undefined,
                         marginRight: bodyAlign === "left" ? "auto" : undefined,
+                        whiteSpace: "pre-line",
                       }}
                     >
                       {bodyCopy}

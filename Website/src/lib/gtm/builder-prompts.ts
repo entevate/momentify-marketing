@@ -323,7 +323,7 @@ LAYOUT: center
 Rules: no em dashes, no buzzwords, each slide must stand alone visually. Headlines should be punchy and scannable. Keep body text minimal. This is a visual deck, not a document.`
 
     case "infographic":
-      return `Write an infographic script for Momentify. This will be rendered as a series of branded 16:9 panels stacked vertically.
+      return `Write a DATA-DRIVEN INFOGRAPHIC for Momentify. This is NOT a pitch deck. It is a vertical data story where every panel leads with a number, stat, or data insight. Think "stat card" not "slide deck."
 
 Solution: ${solution}
 Vertical: ${vertLabel}
@@ -337,45 +337,45 @@ COLOR PALETTE (${palette.name}):
 - Hero gradient: ${palette.heroGrad}
 - Light section background: ${palette.lightBg}
 ` : ""}
-Generate exactly 6 panels. For each panel, output using these exact markers:
+Generate exactly 6 panels. Every headline MUST be a number, stat, percentage, or data point. No generic statements. For each panel, output using these exact markers:
 
 ---SLIDE 1: TITLE---
-HEADLINE: [infographic title, under 10 words]
-SUBHEAD: [one sentence framing what this data story covers]
+HEADLINE: [infographic title framed as a question or data claim, e.g. "Where Does Your Event Budget Actually Go?"]
+SUBHEAD: [one sentence framing this as a data story about ${vertLabel} events]
 BODY:
 LAYOUT: title
 
----SLIDE 2: THE PROBLEM---
-HEADLINE: [problem stat or insight, under 10 words]
-SUBHEAD: [one sentence expanding on the data point]
-BODY: [2-3 supporting facts. Use bullet character. Each under 15 words]
-LAYOUT: top
+---SLIDE 2: STAT 1---
+HEADLINE: [a specific number or percentage about the problem, e.g. "68% of exhibitors can't prove event ROI"]
+SUBHEAD: [one sentence source or context]
+BODY: [2 supporting data points. Start each with a number. Use bullet character]
+LAYOUT: center
 
----SLIDE 3: KEY STAT---
-HEADLINE: [one big number or percentage, e.g. "73% of event leads go cold"]
-SUBHEAD: [source or context for the stat]
+---SLIDE 3: STAT 2---
+HEADLINE: [another data point about the cost/impact of the problem, e.g. "$2.1M average annual trade show spend with zero attribution"]
+SUBHEAD: [one sentence making this real for ${vertLabel} buyers]
 BODY:
 LAYOUT: center
 
----SLIDE 4: THE SOLUTION---
-HEADLINE: [how Momentify addresses this, under 10 words]
-SUBHEAD: [one sentence on the approach]
-BODY: [3 bullet points mapping to ROX dimensions. Use bullet character]
+---SLIDE 4: THE GAP---
+HEADLINE: [a comparison stat, e.g. "4.2 days average follow-up time vs. 24-hour best practice"]
+SUBHEAD: [one sentence on what this gap costs in the ${vertLabel} vertical]
+BODY: [3 ROX dimension gaps as data points. Start each with a number. Use bullet character]
 LAYOUT: top
 
----SLIDE 5: ROX IMPACT---
-HEADLINE: [a proof metric, e.g. "40% improvement in lead qualification"]
-SUBHEAD: [one sentence of context]
+---SLIDE 5: THE RESULT---
+HEADLINE: [a Momentify proof metric, e.g. "40% lead qualification improvement across 50+ events"]
+SUBHEAD: [one sentence connecting this result to the earlier stats]
 BODY:
 LAYOUT: center
 
 ---SLIDE 6: CTA---
-HEADLINE: [clear next step, under 8 words]
-SUBHEAD: [low-friction ask]
+HEADLINE: [data-framed CTA, e.g. "Find your ROX score in 20 minutes"]
+SUBHEAD: [one sentence low-friction ask]
 BODY:
 LAYOUT: center
 
-Rules: no em dashes, no buzzwords. Each panel should tell one part of a data story. Numbers and stats should be prominent. This is a visual data narrative, not a text document.`
+Rules: no em dashes, no buzzwords. EVERY headline must contain a number, stat, or data point. This is a data narrative, not a sales pitch. Panels should flow as a logical data story: here's the problem (by the numbers), here's what it costs, here's the gap, here's the proof, here's the next step.`
 
     case "carousel":
       return `Write a social carousel for Momentify. This will be rendered as a series of branded swipeable cards.
