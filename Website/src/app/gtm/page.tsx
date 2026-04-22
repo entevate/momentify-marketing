@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import { SolutionIcon } from "@/components/gtm/SolutionIcon"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
 
@@ -10,7 +11,8 @@ const solutions = [
   {
     id: "trade-shows",
     label: "Trade Shows & Exhibits",
-    icon: "\u{1F3DB}",
+    icon: "building-columns" as const,
+    color: "#7C3AED",
     priority: "NOW" as const,
     desc: "Turn booth investment into measurable ROX.",
     antiIcp: "Event planners without exhibitor clients. Consumer shows.",
@@ -19,7 +21,8 @@ const solutions = [
   {
     id: "recruiting",
     label: "Technical Recruiting",
-    icon: "\u{1F3AF}",
+    icon: "target" as const,
+    color: "#00BBA5",
     priority: "NOW" as const,
     desc: "Capture, engage, and follow up with top talent.",
     antiIcp: "High-volume hourly recruiting. Non-technical roles.",
@@ -28,7 +31,8 @@ const solutions = [
   {
     id: "field-sales",
     label: "Field Sales Enablement",
-    icon: "\u{1F5FA}",
+    icon: "map" as const,
+    color: "#F59E0B",
     priority: "NEXT" as const,
     desc: "Smart content delivery and intent capture in the field.",
     antiIcp: "Inside sales teams. Companies without field reps.",
@@ -37,7 +41,8 @@ const solutions = [
   {
     id: "facilities",
     label: "Facilities",
-    icon: "\u{1F3E2}",
+    icon: "building" as const,
+    color: "#4F46E5",
     priority: "NEXT" as const,
     desc: "Showrooms, demo floors, and training centers.",
     antiIcp: "Office buildings without customer-facing traffic.",
@@ -46,7 +51,8 @@ const solutions = [
   {
     id: "events-venues",
     label: "Events & Venues",
-    icon: "\u{1F3EA}",
+    icon: "stage" as const,
+    color: "#E5484D",
     priority: "LATER" as const,
     desc: "Beyond ticket sales. Interactive branded experiences.",
     antiIcp: "Small community events. Non-commercial venues.",
@@ -186,10 +192,10 @@ function PriorityBadge({ priority }: { priority: "NOW" | "NEXT" | "LATER" }) {
   return (
     <span
       style={{
-        fontSize: 11,
+        fontSize: 13,
         fontWeight: 600,
         letterSpacing: "0.02em",
-        padding: "4px 10px",
+        padding: "6px 12px",
         borderRadius: 4,
         background: c.bg,
         color: c.text,
@@ -466,8 +472,7 @@ export default function GTMDashboard() {
           }}
         >
           {solutions.map((s) => {
-            const built = progress[s.id] || 0
-            const pct = (built / 7) * 100
+            const assetCount = progress[s.id] || 0
             return (
               <div
                 key={s.id}
@@ -496,7 +501,7 @@ export default function GTMDashboard() {
                     alignItems: "center",
                   }}
                 >
-                  <span style={{ fontSize: 24 }}>{s.icon}</span>
+                  <SolutionIcon icon={s.icon} size={32} color={s.color} />
                   <PriorityBadge priority={s.priority} />
                 </div>
 
@@ -542,40 +547,17 @@ export default function GTMDashboard() {
                   Anti-ICP: {s.antiIcp}
                 </p>
 
-                {/* Layer progress */}
+                {/* Assets created */}
                 <div style={{ marginTop: 16 }}>
                   <div
                     style={{
-                      display: "flex",
-                      justifyContent: "space-between",
                       fontSize: 12,
                       color: "var(--gtm-text-faint)",
                       fontFamily: font,
-                      marginBottom: 6,
                       transition: "color 200ms ease",
                     }}
                   >
-                    <span>Layers built</span>
-                    <span>{built} / 7</span>
-                  </div>
-                  <div
-                    style={{
-                      height: 4,
-                      borderRadius: 2,
-                      background: "var(--gtm-border)",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <div
-                      style={{
-                        height: "100%",
-                        width: `${pct}%`,
-                        borderRadius: 2,
-                        background:
-                          "linear-gradient(135deg, #0CF4DF, #1A56DB)",
-                        transition: "width 300ms ease",
-                      }}
-                    />
+                    <span>{assetCount} content {assetCount === 1 ? "asset" : "assets"} created</span>
                   </div>
                 </div>
 
