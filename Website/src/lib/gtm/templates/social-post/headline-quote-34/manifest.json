@@ -5,12 +5,14 @@
   "aspectRatio": "3:4",
   "description": "White card with a bold headline at top, a pull quote in the middle, attribution + CTA at the bottom. Left-edge primary color accent bar. For event promos and fan testimonials.",
   "slots": [
+    { "key": "LABEL",        "label": "Eyebrow label above headline",   "kind": "eyebrow",     "maxChars": 40,  "example": "Customer Story" },
     { "key": "HEADLINE",     "label": "Bold headline at top",           "kind": "headline",    "maxChars": 72,  "example": "Every Great Moment Deserves to Be Remembered" },
     { "key": "QUOTE",        "label": "Pull quote or supporting text",  "kind": "quote",       "maxChars": 220, "example": "Momentify transformed how we engage fans. Our post-event NPS jumped 28 points in one season." },
     { "key": "ATTRIBUTION",  "label": "Attribution or date",            "kind": "attribution", "maxChars": 60,  "example": "— Sarah Chen, VP Fan Experience, Pacific FC" },
     { "key": "CTA",          "label": "CTA button text",                "kind": "cta_label",   "maxChars": 36,  "example": "Book a Demo" }
   ],
   "sampleData": {
+    "LABEL": "Customer Story",
     "HEADLINE": "Every Great Moment Deserves to Be Remembered",
     "QUOTE": "Momentify transformed how we engage fans. Our post-event NPS jumped 28 points in one season.",
     "ATTRIBUTION": "— Sarah Chen, VP Fan Experience, Pacific FC",

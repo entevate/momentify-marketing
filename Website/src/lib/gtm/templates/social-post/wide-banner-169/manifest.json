@@ -5,13 +5,15 @@
   "aspectRatio": "16:9",
   "description": "Dark event/solution banner with a large left-aligned headline, sub-headline, and CTA. Right-side decorative gradient accent. For event announcements and solution launches.",
   "slots": [
+    { "key": "LABEL",        "label": "Eyebrow label",                 "kind": "eyebrow",  "maxChars": 40,  "example": "Sports Innovation Summit · June 2025" },
     { "key": "HEADLINE",     "label": "Event or solution headline",    "kind": "headline", "maxChars": 60,  "example": "The Future of Fan Engagement Is Here" },
-    { "key": "SUBHEADLINE",  "label": "Sub-headline, date, or location", "kind": "support",  "maxChars": 80,  "example": "Live at the Sports Innovation Summit · June 2025" },
+    { "key": "SUBHEADLINE",  "label": "Sub-headline or supporting line", "kind": "support",  "maxChars": 80,  "example": "Real-time badge scanning, lead capture, and ROX scoring on the floor." },
     { "key": "CTA",          "label": "CTA text",                      "kind": "cta_label", "maxChars": 36,  "example": "Reserve Your Spot" }
   ],
   "sampleData": {
+    "LABEL": "Sports Innovation Summit · June 2025",
     "HEADLINE": "The Future of Fan Engagement Is Here",
-    "SUBHEADLINE": "Live at the Sports Innovation Summit · June 2025",
+    "SUBHEADLINE": "Real-time badge scanning, lead capture, and ROX scoring on the floor.",
     "CTA": "Reserve Your Spot"
   }
 }
