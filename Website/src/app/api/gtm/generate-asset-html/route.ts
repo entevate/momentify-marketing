@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
+import { put } from "@vercel/blob"
+import { kv } from "@vercel/kv"
+import { assetBlobPath, assetKvKey } from "@/lib/gtm/asset-helpers"
 
-// Fix #1: Parameter validation function
+const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || ""
+
+// Parameter sanitization: solution/assetType must be safe for filesystem + URLs
 const isValidParameter = (param: string): boolean => /^[a-zA-Z0-9_-]+$/.test(param)
 
 const assetPrompts: Record<string, (brief: string, solution: string) => string> = {
@@ -103,7 +108,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const htmlContent = content.text
+    const htmlContent: string = content.text
 
     // Fix #5: Weak HTML validation - upgrade validation checks
     if (!htmlContent.includes("<!DOCTYPE") && !htmlContent.includes("<html")) {
@@ -119,18 +124,53 @@ export async function POST(request: Request) {
       )
     }
 
-    // Save to /public/gtm/
+    const filename = `${solution}-${assetType}.html`
+
+    // Persist to Vercel Blob (Vercel's serverless FS is read-only, so writes
+    // to public/gtm fail in prod). Deterministic path + addRandomSuffix:false
+    // lets us regenerate in place, and we cache the resulting URL in KV.
+    const blobPath = assetBlobPath(solution, assetType)
+    let previewUrl: string
+    if (blobPath) {
+      try {
+        const blob = await put(blobPath, htmlContent, {
+          access: "public",
+          addRandomSuffix: false,
+          contentType: "text/html; charset=utf-8",
+          token: BLOB_TOKEN || undefined,
+        })
+        previewUrl = blob.url
+
+        // Cache the blob URL so asset-check can find it on page-load.
+        try {
+          await kv.set(assetKvKey(solution, assetType), previewUrl)
+        } catch {
+          /* KV cache is best-effort */
+        }
+
+        return NextResponse.json({
+          success: true,
+          url: previewUrl,
+          filename,
+        })
+      } catch (blobErr) {
+        // Local-dev fallback: when no BLOB_READ_WRITE_TOKEN is configured,
+        // fall back to the filesystem so devs without blob setup still get a preview.
+        console.error("[generate-asset-html] blob put failed, trying local fs fallback", blobErr)
+      }
+    }
+
+    // Filesystem fallback (local dev only — Vercel prod has a read-only FS)
     const dir = path.join(process.cwd(), "public/gtm")
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true })
     }
 
-    const filename = `${solution}-${assetType}.html`
     const filePath = path.join(dir, filename)
     fs.writeFileSync(filePath, htmlContent, "utf-8")
 
     // Fix #2: Hardcoded preview URL - return asset-type-specific URL
-    const previewUrl = `/${solution}-${assetType}.html`
+    previewUrl = `/${solution}-${assetType}.html`
     return NextResponse.json({
       success: true,
       url: previewUrl,

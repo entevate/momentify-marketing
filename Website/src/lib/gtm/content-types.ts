@@ -25,6 +25,22 @@ export interface MicrositeRecord {
   publishedAt: string
 }
 
+export interface RecurringSchedule {
+  id: string
+  createdAt: string
+  lastRunAt?: string
+  nextRunOn: string
+  enabled: boolean
+  pillars: string[]
+  contentTypes: string[]
+  industry: string
+  motion: "direct" | "partner"
+  personas: string[]
+  additionalContext?: string
+  postsPerWeek: number
+  weekdaysOnly: boolean
+}
+
 // KV key helpers
 export const KV = {
   content: (id: string) => `gtm:content:${id}`,
@@ -33,6 +49,8 @@ export const KV = {
   calendarIndex: "gtm:calendar:index",
   microsite: (slug: string) => `gtm:microsite:${slug}`,
   micrositeIndex: "gtm:microsite:index",
+  recurring: (id: string) => `gtm:recurring:${id}`,
+  recurringIndex: "gtm:recurring:index",
 } as const
 
 // Auth check for API routes (reads gtm_auth cookie)

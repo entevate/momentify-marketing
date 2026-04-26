@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, ChevronDown } from "lucide-react"
 import { SolutionIcon } from "@/components/gtm/SolutionIcon"
+import SolutionTabs from "@/components/gtm/tabs/SolutionTabs"
+import type { VerticalOption } from "@/components/gtm/tabs/SolutionTabs"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
 
@@ -17,6 +19,11 @@ const solutions = [
     desc: "Turn booth investment into measurable ROX.",
     antiIcp: "Event planners without exhibitor clients. Consumer shows.",
     href: "/gtm/trade-shows",
+    verticals: [
+      { id: "trade-shows-heavy-equipment", label: "Heavy Equipment" },
+      { id: "trade-shows-energy-infrastructure", label: "Energy & Infrastructure" },
+      { id: "trade-shows-aerospace-aviation", label: "Aerospace & Aviation" },
+    ] as VerticalOption[],
   },
   {
     id: "recruiting",
@@ -27,6 +34,11 @@ const solutions = [
     desc: "Capture, engage, and follow up with top talent.",
     antiIcp: "High-volume hourly recruiting. Non-technical roles.",
     href: "/gtm/recruiting",
+    verticals: [
+      { id: "recruiting-heavy-equipment", label: "Heavy Equipment" },
+      { id: "recruiting-energy-infrastructure", label: "Energy & Infrastructure" },
+      { id: "recruiting-aerospace-aviation", label: "Aerospace & Aviation" },
+    ] as VerticalOption[],
   },
   {
     id: "field-sales",
@@ -37,6 +49,11 @@ const solutions = [
     desc: "Smart content delivery and intent capture in the field.",
     antiIcp: "Inside sales teams. Companies without field reps.",
     href: "/gtm/field-sales",
+    verticals: [
+      { id: "field-sales-heavy-equipment", label: "Heavy Equipment" },
+      { id: "field-sales-energy-infrastructure", label: "Energy & Infrastructure" },
+      { id: "field-sales-aerospace-aviation", label: "Aerospace & Aviation" },
+    ] as VerticalOption[],
   },
   {
     id: "facilities",
@@ -47,6 +64,10 @@ const solutions = [
     desc: "Showrooms, demo floors, and training centers.",
     antiIcp: "Office buildings without customer-facing traffic.",
     href: "/gtm/facilities",
+    verticals: [
+      { id: "facilities-heavy-equipment", label: "Heavy Equipment" },
+      { id: "facilities-energy-infrastructure", label: "Energy & Infrastructure" },
+    ] as VerticalOption[],
   },
   {
     id: "events-venues",
@@ -57,6 +78,9 @@ const solutions = [
     desc: "Beyond ticket sales. Interactive branded experiences.",
     antiIcp: "Small community events. Non-commercial venues.",
     href: "/gtm/events-venues",
+    verticals: [
+      { id: "events-venues-sports-entertainment", label: "Sports & Entertainment" },
+    ] as VerticalOption[],
   },
 ]
 
@@ -312,6 +336,7 @@ function CoverageCell({ status }: { status: CoverageStatus }) {
 
 export default function GTMDashboard() {
   const [progress, setProgress] = useState<Record<string, number>>({})
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     const p: Record<string, number> = {}
@@ -321,6 +346,10 @@ export default function GTMDashboard() {
     })
     setProgress(p)
   }, [])
+
+  function toggleExpanded(id: string) {
+    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }))
+  }
 
   return (
     <div
@@ -462,122 +491,162 @@ export default function GTMDashboard() {
         </div>
       </section>
 
-      {/* ── Section 3: Solution Cards ── */}
+      {/* ── Section 3: Solutions with SolutionTabs ── */}
       <section style={{ marginTop: 56 }}>
-        <div
+        <h2
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: 16,
+            fontSize: 24,
+            fontWeight: 500,
+            color: "var(--gtm-text-primary)",
+            fontFamily: font,
+            margin: 0,
+            marginBottom: 24,
+            transition: "color 200ms ease",
           }}
         >
+          Solutions
+        </h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {solutions.map((s) => {
-            const assetCount = progress[s.id] || 0
+            const isOpen = !!expanded[s.id]
             return (
               <div
                 key={s.id}
                 style={{
                   background: "var(--gtm-bg-card)",
                   border: "1px solid var(--gtm-border)",
+                  borderLeft: isOpen ? `3px solid ${s.color}` : "1px solid var(--gtm-border)",
                   borderRadius: 12,
-                  padding: 24,
+                  overflow: "hidden",
                   transition: "all 200ms ease",
-                  cursor: "pointer",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = "var(--gtm-shadow-hover)"
-                  e.currentTarget.style.transform = "translateY(-3px)"
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "none"
-                  e.currentTarget.style.transform = "translateY(0)"
                 }}
               >
-                {/* Row 1: icon + priority */}
-                <div
+                {/* Accordion header */}
+                <button
+                  onClick={() => toggleExpanded(s.id)}
                   style={{
+                    width: "100%",
                     display: "flex",
-                    justifyContent: "space-between",
                     alignItems: "center",
+                    gap: 16,
+                    padding: "20px 24px",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    transition: "background 150ms ease",
                   }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "var(--gtm-layer-hover, rgba(255,255,255,0.03))")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "transparent")
+                  }
                 >
-                  <SolutionIcon icon={s.icon} size={32} color={s.color} />
-                  <PriorityBadge priority={s.priority} />
-                </div>
+                  <SolutionIcon icon={s.icon} size={28} color={s.color} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 15,
+                          fontWeight: 700,
+                          color: "var(--gtm-text-primary)",
+                          fontFamily: font,
+                          transition: "color 200ms ease",
+                        }}
+                      >
+                        {s.label}
+                      </span>
+                      <PriorityBadge priority={s.priority} />
+                    </div>
+                    <p
+                      style={{
+                        fontSize: 13,
+                        color: "var(--gtm-text-muted)",
+                        fontFamily: font,
+                        margin: "4px 0 0",
+                        transition: "color 200ms ease",
+                      }}
+                    >
+                      {s.desc}
+                    </p>
+                  </div>
+                  <ChevronDown
+                    size={18}
+                    style={{
+                      color: "var(--gtm-text-faint)",
+                      flexShrink: 0,
+                      transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
+                      transition: "transform 250ms ease",
+                    }}
+                  />
+                </button>
 
-                {/* Solution name */}
-                <p
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 700,
-                    color: "var(--gtm-text-primary)",
-                    fontFamily: font,
-                    marginTop: 12,
-                    transition: "color 200ms ease",
-                  }}
-                >
-                  {s.label}
-                </p>
-
-                {/* Description */}
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: "var(--gtm-text-muted)",
-                    fontFamily: font,
-                    marginTop: 6,
-                    lineHeight: 1.6,
-                    transition: "color 200ms ease",
-                  }}
-                >
-                  {s.desc}
-                </p>
-
-                {/* Anti-ICP hint */}
-                <p
-                  style={{
-                    fontSize: 11,
-                    fontStyle: "italic",
-                    color: "var(--gtm-text-faint)",
-                    fontFamily: font,
-                    marginTop: 8,
-                    transition: "color 200ms ease",
-                  }}
-                >
-                  Anti-ICP: {s.antiIcp}
-                </p>
-
-                {/* Assets created */}
-                <div style={{ marginTop: 16 }}>
+                {/* Expanded content — SolutionTabs */}
+                {isOpen && (
                   <div
                     style={{
-                      fontSize: 12,
-                      color: "var(--gtm-text-faint)",
-                      fontFamily: font,
-                      transition: "color 200ms ease",
+                      borderTop: "1px solid var(--gtm-border)",
+                      padding: "24px 24px 28px",
                     }}
                   >
-                    <span>{assetCount} content {assetCount === 1 ? "asset" : "assets"} created</span>
+                    <SolutionTabs
+                      solution={s.id}
+                      solutionLabel={s.label}
+                      verticals={s.verticals}
+                    >
+                      {/* Framework tab content */}
+                      <div>
+                        <p
+                          style={{
+                            fontSize: 14,
+                            color: "var(--gtm-text-muted)",
+                            fontFamily: font,
+                            lineHeight: 1.7,
+                            margin: "0 0 8px",
+                            transition: "color 200ms ease",
+                          }}
+                        >
+                          {s.desc}
+                        </p>
+                        <p
+                          style={{
+                            fontSize: 12,
+                            fontStyle: "italic",
+                            color: "var(--gtm-text-faint)",
+                            fontFamily: font,
+                            margin: "0 0 20px",
+                            transition: "color 200ms ease",
+                          }}
+                        >
+                          Anti-ICP: {s.antiIcp}
+                        </p>
+                        <Link
+                          href={s.href}
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 6,
+                            fontSize: 13,
+                            fontWeight: 700,
+                            color: "var(--gtm-cyan)",
+                            fontFamily: font,
+                            textDecoration: "none",
+                          }}
+                        >
+                          Open Full Framework <ArrowRight size={14} />
+                        </Link>
+                      </div>
+                    </SolutionTabs>
                   </div>
-                </div>
-
-                {/* Footer link */}
-                <Link
-                  href={s.href}
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 4,
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: "var(--gtm-cyan)",
-                    fontFamily: font,
-                    textDecoration: "none",
-                    marginTop: 16,
-                  }}
-                >
-                  View Framework <ArrowRight size={14} />
-                </Link>
+                )}
               </div>
             )
           })}

@@ -1,0 +1,17 @@
+{
+  "id": "wide-banner-169",
+  "label": "Wide Banner · Landscape",
+  "assetType": "social-post",
+  "aspectRatio": "16:9",
+  "description": "Dark event/solution banner with a large left-aligned headline, sub-headline, and CTA. Right-side decorative gradient accent. For event announcements and solution launches.",
+  "slots": [
+    { "key": "HEADLINE",     "label": "Event or solution headline",    "kind": "headline", "maxChars": 60,  "example": "The Future of Fan Engagement Is Here" },
+    { "key": "SUBHEADLINE",  "label": "Sub-headline, date, or location", "kind": "support",  "maxChars": 80,  "example": "Live at the Sports Innovation Summit · June 2025" },
+    { "key": "CTA",          "label": "CTA text",                      "kind": "cta_label", "maxChars": 36,  "example": "Reserve Your Spot" }
+  ],
+  "sampleData": {
+    "HEADLINE": "The Future of Fan Engagement Is Here",
+    "SUBHEADLINE": "Live at the Sports Innovation Summit · June 2025",
+    "CTA": "Reserve Your Spot"
+  }
+}
