@@ -257,7 +257,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
               disabled={busy}
               style={{
                 ...smallBtn,
-                background: busy ? "var(--gtm-text-faint)" : "#247b96",
+                background: busy ? "var(--gtm-text-faint)" : "#00BBA5",
                 color: "#fff",
                 borderColor: "transparent",
                 cursor: busy ? "not-allowed" : "pointer",
@@ -272,7 +272,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
               disabled={busy}
               style={{
                 ...smallBtn,
-                background: busy ? "var(--gtm-text-faint)" : "#247b96",
+                background: busy ? "var(--gtm-text-faint)" : "#00BBA5",
                 color: "#fff",
                 borderColor: "transparent",
                 cursor: busy ? "not-allowed" : "pointer",
@@ -360,7 +360,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
                   onClick={() => handleFillTemplate(t.id)}
                   style={{
                     ...pickerCard,
-                    borderColor: isActive ? "#247b96" : "var(--gtm-border)",
+                    borderColor: isActive ? "#00BBA5" : "var(--gtm-border)",
                     boxShadow: isActive ? "0 0 0 2px rgba(36,123,150,0.16)" : "none",
                   }}
                 >
@@ -392,7 +392,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
                       </span>
                     </div>
                     {isActive && (
-                      <div style={{ fontSize: 10, color: "#247b96", marginTop: 4, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                      <div style={{ fontSize: 10, color: "#00BBA5", marginTop: 4, display: "inline-flex", alignItems: "center", gap: 4 }}>
                         <Check size={10} /> Last used
                       </div>
                     )}
@@ -538,12 +538,12 @@ const progressBanner: React.CSSProperties = {
   alignItems: "center",
   gap: 8,
   padding: 12,
-  background: "rgba(36, 123, 150, 0.06)",
-  border: "1px solid rgba(36, 123, 150, 0.2)",
+  background: "rgba(0, 187, 165, 0.06)",
+  border: "1px solid rgba(0, 187, 165, 0.2)",
   borderRadius: 6,
   fontSize: 12,
   fontWeight: 500,
-  color: "#247b96",
+  color: "#00BBA5",
   fontFamily: font,
   marginBottom: 12,
 }

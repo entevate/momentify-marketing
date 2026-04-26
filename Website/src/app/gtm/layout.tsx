@@ -26,8 +26,8 @@ const navItems = [
   { label: "Trade Shows", href: "/gtm/trade-shows", icon: Building2, color: "#9B5FE8" },
   { label: "Technical Recruiting", href: "/gtm/recruiting", icon: Target, color: "#5FD9C2" },
   { label: "Field Sales", href: "/gtm/field-sales", icon: MapPin, color: "#F2B33D" },
-  { label: "Facilities", href: "/gtm/facilities", icon: Layers, color: "#7B62C9" },
-  { label: "Events & Venues", href: "/gtm/events-venues", icon: Ticket, color: "#F25E3D" },
+  { label: "Facilities", href: "/gtm/facilities", icon: Layers, color: "#5B4499" },
+  { label: "Events & Venues", href: "/gtm/events-venues", icon: Ticket, color: "#D43D1A" },
 ]
 
 function Sidebar({

@@ -267,9 +267,9 @@ function FilterChip({ label, active, onClick, count }: { label: string; active: 
         fontSize: 11,
         fontWeight: 600,
         fontFamily: font,
-        border: `1px solid ${active ? "#247b96" : "var(--gtm-border)"}`,
-        background: active ? "rgba(36, 123, 150, 0.08)" : "#fff",
-        color: active ? "#247b96" : "var(--gtm-text-secondary)",
+        border: `1px solid ${active ? "#00BBA5" : "var(--gtm-border)"}`,
+        background: active ? "rgba(0, 187, 165, 0.08)" : "#fff",
+        color: active ? "#00BBA5" : "var(--gtm-text-secondary)",
         borderRadius: 100,
         cursor: "pointer",
       }}
@@ -291,8 +291,8 @@ const typePill: React.CSSProperties = {
   fontWeight: 700,
   textTransform: "uppercase",
   letterSpacing: "0.06em",
-  color: "#247b96",
-  background: "rgba(36, 123, 150, 0.08)",
+  color: "#00BBA5",
+  background: "rgba(0, 187, 165, 0.08)",
   padding: "3px 8px",
   borderRadius: 100,
 }

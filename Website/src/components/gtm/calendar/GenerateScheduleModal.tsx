@@ -376,7 +376,7 @@ export default function GenerateScheduleModal({ onClose, onComplete }: GenerateS
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 24px", borderBottom: "1px solid var(--gtm-border)" }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-            <Zap size={16} style={{ color: "#247b96" }} />
+            <Zap size={16} style={{ color: "#00BBA5" }} />
             <h2 style={{ margin: 0, fontSize: 16, fontWeight: 600, color: "var(--gtm-text-primary)", fontFamily: font }}>
               Generate Schedule
             </h2>
@@ -400,8 +400,8 @@ export default function GenerateScheduleModal({ onClose, onComplete }: GenerateS
                     style={{
                       ...chip,
                       background: active ? "rgba(36,123,150,0.08)" : "#fff",
-                      borderColor: active ? "#247b96" : "var(--gtm-border)",
-                      color: active ? "#247b96" : "var(--gtm-text-secondary)",
+                      borderColor: active ? "#00BBA5" : "var(--gtm-border)",
+                      color: active ? "#00BBA5" : "var(--gtm-text-secondary)",
                     }}
                   >
                     {p.label}
@@ -471,9 +471,9 @@ export default function GenerateScheduleModal({ onClose, onComplete }: GenerateS
                 return (
                   <button key={ct.value} onClick={() => toggleContentType(ct.value)} style={{
                     ...chip,
-                    background: active ? "rgba(36, 123, 150, 0.08)" : "#fff",
-                    borderColor: active ? "#247b96" : "var(--gtm-border)",
-                    color: active ? "#247b96" : "var(--gtm-text-secondary)",
+                    background: active ? "rgba(0, 187, 165, 0.08)" : "#fff",
+                    borderColor: active ? "#00BBA5" : "var(--gtm-border)",
+                    color: active ? "#00BBA5" : "var(--gtm-text-secondary)",
                   }}>
                     {ct.label}
                   </button>
@@ -500,9 +500,9 @@ export default function GenerateScheduleModal({ onClose, onComplete }: GenerateS
                     <button key={m} onClick={() => setMotion(m)} style={{
                       ...chip,
                       flex: 1,
-                      background: active ? "rgba(36, 123, 150, 0.08)" : "#fff",
-                      borderColor: active ? "#247b96" : "var(--gtm-border)",
-                      color: active ? "#247b96" : "var(--gtm-text-secondary)",
+                      background: active ? "rgba(0, 187, 165, 0.08)" : "#fff",
+                      borderColor: active ? "#00BBA5" : "var(--gtm-border)",
+                      color: active ? "#00BBA5" : "var(--gtm-text-secondary)",
                       textTransform: "capitalize",
                     }}>
                       {m === "direct" ? "Direct" : "Partner"}
@@ -521,9 +521,9 @@ export default function GenerateScheduleModal({ onClose, onComplete }: GenerateS
                   return (
                     <button key={p} onClick={() => togglePersona(p)} style={{
                       ...chip,
-                      background: active ? "rgba(36, 123, 150, 0.08)" : "#fff",
-                      borderColor: active ? "#247b96" : "var(--gtm-border)",
-                      color: active ? "#247b96" : "var(--gtm-text-secondary)",
+                      background: active ? "rgba(0, 187, 165, 0.08)" : "#fff",
+                      borderColor: active ? "#00BBA5" : "var(--gtm-border)",
+                      color: active ? "#00BBA5" : "var(--gtm-text-secondary)",
                     }}>
                       {p}
                     </button>
@@ -544,7 +544,7 @@ export default function GenerateScheduleModal({ onClose, onComplete }: GenerateS
 
           <label style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: 12, background: "var(--gtm-bg-page)", border: "1px solid var(--gtm-border)", borderRadius: 6, cursor: "pointer", fontFamily: font, fontSize: 13, color: "var(--gtm-text-primary)" }}>
             <input type="checkbox" checked={recurring} onChange={(e) => setRecurring(e.target.checked)} />
-            <Repeat size={14} style={{ color: "#247b96" }} />
+            <Repeat size={14} style={{ color: "#00BBA5" }} />
             <span>Save as weekly recurring. Runs every Sunday at 08:00 UTC and auto-generates the upcoming week.</span>
           </label>
 
@@ -560,8 +560,8 @@ export default function GenerateScheduleModal({ onClose, onComplete }: GenerateS
 
           {/* Progress */}
           {generating && (
-            <div style={{ padding: 12, background: "rgba(36, 123, 150, 0.06)", border: "1px solid rgba(36, 123, 150, 0.2)", borderRadius: 6, fontFamily: font }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: "#247b96" }}>
+            <div style={{ padding: 12, background: "rgba(0, 187, 165, 0.06)", border: "1px solid rgba(0, 187, 165, 0.2)", borderRadius: 6, fontFamily: font }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "#00BBA5" }}>
                 Generating {progress.done + 1} of {progress.total}
               </div>
               {progress.current && (
@@ -573,7 +573,7 @@ export default function GenerateScheduleModal({ onClose, onComplete }: GenerateS
                 <div style={{
                   height: "100%",
                   width: `${(progress.done / Math.max(1, progress.total)) * 100}%`,
-                  background: "linear-gradient(90deg, #247b96, #38c6f4)",
+                  background: "linear-gradient(90deg, #00BBA5, #0CF4DF)",
                   transition: "width 200ms ease",
                 }} />
               </div>
@@ -602,7 +602,7 @@ export default function GenerateScheduleModal({ onClose, onComplete }: GenerateS
             disabled={!canGenerate}
             style={{
               ...primaryBtn,
-              background: !canGenerate ? "var(--gtm-text-faint)" : "#247b96",
+              background: !canGenerate ? "var(--gtm-text-faint)" : "#00BBA5",
               cursor: !canGenerate ? "not-allowed" : "pointer",
             }}
           >
@@ -705,7 +705,7 @@ const primaryBtn: React.CSSProperties = {
   border: "none",
   borderRadius: 6,
   color: "#fff",
-  background: "#247b96",
+  background: "#00BBA5",
   cursor: "pointer",
 }
 

@@ -95,8 +95,8 @@ export default function RecurringSchedulesPanel({ refreshKey = 0 }: Props) {
   return (
     <div style={{ marginBottom: 20, fontFamily: font }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-        <Repeat size={14} style={{ color: "#247b96" }} />
-        <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#247b96" }}>
+        <Repeat size={14} style={{ color: "#00BBA5" }} />
+        <span style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "#00BBA5" }}>
           Weekly Recurring
         </span>
         <span style={{ fontSize: 11, color: "var(--gtm-text-faint)" }}>
@@ -137,7 +137,7 @@ export default function RecurringSchedulesPanel({ refreshKey = 0 }: Props) {
                 title={s.enabled ? "Pause" : "Resume"}
                 style={{
                   ...iconBtn,
-                  color: s.enabled ? "#247b96" : "var(--gtm-text-faint)",
+                  color: s.enabled ? "#00BBA5" : "var(--gtm-text-faint)",
                   background: s.enabled ? "rgba(36,123,150,0.08)" : "#fff",
                   borderColor: s.enabled ? "rgba(36,123,150,0.3)" : "var(--gtm-border)",
                 }}

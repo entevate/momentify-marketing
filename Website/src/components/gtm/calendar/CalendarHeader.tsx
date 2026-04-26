@@ -232,7 +232,7 @@ export default function CalendarHeader({
               alignItems: "center",
               gap: 6,
               color: "#fff",
-              background: "#247b96",
+              background: "#00BBA5",
               border: "none",
               borderRadius: 8,
               padding: "6px 14px",

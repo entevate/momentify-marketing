@@ -560,9 +560,9 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
                     fontSize: 12,
                     fontWeight: 600,
                     fontFamily: font,
-                    border: `1px solid ${isActive ? "#247b96" : "var(--gtm-border)"}`,
-                    background: isActive ? "rgba(36, 123, 150, 0.08)" : "#fff",
-                    color: isActive ? "#247b96" : "var(--gtm-text-secondary)",
+                    border: `1px solid ${isActive ? "#00BBA5" : "var(--gtm-border)"}`,
+                    background: isActive ? "rgba(0, 187, 165, 0.08)" : "#fff",
+                    color: isActive ? "#00BBA5" : "var(--gtm-text-secondary)",
                     borderRadius: 6,
                     cursor: "pointer",
                     textTransform: "capitalize",
@@ -620,7 +620,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
           style={{
             height: 38,
             padding: "0 16px",
-            background: loading ? "var(--gtm-text-faint)" : "#247b96",
+            background: loading ? "var(--gtm-text-faint)" : "#00BBA5",
             color: "#fff",
             border: "none",
             borderRadius: 6,
@@ -678,7 +678,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
               </button>
               <button
                 onClick={() => void handleSave()}
-                style={{ ...outputActionStyle, background: saved ? "rgba(43, 191, 168, 0.12)" : "rgba(36, 123, 150, 0.08)", color: saved ? "#2bbfa8" : "#247b96" }}
+                style={{ ...outputActionStyle, background: saved ? "rgba(0, 187, 165, 0.12)" : "rgba(0, 187, 165, 0.08)", color: saved ? "#00BBA5" : "#00BBA5" }}
               >
                 {saved ? <Check size={12} /> : <Save size={12} />}
                 {saved ? "Saved" : "Save to Library"}
@@ -689,7 +689,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
                 <>
                   <button
                     onClick={() => setScheduleOpen((v) => !v)}
-                    style={{ ...outputActionStyle, background: scheduled ? "rgba(43, 191, 168, 0.12)" : "rgba(36, 123, 150, 0.08)", color: scheduled ? "#2bbfa8" : "#247b96" }}
+                    style={{ ...outputActionStyle, background: scheduled ? "rgba(0, 187, 165, 0.12)" : "rgba(0, 187, 165, 0.08)", color: scheduled ? "#00BBA5" : "#00BBA5" }}
                   >
                     {scheduled ? <Check size={12} /> : <CalendarPlus size={12} />}
                     {scheduled ? "Scheduled" : "Schedule"}
@@ -755,7 +755,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
                         <button
                           onClick={() => handleSchedule(scheduleDate)}
                           disabled={scheduleBusy}
-                          style={{ ...outputActionStyle, background: "#247b96", color: "#fff", borderColor: "transparent", cursor: scheduleBusy ? "not-allowed" : "pointer" }}
+                          style={{ ...outputActionStyle, background: "#00BBA5", color: "#fff", borderColor: "transparent", cursor: scheduleBusy ? "not-allowed" : "pointer" }}
                         >
                           {scheduleBusy ? <Loader2 size={12} style={{ animation: "spin 1s linear infinite" }} /> : <CalendarPlus size={12} />}
                           {scheduleBusy ? "Scheduling..." : "Save + Schedule"}
@@ -852,7 +852,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
                     fontFamily: font,
                     border: "none",
                     background: isActive ? "#fff" : "transparent",
-                    color: isActive ? "#247b96" : hasContent ? "var(--gtm-text-secondary)" : "var(--gtm-text-faint)",
+                    color: isActive ? "#00BBA5" : hasContent ? "var(--gtm-text-secondary)" : "var(--gtm-text-faint)",
                     borderRadius: 4,
                     cursor: hasContent ? "pointer" : "not-allowed",
                     boxShadow: isActive ? "0 1px 2px rgba(0,0,0,0.06)" : "none",
@@ -933,7 +933,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
               style={{
                 height: 38,
                 padding: "0 16px",
-                background: generatingAsset ? "var(--gtm-text-faint)" : "#247b96",
+                background: generatingAsset ? "var(--gtm-text-faint)" : "#00BBA5",
                 color: "#fff",
                 border: "none",
                 borderRadius: 6,
@@ -984,9 +984,9 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
                   height: 38,
                   padding: "0 12px",
                   fontSize: 12,
-                  background: "rgba(43, 191, 168, 0.08)",
-                  color: "#2bbfa8",
-                  borderColor: "rgba(43, 191, 168, 0.32)",
+                  background: "rgba(0, 187, 165, 0.08)",
+                  color: "#00BBA5",
+                  borderColor: "rgba(0, 187, 165, 0.32)",
                 }}
               >
                 <Globe size={12} /> Publish Microsite
@@ -1074,7 +1074,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
           <div>
             <h3 style={{ margin: 0, fontSize: 15, fontWeight: 600, color: "var(--gtm-text-primary)", display: "inline-flex", alignItems: "center", gap: 8 }}>
-              <Terminal size={14} style={{ color: "#247b96" }} />
+              <Terminal size={14} style={{ color: "#00BBA5" }} />
               Build with Claude Code
             </h3>
             <p style={{ margin: "6px 0 0 0", fontSize: 13, color: "var(--gtm-text-secondary)", lineHeight: 1.55, maxWidth: "64ch" }}>
@@ -1138,9 +1138,9 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
           </div>
 
           {publishResult?.blobUrl ? (
-            <div style={{ background: "rgba(43, 191, 168, 0.08)", border: "1px solid rgba(43, 191, 168, 0.3)", borderRadius: 6, padding: 12 }}>
-              <p style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: 600, color: "#2bbfa8" }}>Published.</p>
-              <a href={publishResult.blobUrl} target="_blank" rel="noopener" style={{ fontSize: 12, color: "#247b96", wordBreak: "break-all" }}>
+            <div style={{ background: "rgba(0, 187, 165, 0.08)", border: "1px solid rgba(0, 187, 165, 0.3)", borderRadius: 6, padding: 12 }}>
+              <p style={{ margin: "0 0 8px 0", fontSize: 13, fontWeight: 600, color: "#00BBA5" }}>Published.</p>
+              <a href={publishResult.blobUrl} target="_blank" rel="noopener" style={{ fontSize: 12, color: "#00BBA5", wordBreak: "break-all" }}>
                 {publishResult.blobUrl}
               </a>
             </div>
@@ -1196,7 +1196,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
                 disabled={!publishSlug.trim() || publishing}
                 style={{
                   height: 38, padding: "0 16px",
-                  background: publishing || !publishSlug.trim() ? "var(--gtm-text-faint)" : "#247b96",
+                  background: publishing || !publishSlug.trim() ? "var(--gtm-text-faint)" : "#00BBA5",
                   color: "#fff", border: "none", borderRadius: 6,
                   fontFamily: font, fontSize: 13, fontWeight: 600,
                   cursor: publishing || !publishSlug.trim() ? "not-allowed" : "pointer",

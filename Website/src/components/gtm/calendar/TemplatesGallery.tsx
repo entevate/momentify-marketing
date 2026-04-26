@@ -101,8 +101,8 @@ export default function TemplatesGallery({
                   style={{
                     ...chipStyle,
                     background: active ? "rgba(43,191,168,0.08)" : "#fff",
-                    color: active ? "#2bbfa8" : "#6b6b6b",
-                    borderColor: active ? "#2bbfa8" : "#dde6f0",
+                    color: active ? "#00BBA5" : "#6b6b6b",
+                    borderColor: active ? "#00BBA5" : "#dde6f0",
                   }}
                 >
                   {a}
@@ -217,7 +217,7 @@ const reloadBtnStyle: React.CSSProperties = {
   fontSize: 12,
   fontWeight: 600,
   fontFamily: font,
-  background: "#2bbfa8",
+  background: "#00BBA5",
   color: "#fff",
   border: "none",
   borderRadius: 6,

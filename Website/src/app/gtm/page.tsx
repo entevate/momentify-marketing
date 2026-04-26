@@ -14,7 +14,7 @@ const solutions = [
     id: "trade-shows",
     label: "Trade Shows & Exhibits",
     icon: "building-columns" as const,
-    color: "#7C3AED",
+    color: "#6B21D4",
     priority: "NOW" as const,
     desc: "Turn booth investment into measurable ROX.",
     antiIcp: "Event planners without exhibitor clients. Consumer shows.",
@@ -44,7 +44,7 @@ const solutions = [
     id: "field-sales",
     label: "Field Sales Enablement",
     icon: "map" as const,
-    color: "#F59E0B",
+    color: "#D4940A",
     priority: "NEXT" as const,
     desc: "Smart content delivery and intent capture in the field.",
     antiIcp: "Inside sales teams. Companies without field reps.",
@@ -59,7 +59,7 @@ const solutions = [
     id: "facilities",
     label: "Facilities",
     icon: "building" as const,
-    color: "#4F46E5",
+    color: "#3A2073",
     priority: "NEXT" as const,
     desc: "Showrooms, demo floors, and training centers.",
     antiIcp: "Office buildings without customer-facing traffic.",
@@ -73,7 +73,7 @@ const solutions = [
     id: "events-venues",
     label: "Events & Venues",
     icon: "stage" as const,
-    color: "#E5484D",
+    color: "#D43D1A",
     priority: "LATER" as const,
     desc: "Beyond ticket sales. Interactive branded experiences.",
     antiIcp: "Small community events. Non-commercial venues.",
@@ -465,7 +465,7 @@ export default function GTMDashboard() {
               <p
                 style={{
                   fontSize: 14,
-                  fontWeight: 700,
+                  fontWeight: 500,
                   color: "var(--gtm-text-primary)",
                   fontFamily: font,
                   marginTop: 10,
@@ -556,7 +556,7 @@ export default function GTMDashboard() {
                       <span
                         style={{
                           fontSize: 15,
-                          fontWeight: 700,
+                          fontWeight: 500,
                           color: "var(--gtm-text-primary)",
                           fontFamily: font,
                           transition: "color 200ms ease",
@@ -690,7 +690,7 @@ export default function GTMDashboard() {
             <p
               style={{
                 fontSize: 16,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "var(--gtm-text-primary)",
                 fontFamily: font,
                 marginTop: 12,
@@ -757,7 +757,7 @@ export default function GTMDashboard() {
             <p
               style={{
                 fontSize: 16,
-                fontWeight: 700,
+                fontWeight: 500,
                 color: "var(--gtm-text-primary)",
                 fontFamily: font,
                 marginTop: 12,
@@ -969,7 +969,7 @@ export default function GTMDashboard() {
               <p
                 style={{
                   fontSize: 13,
-                  fontWeight: 700,
+                  fontWeight: 600,
                   color: "var(--gtm-text-primary)",
                   fontFamily: font,
                   marginTop: 10,
