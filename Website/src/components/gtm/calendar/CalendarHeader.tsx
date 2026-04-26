@@ -6,6 +6,7 @@ import {
   ChevronRight,
   List,
   CalendarDays,
+  Zap,
 } from "lucide-react"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
@@ -17,6 +18,7 @@ interface CalendarHeaderProps {
   onViewChange: (mode: "list" | "calendar") => void
   onTodayClick: () => void
   taskStats: { total: number; completed: number }
+  onGenerateScheduleClick?: () => void
 }
 
 export default function CalendarHeader({
@@ -26,6 +28,7 @@ export default function CalendarHeader({
   onViewChange,
   onTodayClick,
   taskStats,
+  onGenerateScheduleClick,
 }: CalendarHeaderProps) {
   const monthLabel = currentMonth.toLocaleDateString("en-US", {
     month: "long",
@@ -178,7 +181,7 @@ export default function CalendarHeader({
         </button>
       </div>
 
-      {/* Right: Today + stats */}
+      {/* Right: Today + stats + generate */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <button
           style={{
@@ -218,6 +221,31 @@ export default function CalendarHeader({
         >
           {taskStats.completed}/{taskStats.total} completed
         </span>
+        {onGenerateScheduleClick && (
+          <button
+            onClick={onGenerateScheduleClick}
+            style={{
+              fontFamily: font,
+              fontSize: 12,
+              fontWeight: 600,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              color: "#fff",
+              background: "#247b96",
+              border: "none",
+              borderRadius: 8,
+              padding: "6px 14px",
+              cursor: "pointer",
+              transition: "opacity 200ms ease",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.85" }}
+            onMouseLeave={(e) => { e.currentTarget.style.opacity = "1" }}
+          >
+            <Zap size={13} />
+            Generate Schedule
+          </button>
+        )}
       </div>
     </div>
   )

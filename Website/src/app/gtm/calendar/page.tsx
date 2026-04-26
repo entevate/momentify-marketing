@@ -25,6 +25,9 @@ import CalendarView from "@/components/gtm/calendar/CalendarView"
 import ListView from "@/components/gtm/calendar/ListView"
 import TaskDetailModal from "@/components/gtm/calendar/TaskDetailModal"
 import TaskCard from "@/components/gtm/calendar/TaskCard"
+import GenerateScheduleModal, { type GeneratedBatch } from "@/components/gtm/calendar/GenerateScheduleModal"
+import RecurringSchedulesPanel from "@/components/gtm/calendar/RecurringSchedulesPanel"
+import { Undo2, X as XIcon } from "lucide-react"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
 
@@ -55,6 +58,10 @@ export default function CalendarPage() {
   const [activeId, setActiveId] = useState<string | null>(null)
   const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [scheduleOpen, setScheduleOpen] = useState(false)
+  const [recurringRefresh, setRecurringRefresh] = useState(0)
+  const [lastBatch, setLastBatch] = useState<GeneratedBatch | null>(null)
+  const [undoing, setUndoing] = useState(false)
 
   useEffect(() => {
     fetchTasks().then((loaded) => {
@@ -139,6 +146,33 @@ export default function CalendarPage() {
     setTasks((prev) => prev.filter((t) => t.id !== taskId))
     fetch(`/api/gtm/calendar/${taskId}`, { method: "DELETE" }).catch(() => {})
   }, [])
+
+  /**
+   * Undo a bulk schedule generation. Deletes every calendar task and
+   * library item created by the most recent GenerateScheduleModal run.
+   */
+  const handleUndoBatch = useCallback(async () => {
+    if (!lastBatch) return
+    setUndoing(true)
+    try {
+      const taskIdSet = new Set(lastBatch.taskIds)
+      setTasks((prev) => prev.filter((t) => !taskIdSet.has(t.id)))
+      await Promise.allSettled([
+        ...lastBatch.taskIds.map((id) => fetch(`/api/gtm/calendar/${id}`, { method: "DELETE" })),
+        ...lastBatch.libraryItemIds.map((id) => fetch(`/api/gtm/content/${id}`, { method: "DELETE" })),
+      ])
+    } finally {
+      setLastBatch(null)
+      setUndoing(false)
+    }
+  }, [lastBatch])
+
+  // Auto-hide the Undo toast after 2 minutes
+  useEffect(() => {
+    if (!lastBatch) return
+    const t = setTimeout(() => setLastBatch(null), 120_000)
+    return () => clearTimeout(t)
+  }, [lastBatch])
 
   const handleEditTask = useCallback((updatedTask: CalendarTask) => {
     setTasks((prev) => prev.map((t) => t.id === updatedTask.id ? updatedTask : t))
@@ -314,7 +348,78 @@ export default function CalendarPage() {
         onViewChange={setViewMode}
         onTodayClick={handleTodayClick}
         taskStats={taskStats}
+        onGenerateScheduleClick={() => setScheduleOpen(true)}
       />
+
+      {/* Undo toast - appears after a bulk generation finishes. Auto-hides after 2 min. */}
+      {lastBatch && (
+        <div
+          role="status"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "10px 14px",
+            marginBottom: 16,
+            background: "rgba(36, 123, 150, 0.06)",
+            border: "1px solid rgba(36, 123, 150, 0.25)",
+            borderRadius: 6,
+            fontFamily: font,
+          }}
+        >
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: "0.04em", color: "#247b96", textTransform: "uppercase" }}>
+              Generated {lastBatch.taskIds.length} task{lastBatch.taskIds.length === 1 ? "" : "s"}
+            </div>
+            <div style={{ fontSize: 12, color: "var(--gtm-text-muted)", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {lastBatch.summary}
+            </div>
+          </div>
+          <button
+            onClick={handleUndoBatch}
+            disabled={undoing}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              fontFamily: font,
+              fontSize: 12,
+              fontWeight: 600,
+              padding: "6px 12px",
+              background: undoing ? "var(--gtm-text-faint)" : "#247b96",
+              color: "#fff",
+              border: "none",
+              borderRadius: 6,
+              cursor: undoing ? "not-allowed" : "pointer",
+            }}
+          >
+            <Undo2 size={13} />
+            {undoing ? "Undoing…" : "Undo"}
+          </button>
+          <button
+            onClick={() => setLastBatch(null)}
+            title="Dismiss"
+            aria-label="Dismiss"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 26,
+              height: 26,
+              padding: 0,
+              background: "transparent",
+              border: "none",
+              borderRadius: 6,
+              color: "var(--gtm-text-muted)",
+              cursor: "pointer",
+            }}
+          >
+            <XIcon size={14} />
+          </button>
+        </div>
+      )}
+
+      <RecurringSchedulesPanel refreshKey={recurringRefresh} />
 
       <FilterBar
         selectedSolutions={selectedSolutions}
@@ -391,6 +496,17 @@ export default function CalendarPage() {
         onEditTask={handleEditTask}
         onDeleteTask={handleDeleteTask}
       />
+
+      {scheduleOpen && (
+        <GenerateScheduleModal
+          onClose={() => setScheduleOpen(false)}
+          onComplete={(batch) => {
+            fetchTasks().then((loaded) => setTasks(loaded))
+            setRecurringRefresh((n) => n + 1)
+            if (batch) setLastBatch(batch)
+          }}
+        />
+      )}
     </div>
   )
 }
