@@ -472,6 +472,7 @@ function FacilitiesContent() {
           solution="facilities"
           solutionLabel="Facilities"
           verticals={[
+            { id: "general", label: "General / All Industries" },
             { id: "corporate-facilities", label: "Corporate Facilities" },
             { id: "manufacturing-facilities", label: "Manufacturing Facilities" },
           ]}

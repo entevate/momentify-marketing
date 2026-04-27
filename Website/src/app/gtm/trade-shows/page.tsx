@@ -477,6 +477,7 @@ function TradeShowsContent() {
           solution="trade-shows"
           solutionLabel="Trade Shows & Exhibits"
           verticals={[
+            { id: "general", label: "General / All Industries" },
             { id: "heavy-equipment", label: "Heavy Equipment" },
             { id: "energy-infrastructure", label: "Energy, Infrastructure & Power" },
             { id: "aerospace-aviation", label: "Aerospace & Aviation" },

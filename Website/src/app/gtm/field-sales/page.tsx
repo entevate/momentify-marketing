@@ -472,6 +472,7 @@ function FieldSalesContent() {
           solution="field-sales"
           solutionLabel="Field Sales Enablement"
           verticals={[
+            { id: "general", label: "General / All Industries" },
             { id: "territory-sales", label: "Territory Sales" },
             { id: "enterprise-sales", label: "Enterprise Sales" },
             { id: "channel-sales", label: "Channel & Distributor" },

@@ -472,6 +472,7 @@ function EventsVenuesContent() {
           solution="events-venues"
           solutionLabel="Events & Venues"
           verticals={[
+            { id: "general", label: "General / All Industries" },
             { id: "sports-entertainment", label: "Sports & Entertainment" },
             { id: "conference-venues", label: "Conference & Convention Venues" },
           ]}
