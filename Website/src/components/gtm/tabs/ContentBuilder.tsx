@@ -31,44 +31,6 @@ const CONTENT_TYPES: { value: string; label: string; description: string }[] = [
   { value: "one-pager", label: "Sales One-Pager", description: "Leave-behind PDF content" },
 ]
 
-const INDUSTRY_GROUPS: { label: string; industries: { value: string; label: string }[] }[] = [
-  {
-    label: "General",
-    industries: [
-      { value: "general", label: "General / All Industries" },
-    ],
-  },
-  {
-    label: "Target Industries",
-    industries: [
-      { value: "heavy-equipment", label: "Heavy Equipment & Industrial Manufacturing" },
-      { value: "aerospace-defense", label: "Aerospace & Defense" },
-      { value: "automotive-mobility", label: "Automotive & Mobility" },
-      { value: "energy-utilities", label: "Energy & Utilities" },
-      { value: "technology-software", label: "Technology & Software" },
-      { value: "hospitality", label: "Hospitality & Travel" },
-      { value: "higher-education", label: "Higher Education & Research" },
-      { value: "economic-development", label: "Economic Development & Innovation Districts" },
-    ],
-  },
-  {
-    label: "Additional Industries",
-    industries: [
-      { value: "financial-services", label: "Financial Services & Banking" },
-      { value: "healthcare-life-sciences", label: "Healthcare & Life Sciences" },
-      { value: "pharmaceutical", label: "Pharmaceutical & Biotech" },
-      { value: "consumer-goods", label: "Consumer Packaged Goods" },
-      { value: "retail-ecommerce", label: "Retail & eCommerce" },
-      { value: "transportation-logistics", label: "Transportation & Logistics" },
-      { value: "construction-real-estate", label: "Construction & Real Estate" },
-      { value: "telecommunications", label: "Telecommunications" },
-      { value: "media-entertainment", label: "Media & Entertainment" },
-      { value: "government-public-sector", label: "Government & Public Sector" },
-      { value: "professional-services", label: "Professional Services" },
-      { value: "insurance", label: "Insurance" },
-    ],
-  },
-]
 
 interface ContentBuilderProps {
   solution: string
@@ -82,7 +44,6 @@ export default function ContentBuilder({
   verticals,
 }: ContentBuilderProps) {
   const [vertical, setVertical] = useState(verticals[0]?.id ?? "")
-  const [industry, setIndustry] = useState(INDUSTRY_GROUPS[0].industries[0].value)
   const [motion, setMotion] = useState<"direct" | "partner">("direct")
   const [contentType, setContentType] = useState(CONTENT_TYPES[0].value)
   const [additionalContext, setAdditionalContext] = useState("")
@@ -122,7 +83,6 @@ export default function ContentBuilder({
       if (raw) {
         const s = JSON.parse(raw) as Record<string, unknown>
         if (typeof s.vertical === "string") setVertical(s.vertical)
-        if (typeof s.industry === "string") setIndustry(s.industry)
         if (s.motion === "direct" || s.motion === "partner") setMotion(s.motion)
         if (typeof s.contentType === "string") setContentType(s.contentType)
         if (typeof s.additionalContext === "string") setAdditionalContext(s.additionalContext)
@@ -143,18 +103,17 @@ export default function ContentBuilder({
       localStorage.setItem(
         storageKey,
         JSON.stringify({
-          vertical, industry, motion, contentType,
+          vertical, motion, contentType,
           additionalContext, competitor, generated, draftAssetId,
         })
       )
     } catch {
       /* storage full / disabled - silently skip */
     }
-  }, [storageKey, vertical, industry, motion, contentType, additionalContext, competitor, generated, draftAssetId])
+  }, [storageKey, vertical, motion, contentType, additionalContext, competitor, generated, draftAssetId])
 
   function handleClearSession() {
     setVertical(verticals[0]?.id ?? "")
-    setIndustry(INDUSTRY_GROUPS[0].industries[0].value)
     setMotion("direct")
     setContentType(CONTENT_TYPES[0].value)
     setAdditionalContext("")
@@ -269,7 +228,6 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
         body: JSON.stringify({
           solution,
           vertical,
-          industry,
           motion,
           contentType,
           additionalContext: additionalContext || undefined,
@@ -324,7 +282,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
           contentType,
           motion,
           content: generated,
-          tags: [vertical, industry].filter(Boolean),
+          tags: [vertical],
           createdAt: new Date().toISOString(),
         }),
       })
@@ -410,7 +368,6 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
         // Persist the asset type so TaskDetailModal knows whether to render
         // an inline preview (only social-post has a rendered HTML asset).
         assetType: contentType,
-        industry,
         motion,
       }
       const res = await fetch("/api/gtm/calendar", {
@@ -534,24 +491,6 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
               <option key={v.id} value={v.id}>
                 {v.label}
               </option>
-            ))}
-          </select>
-        </FormField>
-
-        <FormField label="Industry">
-          <select
-            value={industry}
-            onChange={(e) => setIndustry(e.target.value)}
-            style={selectStyle}
-          >
-            {INDUSTRY_GROUPS.map((group) => (
-              <optgroup key={group.label} label={group.label}>
-                {group.industries.map((ind) => (
-                  <option key={ind.value} value={ind.value}>
-                    {ind.label}
-                  </option>
-                ))}
-              </optgroup>
             ))}
           </select>
         </FormField>
