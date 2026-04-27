@@ -19,7 +19,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Check, ExternalLink, Loader2, RefreshCw, Upload, Wand2, LayoutGrid } from "lucide-react"
+import { Check, Download, ExternalLink, Loader2, RefreshCw, Upload, Wand2, LayoutGrid } from "lucide-react"
 import { allTemplates } from "@/lib/gtm/templates/_registry"
 import type { TemplateManifest } from "@/lib/gtm/templates/types"
 
@@ -317,9 +317,14 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
             onChange={handleFilePicked}
           />
           {assetUrl && (
-            <a href={stripCacheBust(assetUrl)} target="_blank" rel="noopener" style={{ ...smallBtn, textDecoration: "none" }}>
-              <ExternalLink size={12} />
-              Open
+            <a
+              href={stripCacheBust(assetUrl)}
+              download={`momentify-${solution}-${assetType}-${itemId}.html`}
+              style={{ ...smallBtn, textDecoration: "none" }}
+              title="Download the rendered HTML"
+            >
+              <Download size={12} />
+              Download
             </a>
           )}
         </div>
