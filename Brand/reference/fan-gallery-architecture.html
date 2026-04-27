@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fan Gallery - Production Architecture</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #07081F;
+    --text: #FFFFFF;
+    --text-muted: rgba(255,255,255,0.5);
+    --text-dim: rgba(255,255,255,0.35);
+    --text-body: rgba(255,255,255,0.7);
+    --surface: rgba(255,255,255,0.03);
+    --surface-2: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.15);
+
+    --teal: #00BBA5;
+    --teal-soft: rgba(0,187,165,0.12);
+    --teal-glow: rgba(0,187,165,0.06);
+    --blue: #254FE5;
+    --blue-soft: rgba(37,79,229,0.12);
+    --violet: #7C316D;
+    --violet-soft: rgba(124,49,109,0.12);
+    --amber: #F2B33D;
+    --amber-soft: rgba(242,179,61,0.10);
+    --red: #E5484D;
+    --red-soft: rgba(229,72,77,0.10);
+    --cyan: #0CF4DF;
+
+    --toggle-bg: rgba(255,255,255,0.06);
+    --toggle-border: rgba(255,255,255,0.12);
+  }
+
+  [data-theme="light"] {
+    --bg: #F5F6FA;
+    --text: #0F172A;
+    --text-muted: rgba(15,23,42,0.50);
+    --text-dim: rgba(15,23,42,0.35);
+    --text-body: rgba(15,23,42,0.65);
+    --surface: rgba(255,255,255,0.85);
+    --surface-2: rgba(255,255,255,0.95);
+    --border: rgba(15,23,42,0.08);
+    --border-hover: rgba(15,23,42,0.15);
+    --teal-soft: rgba(0,187,165,0.08);
+    --teal-glow: rgba(0,187,165,0.04);
+    --blue-soft: rgba(37,79,229,0.08);
+    --violet-soft: rgba(124,49,109,0.08);
+    --amber-soft: rgba(242,179,61,0.08);
+    --red-soft: rgba(229,72,77,0.08);
+    --toggle-bg: rgba(15,23,42,0.04);
+    --toggle-border: rgba(15,23,42,0.10);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.5;
+    padding: 40px 24px 80px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* Theme toggle */
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 100;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--toggle-bg); border: 1px solid var(--toggle-border);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); transition: all 150ms;
+  }
+  .theme-toggle:hover { border-color: var(--border-hover); color: var(--text); }
+
+  /* Header */
+  .page-header { margin-bottom: 48px; text-align: center; }
+  .page-header .eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 12px;
+  }
+  .page-header h1 { font-size: 32px; font-weight: 500; margin-bottom: 8px; }
+  .page-header p { font-size: 15px; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+  /* Section */
+  .section { margin-bottom: 56px; }
+  .section-title {
+    font-size: 13px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 24px; padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Entity hierarchy */
+  .hierarchy {
+    display: flex; flex-direction: column; gap: 0;
+    position: relative;
+  }
+  .hierarchy-level {
+    display: flex; gap: 20px; align-items: flex-start;
+    position: relative;
+    padding: 24px 0;
+  }
+  .hierarchy-level + .hierarchy-level {
+    border-top: 1px solid var(--border);
+  }
+  .level-label {
+    width: 140px; flex-shrink: 0;
+    display: flex; flex-direction: column; gap: 4px;
+    padding-top: 12px;
+  }
+  .level-label .name {
+    font-size: 14px; font-weight: 600; color: var(--text);
+  }
+  .level-label .desc {
+    font-size: 12px; color: var(--text-dim); line-height: 1.4;
+  }
+  .level-content {
+    flex: 1; display: flex; flex-wrap: wrap; gap: 12px;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    min-width: 220px;
+    flex: 1;
+    max-width: 320px;
+    transition: border-color 150ms;
+  }
+  .card:hover { border-color: var(--border-hover); }
+  .card .card-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 10px; font-size: 16px;
+  }
+  .card .card-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .card .card-subtitle { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+  .card .card-meta {
+    margin-top: 10px; display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .card .meta-tag {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.5px;
+    padding: 3px 8px; border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  /* Color-coded cards */
+  .card-teal .card-icon { background: var(--teal-soft); color: var(--teal); }
+  .card-blue .card-icon { background: var(--blue-soft); color: var(--blue); }
+  .card-violet .card-icon { background: var(--violet-soft); color: var(--violet); }
+  .card-amber .card-icon { background: var(--amber-soft); color: var(--amber); }
+  .card-red .card-icon { background: var(--red-soft); color: var(--red); }
+
+  /* Architecture layers */
+  .arch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .arch-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    transition: border-color 150ms;
+  }
+  .arch-card:hover { border-color: var(--border-hover); }
+  .arch-card .arch-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+  }
+  .arch-card .arch-icon {
+    width: 28px; height: 28px; border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .arch-card .arch-title { font-size: 14px; font-weight: 600; }
+  .arch-card .arch-items { display: flex; flex-direction: column; gap: 6px; }
+  .arch-card .arch-item {
+    font-size: 12px; color: var(--text-body);
+    padding: 6px 10px; border-radius: 6px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .arch-card .arch-item code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 11px; color: var(--cyan);
+  }
+
+  /* Flow diagram */
+  .flow {
+    display: flex; align-items: stretch; gap: 0;
+    overflow-x: auto; padding: 8px 0;
+  }
+  .flow-step {
+    flex: 1; min-width: 180px;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; position: relative;
+    padding: 0 12px;
+  }
+  .flow-step .step-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--teal-soft); color: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; margin-bottom: 10px;
+    border: 1px solid rgba(0,187,165,0.2);
+  }
+  .flow-step .step-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .flow-step .step-desc { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
+  .flow-arrow {
+    display: flex; align-items: center; justify-content: center;
+    min-width: 40px; color: var(--text-dim); font-size: 18px;
+    padding-bottom: 20px;
+  }
+
+  /* DB schema */
+  .schema-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .schema-table {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .schema-table .table-header {
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .schema-table .table-header .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .schema-table .table-header .name {
+    font-size: 13px; font-weight: 600;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+  .schema-table .table-fields { padding: 8px 0; }
+  .schema-table .field {
+    padding: 4px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 11px;
+  }
+  .schema-table .field .fname {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: var(--text-body);
+  }
+  .schema-table .field .ftype {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: var(--text-dim); font-size: 10px;
+  }
+  .schema-table .field.pk .fname { color: var(--teal); font-weight: 600; }
+  .schema-table .field.fk .fname { color: var(--amber); }
+
+  /* Route map */
+  .route-group { margin-bottom: 20px; }
+  .route-group-title {
+    font-size: 12px; font-weight: 600; color: var(--text-muted);
+    margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.8px;
+  }
+  .route-list { display: flex; flex-direction: column; gap: 4px; }
+  .route-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .route-method {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+    padding: 2px 6px; border-radius: 3px; min-width: 36px; text-align: center;
+  }
+  .method-get { background: rgba(0,187,165,0.12); color: var(--teal); }
+  .method-post { background: rgba(37,79,229,0.12); color: var(--blue); }
+  .method-put { background: rgba(242,179,61,0.12); color: var(--amber); }
+  .method-del { background: rgba(229,72,77,0.12); color: var(--red); }
+  .route-path {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: var(--text-body); font-size: 11px; flex: 1;
+  }
+  .route-desc { color: var(--text-dim); font-size: 11px; }
+
+  /* Phase timeline */
+  .phases { display: flex; flex-direction: column; gap: 0; }
+  .phase {
+    display: flex; gap: 20px; padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase:last-child { border-bottom: none; }
+  .phase-marker {
+    width: 48px; flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .phase-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    border: 2px solid;
+  }
+  .phase-line {
+    flex: 1; width: 2px; min-height: 20px;
+    background: var(--border);
+  }
+  .phase-body { flex: 1; padding-top: 4px; }
+  .phase-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .phase-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .phase-items { display: flex; flex-wrap: wrap; gap: 6px; }
+  .phase-tag {
+    font-size: 11px; padding: 4px 10px; border-radius: 5px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text-body);
+  }
+
+  /* Admin UI mockup */
+  .ui-mockup {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .ui-sidebar {
+    width: 200px; padding: 16px;
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .ui-sidebar-item {
+    padding: 8px 12px; border-radius: 6px;
+    font-size: 12px; color: var(--text-muted);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ui-sidebar-item.active {
+    background: var(--teal-soft); color: var(--teal); font-weight: 600;
+  }
+  .ui-main { flex: 1; padding: 20px; }
+  .ui-breadcrumb {
+    font-size: 11px; color: var(--text-dim); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .ui-breadcrumb .sep { color: var(--text-dim); }
+  .ui-breadcrumb .current { color: var(--text); font-weight: 500; }
+
+  /* Admin screens preview */
+  .screens-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 900px) { .screens-grid { grid-template-columns: 1fr; } }
+  .screen-preview {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .screen-preview .screen-bar {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .screen-preview .screen-bar .bar-title {
+    font-size: 11px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.8px;
+  }
+  .screen-preview .screen-bar .bar-badge {
+    font-size: 10px; padding: 2px 8px; border-radius: 4px;
+    font-weight: 600;
+  }
+  .screen-preview .screen-body { padding: 14px; }
+  .screen-preview .mock-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 10px; border-radius: 6px;
+    margin-bottom: 6px;
+    background: var(--surface-2); border: 1px solid var(--border);
+  }
+  .mock-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .mock-text {
+    font-size: 11px; color: var(--text-body); flex: 1;
+  }
+  .mock-text-sm { font-size: 10px; color: var(--text-dim); }
+  .mock-badge {
+    font-size: 9px; padding: 2px 6px; border-radius: 3px;
+    font-weight: 600; flex-shrink: 0;
+  }
+
+  /* Card grid mockup */
+  .mock-cards {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+  }
+  .mock-card {
+    border-radius: 8px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .mock-card-cover {
+    height: 40px; position: relative;
+  }
+  .mock-card-body { padding: 8px 10px; }
+  .mock-card-title { font-size: 10px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .mock-card-sub { font-size: 9px; color: var(--text-dim); }
+
+  /* Connector lines */
+  .connector {
+    display: flex; align-items: center; justify-content: center;
+    padding: 8px 0; color: var(--text-dim);
+  }
+  .connector svg { opacity: 0.4; }
+
+  /* Tech stack badges */
+  .tech-grid {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 8px;
+  }
+  .tech-badge {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 14px; border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    font-size: 12px; font-weight: 500; color: var(--text-body);
+  }
+  .tech-badge .tech-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+
+<!-- Theme toggle -->
+<button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+  <svg width="16" height="16" viewBox="0 0 18 18" fill="none" id="theme-icon">
+    <circle cx="9" cy="9" r="3.5" stroke="currentColor" stroke-width="1.5"/>
+    <path d="M9 2v2M9 14v2M2 9h2M14 9h2M4.2 4.2l1.4 1.4M12.4 12.4l1.4 1.4M4.2 13.8l1.4-1.4M12.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+</button>
+
+<!-- Header -->
+<header class="page-header">
+  <div class="eyebrow">Fan Gallery</div>
+  <h1>Production Architecture</h1>
+  <p>End-to-end system for branded fan photo galleries with user onboarding, persistent storage, QR code service, and multi-tenant admin.</p>
+</header>
+
+<!-- ─── ENTITY HIERARCHY ─── -->
+<div class="section">
+  <div class="section-title">Entity Hierarchy</div>
+  <div class="hierarchy">
+
+    <div class="hierarchy-level">
+      <div class="level-label">
+        <div class="name">Organization</div>
+        <div class="desc">Clerk org, multi-tenant workspace</div>
+      </div>
+      <div class="level-content">
+        <div class="card card-teal">
+          <div class="card-icon" style="background:var(--teal-soft);color:var(--teal)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </div>
+          <div class="card-title">ENTEVATE</div>
+          <div class="card-subtitle">Manages events across venues. Contains team members, billing, and brand settings.</div>
+          <div class="card-meta">
+            <span class="meta-tag" style="background:var(--teal-soft);color:var(--teal)">Clerk Organizations</span>
+            <span class="meta-tag" style="background:var(--surface-2);color:var(--text-dim)">Postgres FK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+
+    <div class="hierarchy-level">
+      <div class="level-label">
+        <div class="name">Events</div>
+        <div class="desc">A single occasion at a venue (game, conference, etc.)</div>
+      </div>
+      <div class="level-content">
+        <div class="card card-blue">
+          <div class="card-icon" style="background:var(--blue-soft);color:var(--blue)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="card-title">Mavs vs. Lakers</div>
+          <div class="card-subtitle">April 20, 2026 at American Airlines Center. Contains multiple moments across suites.</div>
+          <div class="card-meta">
+            <span class="meta-tag" style="background:rgba(34,197,94,0.12);color:#22C55E">Live</span>
+            <span class="meta-tag" style="background:var(--surface-2);color:var(--text-dim)">3 Moments</span>
+          </div>
+        </div>
+        <div class="card card-blue">
+          <div class="card-icon" style="background:var(--blue-soft);color:var(--blue)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="card-title">Tech Summit 2026</div>
+          <div class="card-subtitle">May 15, 2026 at Kay Bailey Hutchison. Draft event with 1 moment configured.</div>
+          <div class="card-meta">
+            <span class="meta-tag" style="background:var(--amber-soft);color:var(--amber)">Draft</span>
+            <span class="meta-tag" style="background:var(--surface-2);color:var(--text-dim)">1 Moment</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+
+    <div class="hierarchy-level">
+      <div class="level-label">
+        <div class="name">Moments</div>
+        <div class="desc">An activation within an event (suite gallery, photo booth, registration)</div>
+      </div>
+      <div class="level-content">
+        <div class="card card-violet">
+          <div class="card-icon" style="background:var(--violet-soft);color:var(--violet)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          </div>
+          <div class="card-title">Suite 214 Gallery</div>
+          <div class="card-subtitle">Fan photo gallery with branded overlays, trivia, and survey.</div>
+          <div class="card-meta">
+            <span class="meta-tag" style="background:rgba(34,197,94,0.12);color:#22C55E">Published</span>
+            <span class="meta-tag" style="background:var(--surface-2);color:var(--text-dim)">Fan Gallery</span>
+          </div>
+        </div>
+        <div class="card card-violet">
+          <div class="card-icon" style="background:var(--violet-soft);color:var(--violet)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          </div>
+          <div class="card-title">Suite 520 Gallery</div>
+          <div class="card-subtitle">Second suite gallery with separate branding and config.</div>
+          <div class="card-meta">
+            <span class="meta-tag" style="background:var(--amber-soft);color:var(--amber)">Draft</span>
+            <span class="meta-tag" style="background:var(--surface-2);color:var(--text-dim)">Fan Gallery</span>
+          </div>
+        </div>
+        <div class="card card-violet">
+          <div class="card-icon" style="background:var(--violet-soft);color:var(--violet)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v-2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+          </div>
+          <div class="card-title">Main Concourse</div>
+          <div class="card-subtitle">Self-registration kiosk with public QR code.</div>
+          <div class="card-meta">
+            <span class="meta-tag" style="background:rgba(34,197,94,0.12);color:#22C55E">Published</span>
+            <span class="meta-tag" style="background:var(--surface-2);color:var(--text-dim)">Self Registration</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="connector">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </div>
+
+    <div class="hierarchy-level">
+      <div class="level-label">
+        <div class="name">Sessions</div>
+        <div class="desc">Fan photos, contact info, survey answers, trivia</div>
+      </div>
+      <div class="level-content">
+        <div class="card card-amber">
+          <div class="card-icon" style="background:var(--amber-soft);color:var(--amber)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="card-title">Photo + Contact Data</div>
+          <div class="card-subtitle">Photo stored in Vercel Blob, metadata in Postgres. Includes name, email, phone, caption, frame style.</div>
+        </div>
+        <div class="card card-amber">
+          <div class="card-icon" style="background:var(--amber-soft);color:var(--amber)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </div>
+          <div class="card-title">Survey + Trivia</div>
+          <div class="card-subtitle">Survey answers as JSONB. Trivia answer index + correctness boolean. Promo opt-in response.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── TECH STACK ─── -->
+<div class="section">
+  <div class="section-title">Tech Stack</div>
+  <div class="tech-grid">
+    <div class="tech-badge"><div class="tech-dot" style="background:var(--teal)"></div> Clerk <span style="color:var(--text-dim)">(Auth + Orgs)</span></div>
+    <div class="tech-badge"><div class="tech-dot" style="background:var(--blue)"></div> Vercel Postgres <span style="color:var(--text-dim)">(Database)</span></div>
+    <div class="tech-badge"><div class="tech-dot" style="background:var(--violet)"></div> Drizzle ORM <span style="color:var(--text-dim)">(Type-safe queries)</span></div>
+    <div class="tech-badge"><div class="tech-dot" style="background:var(--amber)"></div> Vercel Blob <span style="color:var(--text-dim)">(Photo storage)</span></div>
+    <div class="tech-badge"><div class="tech-dot" style="background:var(--red)"></div> qrcode + nanoid <span style="color:var(--text-dim)">(QR generation)</span></div>
+    <div class="tech-badge"><div class="tech-dot" style="background:var(--cyan)"></div> Next.js 16 <span style="color:var(--text-dim)">(App Router)</span></div>
+  </div>
+</div>
+
+<!-- ─── ADMIN UI SCREENS ─── -->
+<div class="section">
+  <div class="section-title">Admin UI Levels</div>
+  <div class="screens-grid">
+
+    <!-- Level 1: Events List -->
+    <div class="screen-preview">
+      <div class="screen-bar">
+        <span class="bar-title">Level 1: Events</span>
+        <span class="bar-badge" style="background:var(--teal-soft);color:var(--teal)">/admin</span>
+      </div>
+      <div class="screen-body">
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <span style="font-size:10px;padding:3px 8px;border-radius:4px;background:var(--teal-soft);color:var(--teal);font-weight:600">All (5)</span>
+          <span style="font-size:10px;padding:3px 8px;border-radius:4px;color:var(--text-dim)">Live (2)</span>
+          <span style="font-size:10px;padding:3px 8px;border-radius:4px;color:var(--text-dim)">Upcoming (2)</span>
+          <span style="font-size:10px;padding:3px 8px;border-radius:4px;color:var(--text-dim)">Past (1)</span>
+        </div>
+        <div class="mock-cards">
+          <div class="mock-card">
+            <div class="mock-card-cover" style="background:linear-gradient(135deg,#1a56db,#7c316d)"></div>
+            <div class="mock-card-body">
+              <div class="mock-card-title">Mavs vs. Lakers</div>
+              <div class="mock-card-sub">3 moments</div>
+            </div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-cover" style="background:linear-gradient(135deg,#00bba5,#254fe5)"></div>
+            <div class="mock-card-body">
+              <div class="mock-card-title">Tech Summit</div>
+              <div class="mock-card-sub">1 moment</div>
+            </div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-cover" style="background:linear-gradient(135deg,#f2b33d,#e5484d)"></div>
+            <div class="mock-card-body">
+              <div class="mock-card-title">Annual Gala</div>
+              <div class="mock-card-sub">2 moments</div>
+            </div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-cover" style="background:linear-gradient(135deg,#7c316d,#1a56db)"></div>
+            <div class="mock-card-body">
+              <div class="mock-card-title">Cowboys Opener</div>
+              <div class="mock-card-sub">4 moments</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Level 2: Event Detail (like /dashboard/events/6) -->
+    <div class="screen-preview">
+      <div class="screen-bar">
+        <span class="bar-title">Level 2: Event Detail</span>
+        <span class="bar-badge" style="background:var(--blue-soft);color:var(--blue)">/events/[id]</span>
+      </div>
+      <div class="screen-body">
+        <div class="ui-breadcrumb" style="margin-bottom:6px">
+          <span style="color:var(--teal)">Events</span>
+          <span class="sep">/</span>
+          <span class="current">Mavs vs. Lakers</span>
+        </div>
+        <!-- Stats row -->
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <div style="flex:1;padding:4px 6px;border-radius:5px;background:var(--surface-2);border:1px solid var(--border);text-align:center">
+            <div style="font-size:12px;font-weight:700;color:var(--teal)">47</div>
+            <div style="font-size:8px;color:var(--text-dim)">Sessions</div>
+          </div>
+          <div style="flex:1;padding:4px 6px;border-radius:5px;background:var(--surface-2);border:1px solid var(--border);text-align:center">
+            <div style="font-size:12px;font-weight:700;color:var(--red)">8</div>
+            <div style="font-size:8px;color:var(--text-dim)">Hot</div>
+          </div>
+          <div style="flex:1;padding:4px 6px;border-radius:5px;background:var(--surface-2);border:1px solid var(--border);text-align:center">
+            <div style="font-size:12px;font-weight:700;color:var(--text)">3</div>
+            <div style="font-size:8px;color:var(--text-dim)">Moments</div>
+          </div>
+          <div style="flex:1;padding:4px 6px;border-radius:5px;background:var(--surface-2);border:1px solid var(--border);text-align:center">
+            <div style="font-size:12px;font-weight:700;color:var(--amber)">156</div>
+            <div style="font-size:8px;color:var(--text-dim)">Scans</div>
+          </div>
+        </div>
+        <!-- Tabs -->
+        <div style="display:flex;gap:10px;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:6px">
+          <span style="font-size:10px;font-weight:600;color:var(--text);border-bottom:2px solid var(--teal);padding-bottom:4px">Sessions</span>
+          <span style="font-size:10px;color:var(--text-dim)">Intelligence</span>
+          <span style="font-size:10px;color:var(--text-dim)">Analytics</span>
+        </div>
+        <!-- Session table rows -->
+        <div style="display:flex;gap:4px;margin-bottom:4px;padding:0 4px">
+          <span style="font-size:8px;color:var(--text-dim);width:12px"></span>
+          <span style="font-size:8px;color:var(--text-dim);flex:1">Name</span>
+          <span style="font-size:8px;color:var(--text-dim);flex:1">Moment</span>
+          <span style="font-size:8px;color:var(--text-dim);width:30px">Opt In</span>
+        </div>
+        <div class="mock-row" style="padding:5px 8px"><div class="mock-dot" style="background:var(--red)"></div><div class="mock-text" style="flex:1">Alex Rivera</div><div class="mock-text-sm" style="flex:1">Suite 214</div><div class="mock-badge" style="background:rgba(34,197,94,0.12);color:#22C55E;width:30px;text-align:center">Yes</div></div>
+        <div class="mock-row" style="padding:5px 8px"><div class="mock-dot" style="background:var(--amber)"></div><div class="mock-text" style="flex:1">Jordan Lee</div><div class="mock-text-sm" style="flex:1">Suite 520</div><div class="mock-badge" style="background:var(--surface-2);color:var(--text-dim);width:30px;text-align:center">--</div></div>
+        <div class="mock-row" style="padding:5px 8px"><div class="mock-dot" style="background:transparent"></div><div class="mock-text" style="flex:1">Casey Blake</div><div class="mock-text-sm" style="flex:1">Concourse</div><div class="mock-badge" style="background:rgba(34,197,94,0.12);color:#22C55E;width:30px;text-align:center">Yes</div></div>
+      </div>
+    </div>
+
+    <!-- Level 3: Moment Editor -->
+    <div class="screen-preview">
+      <div class="screen-bar">
+        <span class="bar-title">Level 3: Moment Editor</span>
+        <span class="bar-badge" style="background:var(--violet-soft);color:var(--violet)">/moments/[id]</span>
+      </div>
+      <div class="screen-body">
+        <div class="ui-breadcrumb" style="margin-bottom:8px">
+          <span style="color:var(--teal)">Events</span>
+          <span class="sep">/</span>
+          <span>Mavs vs. Lakers</span>
+          <span class="sep">/</span>
+          <span class="current">Suite 214</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1">
+            <div class="mock-row" style="flex-direction:column;align-items:stretch;gap:4px">
+              <div class="mock-text-sm">Select Suite</div>
+              <div style="padding:4px 8px;border-radius:4px;background:var(--surface);border:1px solid var(--border);font-size:10px;color:var(--text-body)">Suite 214</div>
+            </div>
+            <div class="mock-row" style="flex-direction:column;align-items:stretch;gap:4px">
+              <div class="mock-text-sm">Accent Color</div>
+              <div style="display:flex;gap:4px">
+                <div style="width:16px;height:16px;border-radius:4px;background:#F25E3D"></div>
+                <div style="width:16px;height:16px;border-radius:4px;background:#8F200A"></div>
+                <div style="width:16px;height:16px;border-radius:4px;background:#1A0A06"></div>
+              </div>
+            </div>
+            <div class="mock-row" style="flex-direction:column;align-items:stretch;gap:4px">
+              <div class="mock-text-sm">Trivia Question</div>
+              <div style="padding:4px 8px;border-radius:4px;background:var(--surface);border:1px solid var(--border);font-size:10px;color:var(--text-dim)">Who scored...</div>
+            </div>
+          </div>
+          <div style="flex:1;display:flex;align-items:center;justify-content:center">
+            <div style="width:60px;height:100px;border-radius:10px;background:var(--surface-2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center">
+              <div style="font-size:8px;color:var(--text-dim);text-align:center">Live<br>Preview</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── USER FLOW ─── -->
+<div class="section">
+  <div class="section-title">Fan User Flow (Public)</div>
+  <div class="flow">
+    <div class="flow-step">
+      <div class="step-num">1</div>
+      <div class="step-title">Scan QR</div>
+      <div class="step-desc">Fan scans code at suite table, signage, or jumbotron</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">
+      <div class="step-num">2</div>
+      <div class="step-title">Gallery</div>
+      <div class="step-desc">Browse existing fan photos, tap "Add Your Photo"</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">
+      <div class="step-num">3</div>
+      <div class="step-title">Capture</div>
+      <div class="step-desc">Take or upload photo, apply branded frame overlay</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">
+      <div class="step-num">4</div>
+      <div class="step-title">Contact</div>
+      <div class="step-desc">Enter name, email, phone for lead capture</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">
+      <div class="step-num">5</div>
+      <div class="step-title">Confirm</div>
+      <div class="step-desc">Thank you + trivia + survey + promo sponsor</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">
+      <div class="step-num">6</div>
+      <div class="step-title">Share</div>
+      <div class="step-desc">Download photo, share to social with hashtags</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── SESSION RECORD DETAIL ─── -->
+<div class="section">
+  <div class="section-title">Session Record Detail (per QR scan / fan interaction)</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+
+    <!-- Contact form capture -->
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:var(--teal-soft);color:var(--teal)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="arch-title">Contact Form (Screen 2)</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>name</code> <span style="color:var(--text-dim)">text</span> &mdash; First + last name</div>
+        <div class="arch-item"><code>email</code> <span style="color:var(--text-dim)">text</span> &mdash; Fan email address</div>
+        <div class="arch-item"><code>phone</code> <span style="color:var(--text-dim)">text</span> &mdash; Phone number</div>
+        <div class="arch-item"><code>opt_in</code> <span style="color:var(--text-dim)">boolean</span> &mdash; Marketing + age consent</div>
+      </div>
+    </div>
+
+    <!-- Photo capture -->
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:var(--blue-soft);color:var(--blue)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        </div>
+        <div class="arch-title">Photo Capture (Screen 1 &rarr; 2)</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>photo_url</code> <span style="color:var(--text-dim)">text</span> &mdash; Vercel Blob URL of uploaded photo</div>
+        <div class="arch-item"><code>caption</code> <span style="color:var(--text-dim)">text</span> &mdash; Fan-written caption</div>
+        <div class="arch-item"><code>frame_style</code> <span style="color:var(--text-dim)">text</span> &mdash; Overlay selected (default / banner / minimal / none)</div>
+        <div class="arch-item"><code>media</code> <span style="color:var(--text-dim)">boolean</span> &mdash; Whether photo was included</div>
+      </div>
+    </div>
+
+    <!-- Engagement capture -->
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:var(--violet-soft);color:var(--violet)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <div class="arch-title">Engagement (Screen 3)</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>trivia_answer</code> <span style="color:var(--text-dim)">int</span> &mdash; Selected option index</div>
+        <div class="arch-item"><code>trivia_correct</code> <span style="color:var(--text-dim)">boolean</span> &mdash; Got it right?</div>
+        <div class="arch-item"><code>promo_response</code> <span style="color:var(--text-dim)">text</span> &mdash; Sponsor promo answer</div>
+        <div class="arch-item"><code>survey_data</code> <span style="color:var(--text-dim)">jsonb</span> &mdash; { heard, frequency, social }</div>
+      </div>
+    </div>
+
+    <!-- Auto-captured metadata -->
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:var(--amber-soft);color:var(--amber)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="arch-title">Auto-captured</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>moment_id</code> <span style="color:var(--text-dim)">uuid FK</span> &mdash; Which suite / moment</div>
+        <div class="arch-item"><code>qr_code_id</code> <span style="color:var(--text-dim)">uuid FK</span> &mdash; Which QR code scanned</div>
+        <div class="arch-item"><code>created_at</code> <span style="color:var(--text-dim)">timestamp</span> &mdash; Session start time</div>
+      </div>
+    </div>
+
+    <!-- Admin-set fields -->
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:var(--red-soft);color:var(--red)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        </div>
+        <div class="arch-title">Admin-set (Detail Drawer)</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>temp</code> <span style="color:var(--text-dim)">text</span> &mdash; Lead temperature (hot / warm / cold)</div>
+        <div class="arch-item"><code>company</code> <span style="color:var(--text-dim)">text</span> &mdash; Company name</div>
+        <div class="arch-item"><code>title</code> <span style="color:var(--text-dim)">text</span> &mdash; Job title</div>
+        <div class="arch-item"><code>follow_up</code> <span style="color:var(--text-dim)">boolean</span> &mdash; Flagged for follow-up</div>
+        <div class="arch-item"><code>notes</code> <span style="color:var(--text-dim)">text</span> &mdash; Admin notes</div>
+      </div>
+    </div>
+
+    <!-- Notification tracking -->
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:rgba(99,102,241,0.12);color:#6366F1">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </div>
+        <div class="arch-title">Notification Tracking</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>email_sent</code> <span style="color:var(--text-dim)">boolean</span> &mdash; Gallery link email delivered</div>
+        <div class="arch-item"><code>sms_sent</code> <span style="color:var(--text-dim)">boolean</span> &mdash; Gallery link SMS delivered</div>
+        <div class="arch-item"><code>notification_sent_at</code> <span style="color:var(--text-dim)">timestamp</span> &mdash; When notification fired</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── DATABASE SCHEMA ─── -->
+<div class="section">
+  <div class="section-title">Database Schema (Vercel Postgres)</div>
+  <div class="schema-grid">
+
+    <div class="schema-table">
+      <div class="table-header">
+        <div class="dot" style="background:var(--teal)"></div>
+        <div class="name">organizations</div>
+      </div>
+      <div class="table-fields">
+        <div class="field pk"><span class="fname">id</span><span class="ftype">uuid PK</span></div>
+        <div class="field"><span class="fname">clerk_org_id</span><span class="ftype">text UNIQUE</span></div>
+        <div class="field"><span class="fname">name</span><span class="ftype">text</span></div>
+        <div class="field"><span class="fname">slug</span><span class="ftype">text UNIQUE</span></div>
+        <div class="field"><span class="fname">created_at</span><span class="ftype">timestamp</span></div>
+      </div>
+    </div>
+
+    <div class="schema-table">
+      <div class="table-header">
+        <div class="dot" style="background:var(--blue)"></div>
+        <div class="name">events</div>
+      </div>
+      <div class="table-fields">
+        <div class="field pk"><span class="fname">id</span><span class="ftype">uuid PK</span></div>
+        <div class="field fk"><span class="fname">org_id</span><span class="ftype">uuid FK &rarr; orgs</span></div>
+        <div class="field"><span class="fname">name</span><span class="ftype">text</span></div>
+        <div class="field"><span class="fname">date</span><span class="ftype">date</span></div>
+        <div class="field"><span class="fname">location</span><span class="ftype">text</span></div>
+        <div class="field"><span class="fname">status</span><span class="ftype">draft|live|past</span></div>
+        <div class="field"><span class="fname">cover_gradient</span><span class="ftype">text</span></div>
+        <div class="field"><span class="fname">created_by</span><span class="ftype">text (clerk ID)</span></div>
+      </div>
+    </div>
+
+    <div class="schema-table">
+      <div class="table-header">
+        <div class="dot" style="background:var(--violet)"></div>
+        <div class="name">moments</div>
+      </div>
+      <div class="table-fields">
+        <div class="field pk"><span class="fname">id</span><span class="ftype">uuid PK</span></div>
+        <div class="field fk"><span class="fname">event_id</span><span class="ftype">uuid FK &rarr; events</span></div>
+        <div class="field fk"><span class="fname">org_id</span><span class="ftype">uuid FK &rarr; orgs</span></div>
+        <div class="field"><span class="fname">slug</span><span class="ftype">text UNIQUE</span></div>
+        <div class="field"><span class="fname">name</span><span class="ftype">text</span></div>
+        <div class="field"><span class="fname">type</span><span class="ftype">fan-gallery|self-reg</span></div>
+        <div class="field"><span class="fname">published</span><span class="ftype">boolean</span></div>
+        <div class="field"><span class="fname">config</span><span class="ftype">jsonb</span></div>
+      </div>
+    </div>
+
+    <div class="schema-table">
+      <div class="table-header">
+        <div class="dot" style="background:var(--amber)"></div>
+        <div class="name">sessions</div>
+      </div>
+      <div class="table-fields">
+        <div class="field pk"><span class="fname">id</span><span class="ftype">uuid PK</span></div>
+        <div class="field fk"><span class="fname">moment_id</span><span class="ftype">uuid FK &rarr; moments</span></div>
+        <div class="field"><span class="fname">temp</span><span class="ftype">hot|warm|cold|null</span></div>
+        <div class="field"><span class="fname">name, email, phone</span><span class="ftype">text</span></div>
+        <div class="field"><span class="fname">company, title</span><span class="ftype">text</span></div>
+        <div class="field"><span class="fname">photo_url</span><span class="ftype">text (Blob)</span></div>
+        <div class="field"><span class="fname">opt_in, follow_up</span><span class="ftype">boolean</span></div>
+        <div class="field"><span class="fname">media, notes</span><span class="ftype">boolean / text</span></div>
+        <div class="field"><span class="fname">survey_data</span><span class="ftype">jsonb</span></div>
+        <div class="field"><span class="fname">trivia_answer</span><span class="ftype">int</span></div>
+        <div class="field"><span class="fname">caption, frame_style</span><span class="ftype">text</span></div>
+        <div class="field"><span class="fname">promo_response</span><span class="ftype">text</span></div>
+        <div class="field fk"><span class="fname">qr_code_id</span><span class="ftype">uuid FK (nullable)</span></div>
+        <div class="field"><span class="fname">email_sent, sms_sent</span><span class="ftype">boolean</span></div>
+        <div class="field"><span class="fname">notification_sent_at</span><span class="ftype">timestamp</span></div>
+        <div class="field"><span class="fname">created_at</span><span class="ftype">timestamp</span></div>
+      </div>
+    </div>
+
+    <div class="schema-table">
+      <div class="table-header">
+        <div class="dot" style="background:var(--red)"></div>
+        <div class="name">qr_codes</div>
+      </div>
+      <div class="table-fields">
+        <div class="field pk"><span class="fname">id</span><span class="ftype">uuid PK</span></div>
+        <div class="field fk"><span class="fname">moment_id</span><span class="ftype">uuid FK (nullable)</span></div>
+        <div class="field fk"><span class="fname">event_id</span><span class="ftype">uuid FK (nullable)</span></div>
+        <div class="field"><span class="fname">label</span><span class="ftype">text</span></div>
+        <div class="field"><span class="fname">short_code</span><span class="ftype">text UNIQUE</span></div>
+        <div class="field"><span class="fname">target_url</span><span class="ftype">text</span></div>
+        <div class="field"><span class="fname">scan_count</span><span class="ftype">int</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── ARCHITECTURE LAYERS ─── -->
+<div class="section">
+  <div class="section-title">System Architecture</div>
+  <div class="arch-grid">
+
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:var(--teal-soft);color:var(--teal)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="arch-title">Authentication</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>@clerk/nextjs</code> ClerkProvider + middleware</div>
+        <div class="arch-item"><code>middleware.ts</code> Protects /fan-gallery/admin/*</div>
+        <div class="arch-item"><code>Organizations</code> Multi-tenant workspace isolation</div>
+        <div class="arch-item"><code>Webhook</code> Syncs orgs to Postgres</div>
+      </div>
+    </div>
+
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:var(--blue-soft);color:var(--blue)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <div class="arch-title">Database</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>@vercel/postgres</code> Managed PostgreSQL</div>
+        <div class="arch-item"><code>drizzle-orm</code> Type-safe schema + queries</div>
+        <div class="arch-item"><code>drizzle-kit</code> Migrations + generation</div>
+        <div class="arch-item"><code>JSONB</code> Gallery config stored as document</div>
+      </div>
+    </div>
+
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:var(--amber-soft);color:var(--amber)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        </div>
+        <div class="arch-title">File Storage</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>@vercel/blob</code> Photo uploads (existing pattern)</div>
+        <div class="arch-item"><code>sessions.photo_url</code> Blob URL in Postgres</div>
+        <div class="arch-item"><code>QR SVG/PNG</code> Generated server-side</div>
+      </div>
+    </div>
+
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:var(--violet-soft);color:var(--violet)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="arch-title">Admin Frontend</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>Level 1</code> Events list (TabBar, EventGrid)</div>
+        <div class="arch-item"><code>Level 2</code> Event detail + sessions table + moments drawer</div>
+        <div class="arch-item"><code>Level 3</code> Moment editor (existing admin page)</div>
+        <div class="arch-item"><code>Reuse</code> Dashboard components (TabBar, DrawerPanel, etc.)</div>
+      </div>
+    </div>
+
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:var(--red-soft);color:var(--red)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h.01M7 12h.01M7 17h.01M12 7h.01M12 12h.01M12 17h.01M17 7h.01M17 12h.01M17 17h.01"/></svg>
+        </div>
+        <div class="arch-title">QR Code Service</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>qrcode</code> Server-side SVG/PNG generation</div>
+        <div class="arch-item"><code>nanoid</code> 8-char short codes for tracking</div>
+        <div class="arch-item"><code>Redirect API</code> /api/fan-gallery/qr/[code]</div>
+        <div class="arch-item"><code>Dynamic</code> Update target URL without reprint</div>
+      </div>
+    </div>
+
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:var(--teal-soft);color:var(--teal)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v-2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="arch-title">Public Gallery</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item"><code>/fan-gallery/[slug]</code> No auth required</div>
+        <div class="arch-item"><code>4-screen wizard</code> Gallery, Capture, Contact, Confirm</div>
+        <div class="arch-item"><code>Real sessions</code> Photo + data to Postgres/Blob</div>
+        <div class="arch-item"><code>My Moments</code> Session-based, DB-backed</div>
+      </div>
+    </div>
+
+    <div class="arch-card">
+      <div class="arch-header">
+        <div class="arch-icon" style="background:rgba(99,102,241,0.12);color:#6366F1">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </div>
+        <div class="arch-title">Notifications (Email + SMS)</div>
+      </div>
+      <div class="arch-items">
+        <div class="arch-item" style="border-left:2px solid #6366F1;margin-left:0">
+          <code>@sendgrid/mail</code> Transactional email via SendGrid
+        </div>
+        <div class="arch-item" style="border-left:2px solid #6366F1;margin-left:0">
+          <code>twilio</code> SMS delivery via Twilio
+        </div>
+        <div class="arch-item"><code>Pre-submission</code> Gallery link sent after contact form (Screen 2)</div>
+        <div class="arch-item"><code>Post-submission</code> Photo ready + download link + sponsor CTA</div>
+        <div class="arch-item"><code>Triggers</code> Contact form submit &rarr; instant email + SMS</div>
+        <div class="arch-item"><code>Tracking</code> email_sent, sms_sent, notification_sent_at per session</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── PHASED ROLLOUT ─── -->
+<div class="section">
+  <div class="section-title">Phased Rollout</div>
+  <div class="phases">
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div class="phase-num" style="border-color:var(--teal);color:var(--teal)">1</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-title">Database + Auth Foundation</div>
+        <div class="phase-subtitle">Vercel Postgres schema, Drizzle ORM, Clerk integration, middleware</div>
+        <div class="phase-items">
+          <span class="phase-tag">drizzle.config.ts</span>
+          <span class="phase-tag">src/db/schema.ts</span>
+          <span class="phase-tag">ClerkProvider</span>
+          <span class="phase-tag">middleware.ts</span>
+          <span class="phase-tag">Sign-in / Sign-up pages</span>
+          <span class="phase-tag">Clerk webhook</span>
+          <span class="phase-tag">Seed from JSON</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div class="phase-num" style="border-color:var(--blue);color:var(--blue)">2</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-title">Events List (Level 1)</div>
+        <div class="phase-subtitle">Browse, search, filter, create events within your org</div>
+        <div class="phase-items">
+          <span class="phase-tag">/fan-gallery/admin</span>
+          <span class="phase-tag">TabBar + EventGrid</span>
+          <span class="phase-tag">Create Event drawer</span>
+          <span class="phase-tag">Events API CRUD</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div class="phase-num" style="border-color:var(--violet);color:var(--violet)">3</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-title">Event Detail + Sessions Table (Level 2)</div>
+        <div class="phase-subtitle">Sessions table with moment filter, detail drawer, moments managed via drawer</div>
+        <div class="phase-items">
+          <span class="phase-tag">/admin/events/[id]</span>
+          <span class="phase-tag">EventDetailHeader + stats</span>
+          <span class="phase-tag">SessionTable + moment filter</span>
+          <span class="phase-tag">SessionDetailDrawer</span>
+          <span class="phase-tag">Moments drawer</span>
+          <span class="phase-tag">Sessions + Moments API</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div class="phase-num" style="border-color:var(--amber);color:var(--amber)">4</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-title">Moment Editor (Level 3)</div>
+        <div class="phase-subtitle">Refactor existing admin editor, wire to Postgres, breadcrumb nav</div>
+        <div class="phase-items">
+          <span class="phase-tag">/admin/.../moments/[id]</span>
+          <span class="phase-tag">Existing editor refactor</span>
+          <span class="phase-tag">Save to Postgres JSONB</span>
+          <span class="phase-tag">Public page reads from DB</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div class="phase-num" style="border-color:var(--red);color:var(--red)">5</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-title">Sessions Pipeline</div>
+        <div class="phase-subtitle">Real photo uploads, contact data persistence, survey tracking</div>
+        <div class="phase-items">
+          <span class="phase-tag">Vercel Blob upload</span>
+          <span class="phase-tag">Sessions table</span>
+          <span class="phase-tag">Admin sessions viewer</span>
+          <span class="phase-tag">My Moments (DB-backed)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div class="phase-num" style="border-color:var(--cyan);color:var(--cyan)">6</div>
+        <div class="phase-line"></div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-title">QR Code Service</div>
+        <div class="phase-subtitle">Generate, track, and manage QR codes per moment/event</div>
+        <div class="phase-items">
+          <span class="phase-tag">QR generation API</span>
+          <span class="phase-tag">Redirect + scan tracking</span>
+          <span class="phase-tag">Admin QR management</span>
+          <span class="phase-tag">Download SVG/PNG</span>
+          <span class="phase-tag">Dynamic target URLs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-marker">
+        <div class="phase-num" style="border-color:#6366F1;color:#6366F1">7</div>
+      </div>
+      <div class="phase-body">
+        <div class="phase-title">Notifications (Email + SMS)</div>
+        <div class="phase-subtitle">SendGrid email + Twilio SMS for gallery links and post-submission follow-up</div>
+        <div class="phase-items">
+          <span class="phase-tag">@sendgrid/mail</span>
+          <span class="phase-tag">twilio</span>
+          <span class="phase-tag">POST /api/fan-gallery/notify</span>
+          <span class="phase-tag">Pre-submission gallery link</span>
+          <span class="phase-tag">Post-submission photo + download</span>
+          <span class="phase-tag">email_sent / sms_sent tracking</span>
+          <span class="phase-tag">SENDGRID_API_KEY</span>
+          <span class="phase-tag">TWILIO_ACCOUNT_SID / AUTH_TOKEN</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── ROUTE MAP ─── -->
+<div class="section">
+  <div class="section-title">Route Map</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:24px">
+
+    <div>
+      <div class="route-group">
+        <div class="route-group-title">Admin Pages</div>
+        <div class="route-list">
+          <div class="route-item"><span class="route-path">/fan-gallery/admin</span><span class="route-desc">Events list</span></div>
+          <div class="route-item"><span class="route-path">/fan-gallery/admin/events/[id]</span><span class="route-desc">Event detail + sessions table + moments drawer</span></div>
+          <div class="route-item"><span class="route-path">/fan-gallery/admin/events/[id]/moments/[mId]</span><span class="route-desc">Moment editor</span></div>
+          <div class="route-item"><span class="route-path">/fan-gallery/admin/qr-codes</span><span class="route-desc">QR management</span></div>
+        </div>
+      </div>
+      <div class="route-group">
+        <div class="route-group-title">Public Pages</div>
+        <div class="route-list">
+          <div class="route-item"><span class="route-path">/fan-gallery/[slug]</span><span class="route-desc">Public gallery (no auth)</span></div>
+          <div class="route-item"><span class="route-path">/fan-gallery/sign-in</span><span class="route-desc">Clerk sign-in</span></div>
+          <div class="route-item"><span class="route-path">/fan-gallery/sign-up</span><span class="route-desc">Clerk sign-up</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="route-group">
+        <div class="route-group-title">Admin API</div>
+        <div class="route-list">
+          <div class="route-item"><span class="route-method method-get">GET</span><span class="route-method method-post">POST</span><span class="route-path">/api/fan-gallery/admin/events</span></div>
+          <div class="route-item"><span class="route-method method-get">GET</span><span class="route-method method-put">PUT</span><span class="route-method method-del">DEL</span><span class="route-path">/api/.../events/[id]</span></div>
+          <div class="route-item"><span class="route-method method-get">GET</span><span class="route-method method-post">POST</span><span class="route-path">/api/.../admin/moments</span></div>
+          <div class="route-item"><span class="route-method method-get">GET</span><span class="route-method method-put">PUT</span><span class="route-method method-del">DEL</span><span class="route-path">/api/.../moments/[id]</span></div>
+          <div class="route-item"><span class="route-method method-get">GET</span><span class="route-path">/api/.../admin/sessions</span></div>
+          <div class="route-item"><span class="route-method method-get">GET</span><span class="route-method method-post">POST</span><span class="route-path">/api/.../admin/qr-codes</span></div>
+        </div>
+      </div>
+      <div class="route-group">
+        <div class="route-group-title">Public API</div>
+        <div class="route-list">
+          <div class="route-item"><span class="route-method method-post">POST</span><span class="route-path">/api/fan-gallery/submit</span><span class="route-desc">Photo upload + session</span></div>
+          <div class="route-item"><span class="route-method method-post">POST</span><span class="route-path">/api/fan-gallery/notify</span><span class="route-desc">Email + SMS gallery link</span></div>
+          <div class="route-item"><span class="route-method method-get">GET</span><span class="route-path">/api/fan-gallery/qr/[code]</span><span class="route-desc">Redirect + track</span></div>
+          <div class="route-item"><span class="route-method method-post">POST</span><span class="route-path">/api/webhooks/clerk</span><span class="route-desc">Org sync</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+}
+</script>
+</body>
+</html>

@@ -472,6 +472,7 @@ function RecruitingContent() {
           solution="recruiting"
           solutionLabel="Technical Recruiting"
           verticals={[
+            { id: "general", label: "General / All Industries" },
             { id: "tech-recruiting", label: "Technical Recruiting" },
             { id: "campus-recruiting", label: "Campus & University" },
             { id: "skilled-trades", label: "Skilled Trades" },
