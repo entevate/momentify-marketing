@@ -8,129 +8,103 @@
     --primary:       {{PRIMARY}};
     --primary-light: {{PRIMARY_LIGHT}};
     --primary-dark:  {{PRIMARY_DARK}};
-    --hero-grad:     {{HERO_GRAD}};
     --light-bg:      {{LIGHT_BG}};
-    --decor-pattern: {{DECOR_PATTERN}};
-    --decor-size:    {{DECOR_SIZE}};
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
-    width: 100%;
-    height: 100%;
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; background: var(--light-bg);
     font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 
-  .card {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 1 / 1;
+  .stage {
+    width: 1080px; height: 1080px;
+    flex-shrink: 0; transform-origin: center center;
     background: #ffffff;
     display: grid;
     grid-template-rows: auto 1fr auto;
     overflow: hidden;
   }
 
-  /* Left accent bar */
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 6px;
-    height: 100%;
-    background: var(--primary);
-    z-index: 2;
-  }
-
-  /* Header */
   .header {
     background: var(--light-bg);
-    padding: clamp(20px, 5%, 40px) clamp(24px, 6%, 48px);
-    padding-left: clamp(30px, 7.5%, 56px);
-    position: relative;
-    z-index: 1;
+    padding: 48px 60px;
   }
 
   .eyebrow {
-    font-size: clamp(10px, 1.4vw, 13px);
+    font-size: 20px;
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: #00BBA5;
-    margin-bottom: clamp(6px, 1.2vw, 10px);
+    margin-bottom: 14px;
   }
 
   .headline {
-    font-size: clamp(18px, 4vw, 34px);
+    font-size: 54px;
     font-weight: 500;
     line-height: 1.18;
     color: #061341;
   }
 
-  /* Main — bullet list */
   .main {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: clamp(10px, 2.2vw, 20px);
-    padding: clamp(18px, 4.5%, 36px) clamp(24px, 6%, 48px);
-    padding-left: clamp(30px, 7.5%, 56px);
+    gap: 30px;
+    padding: 44px 60px;
   }
 
   .bullet-row {
     display: flex;
     align-items: flex-start;
-    gap: clamp(10px, 1.8vw, 16px);
+    gap: 22px;
   }
 
   .bullet-dot {
     flex-shrink: 0;
-    width: clamp(7px, 1.1vw, 9px);
-    height: clamp(7px, 1.1vw, 9px);
+    width: 20px; height: 20px;
     border-radius: 50%;
     background: var(--primary);
-    margin-top: clamp(4px, 0.7vw, 6px);
+    margin-top: 18px;
   }
 
   .bullet-text {
-    font-size: clamp(12px, 2vw, 17px);
+    font-size: 52px;
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 1.4;
     color: #1a2340;
+    text-wrap: pretty;
   }
 
-  /* Footer */
   .footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: clamp(14px, 3.5%, 28px) clamp(24px, 6%, 48px);
-    padding-left: clamp(30px, 7.5%, 56px);
+    padding: 40px 60px 70px;
     border-top: 1px solid rgba(0,0,0,0.07);
   }
 
-  .logo {
-    height: clamp(18px, 3.2vw, 28px);
-    width: auto;
-  }
+  .logo { width: 300px; height: auto; }
 
   .cta-pill {
-    font-size: clamp(10px, 1.4vw, 13px);
+    font-size: 25px;
     font-weight: 600;
     letter-spacing: 0.04em;
     color: #ffffff;
     background: var(--primary);
     border-radius: 100px;
-    padding: clamp(6px, 1.2vw, 10px) clamp(14px, 2.8vw, 22px);
+    padding: 18px 40px;
     white-space: nowrap;
   }
 </style>
 </head>
 <body>
-<div class="card">
+<div class="stage">
 
   <header class="header">
     <p class="eyebrow">{{LABEL}}</p>
@@ -154,8 +128,8 @@
 
   <footer class="footer">
     <svg class="logo" viewBox="0 0 628 103" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Momentify">
-      <path d="M0.42772 92.0666L39.9572 3.39622C41.5243 -0.452991 46.6664 -1.17078 49.2277 2.1021L75.7664 33.9273C77.5509 36.2075 77.2236 39.4885 75.0238 41.3713L8.95573 98.2165C4.64682 101.904 -1.71099 97.3195 0.42772 92.0666Z" fill="url(#cl-grad0)"/>
-      <path d="M129.959 97.6845L104.837 67.7751C103.619 66.1262 101.34 65.0635 99.0327 66.1262L45.1948 91.7142C39.4911 94.3412 34.6433 86.7737 39.4142 82.6905L134.154 1.31667C137.95 -1.93233 143.745 1.26227 143.025 6.20685L139.625 95.2C138.933 99.9506 132.856 101.513 129.959 97.6845Z" fill="url(#cl-grad1)"/>
+      <path d="M0.42772 92.0666L39.9572 3.39622C41.5243 -0.452991 46.6664 -1.17078 49.2277 2.1021L75.7664 33.9273C77.5509 36.2075 77.2236 39.4885 75.0238 41.3713L8.95573 98.2165C4.64682 101.904 -1.71099 97.3195 0.42772 92.0666Z" fill="url(#sf11-g0)"/>
+      <path d="M129.959 97.6845L104.837 67.7751C103.619 66.1262 101.34 65.0635 99.0327 66.1262L45.1948 91.7142C39.4911 94.3412 34.6433 86.7737 39.4142 82.6905L134.154 1.31667C137.95 -1.93233 143.745 1.26227 143.025 6.20685L139.625 95.2C138.933 99.9506 132.856 101.513 129.959 97.6845Z" fill="url(#sf11-g1)"/>
       <path d="M581.72 102.087C580.825 102.087 579.942 101.998 579.072 101.821L580.268 93.3114C581.138 93.4887 582.021 93.5774 582.916 93.5774C584.229 93.5774 585.349 93.2523 586.276 92.6023C587.194 92.0113 588.115 90.9772 589.039 89.4998C589.963 88.0224 591.085 85.9836 592.405 83.3834L578.867 36.4023H589.609L599.003 72.7462L617.179 36.4023H627.205L602.252 83.3834C599.907 87.7564 597.763 91.3317 595.821 94.1092C593.879 96.8867 591.836 98.896 589.693 100.137C587.541 101.437 584.883 102.087 581.72 102.087Z" fill="#061341"/>
       <path d="M548.564 83.3833L553.995 44.7347H547.729L548.9 36.4022H555.166L555.353 35.0726C555.793 31.9405 556.666 29.3403 557.971 27.272C559.345 25.1445 561.27 23.549 563.746 22.4852C566.223 21.4215 569.312 20.8896 573.012 20.8896C573.907 20.8896 574.917 20.9192 576.043 20.9783C577.177 20.9783 578.392 21.0374 579.688 21.1556L578.492 29.6654C577.613 29.5472 576.637 29.4881 575.563 29.4881C574.557 29.429 573.606 29.3994 572.711 29.3994C570.204 29.3994 568.378 29.8722 567.23 30.8177C566.151 31.7041 565.453 33.2702 565.138 35.5158L565.013 36.4022H576.65L575.479 44.7347H563.842L558.41 83.3833H548.564Z" fill="#061341"/>
       <path d="M526.227 83.3826L532.83 36.4015H542.677L536.074 83.3826H526.227ZM538.501 31.0829C536.651 31.0829 535.208 30.5215 534.172 29.3987C533.205 28.2168 532.849 26.7099 533.107 24.8779C533.364 23.0459 534.139 21.5685 535.431 20.4457C536.79 19.2638 538.395 18.6729 540.245 18.6729C542.095 18.6729 543.504 19.2638 544.472 20.4457C545.507 21.5685 545.896 23.0459 545.639 24.8779C545.382 26.7099 544.573 28.2168 543.213 29.3987C541.922 30.5215 540.351 31.0829 538.501 31.0829Z" fill="#061341"/>
@@ -166,10 +140,10 @@
       <path d="M289.723 84.3579C285.366 84.3579 281.552 83.4715 278.28 81.6986C275.017 79.8667 272.59 77.1778 271 73.6321C269.477 70.0272 269.086 65.5951 269.825 60.3356L270.074 58.5627C270.772 53.5987 272.376 49.4029 274.887 45.9753C277.465 42.4887 280.64 39.8589 284.41 38.0861C288.18 36.3132 292.243 35.4268 296.599 35.4268C301.016 35.4268 304.83 36.3132 308.042 38.0861C311.313 39.8589 313.719 42.4887 315.258 45.9753C316.865 49.4029 317.319 53.5987 316.622 58.5627L316.373 60.3356C315.633 65.5951 313.966 70.0272 311.371 73.6321C308.844 77.1778 305.691 79.8667 301.912 81.6986C298.202 83.4715 294.139 84.3579 289.723 84.3579ZM290.919 75.8482C293.186 75.8482 295.409 75.3163 297.588 74.2526C299.766 73.1889 301.64 71.5342 303.209 69.2886C304.786 66.9838 305.832 63.9995 306.347 60.3356L306.596 58.5627C307.069 55.1942 306.829 52.4463 305.875 50.3189C304.929 48.1323 303.512 46.5367 301.624 45.5321C299.745 44.4684 297.671 43.9365 295.404 43.9365C293.136 43.9365 290.913 44.4684 288.734 45.5321C286.564 46.5367 284.699 48.1323 283.138 50.3189C281.586 52.4463 280.573 55.1942 280.1 58.5627L279.851 60.3356C279.336 63.9995 279.543 66.9838 280.472 69.2886C281.41 71.5342 282.818 73.1889 284.698 74.2526C286.577 75.3163 288.651 75.8482 290.919 75.8482Z" fill="#061341"/>
       <path d="M196.754 83.3824L205.475 21.332H216.574L231.366 58.1191L256.498 21.332H267.24L258.519 83.3824H247.777L253.882 39.9472L233.024 70.5291H225.862L213.6 39.9472L207.496 83.3824H196.754Z" fill="#061341"/>
       <defs>
-        <linearGradient id="cl-grad0" x1="97.7861" y1="2.97816" x2="5.6519" y2="3.51518" gradientUnits="userSpaceOnUse">
+        <linearGradient id="sf11-g0" x1="97.7861" y1="2.97816" x2="5.6519" y2="3.51518" gradientUnits="userSpaceOnUse">
           <stop stop-color="#00BBA5"/><stop offset="1" stop-color="#3257D9"/>
         </linearGradient>
-        <linearGradient id="cl-grad1" x1="173.179" y1="5.05863" x2="40.3335" y2="6.14837" gradientUnits="userSpaceOnUse">
+        <linearGradient id="sf11-g1" x1="173.179" y1="5.05863" x2="40.3335" y2="6.14837" gradientUnits="userSpaceOnUse">
           <stop stop-color="#00BBA5"/><stop offset="1" stop-color="#3257D9"/>
         </linearGradient>
       </defs>
@@ -178,5 +152,12 @@
   </footer>
 
 </div>
+<script>
+(function(){
+  var W=1080,H=1080,el=document.querySelector('.stage');
+  function sc(){el.style.transform='scale('+Math.min(innerWidth/W,innerHeight/H)+')';}
+  sc(); window.addEventListener('resize',sc);
+})();
+</script>
 </body>
 </html>
