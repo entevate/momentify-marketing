@@ -8,7 +8,9 @@ import AssetPanel from "@/components/gtm/AssetPanel"
 
 // ─── HTML-asset generation contract ───────────────────────────────────────
 // Content types that have a one-click HTML asset pipeline (calls /api/gtm/generate-asset-html).
-const ONE_CLICK_HTML_ASSETS = new Set(["infographic", "microsite", "carousel", "social-post", "one-pager", "pitch-deck"])
+// social-post AND carousel use the template-selector flow instead (see isSocialPost below),
+// so they're intentionally excluded here.
+const ONE_CLICK_HTML_ASSETS = new Set(["infographic", "microsite", "one-pager", "pitch-deck"])
 // Reserved for future manual-only asset types - currently none.
 const MANUAL_HTML_ASSETS = new Set<string>([])
 
@@ -166,7 +168,13 @@ export default function ContentBuilder({
   }
 
   const showCompetitor = contentType === "battle-card"
-  const isSocialPost = contentType === "social-post"
+  // Both social-post and carousel use the template-selector + AssetPanel flow.
+  // Naming kept as `isSocialPost` for minimal churn — semantically it now
+  // means "uses the template-asset output pipeline" for these two types.
+  // socialSections parsing only matches LinkedIn/Instagram/X output, so it
+  // returns null for carousel and gated UI (platform tabs, multi-platform
+  // panel) safely no-ops.
+  const isSocialPost = contentType === "social-post" || contentType === "carousel"
   const isOneClickHtmlAsset = ONE_CLICK_HTML_ASSETS.has(contentType)
   const isManualHtmlAsset = MANUAL_HTML_ASSETS.has(contentType)
 

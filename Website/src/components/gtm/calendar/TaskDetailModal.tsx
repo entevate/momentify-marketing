@@ -366,10 +366,13 @@ export default function TaskDetailModal({
                 )}
 
                 {/* Asset preview — renders for tasks linked to a Library item
-                    that has a rendered HTML asset (currently social-post only).
+                    that has a rendered HTML asset (social-post and carousel
+                    both render templated graphics under the social-post asset
+                    namespace, so the iframe URL hardcodes assetType=social-post
+                    regardless of the calendar task's assetType field).
                     The /api/gtm/asset-preview proxy returns the rendered HTML
                     inline so it can be iframe'd without CSP issues. */}
-                {task.libraryItemId && task.assetType === "social-post" && (
+                {task.libraryItemId && (task.assetType === "social-post" || task.assetType === "carousel") && (
                   <div
                     style={{
                       marginBottom: 20,
