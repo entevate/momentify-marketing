@@ -220,6 +220,18 @@ export const instances: ExplorerInstance[] = [
     hidden: true,
   },
   {
+    slug: "salas-o-brien",
+    name: "Salas O'Brien Explorer",
+    company: "Salas O'Brien",
+    industry: "Engineering & Design",
+    prototypeFile: "/explorer/salas-o-brien",
+    logo: "/brand/assets/salas-obrien-icon.png",
+    gateLogo: "/brand/assets/salas-obrien-logo-reverse.svg",
+    accentColor: "#009DE0",
+    createdAt: "2026-04-28",
+    password: "salasobrien2026",
+  },
+  {
     slug: "empire-jobfair",
     name: "Empire CAT Job Fair",
     company: "Empire CAT",
