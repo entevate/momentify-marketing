@@ -5,7 +5,7 @@ import { put } from "@vercel/blob"
 import { kv } from "@vercel/kv"
 import { assetBlobPath, assetKvKey } from "@/lib/gtm/asset-helpers"
 
-const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || ""
+const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 
 export async function POST(request: Request) {
   try {

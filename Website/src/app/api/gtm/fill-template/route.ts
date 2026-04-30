@@ -9,7 +9,7 @@ import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
 
-const BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN || ""
+const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 
 const isSafe = (v: string) => /^[a-zA-Z0-9_-]+$/.test(v)
 

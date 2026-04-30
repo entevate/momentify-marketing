@@ -4,7 +4,7 @@ import { put, del } from "@vercel/blob"
 import { KV, requireGtmAuth, type MicrositeRecord } from "@/lib/gtm/content-types"
 import { stripBrandNav } from "../route"
 
-const token = process.env.BLOB_READ_WRITE_TOKEN || ""
+const token = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 
 export async function GET(
   _request: Request,

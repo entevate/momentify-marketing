@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { put, list } from "@vercel/blob";
 
 const BLOB_NAME = "prototype-views.json";
-const token = process.env.BLOB_READ_WRITE_TOKEN || "";
+const token = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || "";
 
 interface ViewEntry { views: number; lastViewed: string; }
 interface ViewData { [slug: string]: ViewEntry; }

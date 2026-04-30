@@ -4,7 +4,7 @@ import type { SessionRecord, AnalyticsSummary } from "@/app/prototypes/explorer/
 import { classifySource } from "@/app/prototypes/explorer/analytics-types";
 
 const MAX_SESSIONS = 200;
-const token = process.env.BLOB_READ_WRITE_TOKEN || "";
+const token = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || "";
 
 function blobName(slug: string) {
   return `prototype-sessions-${slug}.json`;

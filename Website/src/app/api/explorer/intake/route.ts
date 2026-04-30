@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { put, list } from '@vercel/blob';
 
-const token = process.env.BLOB_READ_WRITE_TOKEN || '';
+const token = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || '';
 const INTAKE_PREFIX = 'explorer-intake/';
 
 export async function POST(request: Request) {

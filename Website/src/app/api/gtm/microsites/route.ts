@@ -3,7 +3,7 @@ import { kv } from "@/lib/gtm/kv-store"
 import { put } from "@vercel/blob"
 import { KV, requireGtmAuth, type MicrositeRecord } from "@/lib/gtm/content-types"
 
-const token = process.env.BLOB_READ_WRITE_TOKEN || ""
+const token = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 
 // Strip brand-nav and internal tooling scripts from HTML
 export function stripBrandNav(html: string): string {
