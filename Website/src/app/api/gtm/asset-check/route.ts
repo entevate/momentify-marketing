@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
-import { kv } from "@vercel/kv"
+import { kv } from "@/lib/gtm/kv-store"
 import { assetFilename, assetKvKey, isValidAssetParam } from "@/lib/gtm/asset-helpers"
 
 /**

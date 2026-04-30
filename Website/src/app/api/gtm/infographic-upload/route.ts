@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
 import { put } from "@vercel/blob"
-import { kv } from "@vercel/kv"
+import { kv } from "@/lib/gtm/kv-store"
 import { assetBlobPath, assetKvKey } from "@/lib/gtm/asset-helpers"
 
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
