@@ -71,6 +71,82 @@ type BuilderParams = {
   competitor?: string
 }
 
+/**
+ * Per-solution guidance that overrides the system prompt's trade-show
+ * defaults. Prepended to every user prompt branch in buildUserMessage so
+ * Claude reorients to the correct domain BEFORE reading the rest of the
+ * prompt (which may still reference "events" / "ROX" generically).
+ *
+ * Each block must (a) name the activities and audience for this solution,
+ * (b) name the proprietary capability the buyer is evaluating, and (c)
+ * explicitly forbid the wrong domain language.
+ */
+const solutionGuidance: Record<string, string> = {
+  "trade-shows": `===== SOLUTION DOMAIN: TRADE SHOWS & EXHIBITS =====
+The buyer runs in-person trade show and exhibit programs. Activities you can reference: booths, exhibits, show floors, exhibitor lounges, demo stations, booth staff, post-show follow-up, lead capture at the booth, badge scanning, exhibit ROI.
+Audience: VPs of Marketing, Event Managers, Trade Show Managers, Exhibit Directors, Marketing Operations leaders responsible for the trade show portfolio.
+Momentify capability to lead with: Booth Mode - the engagement intelligence layer that sits above existing exhibit tools (Cvent, badge scanners, lead retrieval apps) and turns booth interactions into measurable ROX.
+ROX framing is fully appropriate. Use trade-show vocabulary fluently. Speak to the buyer's frustration that booth investment isn't measurable today.`,
+
+  recruiting: `===== SOLUTION DOMAIN: TECHNICAL RECRUITING =====
+The buyer runs recruiting events: career fairs, on-campus visits, hiring expos, info sessions, hackathons, open houses, employer-brand activations. NOT trade shows. NOT field sales visits.
+Activities you can reference: career fair booths, recruiter conversations, candidate qualification, follow-up to qualified candidates, employer brand storytelling, candidate-experience scoring.
+Audience: VPs of Talent Acquisition, Recruiting Directors, Employer Brand Managers, University Relations leaders.
+Momentify capability to lead with: candidate engagement intelligence - structured capture of every recruiter-candidate interaction with role, interest signal, and follow-up routing.
+Frame ROX as Return on Recruiting Experience: capture quality, conversation depth, follow-up speed to candidate, offer-acceptance rate. Do NOT use "exhibitor", "booth ROI", "post-show" framing - this buyer cares about candidate pipeline, not exhibit programs.`,
+
+  "field-sales": `===== SOLUTION DOMAIN: FIELD SALES ENABLEMENT (ON-THE-GO MODE) =====
+THIS IS NOT TRADE SHOWS. THIS IS NOT EVENT MARKETING.
+The buyer runs a field sales operation: territory reps making in-person customer visits, lunch-and-learns at customer offices, dealer / distributor visits, job site walks, demo days at customer facilities, ride-alongs, route-based dealer territory coverage.
+
+Momentify capability to lead with: ON-THE-GO MODE - the mobile field rep experience that:
+- Captures customer conversations on any device, online OR offline (low-connectivity job sites, oil rigs, equipment yards, basements, remote facilities)
+- Auto-syncs to the CRM the moment connectivity returns, so reps don't lose visit context to the 3-day CRM lag
+- Delivers role-based content (battle cards, spec sheets, pricing tools, video demos) at the point of conversation, not back at the laptop
+- Triggers post-visit follow-up automatically based on what the customer engaged with during the meeting
+- Surfaces which content, reps, regions, and customer segments are actually moving deals forward
+
+Audience: VPs of Sales, Regional Sales Directors, Sales Enablement leaders, Territory Managers, Channel Sales Directors, CROs at companies with 10+ field reps. Their pain: 65% of field content goes unused, 3+ days average lag from visit to CRM, no visibility into which conversations move pipeline.
+
+Frame ROX (Return on Experience) as: capture rate of meaningful field interactions, content engagement during visits, follow-up speed from visit to first CRM action, conversion of visit to opportunity.
+
+FORBIDDEN LANGUAGE: do not use "trade show", "exhibit", "booth", "post-show", "show floor", "in-booth", "exhibitor", "career fair", "candidate", "venue", "ticket", "fan". This is field sales. The setting is the customer's parking lot, plant floor, conference room, dealer showroom, or job site - NOT a trade show booth.`,
+
+  facilities: `===== SOLUTION DOMAIN: FACILITIES (BUYER EXPERIENCE) =====
+The buyer manages physical facilities where customers visit: showrooms, demo floors, training centers, executive briefing centers, dealer experience centers, plant tours.
+Activities you can reference: facility tours, demo station visits, showroom walks, training-room engagement, signed-in visitor sessions, zone-by-zone customer interactions, post-visit follow-up.
+Audience: Facilities Directors, Workplace Experience Managers, Showroom Managers, Plant Operations leaders, EHS Managers running facility tours.
+Momentify capability to lead with: zone-level engagement tracking across the facility, with consistent capture and content delivery at every touchpoint.
+Frame ROX as Return on (facility) Experience: which zones drive engagement, how visits convert to pipeline, which content matters at each station. Do NOT use trade-show or career-fair framing - the facility is the venue, the customer comes to YOU.`,
+
+  "events-venues": `===== SOLUTION DOMAIN: EVENTS & VENUES (FAN EXPERIENCE) =====
+The buyer runs sports venues, arenas, entertainment venues, conference centers, or similar live-event spaces. The audience is FANS or GUESTS, not B2B exhibit attendees.
+Activities you can reference: game day, concert night, sponsor activations, fan zones, suite engagement, gate-to-seat experience, VIP touchpoints, between-innings/intermission activations, post-event guest follow-up.
+Audience: VPs of Fan Experience, Venue Operations Directors, Sponsorship Sales leaders, CROs at sports franchises, arenas, and entertainment venues.
+Momentify capability to lead with: fan-engagement intelligence - sponsor accountability, guest interaction tracking, follow-up clarity in one platform that sits above ticketing.
+Frame ROX as Return on (fan) Experience: sponsor activation ROI, fan-touchpoint depth, guest data quality. Do NOT use "exhibitor", "booth", "career fair", "field rep" framing - the buyer monetizes fan attention, not exhibit programs.`,
+}
+
+/**
+ * Per-solution default ICP for the "general / All Industries" vertical.
+ * Used when vertical === "general" or when verticalICPs has no entry,
+ * so each solution's "General" pick yields a buyer description that
+ * matches the solution domain rather than falling back to the trade-show-
+ * leaning generic.
+ */
+const solutionDefaultICPs: Record<string, string> = {
+  "trade-shows":
+    "VP of Marketing, Director of Trade Shows, or Event Manager at a B2B company that exhibits at 5+ industry shows per year and is accountable for booth ROI",
+  recruiting:
+    "VP of Talent Acquisition, Recruiting Director, or Employer Brand Manager running on-campus and career-fair recruiting programs",
+  "field-sales":
+    "VP of Sales, Regional Sales Director, or Sales Enablement Lead at a company with 10+ field reps making in-person customer visits across territories",
+  facilities:
+    "Facilities Director, Showroom Manager, or VP of Real Estate & Facilities running customer-facing visitor experiences",
+  "events-venues":
+    "VP of Fan Experience, Venue Operations Director, or CRO at a sports franchise, arena, or live-event venue",
+}
+
 const solutionPalettes: Record<string, { name: string; primary: string; light: string; dark: string; heroGrad: string; lightBg: string }> = {
   "trade-shows": { name: "Violet", primary: "#6B21D4", light: "#9B5FE8", dark: "#2D0770", heroGrad: "linear-gradient(135deg, #2D0770, #4A0FA8 55%, #9B5FE8)", lightBg: "linear-gradient(145deg, #F8F4FF, #EDE6FF)" },
   recruiting: { name: "Teal", primary: "#00BBA5", light: "#5FD9C2", dark: "#040E28", heroGrad: "linear-gradient(135deg, #040E28, #1A8A76 55%, #5FD9C2)", lightBg: "linear-gradient(145deg, #E8FDF8, #F0FFFC)" },
@@ -83,10 +159,29 @@ export function buildUserMessage(params: BuilderParams): string {
   const { solution, vertical, motion, contentType, additionalContext, competitor } = params
   const vertLabel = verticalLabels[vertical] || vertical
   const motionLabel = motion === "direct" ? "Direct to Customer" : "Channel Partners"
-  const icpTitle = verticalICPs[vertical] || "event marketing decision-maker"
+  // ICP resolution: vertical-specific takes priority, but the shared
+  // "general" id (or any unknown vertical) falls through to the per-
+  // solution default so trade-show framing doesn't leak into other
+  // solutions when the user picks "General / All Industries".
+  const verticalSpecificICP =
+    vertical && vertical !== "general" ? verticalICPs[vertical] : undefined
+  const icpTitle =
+    verticalSpecificICP ||
+    solutionDefaultICPs[solution] ||
+    verticalICPs[vertical] ||
+    "decision-maker"
+  // Solution domain override block - prepended to every prompt branch so
+  // Claude reorients to field-sales / recruiting / facilities / etc. and
+  // does not silently inherit the trade-show framing from the system
+  // prompt or from event-flavored phrases later in the user prompt.
+  const guidance = solutionGuidance[solution] || ""
   const extra = additionalContext ? `\n\nSPECIFIC CONTEXT (incorporate this into every section of the output): ${additionalContext}` : ""
   const palette = solutionPalettes[solution]
 
+  // Each branch returns the body of the prompt; the solution guidance
+  // block is prepended to whatever the branch returns, so we only need
+  // to maintain it in one place.
+  const body: string = (() => {
   switch (contentType) {
     case "cold-emails":
       return `Write a 3-touch cold outreach email sequence for Momentify.
@@ -480,6 +575,9 @@ Rules: no em dashes, no buzzwords, under 400 words total. Every word must earn i
     default:
       return `Write GTM content for Momentify targeting the ${vertLabel} vertical.${extra}`
   }
+  })()
+
+  return guidance ? `${guidance}\n\n${body}` : body
 }
 
 export const systemPrompt = `You are a senior B2B marketing strategist writing on behalf of Momentify.

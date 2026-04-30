@@ -366,12 +366,12 @@ export default function TaskDetailModal({
                 )}
 
                 {/* Asset preview — renders for tasks linked to a Library item
-                    that has a rendered HTML asset (social-post and carousel
-                    both render templated graphics under the social-post asset
-                    namespace, so the iframe URL hardcodes assetType=social-post
-                    regardless of the calendar task's assetType field).
-                    The /api/gtm/asset-preview proxy returns the rendered HTML
-                    inline so it can be iframe'd without CSP issues. */}
+                    that has a rendered HTML asset. Storage is namespaced by
+                    assetType: social-post stores the rendered template,
+                    carousel stores the swipeable shell HTML (which embeds 6
+                    rendered cards via iframe). The iframe URL forwards the
+                    task's assetType so each one resolves under its own
+                    namespace via /api/gtm/asset-preview. */}
                 {task.libraryItemId && (task.assetType === "social-post" || task.assetType === "carousel") && (
                   <div
                     style={{
@@ -386,7 +386,7 @@ export default function TaskDetailModal({
                   >
                     <iframe
                       title="Scheduled asset preview"
-                      src={`/api/gtm/asset-preview?solution=${encodeURIComponent(task.solution)}&assetType=social-post&itemId=${encodeURIComponent(task.libraryItemId)}`}
+                      src={`/api/gtm/asset-preview?solution=${encodeURIComponent(task.solution)}&assetType=${encodeURIComponent(task.assetType)}&itemId=${encodeURIComponent(task.libraryItemId)}`}
                       style={{
                         width: "100%",
                         height: "100%",

@@ -67,10 +67,17 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const busy = generating || uploading
 
-  const isSocialPost = assetType === "social-post"
+  const isCarousel = assetType === "carousel"
+  // "Templated" mode = template picker + slot-fill flow. Both social-post
+  // and carousel render through social-post template families; carousel
+  // restricts to 1:1 templates and routes to /api/gtm/fill-carousel.
+  const isSocialPost = assetType === "social-post" || isCarousel
   const socialTemplates: TemplateManifest[] = useMemo(
-    () => allTemplates.filter((t) => t.assetType === "social-post"),
-    []
+    () =>
+      allTemplates
+        .filter((t) => t.assetType === "social-post")
+        .filter((t) => (isCarousel ? t.aspectRatio === "1:1" : true)),
+    [isCarousel]
   )
 
   // On mount, check whether this item already has an asset on disk.
@@ -102,25 +109,29 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
     }
   }, [solution, assetType, itemId, isSocialPost])
 
-  // ─── Template fill (social-post) ────────────────────────────────────
+  // ─── Template fill (social-post + carousel) ─────────────────────────
+  // Carousel routes through /api/gtm/fill-carousel, which fans the chosen
+  // 1:1 template into 6 slot-filled variants and assembles a swipeable
+  // shell. Social-post stays on /api/gtm/fill-template (single render).
   const handleFillTemplate = useCallback(
     async (templateId: string) => {
       setGenerating(true)
       setError(null)
       setActiveTemplateId(templateId)
       const abortCtrl = new AbortController()
-      const timeoutId = setTimeout(() => abortCtrl.abort(), 60_000)
+      // Carousel = 1 Claude call producing 6 cards, plus 6 + 1 blob writes.
+      // Bump timeout to 120s vs social-post's 60s.
+      const timeoutMs = isCarousel ? 120_000 : 60_000
+      const timeoutId = setTimeout(() => abortCtrl.abort(), timeoutMs)
       try {
-        const res = await fetch("/api/gtm/fill-template", {
+        const endpoint = isCarousel ? "/api/gtm/fill-carousel" : "/api/gtm/fill-template"
+        const payload = isCarousel
+          ? { templateId, pillar: solution, briefText, itemId }
+          : { templateId, assetType: "social-post", pillar: solution, briefText, itemId }
+        const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            templateId,
-            assetType: "social-post",
-            pillar: solution,
-            briefText,
-            itemId,
-          }),
+          body: JSON.stringify(payload),
           signal: abortCtrl.signal,
         })
         if (!res.ok) {
@@ -141,7 +152,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
         setGenerating(false)
       }
     },
-    [solution, briefText, itemId]
+    [solution, briefText, itemId, isCarousel]
   )
 
   // ─── Claude full-HTML generation (non-social-post asset types) ──────
@@ -237,17 +248,23 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
           <p style={{ margin: "2px 0 0 0", fontSize: 11, color: "var(--gtm-text-faint)", fontFamily: font }}>
             {busy
               ? generating
-                ? isSocialPost
-                  ? "Claude is filling the template. Takes 5 to 15 seconds."
-                  : "Claude is rendering a fully-branded graphic. Takes 30 to 140 seconds."
+                ? isCarousel
+                  ? "Claude is filling 6 carousel cards. Takes 15 to 30 seconds."
+                  : isSocialPost
+                    ? "Claude is filling the template. Takes 5 to 15 seconds."
+                    : "Claude is rendering a fully-branded graphic. Takes 30 to 140 seconds."
                 : "Uploading..."
               : assetUrl
-                ? isSocialPost
-                  ? "Preview below. Pick a different template or upload a replacement any time."
-                  : "Preview below. Regenerate or upload a replacement any time."
-                : isSocialPost
-                  ? "Pick a template below - Claude fills the slots with copy from this brief."
-                  : "Generate a rendered graphic from this brief, or upload your own HTML."}
+                ? isCarousel
+                  ? "Preview below. Pick a different 1:1 template to regenerate the 6 cards."
+                  : isSocialPost
+                    ? "Preview below. Pick a different template or upload a replacement any time."
+                    : "Preview below. Regenerate or upload a replacement any time."
+                : isCarousel
+                  ? "Pick a 1:1 template below - Claude fills 6 distinct cards using this brief."
+                  : isSocialPost
+                    ? "Pick a template below - Claude fills the slots with copy from this brief."
+                    : "Generate a rendered graphic from this brief, or upload your own HTML."}
           </p>
         </div>
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -316,15 +333,27 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
             style={{ display: "none" }}
             onChange={handleFilePicked}
           />
-          {assetUrl && (
+          {/* Single-graphic download (social-post and any other non-carousel
+              templated asset) -> server-rendered PNG via headless Chromium. */}
+          {assetUrl && !isCarousel && (
             <a
-              href={stripCacheBust(assetUrl)}
-              download={`momentify-${solution}-${assetType}-${itemId}.html`}
+              href={`/api/gtm/render-png?solution=${encodeURIComponent(solution)}&assetType=${encodeURIComponent(assetType)}&itemId=${encodeURIComponent(itemId)}`}
               style={{ ...smallBtn, textDecoration: "none" }}
-              title="Download the rendered HTML"
+              title="Render this graphic as a 1080x1080 PNG"
             >
               <Download size={12} />
-              Download
+              Download .png
+            </a>
+          )}
+          {/* Carousel zip - 6 PNGs + 6 HTMLs + the swipeable shell. */}
+          {assetUrl && isCarousel && (
+            <a
+              href={`/api/gtm/carousel-download?solution=${encodeURIComponent(solution)}&itemId=${encodeURIComponent(itemId)}&format=both`}
+              style={{ ...smallBtn, textDecoration: "none" }}
+              title="Download a zip with 6 PNG cards, the source HTMLs, and the swipeable carousel"
+            >
+              <Download size={12} />
+              Download .zip
             </a>
           )}
         </div>
@@ -336,7 +365,8 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
       {busy && generating && isSocialPost && activeTemplateId && (
         <div style={progressBanner}>
           <Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} />
-          Filling template <strong style={{ marginLeft: 4 }}>{activeTemplateId}</strong>…
+          {isCarousel ? "Filling 6 cards from " : "Filling template "}
+          <strong style={{ marginLeft: 4 }}>{activeTemplateId}</strong>…
         </div>
       )}
 

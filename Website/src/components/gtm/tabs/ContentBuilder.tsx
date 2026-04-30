@@ -289,8 +289,10 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
       if (!res.ok) throw new Error("Save failed")
       const { id: libraryItemId } = await res.json()
 
-      // Link the draft-rendered social-post graphic to the new library id
-      // so AssetPanel in the Library finds it on reopen.
+      // Link the draft-rendered social-post / carousel graphic to the new
+      // library id so AssetPanel in the Library finds it on reopen.
+      // assetType matches the storage namespace: "carousel" for carousel,
+      // "social-post" otherwise.
       if (isSocialPost && draftAssetId && libraryItemId) {
         try {
           await fetch("/api/gtm/asset-link", {
@@ -298,7 +300,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               pillar: solution,
-              assetType: "social-post",
+              assetType: contentType === "carousel" ? "carousel" : "social-post",
               fromItemId: draftAssetId,
               toItemId: libraryItemId,
             }),
@@ -324,7 +326,8 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
   async function handleDownloadGraphic() {
     if (!isSocialPost || !draftAssetId) return
     try {
-      const url = `/api/gtm/asset-preview?solution=${encodeURIComponent(solution)}&assetType=social-post&itemId=${encodeURIComponent(draftAssetId)}`
+      const downloadAssetType = contentType === "carousel" ? "carousel" : "social-post"
+      const url = `/api/gtm/asset-preview?solution=${encodeURIComponent(solution)}&assetType=${downloadAssetType}&itemId=${encodeURIComponent(draftAssetId)}`
       const res = await fetch(url, { cache: "no-store" })
       if (!res.ok) throw new Error(`Fetch failed: ${res.status}`)
       const html = await res.text()
@@ -842,11 +845,15 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
       </div>
     </div>
 
-    {/* ─── Social Post: inline template picker + slot fill ──────────────── */}
+    {/* ─── Social Post / Carousel: inline template picker + slot fill ──── */}
+    {/* Carousel uses the same template picker UI but routes through       */}
+    {/* /api/gtm/fill-carousel which generates 6 cards (1:1 templates only) */}
+    {/* and assembles a swipeable shell. Storage namespace is keyed by     */}
+    {/* assetType so carousel and social-post don't collide.               */}
     {generated && isSocialPost && draftAssetId && (
       <AssetPanel
         solution={solution}
-        assetType="social-post"
+        assetType={contentType === "carousel" ? "carousel" : "social-post"}
         itemId={draftAssetId}
         briefText={rawContent}
       />
