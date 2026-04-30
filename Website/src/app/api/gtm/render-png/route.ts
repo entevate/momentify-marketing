@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
-import { kv } from "@/lib/gtm/kv-store"
-import { assetKvKey, isValidAssetParam } from "@/lib/gtm/asset-helpers"
+import { isValidAssetParam } from "@/lib/gtm/asset-helpers"
+import { resolveAssetUrl } from "@/lib/gtm/blob-url"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
 import { renderHtmlToPng } from "@/lib/gtm/render-png"
 
@@ -43,8 +43,7 @@ export async function GET(request: Request) {
     }
   }
 
-  const key = assetKvKey(solution, assetType, itemId)
-  const blobUrl = await kv.get<string>(key)
+  const blobUrl = await resolveAssetUrl(solution, assetType, itemId)
   if (!blobUrl) {
     return NextResponse.json(
       { error: "Asset not found. Generate the graphic first." },

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import JSZip from "jszip"
 import { kv } from "@/lib/gtm/kv-store"
 import { assetKvKey, isValidAssetParam } from "@/lib/gtm/asset-helpers"
+import { resolveAssetUrl, deterministicAssetUrl } from "@/lib/gtm/blob-url"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
 import { renderManyHtmlToPng } from "@/lib/gtm/render-png"
 
@@ -44,28 +45,48 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "format must be both | png | html" }, { status: 400 })
   }
 
+  // Resolve the shell URL via KV-then-deterministic. The card URLs are
+  // serialized as a JSON array under `<key>:cards`; if that's missing we
+  // fall back to deriving each card's deterministic public blob URL
+  // from the same itemId pattern fill-carousel uses (`<itemId>_c1`..`_c6`).
   const baseKey = assetKvKey(solution, "carousel", itemId)
-  const [shellUrl, cardsRaw] = await Promise.all([
-    kv.get<string>(baseKey),
-    kv.get<string>(`${baseKey}:cards`),
-  ])
-
+  const shellUrl = await resolveAssetUrl(solution, "carousel", itemId)
   if (!shellUrl) {
-    return NextResponse.json({ error: "Carousel not found in KV. Generate it first." }, { status: 404 })
-  }
-  if (!cardsRaw) {
-    return NextResponse.json({ error: "Card URLs not cached. Regenerate the carousel." }, { status: 404 })
+    return NextResponse.json(
+      { error: "Carousel not found. Generate it first." },
+      { status: 404 }
+    )
   }
 
-  let cardUrls: string[]
+  let cardUrls: string[] = []
   try {
-    const parsed = JSON.parse(cardsRaw)
-    if (!Array.isArray(parsed) || !parsed.every((u) => typeof u === "string")) {
-      throw new Error("expected string array")
+    const cardsRaw = await kv.get<string>(`${baseKey}:cards`)
+    if (cardsRaw) {
+      const parsed = JSON.parse(cardsRaw)
+      if (Array.isArray(parsed) && parsed.every((u) => typeof u === "string")) {
+        cardUrls = parsed
+      }
     }
-    cardUrls = parsed
   } catch {
-    return NextResponse.json({ error: "Cached card URLs are malformed" }, { status: 500 })
+    /* fall through to deterministic recovery */
+  }
+  if (cardUrls.length !== 6) {
+    // KV miss - derive the 6 card URLs deterministically.
+    const derived: string[] = []
+    for (let i = 1; i <= 6; i++) {
+      const cardItemId = `${itemId}_c${i}`
+      const u = deterministicAssetUrl(solution, "carousel", cardItemId)
+      if (!u) {
+        return NextResponse.json(
+          { error: "Cannot derive card URLs (no blob token). Regenerate the carousel." },
+          { status: 500 }
+        )
+      }
+      derived.push(u)
+    }
+    cardUrls = derived
+    // Best-effort backfill so future requests skip the derivation.
+    kv.set(`${baseKey}:cards`, JSON.stringify(cardUrls)).catch(() => { /* ignore */ })
   }
 
   // Fetch every card + the shell in parallel. If a card URL is a
