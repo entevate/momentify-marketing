@@ -16,11 +16,15 @@ const nextConfig: NextConfig = {
   // outputFileTracingIncludes forces the bundler to ship the entire
   // @sparticuz/chromium package contents alongside any route that uses
   // it. Patterns are relative to the project root.
+  // Keys are route file paths under app/, NOT URL paths. The tracer
+  // matches against the source file location, so `/api/gtm/render-png`
+  // (URL) won't match - it has to be `app/api/gtm/render-png/route` to
+  // hit the App Router route file. Wildcards are also supported.
   outputFileTracingIncludes: {
-    "/api/gtm/render-png": ["./node_modules/@sparticuz/chromium/**"],
-    "/api/gtm/carousel-download": ["./node_modules/@sparticuz/chromium/**"],
-    "/api/gtm/backgrounds-export": ["./node_modules/@sparticuz/chromium/**"],
-    "/api/gtm/brand-backgrounds-export": ["./node_modules/@sparticuz/chromium/**"],
+    "app/api/gtm/**": [
+      "./node_modules/@sparticuz/chromium/bin/**",
+      "./node_modules/@sparticuz/chromium/build/**",
+    ],
   },
 };
 
