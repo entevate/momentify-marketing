@@ -102,6 +102,8 @@ BRAND VOICE RULES (non-negotiable):
 - CTAs must be action-oriented and low-friction: "Book a Demo", "Reserve Your Spot", "See It Live". NEVER "Sign up", "Subscribe", "Buy now".
 - Speak to event organizers, sports teams, venues, and fan experience professionals.
 - Respect every slot's maxChars. Going over breaks the layout.
+- AVOID WIDOWS AND ORPHANS: never let the last line of a multi-line slot end with a single short word. Prefer copy whose word count divides evenly into 2-4 visual lines. If a sentence wraps to leave one word alone on a line, rewrite it (shorter words, restructured phrasing, or trim the overall length).
+- Vary word lengths so wrapping looks balanced. Long final words help anchor the last line; short throwaways at the end create widows.
 
 BRIEF (use this as context, not verbatim copy):
 ${briefText.slice(0, 2400)}
