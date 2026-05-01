@@ -61,6 +61,18 @@ async function launchBrowser(): Promise<Browser> {
     // Next.js outputFileTracing dropping the .so libraries that the
     // bundled binary depends on (libnss3.so etc.). Adds ~3-5s cold-
     // start latency for the download but is reliable.
+    //
+    // CRITICAL: chromium-min only sets up LD_LIBRARY_PATH (so the
+    // chromium binary can find libnss3.so + friends) when its detection
+    // logic identifies the host as AWS Lambda. That detection checks
+    // AWS_EXECUTION_ENV / AWS_LAMBDA_JS_RUNTIME for "nodejs20.x" /
+    // "nodejs22.x". Vercel does NOT set these vars, so without this
+    // shim, every cold start fails with `libnss3.so: cannot open
+    // shared object file`. Spoofing the var triggers the env setup
+    // (setupLambdaEnvironment("/tmp/al2023/lib")) at module load.
+    if (!process.env.AWS_EXECUTION_ENV && !process.env.AWS_LAMBDA_JS_RUNTIME) {
+      process.env.AWS_LAMBDA_JS_RUNTIME = "nodejs22.x"
+    }
     const chromiumMod = await import("@sparticuz/chromium-min")
     type ChromiumExport = {
       args: string[]
