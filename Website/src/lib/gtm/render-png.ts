@@ -56,19 +56,29 @@ async function launchBrowser(): Promise<Browser> {
   const isServerless = !!process.env.VERCEL || !!process.env.AWS_LAMBDA_FUNCTION_NAME
 
   if (isServerless) {
-    const chromiumMod = await import("@sparticuz/chromium")
-    // Default export depending on bundling
+    // @sparticuz/chromium-min downloads the chromium binary from a CDN
+    // at runtime instead of bundling it with the deployment. Avoids
+    // Next.js outputFileTracing dropping the .so libraries that the
+    // bundled binary depends on (libnss3.so etc.). Adds ~3-5s cold-
+    // start latency for the download but is reliable.
+    const chromiumMod = await import("@sparticuz/chromium-min")
     type ChromiumExport = {
       args: string[]
       defaultViewport: { width: number; height: number; deviceScaleFactor?: number } | null
-      executablePath: () => Promise<string>
+      executablePath: (location?: string) => Promise<string>
       headless: boolean | "shell"
     }
     const chromium = (chromiumMod as { default?: ChromiumExport }).default ?? (chromiumMod as unknown as ChromiumExport)
+    // Pin the chromium pack version. Must match the @sparticuz/chromium-min
+    // package version we installed (131.0.1). If you bump that package,
+    // bump this URL in lockstep.
+    const CHROMIUM_PACK_URL =
+      process.env.CHROMIUM_PACK_URL ||
+      "https://github.com/Sparticuz/chromium/releases/download/v131.0.1/chromium-v131.0.1-pack.tar"
     const launchOpts: LaunchOptions = {
       args: chromium.args,
       defaultViewport: { width: RENDER_WIDTH, height: RENDER_HEIGHT, deviceScaleFactor: 1 },
-      executablePath: await chromium.executablePath(),
+      executablePath: await chromium.executablePath(CHROMIUM_PACK_URL),
       // Force boolean - puppeteer types don't accept "shell".
       headless: chromium.headless === false ? false : true,
     }
