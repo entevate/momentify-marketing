@@ -27,7 +27,7 @@ async function readSessions(slug: string): Promise<SessionRecord[]> {
 
 async function writeSessions(slug: string, sessions: SessionRecord[]) {
   await put(blobName(slug), JSON.stringify(sessions), {
-    access: "private",
+    access: "public",
     addRandomSuffix: false,
     allowOverwrite: true,
     token,

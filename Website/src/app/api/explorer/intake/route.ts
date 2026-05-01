@@ -31,7 +31,7 @@ export async function POST(request: Request) {
         const blobName = `${INTAKE_PREFIX}${slug}/logos/${slug}-${suffix}.${ext}`;
         const buffer = Buffer.from(await file.arrayBuffer());
         const blob = await put(blobName, buffer, {
-          access: 'private',
+          access: 'public',
           addRandomSuffix: false,
           allowOverwrite: true,
           token,
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
         const blobName = `${INTAKE_PREFIX}${slug}/content/${value.name}`;
         const buffer = Buffer.from(await value.arrayBuffer());
         const blob = await put(blobName, buffer, {
-          access: 'private',
+          access: 'public',
           addRandomSuffix: false,
           allowOverwrite: true,
           token,
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
       `${INTAKE_PREFIX}${slug}/intake.json`,
       JSON.stringify(intakeRecord, null, 2),
       {
-        access: 'private',
+        access: 'public',
         addRandomSuffix: false,
         allowOverwrite: true,
         token,

@@ -25,7 +25,7 @@ async function readData(): Promise<ViewData> {
 
 async function writeData(data: ViewData) {
   await put(BLOB_NAME, JSON.stringify(data), {
-    access: "private",
+    access: "public",
     addRandomSuffix: false,
     allowOverwrite: true,
     token,
