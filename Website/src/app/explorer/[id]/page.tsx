@@ -11,6 +11,8 @@ import { DEALROOM_CONFIG } from '@/lib/explorer/configs/dealroom';
 import { DEALROOM_MOBILE_CONFIG } from '@/lib/explorer/configs/dealroom-mobile';
 import { SALAS_OBRIEN_CONFIG } from '@/lib/explorer/configs/salas-o-brien';
 import { SALAS_OBRIEN_MOBILE_CONFIG } from '@/lib/explorer/configs/salas-o-brien-mobile';
+import { DFWPB_PICKLEBALL_CONFIG } from '@/lib/explorer/configs/dfwpb-pickleball-may132026';
+import { DFWPB_PICKLEBALL_MOBILE_CONFIG } from '@/lib/explorer/configs/dfwpb-pickleball-may132026-mobile';
 
 import type { ExplorerConfig } from '@/lib/explorer/types';
 
@@ -25,6 +27,8 @@ const CONFIGS: Record<string, ExplorerConfig> = {
   'dealroom-mobile': DEALROOM_MOBILE_CONFIG,
   'salas-o-brien': SALAS_OBRIEN_CONFIG,
   'salas-o-brien-mobile': SALAS_OBRIEN_MOBILE_CONFIG,
+  'dfwpb-pickleball-may132026': DFWPB_PICKLEBALL_CONFIG,
+  'dfwpb-pickleball-may132026-mobile': DFWPB_PICKLEBALL_MOBILE_CONFIG,
 };
 
 export default async function ExplorerPage({
