@@ -269,7 +269,7 @@ export const instances: ExplorerInstance[] = [
     gateLogo: "/dfwtpb.png",
     accentColor: "#BF353D",
     createdAt: "2026-05-04",
-    password: "dfwtpbPBallen2026",
+    password: "dfwtpb2026",
     mobileSlug: "dfwpb-pickleball-may132026-mobile",
   },
   {
@@ -282,7 +282,7 @@ export const instances: ExplorerInstance[] = [
     gateLogo: "/dfwtpb.png",
     accentColor: "#BF353D",
     createdAt: "2026-05-04",
-    password: "dfwtpbPBallen2026",
+    password: "dfwtpb2026",
     formFactor: "mobile",
     hidden: true,
   },
