@@ -10,7 +10,7 @@
  * actions against the same draft.
  */
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Save, Send, CalendarPlus, Code2, Eye, Check, AlertCircle } from "lucide-react"
 import TipTapEditor from "./TipTapEditor"
 import RecipientPicker from "./RecipientPicker"
@@ -114,14 +114,32 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
   // call applyEmailWrapper() directly because it's a server module that
   // imports pillar-palettes (also fine for client). Mounting in an
   // iframe via srcdoc isolates email styling from the host page.
-  const previewSrc = useMemo(() => {
-    if (local.rawHtmlMode) return local.bodyHtml
-    return wrapForPreview(local.bodyHtml, {
-      solution: local.solution,
-      ctaText: local.ctaText,
-      ctaHref: local.ctaHref,
-      headerTag: local.headerTag,
-    })
+  // Debounced preview source. Re-rendering the iframe srcDoc on every
+  // keystroke does two bad things:
+  //   1. Visible "flicker" as the iframe remounts on each character.
+  //   2. Any <img> in the body re-fetches from the network; if the user
+  //      types faster than the image loads, the fetch gets cancelled
+  //      mid-flight on every render and the image never appears - shows
+  //      as a broken link until typing pauses.
+  // Use a 400ms debounce so the iframe only re-renders after the user
+  // stops typing.
+  const [debouncedPreviewSrc, setDebouncedPreviewSrc] = useState<string>("")
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (local.rawHtmlMode) {
+        setDebouncedPreviewSrc(local.bodyHtml)
+      } else {
+        setDebouncedPreviewSrc(
+          wrapForPreview(local.bodyHtml, {
+            solution: local.solution,
+            ctaText: local.ctaText,
+            ctaHref: local.ctaHref,
+            headerTag: local.headerTag,
+          }),
+        )
+      }
+    }, 400)
+    return () => clearTimeout(t)
   }, [local.bodyHtml, local.rawHtmlMode, local.solution, local.ctaText, local.ctaHref, local.headerTag])
 
   return (
@@ -313,7 +331,7 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
 
           <iframe
             title="Email preview"
-            srcDoc={previewSrc}
+            srcDoc={debouncedPreviewSrc}
             sandbox=""
             style={{
               flex: 1,
