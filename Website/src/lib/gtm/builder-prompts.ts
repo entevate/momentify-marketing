@@ -67,8 +67,192 @@ type BuilderParams = {
   vertical: string
   motion: string
   contentType: string
+  /**
+   * Optional primary-persona id from solutionPersonas. When set (and not
+   * "auto"), overrides the vertical-derived icpTitle so the generated
+   * content speaks directly to that persona's mandate, success metrics,
+   * and pain points. "auto" or undefined falls back to the existing
+   * vertical → solution-default ICP resolution.
+   */
+  persona?: string
   additionalContext?: string
   competitor?: string
+}
+
+/**
+ * Per-solution primary personas. Each entry provides:
+ *   - id: stable key persisted in session/state
+ *   - label: dropdown display text
+ *   - profile: rich buyer description that overrides icpTitle when this
+ *     persona is selected. Should name the title, mandate, primary
+ *     success metric, and the pain point Momentify solves for them.
+ *
+ * The first option for every solution is "auto" — keeps the existing
+ * vertical-driven ICP resolution so the dropdown is non-breaking.
+ */
+export interface PersonaOption {
+  id: string
+  label: string
+  profile: string
+  /**
+   * Sharp one-line voice cue for the persona — what they care about, how
+   * they read content. Injected into the prompt so the tone calibrates
+   * (e.g. CFOs want unit economics, ops want runbooks, marketing wants
+   * narrative + proof).
+   */
+  voice: string
+}
+
+export const solutionPersonas: Record<string, PersonaOption[]> = {
+  general: [
+    { id: "auto", label: "Auto (default)", profile: "", voice: "" },
+    { id: "cmo",
+      label: "Chief Marketing Officer",
+      profile: "CMO accountable for pipeline contribution from every in-person motion across the company - trade shows, field events, recruiting, facility tours, sponsorships - who is being asked by the CFO to defend in-person spend with a single ROI standard",
+      voice: "Speaks in pipeline contribution, attribution, and brand equity. Tired of vanity metrics; wants one ROX standard that proves in-person budget across the company." },
+    { id: "cro",
+      label: "Chief Revenue Officer",
+      profile: "CRO who owns the number across direct sales, channel, and field motions, and who treats every in-person interaction (booth, dinner, demo, site visit) as a top-of-funnel revenue lever they need to measure and compound",
+      voice: "Hyper-focused on revenue conversion velocity. Cares about meetings booked, pipeline created, and forecast accuracy. Allergic to soft metrics." },
+    { id: "coo",
+      label: "Chief Operating Officer",
+      profile: "COO running cross-functional in-person operations - field reps, recruiters, facility staff, event teams - who needs a unified operating system so the company stops paying five vendors for five disconnected toolchains",
+      voice: "Wants efficiency, unification, fewer point tools. Speaks in headcount leverage, vendor consolidation, time-to-value." },
+    { id: "vp-revops",
+      label: "VP RevOps",
+      profile: "VP RevOps responsible for the data, attribution, and system-of-record across every revenue motion, who is tasked with rolling in-person engagement data into the same model as digital marketing and SDR sequences",
+      voice: "Data-first. Cares about attribution model integrity, source-of-truth integration, and clean handoffs to Salesforce/HubSpot." },
+    { id: "vp-demandgen",
+      label: "VP Demand Generation",
+      profile: "VP Demand Gen who allocates spend across digital and in-person and wants every event, field activation, or sponsorship measured with the same MQL/SQL/pipeline rigor as paid digital",
+      voice: "Channel-mix mindset. Compares CAC across digital and in-person; wants every dollar trackable to pipeline." },
+  ],
+  "trade-shows": [
+    { id: "auto", label: "Auto (default)", profile: "", voice: "" },
+    { id: "vp-marketing",
+      label: "VP / Director of Marketing",
+      profile: "VP or Director of Marketing accountable for booth ROI across 5+ industry shows annually, under pressure to defend six- or seven-figure event budgets to a CFO who only sees a hotel-and-travel line item",
+      voice: "Narrative-driven, brand-conscious; needs hard numbers to defend spend. Cares about story + proof." },
+    { id: "trade-show-director",
+      label: "Director of Trade Shows / Events",
+      profile: "Director of Trade Shows or Events who owns the calendar, the booth build, and the post-show wrap-up - the person who has to translate badge scans and stack-ranked lists into something Sales will actually follow up on",
+      voice: "Operational, deadline-driven. Speaks in booths, badges, deliverables, post-show recap PDFs. Wants automation, not more spreadsheets." },
+    { id: "field-marketing-manager",
+      label: "Field Marketing Manager",
+      profile: "Field Marketing Manager who runs a regional event portfolio (regional shows, customer dinners, partner pavilions) and is judged on number of qualified meetings booked per event",
+      voice: "Tactical and metrics-focused. Cares about meetings booked, sales acceptance rate, and per-event payback." },
+    { id: "demand-gen-lead",
+      label: "Demand Gen Lead",
+      profile: "Demand Gen Lead who owns the trade-show line in the marketing-mix model and needs every show treated as a measurable channel - cost per MQL, cost per SQL, contribution to pipeline - alongside paid search and display",
+      voice: "CAC-and-conversion mindset. Wants per-show MQL/SQL economics directly comparable to digital channels." },
+    { id: "booth-ops-manager",
+      label: "Booth Operations Manager",
+      profile: "Booth Operations Manager or Exhibit Manager responsible for the on-floor experience - staffing, demo flow, attendee qualification - who feels the gap between the lead list they hand to Sales and the meetings that actually get booked",
+      voice: "Hands-on; cares about staff productivity, demo throughput, and lead quality at the moment of capture." },
+  ],
+  recruiting: [
+    { id: "auto", label: "Auto (default)", profile: "", voice: "" },
+    { id: "vp-talent",
+      label: "VP of Talent Acquisition",
+      profile: "VP of Talent Acquisition accountable for both campus and experienced-hire pipelines, who treats career fairs, university visits, and recruiting events as a measurable top-of-funnel for offer-acceptance rate",
+      voice: "Funnel-minded. Speaks in source-of-hire, time-to-fill, offer-acceptance, and quality-of-hire." },
+    { id: "recruiting-director",
+      label: "Recruiting Director",
+      profile: "Recruiting Director running an annual calendar of campus visits, hackathons, and industry meetups, judged on yield - did the candidates we engaged at the event actually convert to interviews and offers",
+      voice: "Yield-obsessed. Wants every event tied to interview-to-offer conversion. Tired of badge scans that go nowhere." },
+    { id: "university-recruiting-lead",
+      label: "University Recruiting Lead",
+      profile: "University Recruiting Lead managing relationships with 10+ target schools, on-campus brand presence, and intern conversion, who needs to prove which school visits and info sessions actually produce hires",
+      voice: "Relationship-driven and brand-focused on campus. Cares about school ROI and intern-to-FT conversion." },
+    { id: "employer-brand-manager",
+      label: "Employer Brand Manager",
+      profile: "Employer Brand Manager responsible for how the company shows up at career fairs and recruiting events, accountable for application volume, candidate sentiment, and the gap between brand impression and offer acceptance",
+      voice: "Story + sentiment. Cares about candidate experience, brand differentiation, and Glassdoor-style perception." },
+    { id: "campus-recruiter",
+      label: "Campus / Field Recruiter",
+      profile: "Campus or field recruiter who works the booths and table events directly, knows exactly which conversations turned into interviews, and is frustrated that the system of record drops 80% of the people they actually met",
+      voice: "On-the-ground, conversational; values speed-to-followup and a tool that captures meaningful conversations, not just emails." },
+  ],
+  "field-sales": [
+    { id: "auto", label: "Auto (default)", profile: "", voice: "" },
+    { id: "vp-sales",
+      label: "VP of Sales",
+      profile: "VP of Sales who runs a 10+ rep field organization, accountable to the CRO for in-person meeting velocity and forecast accuracy, frustrated by the gap between rep-claimed activity and CRM reality",
+      voice: "Revenue and forecast first. Cares about meeting volume, pipeline coverage, and rep-level attainment." },
+    { id: "regional-sales-director",
+      label: "Regional Sales Director",
+      profile: "Regional Sales Director managing reps across territories, judged on quarterly attainment, who needs visibility into which on-site visits and field demos actually moved deals forward",
+      voice: "Territory-level optics. Wants per-rep, per-account, per-visit ROX so coaching is grounded in evidence." },
+    { id: "sales-enablement-lead",
+      label: "Sales Enablement Lead",
+      profile: "Sales Enablement Lead arming reps for in-person customer visits with playbooks, demo content, and follow-up cadences, accountable for post-visit follow-through rate",
+      voice: "Playbook + content. Speaks in messaging adoption, content usage, and ramp time." },
+    { id: "sales-ops-manager",
+      label: "Sales Operations Manager",
+      profile: "Sales Operations Manager who owns CRM hygiene, activity reporting, and the rev-tech stack, tasked with closing the loop between field activity and Salesforce so leadership stops guessing",
+      voice: "Process and data integrity. Cares about CRM hygiene, automation coverage, and one source of truth." },
+    { id: "channel-sales-director",
+      label: "Channel Sales Director",
+      profile: "Channel Sales Director running distributor and partner programs, accountable for partner-attached pipeline, who needs to measure and improve in-person partner enablement events and ride-alongs",
+      voice: "Partner-leverage mindset. Cares about partner-sourced pipeline and the ride-along multiplier." },
+  ],
+  facilities: [
+    { id: "auto", label: "Auto (default)", profile: "", voice: "" },
+    { id: "facilities-director",
+      label: "Facilities Director",
+      profile: "Facilities Director responsible for showrooms, customer experience centers, and visitor-facing spaces, accountable for visitor throughput, NPS, and the conversion from a facility tour to a real business outcome",
+      voice: "Operational + experiential. Speaks in throughput, NPS, and turning physical space into pipeline." },
+    { id: "showroom-manager",
+      label: "Showroom Manager",
+      profile: "Showroom or Experience Center Manager who runs the day-to-day visitor program, escorts buyers through the space, and is asked to prove the showroom drives deals - not just impressions",
+      voice: "Hospitality + outcomes. Cares about visit quality, post-visit conversion, and making every tour count." },
+    { id: "vp-real-estate",
+      label: "VP Real Estate & Facilities",
+      profile: "VP of Real Estate & Facilities who is being asked to justify the cost-per-square-foot of customer-facing experience space against measurable revenue contribution",
+      voice: "Capital-allocation lens. Wants $/sqft tied to pipeline contribution; defends real-estate spend to CFO." },
+    { id: "visitor-experience-manager",
+      label: "Visitor Experience Manager",
+      profile: "Visitor Experience Manager who curates the customer journey through the building - check-in, tours, demos, hospitality - and is judged on visitor satisfaction and the depth of post-visit engagement",
+      voice: "Journey-design mindset. Cares about every touchpoint, sentiment, and the story buyers tell after they leave." },
+    { id: "cx-director",
+      label: "Customer Experience Director",
+      profile: "Customer Experience Director treating the physical facility as a key CX touchpoint in a multi-channel customer journey, accountable for visitor sentiment data feeding the broader CX program",
+      voice: "Cross-channel CX. Wants facility data feeding the same CX dashboard as digital and support touchpoints." },
+  ],
+  "events-venues": [
+    { id: "auto", label: "Auto (default)", profile: "", voice: "" },
+    { id: "vp-fan-experience",
+      label: "VP of Fan Experience",
+      profile: "VP of Fan Experience at a sports franchise or arena, accountable for fan satisfaction, in-venue spend per fan, and the data depth of the fan profile after every game or event",
+      voice: "Fan-first. Speaks in NPS, repeat attendance, in-venue spend, and depth of fan profile." },
+    { id: "venue-ops-director",
+      label: "Venue Operations Director",
+      profile: "Venue Operations Director running gameday or event-day operations across multiple events per week, judged on throughput at gates, concourse, and concessions, and on incident-free execution",
+      voice: "Throughput + execution. Cares about queue times, gate flow, and operational reliability." },
+    { id: "venue-cro",
+      label: "CRO / Chief Revenue Officer",
+      profile: "CRO at a sports franchise or live-event venue, accountable for sponsorship revenue, premium-suite renewals, and ticket revenue, who needs activation data to defend sponsor pricing and renew accounts",
+      voice: "Sponsorship and renewals. Cares about sponsor-activation proof and premium account retention." },
+    { id: "sponsorship-director",
+      label: "Sponsorship / Partnership Director",
+      profile: "Sponsorship Director managing brand partnerships at a venue, judged on partner renewals and upsells, who needs in-venue activation data (engagement, dwell, opt-ins) to show partners the value they're paying for",
+      voice: "Partner-narrative. Wants activation metrics that justify renewal pricing and upsell asks." },
+    { id: "guest-services-manager",
+      label: "Guest Services / Hospitality Manager",
+      profile: "Guest Services or Hospitality Manager responsible for the front-line fan and guest experience, accountable for resolving issues in real time and building the post-event sentiment record",
+      voice: "Service-recovery + sentiment. Cares about resolving issues live and capturing the post-event story." },
+  ],
+}
+
+/**
+ * Resolve a persona id (with the solution as fallback context) to its full
+ * PersonaOption, or null if "auto" / unknown.
+ */
+function resolvePersona(solution: string, personaId?: string): PersonaOption | null {
+  if (!personaId || personaId === "auto") return null
+  const list = solutionPersonas[solution]
+  if (!list) return null
+  return list.find((p) => p.id === personaId) ?? null
 }
 
 /**
@@ -172,9 +356,14 @@ const solutionPalettes: Record<string, { name: string; primary: string; light: s
 }
 
 export function buildUserMessage(params: BuilderParams): string {
-  const { solution, vertical, motion, contentType, additionalContext, competitor } = params
+  const { solution, vertical, motion, contentType, persona, additionalContext, competitor } = params
   const vertLabel = verticalLabels[vertical] || vertical
   const motionLabel = motion === "direct" ? "Direct to Customer" : "Channel Partners"
+  // Persona override: when a primary persona is selected, its profile
+  // becomes the icpTitle so every prompt branch speaks directly to that
+  // buyer. "auto" / unset falls through to the existing vertical → solution-
+  // default ICP resolution.
+  const personaOpt = resolvePersona(solution, persona)
   // ICP resolution: vertical-specific takes priority, but the shared
   // "general" id (or any unknown vertical) falls through to the per-
   // solution default so trade-show framing doesn't leak into other
@@ -182,16 +371,27 @@ export function buildUserMessage(params: BuilderParams): string {
   const verticalSpecificICP =
     vertical && vertical !== "general" ? verticalICPs[vertical] : undefined
   const icpTitle =
+    personaOpt?.profile ||
     verticalSpecificICP ||
     solutionDefaultICPs[solution] ||
     verticalICPs[vertical] ||
     "decision-maker"
+  // Persona voice cue is appended as an explicit tone/voice instruction
+  // so Claude calibrates word choice and emphasis to the persona, not
+  // just the title.
+  const personaVoiceBlock = personaOpt?.voice
+    ? `\n\nPERSONA VOICE (calibrate tone, vocabulary, and what the reader cares about to this): ${personaOpt.voice}`
+    : ""
   // Solution domain override block - prepended to every prompt branch so
   // Claude reorients to field-sales / recruiting / facilities / etc. and
   // does not silently inherit the trade-show framing from the system
   // prompt or from event-flavored phrases later in the user prompt.
   const guidance = solutionGuidance[solution] || ""
-  const extra = additionalContext ? `\n\nSPECIFIC CONTEXT (incorporate this into every section of the output): ${additionalContext}` : ""
+  const extraContext = additionalContext ? `\n\nSPECIFIC CONTEXT (incorporate this into every section of the output): ${additionalContext}` : ""
+  // personaVoiceBlock + extraContext combine into the existing "extra"
+  // slot every prompt branch already concatenates, so the persona's voice
+  // cue lands in every content type without touching each switch case.
+  const extra = `${personaVoiceBlock}${extraContext}`
   const palette = solutionPalettes[solution]
 
   // Each branch returns the body of the prompt; the solution guidance

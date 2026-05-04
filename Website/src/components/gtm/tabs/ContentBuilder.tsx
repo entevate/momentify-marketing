@@ -5,6 +5,7 @@ import { Loader2, Copy, Save, Check, ExternalLink, RefreshCw, Send, Globe, Termi
 import type { VerticalOption } from "./SolutionTabs"
 import { dispatchLibraryChanged } from "./SolutionTabs"
 import AssetPanel from "@/components/gtm/AssetPanel"
+import { solutionPersonas } from "@/lib/gtm/builder-prompts"
 
 // ─── HTML-asset generation contract ───────────────────────────────────────
 // Content types that have a one-click HTML asset pipeline (calls /api/gtm/generate-asset-html).
@@ -44,6 +45,10 @@ export default function ContentBuilder({
   verticals,
 }: ContentBuilderProps) {
   const [vertical, setVertical] = useState(verticals[0]?.id ?? "")
+  // Primary persona dropdown — refines the generated content's target buyer
+  // beyond the vertical. "auto" preserves the prior vertical-driven ICP.
+  const personaOptions = solutionPersonas[solution] ?? solutionPersonas.general ?? []
+  const [persona, setPersona] = useState<string>(personaOptions[0]?.id ?? "auto")
   const [motion, setMotion] = useState<"direct" | "partner">("direct")
   const [contentType, setContentType] = useState(CONTENT_TYPES[0].value)
   const [additionalContext, setAdditionalContext] = useState("")
@@ -83,6 +88,7 @@ export default function ContentBuilder({
       if (raw) {
         const s = JSON.parse(raw) as Record<string, unknown>
         if (typeof s.vertical === "string") setVertical(s.vertical)
+        if (typeof s.persona === "string") setPersona(s.persona)
         if (s.motion === "direct" || s.motion === "partner") setMotion(s.motion)
         if (typeof s.contentType === "string") setContentType(s.contentType)
         if (typeof s.additionalContext === "string") setAdditionalContext(s.additionalContext)
@@ -103,17 +109,18 @@ export default function ContentBuilder({
       localStorage.setItem(
         storageKey,
         JSON.stringify({
-          vertical, motion, contentType,
+          vertical, persona, motion, contentType,
           additionalContext, competitor, generated, draftAssetId,
         })
       )
     } catch {
       /* storage full / disabled - silently skip */
     }
-  }, [storageKey, vertical, motion, contentType, additionalContext, competitor, generated, draftAssetId])
+  }, [storageKey, vertical, persona, motion, contentType, additionalContext, competitor, generated, draftAssetId])
 
   function handleClearSession() {
     setVertical(verticals[0]?.id ?? "")
+    setPersona(personaOptions[0]?.id ?? "auto")
     setMotion("direct")
     setContentType(CONTENT_TYPES[0].value)
     setAdditionalContext("")
@@ -228,6 +235,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
         body: JSON.stringify({
           solution,
           vertical,
+          persona,
           motion,
           contentType,
           additionalContext: additionalContext || undefined,
@@ -497,6 +505,27 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
             ))}
           </select>
         </FormField>
+
+        {personaOptions.length > 0 && (
+          <FormField label="Primary Persona">
+            <select
+              value={persona}
+              onChange={(e) => setPersona(e.target.value)}
+              style={selectStyle}
+            >
+              {personaOptions.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.label}
+                </option>
+              ))}
+            </select>
+            <p style={{ margin: "6px 0 0 0", fontSize: 11, color: "var(--gtm-text-faint)" }}>
+              {persona === "auto"
+                ? "Targets the vertical's default buyer."
+                : "Tailors voice, pain points, and proof to this persona."}
+            </p>
+          </FormField>
+        )}
 
         <FormField label="Motion">
           <div style={{ display: "flex", gap: 8 }}>

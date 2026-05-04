@@ -4,7 +4,7 @@ import { buildUserMessage, systemPrompt } from "@/lib/gtm/builder-prompts"
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { solution, vertical, motion, contentType, additionalContext, competitor } = body
+    const { solution, vertical, motion, contentType, persona, additionalContext, competitor } = body
 
     if (!solution || !motion || !contentType) {
       return NextResponse.json(
@@ -27,6 +27,7 @@ export async function POST(request: Request) {
       vertical,
       motion,
       contentType,
+      persona,
       additionalContext,
       competitor,
     })
