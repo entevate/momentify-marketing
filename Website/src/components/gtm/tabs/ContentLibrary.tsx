@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState, useCallback } from "react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Trash2, Copy, Check, ChevronDown, ChevronUp, Loader2, Mail } from "lucide-react"
 import { dispatchLibraryChanged } from "./SolutionTabs"
 import AssetPanel from "@/components/gtm/AssetPanel"
@@ -56,12 +56,41 @@ function formatRelative(iso: string): string {
 }
 
 export default function ContentLibrary({ solution, solutionLabel }: ContentLibraryProps) {
+  const router = useRouter()
   const [items, setItems] = useState<LibraryItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [filter, setFilter] = useState<string>("all")
+  const [sendingItemId, setSendingItemId] = useState<string | null>(null)
+
+  /**
+   * Library "Send via Email" entry point. POSTs to /api/gtm/email/drafts
+   * with libraryItemId + touchIndex. The server dedupes by (libraryItemId,
+   * touchIndex) for any draft in editable status, so repeat clicks on the
+   * same Library item return the same draft instead of duplicating.
+   * Navigates to /gtm/email?draftId=<id> which preselects without doing
+   * any further work (no auto-create-on-refresh).
+   */
+  async function sendViaEmail(libraryItemId: string, touchIndex = 0) {
+    setSendingItemId(libraryItemId)
+    try {
+      const res = await fetch("/api/gtm/email/drafts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ libraryItemId, libraryTouchIndex: touchIndex }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.draft) {
+        throw new Error(data.error || "Failed to create email draft")
+      }
+      router.push(`/gtm/email?draftId=${encodeURIComponent(data.draft.id)}`)
+    } catch (e) {
+      alert(`Could not open email draft: ${e instanceof Error ? e.message : "Unknown error"}`)
+      setSendingItemId(null)
+    }
+  }
 
   const fetchItems = useCallback(async () => {
     setLoading(true)
@@ -236,12 +265,15 @@ export default function ContentLibrary({ solution, solutionLabel }: ContentLibra
 
                     <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
                       {item.contentType === "cold-emails" && (
-                        <Link
-                          href={`/gtm/email?seed=${encodeURIComponent(item.id)}&touch=0`}
-                          style={{ ...actionBtnStyle, background: "rgba(0,187,165,0.08)", color: "#0AA891", borderColor: "rgba(0,187,165,0.25)", textDecoration: "none" }}
+                        <button
+                          type="button"
+                          onClick={() => sendViaEmail(item.id, 0)}
+                          disabled={sendingItemId === item.id}
+                          style={{ ...actionBtnStyle, background: "rgba(0,187,165,0.08)", color: "#0AA891", borderColor: "rgba(0,187,165,0.25)", opacity: sendingItemId === item.id ? 0.6 : 1 }}
                         >
-                          <Mail size={12} />Send via Email
-                        </Link>
+                          <Mail size={12} />
+                          {sendingItemId === item.id ? "Opening..." : "Send via Email"}
+                        </button>
                       )}
                       <button onClick={() => handleCopy(item.id, item.content)} style={actionBtnStyle}>
                         {copiedId === item.id ? <Check size={12} /> : <Copy size={12} />}

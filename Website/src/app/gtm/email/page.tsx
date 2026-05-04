@@ -15,18 +15,18 @@ const font = "'Inter', system-ui, -apple-system, sans-serif"
  *
  * Three tabs: Drafts | Audiences | Sends & Metrics.
  *
- * Query params:
- *   ?seed=<libraryItemId>&touch=<n>  - auto-creates a draft seeded from
- *                                       the chosen Library cold-emails item
- *   ?tab=<drafts|audiences|sends>     - opens a specific tab on load
+ * Query params (all optional, all selection-only - none create state):
+ *   ?draftId=<id>                    - preselects an existing draft on the
+ *                                       Drafts tab (used by ContentLibrary's
+ *                                       Send via Email button after it
+ *                                       creates the draft server-side)
+ *   ?tab=<drafts|audiences|sends>    - opens a specific tab on load
  */
 function EmailPageInner() {
   const searchParams = useSearchParams()
-  const seedId = searchParams.get("seed")
-  const touchStr = searchParams.get("touch")
+  const preselectDraftId = searchParams.get("draftId") || undefined
   const tabParam = searchParams.get("tab") as EmailTabKey | null
 
-  const seed = seedId ? { libraryItemId: seedId, touchIndex: Number(touchStr || 0) } : undefined
   const [active, setActive] = useState<EmailTabKey>(tabParam ?? "drafts")
 
   return (
@@ -38,7 +38,7 @@ function EmailPageInner() {
       </header>
 
       <EmailTabs active={active} onChange={setActive}>
-        {active === "drafts" && <DraftsTab seed={seed} />}
+        {active === "drafts" && <DraftsTab preselectDraftId={preselectDraftId} />}
         {active === "audiences" && <AudiencesTab />}
         {active === "sends" && <SendsTab />}
       </EmailTabs>

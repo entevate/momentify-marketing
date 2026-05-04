@@ -3,14 +3,16 @@
 /**
  * DraftsTab - left list of drafts + right ComposePane.
  *
- * Supports a `seed` query param: when /gtm/email?seed=<libraryItemId>&touch=<n>
- * is loaded, the page passes the seed args here and we POST a new draft
- * with libraryItemId + libraryTouchIndex so the API seeds subject/body
- * from the parsed cold-email sequence.
+ * Supports a `?draftId=X` query param to auto-select an existing draft
+ * on mount (e.g. after the Library "Send via Email" button creates a
+ * draft and routes here). NEVER creates a draft from URL query params
+ * - that caused infinite duplicate creation when refreshing a page that
+ * still had ?seed= in the URL after a delete. New drafts are only ever
+ * created on explicit user click ("New Draft" / LibrarySeedPanel /
+ * ContentLibrary's "Send via Email").
  */
 
-import { useCallback, useEffect, useRef, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useCallback, useEffect, useState } from "react"
 import { Plus, Trash2 } from "lucide-react"
 import ComposePane from "./ComposePane"
 import LibrarySeedPanel from "./LibrarySeedPanel"
@@ -19,19 +21,14 @@ import type { EmailDraft } from "@/lib/gtm/email-types"
 const font = "'Inter', system-ui, -apple-system, sans-serif"
 
 interface Props {
-  /** Optional auto-seed on mount: { libraryItemId, touchIndex }. */
-  seed?: { libraryItemId: string; touchIndex: number }
+  /** Optional preselect on mount: ?draftId=X */
+  preselectDraftId?: string
 }
 
-export default function DraftsTab({ seed }: Props) {
-  const router = useRouter()
+export default function DraftsTab({ preselectDraftId }: Props) {
   const [drafts, setDrafts] = useState<EmailDraft[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  // Tracks which (libraryItemId|touchIndex) combos we've already seeded
-  // in this component's lifetime. Prevents re-creating the same draft
-  // when the parent re-renders with a fresh `seed` object reference.
-  const seededRef = useRef<Set<string>>(new Set())
 
   const refresh = useCallback(async () => {
     setLoading(true)
@@ -46,41 +43,22 @@ export default function DraftsTab({ seed }: Props) {
 
   useEffect(() => { refresh() }, [refresh])
 
-  // Auto-seed on mount when ?seed=... query param is present.
-  // Two guards prevent the duplicate-draft bug:
-  //   1. Stable dep keys (primitives) - libraryItemId + touchIndex,
-  //      not the `seed` object reference (which changes every render).
-  //   2. seededRef set - if the user navigates away and back to the
-  //      same URL, we won't re-create.
-  // After seeding, we replace the URL to drop the ?seed= query param so
-  // a future visit (without re-clicking from Library) doesn't trigger.
-  const seedKey = seed ? `${seed.libraryItemId}|${seed.touchIndex}` : null
+  // Auto-select a draft on mount when ?draftId=X is in the URL. Pure
+  // selection, no creation. If the draft id doesn't exist, nothing
+  // happens (the user lands on "no draft selected" and can pick one).
   useEffect(() => {
-    if (!seedKey || !seed) return
-    if (seededRef.current.has(seedKey)) return
-    seededRef.current.add(seedKey)
-    ;(async () => {
-      try {
-        const res = await fetch("/api/gtm/email/drafts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ libraryItemId: seed.libraryItemId, libraryTouchIndex: seed.touchIndex }),
-        })
-        const data = await res.json()
-        if (data.draft) {
-          setDrafts((prev) => [data.draft, ...prev])
-          setActiveId(data.draft.id)
-        }
-      } finally {
-        // Clear the query param so a back/forward navigation (or page
-        // refresh) doesn't re-seed.
-        router.replace("/gtm/email", { scroll: false })
-      }
-    })()
-    // Intentionally only on seedKey - we don't want re-runs from
-    // `seed`-object identity changes or `router` re-renders.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [seedKey])
+    if (preselectDraftId) setActiveId(preselectDraftId)
+  }, [preselectDraftId])
+
+  /**
+   * Idempotent prepend - replaces an existing draft with the same id
+   * rather than duplicating it. Belt-and-suspender for the server-side
+   * dedupe; even if both fire, React state never holds duplicate keys.
+   */
+  function upsertDraft(d: EmailDraft) {
+    setDrafts((prev) => [d, ...prev.filter((x) => x.id !== d.id)])
+    setActiveId(d.id)
+  }
 
   async function newBlankDraft() {
     const res = await fetch("/api/gtm/email/drafts", {
@@ -89,10 +67,7 @@ export default function DraftsTab({ seed }: Props) {
       body: JSON.stringify({}),
     })
     const data = await res.json()
-    if (data.draft) {
-      setDrafts((prev) => [data.draft, ...prev])
-      setActiveId(data.draft.id)
-    }
+    if (data.draft) upsertDraft(data.draft)
   }
 
   async function seedFromLibrary(libraryItemId: string, touchIndex: number) {
@@ -102,17 +77,24 @@ export default function DraftsTab({ seed }: Props) {
       body: JSON.stringify({ libraryItemId, libraryTouchIndex: touchIndex }),
     })
     const data = await res.json()
-    if (data.draft) {
-      setDrafts((prev) => [data.draft, ...prev])
-      setActiveId(data.draft.id)
-    }
+    if (data.draft) upsertDraft(data.draft)
   }
 
   async function deleteDraft(id: string) {
-    if (!confirm("Delete this draft?")) return
-    await fetch(`/api/gtm/email/drafts/${id}`, { method: "DELETE" })
-    setDrafts((prev) => prev.filter((d) => d.id !== id))
-    if (activeId === id) setActiveId(null)
+    if (!confirm("Delete this draft? This cannot be undone.")) return
+    try {
+      const res = await fetch(`/api/gtm/email/drafts/${id}`, { method: "DELETE" })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        throw new Error(body.error || `Delete failed (${res.status})`)
+      }
+      setDrafts((prev) => prev.filter((d) => d.id !== id))
+      if (activeId === id) setActiveId(null)
+    } catch (e) {
+      alert(`Could not delete draft: ${e instanceof Error ? e.message : "Unknown error"}`)
+      // Refresh from server so the local list reflects truth.
+      await refresh()
+    }
   }
 
   function handleDraftChange(updated: EmailDraft) {

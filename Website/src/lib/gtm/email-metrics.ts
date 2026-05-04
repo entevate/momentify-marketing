@@ -39,14 +39,22 @@ export async function aggregateMetrics(opts?: {
   since?: string
 }): Promise<EmailAggregateMetrics> {
   const drafts = await listDrafts({ solution: opts?.solution })
-  // Optional draftIds filter to scope sends + events.
-  const draftIds = new Set(drafts.map((d) => d.id))
 
   const allSends = await listSends(opts?.since ? { since: opts.since } : undefined)
   const allEvents = await listEvents(opts?.since ? { since: opts.since } : undefined)
 
-  const sends = allSends.filter((s) => draftIds.has(s.draftId))
-  const events = allEvents.filter((e) => e.draftId && draftIds.has(e.draftId))
+  // Filter only when scoping to a specific solution — solution lives on
+  // the draft, so we have to look up via draftIds. Without a solution
+  // filter, count ALL sends + events regardless of whether the draft
+  // was later deleted; otherwise totals would silently drop after a
+  // user cleans up old drafts.
+  let sends = allSends
+  let events = allEvents.filter((e) => !!e.draftId)
+  if (opts?.solution) {
+    const draftIds = new Set(drafts.map((d) => d.id))
+    sends = allSends.filter((s) => draftIds.has(s.draftId))
+    events = events.filter((e) => e.draftId && draftIds.has(e.draftId))
+  }
 
   const base = rollUp("__aggregate__", sends.length, events)
   const byStatus: Record<EmailStatus, number> = {
