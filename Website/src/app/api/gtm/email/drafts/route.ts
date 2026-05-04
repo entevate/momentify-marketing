@@ -41,6 +41,28 @@ export async function POST(request: Request) {
     const body = await request.json().catch(() => ({}))
     const now = new Date().toISOString()
 
+    // Idempotency: if the caller is seeding from a Library item AND a
+    // draft already exists for the same (libraryItemId, touchIndex)
+    // pair in editable status (draft / scheduled), return that draft
+    // instead of creating a duplicate.
+    //
+    // This bulletproofs the "Send via Email" entry-point against React
+    // effect double-fires (Strict Mode, Suspense re-mounts, browser
+    // back-nav) where the client may POST the same seed twice before
+    // the URL clears.
+    if (body.libraryItemId) {
+      const touchIndex = Number.isFinite(body.libraryTouchIndex) ? Number(body.libraryTouchIndex) : 0
+      const existing = await listDrafts({ statuses: ["draft", "scheduled"] })
+      const match = existing.find(
+        (d) =>
+          d.libraryItemId === body.libraryItemId &&
+          (d.libraryTouchIndex ?? 0) === touchIndex,
+      )
+      if (match) {
+        return NextResponse.json({ draft: match, deduped: true })
+      }
+    }
+
     // Seed defaults from a Library cold-emails item when provided. This is
     // the "Send via Email" entry-point from ContentLibrary.
     let seeded: { subject?: string; bodyHtml?: string; solution?: string; motion?: string } = {}
