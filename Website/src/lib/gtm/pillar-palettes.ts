@@ -8,7 +8,7 @@
  * future consumer so that mutating a color in one place updates every surface.
  */
 
-export type PillarId = "trade-shows" | "recruiting" | "field-sales" | "facilities" | "events-venues"
+export type PillarId = "general" | "trade-shows" | "recruiting" | "field-sales" | "facilities" | "events-venues"
 
 export interface Palette {
   name: string
@@ -38,6 +38,17 @@ export interface Palette {
 }
 
 export const pillarPalettes: Record<PillarId, Palette> = {
+  general: {
+    name: "Momentify",
+    primary: "#1A56DB",
+    light: "#0CF4DF",
+    dark: "#061341",
+    heroGrad: "linear-gradient(135deg, #061341 0%, #1A56DB 55%, #0CF4DF 100%)",
+    lightBg: "linear-gradient(145deg, #F4F7FF 0%, #ECF1FB 100%)",
+    // Diagonal momentum lines — forward motion, platform unity across pillars
+    decorPattern: "repeating-linear-gradient(135deg, rgba(26,86,219,0.10) 0 1px, transparent 1px 14px), repeating-linear-gradient(135deg, rgba(12,244,223,0.08) 0 1px, transparent 1px 28px)",
+    decorSize: "auto",
+  },
   "trade-shows": {
     name: "Violet",
     primary: "#6B21D4",
@@ -102,6 +113,7 @@ export function paletteFor(solution: string): Palette {
 }
 
 export const pillarLabels: Record<PillarId, string> = {
+  general: "General Momentify",
   "trade-shows": "Trade Shows",
   recruiting: "Recruiting",
   "field-sales": "Field Sales",
@@ -111,6 +123,7 @@ export const pillarLabels: Record<PillarId, string> = {
 
 export function isPillarId(v: string): v is PillarId {
   return (
+    v === "general" ||
     v === "trade-shows" ||
     v === "recruiting" ||
     v === "field-sales" ||
