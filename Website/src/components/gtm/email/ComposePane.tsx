@@ -211,6 +211,20 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
             />
           </Field>
 
+          <Field label="Header tag (optional)">
+            <input
+              type="text"
+              value={local.headerTag || ""}
+              onChange={(e) => update({ headerTag: e.target.value || undefined })}
+              placeholder="e.g. Q4 Campaign · Field Sales · ROX Audit"
+              maxLength={48}
+              style={subjectInput}
+            />
+            <p style={{ margin: "4px 0 0 0", fontSize: 11, color: "var(--gtm-text-faint)", fontFamily: font, lineHeight: 1.45 }}>
+              Right-aligned uppercase eyebrow in the colored header bar. Leave blank to show only the logo.
+            </p>
+          </Field>
+
           <Field label={local.rawHtmlMode ? "HTML body (raw)" : "Body"}>
             {local.rawHtmlMode ? (
               <textarea
@@ -233,20 +247,6 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
               recipients={local.recipients}
               onChange={(recipients: EmailRecipient[]) => update({ recipients })}
             />
-          </Field>
-
-          <Field label="Header tag (optional)">
-            <input
-              type="text"
-              value={local.headerTag || ""}
-              onChange={(e) => update({ headerTag: e.target.value || undefined })}
-              placeholder="e.g. Q4 Campaign · Field Sales · ROX Audit"
-              maxLength={48}
-              style={subjectInput}
-            />
-            <p style={{ margin: "4px 0 0 0", fontSize: 11, color: "var(--gtm-text-faint)", fontFamily: font, lineHeight: 1.45 }}>
-              Right-aligned uppercase eyebrow in the colored header bar. Leave blank to show only the logo.
-            </p>
           </Field>
 
           <Field label="CTA button (optional)">
