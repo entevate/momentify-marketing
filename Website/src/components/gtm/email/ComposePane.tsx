@@ -300,6 +300,17 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
           <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--gtm-text-faint)", padding: "10px 12px 6px 12px" }}>
             Preview {local.rawHtmlMode ? "(raw)" : "(branded)"}
           </div>
+
+          {/* Envelope header — From / To / Subject — mimics how the
+              email will surface in the recipient's inbox preview. The
+              actual email body is rendered in the iframe below. */}
+          <div style={envelope}>
+            <EnvelopeRow label="From" value={local.fromEmail || `Momentify <${process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL || "hello@momentifyapp.com"}>`} />
+            <EnvelopeRow label="To" value={summarizeRecipients(local.recipients)} />
+            {local.replyTo && <EnvelopeRow label="Reply-To" value={local.replyTo} />}
+            <EnvelopeRow label="Subject" value={local.subject || <em style={{ color: "var(--gtm-text-faint)" }}>(no subject)</em>} bold />
+          </div>
+
           <iframe
             title="Email preview"
             srcDoc={previewSrc}
@@ -328,6 +339,68 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
 }
 
 // ─── helpers ───────────────────────────────────────────────────────────
+
+/**
+ * Envelope header above the preview iframe — mimics the From/To/Subject
+ * tray a recipient sees in their inbox before they open the email.
+ */
+function EnvelopeRow({ label, value, bold = false }: { label: string; value: React.ReactNode; bold?: boolean }) {
+  return (
+    <div style={{ display: "flex", gap: 12, padding: "6px 14px", fontSize: 12, alignItems: "baseline" }}>
+      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--gtm-text-faint)", width: 60, flexShrink: 0 }}>
+        {label}
+      </span>
+      <span style={{ flex: 1, minWidth: 0, fontWeight: bold ? 600 : 400, color: "var(--gtm-text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: font }}>
+        {value}
+      </span>
+    </div>
+  )
+}
+
+const envelope: React.CSSProperties = {
+  background: "#fff",
+  border: "1px solid var(--gtm-border)",
+  borderRadius: 6,
+  padding: "8px 0",
+  marginBottom: 10,
+  display: "flex",
+  flexDirection: "column",
+  gap: 0,
+  fontFamily: font,
+}
+
+/**
+ * Render a human-readable summary of an EmailRecipient[] for the To: row.
+ * - Audience refs become "Audience: <id>" (we'd need to fetch names to
+ *   show a friendlier label; deferred to v2)
+ * - Contact refs become "1 contact"
+ * - Raw emails are listed inline up to 3, then "+N more"
+ * - Empty list → "(no recipients)"
+ */
+function summarizeRecipients(recipients: EmailDraft["recipients"]): React.ReactNode {
+  if (!recipients || recipients.length === 0) {
+    return <em style={{ color: "var(--gtm-text-faint)" }}>(no recipients)</em>
+  }
+  const parts: string[] = []
+  let audienceCount = 0
+  let contactCount = 0
+  const rawEmails: string[] = []
+  for (const r of recipients) {
+    if (r.kind === "audience") audienceCount++
+    else if (r.kind === "contact") contactCount++
+    else if (r.kind === "raw") rawEmails.push(r.email)
+  }
+  if (audienceCount > 0) parts.push(`${audienceCount} audience${audienceCount > 1 ? "s" : ""}`)
+  if (contactCount > 0) parts.push(`${contactCount} contact${contactCount > 1 ? "s" : ""}`)
+  if (rawEmails.length > 0) {
+    if (rawEmails.length <= 3) {
+      parts.push(rawEmails.join(", "))
+    } else {
+      parts.push(`${rawEmails.slice(0, 3).join(", ")}, +${rawEmails.length - 3} more`)
+    }
+  }
+  return parts.join(" · ")
+}
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

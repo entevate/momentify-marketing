@@ -23,6 +23,7 @@ export default function AudiencesTab() {
   const [newEmail, setNewEmail] = useState("")
   const [newFirstName, setNewFirstName] = useState("")
   const [newLastName, setNewLastName] = useState("")
+  const [newCompany, setNewCompany] = useState("")
   const [error, setError] = useState<string | null>(null)
 
   async function refreshAudiences() {
@@ -96,11 +97,12 @@ export default function AudiencesTab() {
           email: newEmail.trim(),
           firstName: newFirstName.trim() || undefined,
           lastName: newLastName.trim() || undefined,
+          company: newCompany.trim() || undefined,
         }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || "Add failed")
-      setNewEmail(""); setNewFirstName(""); setNewLastName("")
+      setNewEmail(""); setNewFirstName(""); setNewLastName(""); setNewCompany("")
       await refreshContacts(activeId)
     } catch (e) {
       setError(e instanceof Error ? e.message : "Add failed")
@@ -203,17 +205,18 @@ export default function AudiencesTab() {
         </div>
         {activeId && (
           <>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 120px 120px auto auto", gap: 6, padding: 12, borderBottom: "1px solid var(--gtm-border)" }}>
-              <input value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="email@..." style={input} type="email" />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1.4fr auto auto", gap: 6, padding: 12, borderBottom: "1px solid var(--gtm-border)" }}>
               <input value={newFirstName} onChange={(e) => setNewFirstName(e.target.value)} placeholder="First name" style={input} />
               <input value={newLastName} onChange={(e) => setNewLastName(e.target.value)} placeholder="Last name" style={input} />
+              <input value={newCompany} onChange={(e) => setNewCompany(e.target.value)} placeholder="Company" style={input} />
+              <input value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="email@..." style={input} type="email" />
               <button type="button" onClick={addContact} style={addBtn}><Plus size={12} /> Add</button>
               <button
                 type="button"
                 onClick={() => importInputRef.current?.click()}
                 disabled={importing}
                 style={{ ...addBtn, background: "var(--gtm-bg-card, #fff)", color: "var(--gtm-text-primary)", border: "1px solid var(--gtm-border)", opacity: importing ? 0.6 : 1 }}
-                title="Import contacts from a CSV file (columns: email, firstName, lastName)"
+                title="Import contacts from a CSV file (columns: firstName, lastName, company, email)"
               >
                 <Upload size={12} /> {importing ? "Importing..." : "Import CSV"}
               </button>
@@ -254,8 +257,10 @@ export default function AudiencesTab() {
               <table style={table}>
                 <thead>
                   <tr>
+                    <th style={th}>First Name</th>
+                    <th style={th}>Last Name</th>
+                    <th style={th}>Company</th>
                     <th style={th}>Email</th>
-                    <th style={th}>Name</th>
                     <th style={th}>Status</th>
                     <th style={th} />
                   </tr>
@@ -263,8 +268,10 @@ export default function AudiencesTab() {
                 <tbody>
                   {contacts.map((c) => (
                     <tr key={c.id}>
+                      <td style={td}>{c.firstName || "-"}</td>
+                      <td style={td}>{c.lastName || "-"}</td>
+                      <td style={td}>{c.company || "-"}</td>
                       <td style={td}>{c.email}</td>
-                      <td style={td}>{[c.firstName, c.lastName].filter(Boolean).join(" ") || "-"}</td>
                       <td style={td}>
                         {c.unsubscribed
                           ? <span style={{ color: "#D43D1A", fontWeight: 600 }}>Unsubscribed</span>
@@ -317,16 +324,19 @@ const errBanner: React.CSSProperties = { gridColumn: "1 / -1", padding: 12, back
  * are 30-50KB gzipped and overkill for what's effectively a 3-column
  * import format.
  */
-function parseCsvContacts(text: string): Array<{ email: string; firstName?: string; lastName?: string }> {
+function parseCsvContacts(text: string): Array<{ email: string; firstName?: string; lastName?: string; company?: string }> {
   const lines = text.replace(/\r\n?/g, "\n").split("\n").filter((l) => l.trim().length > 0)
   if (lines.length === 0) return []
 
   const firstRow = parseCsvRow(lines[0])
-  const looksLikeHeader = firstRow.some((c) => /email|first|last|name/i.test(c))
+  const looksLikeHeader = firstRow.some((c) => /email|first|last|name|company|organization/i.test(c))
 
-  let emailIdx = 0
-  let firstIdx = 1
-  let lastIdx = 2
+  // Default positional layout matches the documented column order
+  // (firstName, lastName, company, email) so unheaded CSVs work too.
+  let firstIdx = 0
+  let lastIdx = 1
+  let companyIdx = 2
+  let emailIdx = 3
   let dataStart = 0
 
   if (looksLikeHeader) {
@@ -334,10 +344,12 @@ function parseCsvContacts(text: string): Array<{ email: string; firstName?: stri
     emailIdx = firstRow.findIndex((c) => /^email$|^email_address$|^e[-_ ]?mail$/i.test(c.trim()))
     firstIdx = firstRow.findIndex((c) => /^first[-_ ]?name$|^first$|^fname$|^given[-_ ]?name$/i.test(c.trim()))
     lastIdx = firstRow.findIndex((c) => /^last[-_ ]?name$|^last$|^lname$|^surname$|^family[-_ ]?name$/i.test(c.trim()))
-    if (emailIdx === -1) emailIdx = 0 // fallback to col 0 if no obvious email header
+    companyIdx = firstRow.findIndex((c) => /^company$|^organization$|^org$|^employer$|^business$/i.test(c.trim()))
+    if (emailIdx === -1) emailIdx = firstRow.findIndex((c) => c.trim().includes("@")) // last-ditch
+    if (emailIdx === -1) emailIdx = firstRow.length - 1 // assume email is in the last column
   }
 
-  const out: Array<{ email: string; firstName?: string; lastName?: string }> = []
+  const out: Array<{ email: string; firstName?: string; lastName?: string; company?: string }> = []
   for (let i = dataStart; i < lines.length; i++) {
     const cols = parseCsvRow(lines[i])
     const email = (cols[emailIdx] || "").trim()
@@ -346,6 +358,7 @@ function parseCsvContacts(text: string): Array<{ email: string; firstName?: stri
       email,
       firstName: firstIdx >= 0 ? (cols[firstIdx] || "").trim() || undefined : undefined,
       lastName:  lastIdx  >= 0 ? (cols[lastIdx]  || "").trim() || undefined : undefined,
+      company:   companyIdx >= 0 ? (cols[companyIdx] || "").trim() || undefined : undefined,
     })
   }
   return out

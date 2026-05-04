@@ -20,6 +20,12 @@ export interface ResendContact {
   email: string
   firstName?: string
   lastName?: string
+  /**
+   * Stored in our KV (gtm:email:contact-meta:{id}) because Resend's
+   * Audiences API has no custom field support. Merged into the contact
+   * shape at list time.
+   */
+  company?: string
   audienceId: string
   unsubscribed: boolean
   createdAt: string

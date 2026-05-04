@@ -23,7 +23,7 @@ export async function POST(request: Request, ctx: { params: Promise<{ id: string
   }
   const { id: audienceId } = await ctx.params
 
-  let body: { contacts?: Array<{ email?: string; firstName?: string; lastName?: string }> }
+  let body: { contacts?: Array<{ email?: string; firstName?: string; lastName?: string; company?: string }> }
   try {
     body = await request.json()
   } catch {
@@ -58,7 +58,13 @@ export async function POST(request: Request, ctx: { params: Promise<{ id: string
     }
     seen.add(email)
     try {
-      await createContact(audienceId, email, raw.firstName?.trim() || undefined, raw.lastName?.trim() || undefined)
+      await createContact(
+        audienceId,
+        email,
+        raw.firstName?.trim() || undefined,
+        raw.lastName?.trim() || undefined,
+        raw.company?.trim() || undefined,
+      )
       added++
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Unknown error"

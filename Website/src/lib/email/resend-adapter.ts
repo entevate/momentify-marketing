@@ -63,10 +63,28 @@ const getFromAddress = (): string => {
   return `${quotedName} <${email}>`
 }
 
+/**
+ * Resend accepts `from` in two formats:
+ *   1. bare email: "addr@domain.tld"
+ *   2. display:    "Name <addr@domain.tld>"
+ * Anything else (no @, just a name, malformed RFC) gets rejected with
+ * "Invalid `from` field". Pre-validate so a bad per-draft override
+ * doesn't tank the send - fall back to the configured default.
+ */
+function safeFromAddress(maybeFrom: string | undefined): string {
+  const candidate = (maybeFrom || "").trim()
+  if (!candidate) return getFromAddress()
+  // Display form: must have <email@domain> at the end
+  if (/<[^@<>]+@[^@<>]+\.[^@<>]+>\s*$/.test(candidate)) return candidate
+  // Bare email form: just email@domain.tld with no spaces
+  if (/^[^\s<>]+@[^\s<>]+\.[^\s<>]+$/.test(candidate)) return candidate
+  return getFromAddress()
+}
+
 export async function send(params: SendParams): Promise<SendResult> {
   const result = await getClient().emails.send({
     to: params.to,
-    from: params.from || getFromAddress(),
+    from: safeFromAddress(params.from),
     subject: params.subject,
     html: params.html,
     replyTo: params.replyTo,
