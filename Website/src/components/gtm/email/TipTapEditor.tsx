@@ -8,16 +8,22 @@
  * on save (sanitizeEmailHtml in email-parser.ts).
  *
  * Toolbar covers the formatting set commonly supported by email clients:
- * bold, italic, headings, lists, links, blockquote, hr. Media (images,
- * tables) intentionally omitted - email-client rendering parity for
- * these is poor without a templating layer (v2 React Email).
+ * bold, italic, headings, lists, links, blockquote, hr, image upload.
+ * Tables intentionally omitted - email-client rendering parity for
+ * tables is poor without a templating layer (v2 React Email).
+ *
+ * Image upload: Insert button opens a file picker, POSTs the file to
+ * /api/gtm/email/upload-image, inserts the returned blob URL as an
+ * <img> node at the cursor position. Inserted images render full-width
+ * by default (constrained by the email shell's 600px content column).
  */
 
 import { useEditor, EditorContent, type Editor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import Link from "@tiptap/extension-link"
 import Placeholder from "@tiptap/extension-placeholder"
-import { useEffect, useState } from "react"
+import Image from "@tiptap/extension-image"
+import { useEffect, useRef, useState } from "react"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
 
@@ -41,6 +47,19 @@ export default function TipTapEditor({ initialHtml, onChange, placeholder = "Wri
         openOnClick: false,
         autolink: true,
         HTMLAttributes: { rel: "noopener", target: "_blank" },
+      }),
+      Image.configure({
+        // Inline images get an inline-block presentation; we want block
+        // by default so an inserted image gets its own line in the body.
+        inline: false,
+        // Allow base64 paste for quick prototyping. Production sends use
+        // hosted URLs (the upload helper) so this is just a convenience.
+        allowBase64: true,
+        HTMLAttributes: {
+          // Constrain to the email shell's content width (600px - 32px*2
+          // padding = 536px). Inline style so it survives copy-paste.
+          style: "max-width:100%;height:auto;display:block;border-radius:6px;margin:12px 0;",
+        },
       }),
       Placeholder.configure({ placeholder }),
     ],
@@ -128,6 +147,32 @@ function Toolbar({ editor }: { editor: Editor }) {
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run()
   }
 
+  // ─── Image upload ────────────────────────────────────────────────────
+  const imageInputRef = useRef<HTMLInputElement | null>(null)
+  const [uploading, setUploading] = useState(false)
+
+  async function uploadImage(file: File) {
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append("file", file)
+      const res = await fetch("/api/gtm/email/upload-image", {
+        method: "POST",
+        body: formData,
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Upload failed")
+      // Insert at the current cursor position. The Image extension's
+      // setImage command handles caret placement automatically.
+      editor.chain().focus().setImage({ src: data.url, alt: file.name }).run()
+    } catch (e) {
+      alert(`Image upload failed: ${e instanceof Error ? e.message : "Unknown error"}`)
+    } finally {
+      setUploading(false)
+      if (imageInputRef.current) imageInputRef.current.value = ""
+    }
+  }
+
   return (
     <div
       style={{
@@ -152,6 +197,18 @@ function Toolbar({ editor }: { editor: Editor }) {
       {btn("Link", editor.isActive("link"), promptLink)}
       {btn("Quote", editor.isActive("blockquote"), () => editor.chain().focus().toggleBlockquote().run())}
       {btn("HR", false, () => editor.chain().focus().setHorizontalRule().run())}
+      <span style={sep} />
+      {btn(uploading ? "Uploading..." : "Image", false, () => imageInputRef.current?.click())}
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/gif,image/webp"
+        style={{ display: "none" }}
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (file) uploadImage(file)
+        }}
+      />
     </div>
   )
 }

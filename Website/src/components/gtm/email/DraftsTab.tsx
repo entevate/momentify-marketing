@@ -9,7 +9,8 @@
  * from the parsed cold-email sequence.
  */
 
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Plus, Trash2 } from "lucide-react"
 import ComposePane from "./ComposePane"
 import LibrarySeedPanel from "./LibrarySeedPanel"
@@ -23,9 +24,14 @@ interface Props {
 }
 
 export default function DraftsTab({ seed }: Props) {
+  const router = useRouter()
   const [drafts, setDrafts] = useState<EmailDraft[]>([])
   const [activeId, setActiveId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  // Tracks which (libraryItemId|touchIndex) combos we've already seeded
+  // in this component's lifetime. Prevents re-creating the same draft
+  // when the parent re-renders with a fresh `seed` object reference.
+  const seededRef = useRef<Set<string>>(new Set())
 
   const refresh = useCallback(async () => {
     setLoading(true)
@@ -41,21 +47,40 @@ export default function DraftsTab({ seed }: Props) {
   useEffect(() => { refresh() }, [refresh])
 
   // Auto-seed on mount when ?seed=... query param is present.
+  // Two guards prevent the duplicate-draft bug:
+  //   1. Stable dep keys (primitives) - libraryItemId + touchIndex,
+  //      not the `seed` object reference (which changes every render).
+  //   2. seededRef set - if the user navigates away and back to the
+  //      same URL, we won't re-create.
+  // After seeding, we replace the URL to drop the ?seed= query param so
+  // a future visit (without re-clicking from Library) doesn't trigger.
+  const seedKey = seed ? `${seed.libraryItemId}|${seed.touchIndex}` : null
   useEffect(() => {
-    if (!seed) return
+    if (!seedKey || !seed) return
+    if (seededRef.current.has(seedKey)) return
+    seededRef.current.add(seedKey)
     ;(async () => {
-      const res = await fetch("/api/gtm/email/drafts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ libraryItemId: seed.libraryItemId, libraryTouchIndex: seed.touchIndex }),
-      })
-      const data = await res.json()
-      if (data.draft) {
-        setDrafts((prev) => [data.draft, ...prev])
-        setActiveId(data.draft.id)
+      try {
+        const res = await fetch("/api/gtm/email/drafts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ libraryItemId: seed.libraryItemId, libraryTouchIndex: seed.touchIndex }),
+        })
+        const data = await res.json()
+        if (data.draft) {
+          setDrafts((prev) => [data.draft, ...prev])
+          setActiveId(data.draft.id)
+        }
+      } finally {
+        // Clear the query param so a back/forward navigation (or page
+        // refresh) doesn't re-seed.
+        router.replace("/gtm/email", { scroll: false })
       }
     })()
-  }, [seed])
+    // Intentionally only on seedKey - we don't want re-runs from
+    // `seed`-object identity changes or `router` re-renders.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seedKey])
 
   async function newBlankDraft() {
     const res = await fetch("/api/gtm/email/drafts", {

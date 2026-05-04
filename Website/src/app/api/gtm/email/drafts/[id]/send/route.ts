@@ -58,6 +58,9 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
   const html = applyEmailWrapper(draft.bodyHtml, {
     rawHtmlMode: draft.rawHtmlMode,
     solution: draft.solution,
+    ctaText: draft.ctaText,
+    ctaHref: draft.ctaHref,
+    headerTag: draft.headerTag,
   })
 
   // Fire sequentially (matches the existing sendBatch helper). Production

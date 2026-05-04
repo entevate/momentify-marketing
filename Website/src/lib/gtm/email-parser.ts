@@ -119,6 +119,12 @@ export interface ApplyEmailWrapperOpts {
   ctaHref?: string
   /** Pre-header text (snippet shown in email client previews). */
   preheader?: string
+  /**
+   * Optional uppercase tag rendered on the right side of the colored
+   * header bar (e.g. "Q4 Campaign", "ROX Audit", "Field Sales — May").
+   * Hidden when blank/undefined.
+   */
+  headerTag?: string
 }
 
 /**
@@ -178,15 +184,22 @@ ${preheader}
   <tr>
     <td align="center" style="padding:32px 16px;">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;width:100%;background:#FFFFFF;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(6,19,65,0.06),0 8px 24px rgba(6,19,65,0.06);">
-        <!-- Header bar: pillar-tinted gradient + Momentify white wordmark only -->
+        <!-- Header bar: white wordmark + optional right-side custom tag -->
         <tr>
-          <td align="left" style="background:${palette.heroGrad};padding:24px 32px;">
-            <img
-              src="https://www.momentifyapp.com/Momentify-Logo_White.svg"
-              alt="Momentify"
-              width="140" height="28"
-              style="display:block;width:140px;height:auto;border:0;outline:none;text-decoration:none;"
-            />
+          <td style="background:${palette.heroGrad};padding:24px 32px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                <td align="left" valign="middle">
+                  <img
+                    src="https://www.momentifyapp.com/Momentify-Logo_White.svg"
+                    alt="Momentify"
+                    width="140" height="28"
+                    style="display:block;width:140px;height:auto;border:0;outline:none;text-decoration:none;"
+                  />
+                </td>
+                ${opts.headerTag ? `<td align="right" valign="middle" style="font-family:Inter,system-ui,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.82);">${escapeHtml(opts.headerTag)}</td>` : ""}
+              </tr>
+            </table>
           </td>
         </tr>
         <!-- Body -->

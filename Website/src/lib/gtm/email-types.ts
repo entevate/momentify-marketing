@@ -55,6 +55,19 @@ export interface EmailDraft {
   /** Override of RESEND_FROM_EMAIL. Must be a verified sender on the Resend account. */
   fromEmail?: string
   replyTo?: string
+  /**
+   * Optional CTA button rendered below the body in the branded email
+   * shell. Both fields must be present for the button to render. The
+   * button is pillar-tinted via the same palette as the header gradient.
+   */
+  ctaText?: string
+  ctaHref?: string
+  /**
+   * Optional eyebrow text rendered in the right side of the colored
+   * header bar (e.g. campaign name, ROX touchpoint, segment label).
+   * Renders in white at uppercase tracking. Hidden when blank.
+   */
+  headerTag?: string
   /** Provenance — when seeded from a Library item. */
   libraryItemId?: string
   /** 0..2 for the 3-touch cold-emails sequence. */

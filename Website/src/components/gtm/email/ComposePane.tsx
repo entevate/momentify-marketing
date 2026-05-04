@@ -116,8 +116,13 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
   // iframe via srcdoc isolates email styling from the host page.
   const previewSrc = useMemo(() => {
     if (local.rawHtmlMode) return local.bodyHtml
-    return wrapForPreview(local.bodyHtml, local.solution)
-  }, [local.bodyHtml, local.rawHtmlMode, local.solution])
+    return wrapForPreview(local.bodyHtml, {
+      solution: local.solution,
+      ctaText: local.ctaText,
+      ctaHref: local.ctaHref,
+      headerTag: local.headerTag,
+    })
+  }, [local.bodyHtml, local.rawHtmlMode, local.solution, local.ctaText, local.ctaHref, local.headerTag])
 
   return (
     <div style={wrap}>
@@ -230,6 +235,42 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
             />
           </Field>
 
+          <Field label="Header tag (optional)">
+            <input
+              type="text"
+              value={local.headerTag || ""}
+              onChange={(e) => update({ headerTag: e.target.value || undefined })}
+              placeholder="e.g. Q4 Campaign · Field Sales · ROX Audit"
+              maxLength={48}
+              style={subjectInput}
+            />
+            <p style={{ margin: "4px 0 0 0", fontSize: 11, color: "var(--gtm-text-faint)", fontFamily: font, lineHeight: 1.45 }}>
+              Right-aligned uppercase eyebrow in the colored header bar. Leave blank to show only the logo.
+            </p>
+          </Field>
+
+          <Field label="CTA button (optional)">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              <input
+                type="text"
+                value={local.ctaText || ""}
+                onChange={(e) => update({ ctaText: e.target.value || undefined })}
+                placeholder="Button text (e.g. Book a Demo)"
+                style={subjectInput}
+              />
+              <input
+                type="url"
+                value={local.ctaHref || ""}
+                onChange={(e) => update({ ctaHref: e.target.value || undefined })}
+                placeholder="https://..."
+                style={subjectInput}
+              />
+            </div>
+            <p style={{ margin: "4px 0 0 0", fontSize: 11, color: "var(--gtm-text-faint)", fontFamily: font, lineHeight: 1.45 }}>
+              Renders below the body in the brand color. Both fields required to show.
+            </p>
+          </Field>
+
           <details style={{ fontFamily: font }}>
             <summary style={{ cursor: "pointer", fontSize: 12, color: "var(--gtm-text-faint)" }}>
               Sender + reply-to (optional)
@@ -305,17 +346,45 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
  * will look in a Momentify-branded email. The actual send-time wrap
  * happens server-side via applyEmailWrapper in email-parser.ts.
  */
-function wrapForPreview(bodyHtml: string, solution?: string): string {
-  const palette = previewPalette(solution)
+interface PreviewOpts {
+  solution?: string
+  ctaText?: string
+  ctaHref?: string
+  headerTag?: string
+}
+
+function wrapForPreview(bodyHtml: string, opts: PreviewOpts): string {
+  const palette = previewPalette(opts.solution)
+  const headerTagCell = opts.headerTag
+    ? `<td align="right" valign="middle" style="font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.82);">${escapeHtmlClient(opts.headerTag)}</td>`
+    : ""
+  const ctaBlock = opts.ctaText && opts.ctaHref
+    ? `<tr><td align="left" style="padding:0 28px 28px 28px;">
+         <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+           <tr><td bgcolor="${palette.primary}" style="border-radius:8px;">
+             <a href="${escapeHtmlClient(opts.ctaHref)}" target="_blank"
+                style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:8px;">
+               ${escapeHtmlClient(opts.ctaText)}
+             </a>
+           </td></tr>
+         </table>
+       </td></tr>`
+    : ""
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#F4F5F8;font-family:Inter,system-ui,sans-serif;color:#061341;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
     <tr><td align="center" style="padding:24px 16px;">
       <table role="presentation" width="600" style="max-width:600px;width:100%;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(6,19,65,0.06),0 8px 24px rgba(6,19,65,0.06);">
-        <tr><td align="left" style="background:${palette.heroGrad};padding:24px 28px;">
-          <img src="/Momentify-Logo_White.svg" alt="Momentify" width="140" style="display:block;width:140px;height:auto;border:0;"/>
+        <tr><td style="background:${palette.heroGrad};padding:24px 28px;">
+          <table role="presentation" width="100%"><tr>
+            <td align="left" valign="middle">
+              <img src="/Momentify-Logo_White.svg" alt="Momentify" width="140" style="display:block;width:140px;height:auto;border:0;"/>
+            </td>
+            ${headerTagCell}
+          </tr></table>
         </td></tr>
         <tr><td style="padding:28px;font-size:15px;line-height:1.6;">${bodyHtml}</td></tr>
+        ${ctaBlock}
         <tr><td style="border-top:1px solid #E6E8EE;padding:18px 28px;font-size:12px;color:rgba(6,19,65,0.55);">
           <a href="https://momentifyapp.com" style="color:rgba(6,19,65,0.55);">momentifyapp.com</a> &middot; Unsubscribe
         </td></tr>
@@ -325,27 +394,33 @@ function wrapForPreview(bodyHtml: string, solution?: string): string {
 </body></html>`
 }
 
+function escapeHtmlClient(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;")
+}
+
 /**
  * Client-side palette mirror of pillarPaletteSafe() in email-parser.ts.
  * Kept in sync with the canonical palette values from pillar-palettes.ts
  * so the preview iframe matches what server-side applyEmailWrapper sends.
  *
  * "general" / undefined returns the neutral Momentify cyan-navy gradient.
+ * Returns `primary` so the CTA button picks up the same brand color
+ * the header gradient was built around.
  */
-function previewPalette(solution?: string): { name: string; heroGrad: string } {
+function previewPalette(solution?: string): { name: string; heroGrad: string; primary: string } {
   switch (solution) {
     case "trade-shows":
-      return { name: "Violet", heroGrad: "linear-gradient(135deg, #2D0770 0%, #4A0FA8 55%, #9B5FE8 100%)" }
+      return { name: "Violet", primary: "#6B21D4", heroGrad: "linear-gradient(135deg, #2D0770 0%, #4A0FA8 55%, #9B5FE8 100%)" }
     case "recruiting":
-      return { name: "Teal", heroGrad: "linear-gradient(135deg, #040E28 0%, #1A8A76 55%, #5FD9C2 100%)" }
+      return { name: "Teal", primary: "#0AA891", heroGrad: "linear-gradient(135deg, #040E28 0%, #1A8A76 55%, #5FD9C2 100%)" }
     case "field-sales":
-      return { name: "Amber", heroGrad: "linear-gradient(135deg, #1A0A00 0%, #A86B00 55%, #F2B33D 100%)" }
+      return { name: "Amber", primary: "#D4940A", heroGrad: "linear-gradient(135deg, #1A0A00 0%, #A86B00 55%, #F2B33D 100%)" }
     case "facilities":
-      return { name: "Indigo", heroGrad: "linear-gradient(135deg, #0D0820 0%, #3A2073 55%, #5B4499 100%)" }
+      return { name: "Indigo", primary: "#3A2073", heroGrad: "linear-gradient(135deg, #0D0820 0%, #3A2073 55%, #5B4499 100%)" }
     case "events-venues":
-      return { name: "Crimson", heroGrad: "linear-gradient(135deg, #1A0400 0%, #8F200A 55%, #F25E3D 100%)" }
+      return { name: "Crimson", primary: "#8F200A", heroGrad: "linear-gradient(135deg, #1A0400 0%, #8F200A 55%, #F25E3D 100%)" }
     default:
-      return { name: "Momentify", heroGrad: "linear-gradient(135deg, #061341 0%, #1A56DB 55%, #0CF4DF 100%)" }
+      return { name: "Momentify", primary: "#1A56DB", heroGrad: "linear-gradient(135deg, #061341 0%, #1A56DB 55%, #0CF4DF 100%)" }
   }
 }
 
