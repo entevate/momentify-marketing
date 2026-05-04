@@ -34,6 +34,12 @@ export interface CalendarTask {
   // Optional context fields surfaced from the Library brief.
   industry?: string
   motion?: string
+  // Linkage to an EmailDraft when this task represents a scheduled send.
+  // Set on tasks created via /api/gtm/email/drafts/[id]/schedule. When
+  // present, TaskDetailModal renders the email preview + Send Now button
+  // and (if the draft has autoSend === true) the cron will fire it on
+  // its scheduled date.
+  emailDraftId?: string
 }
 
 export interface TaskCategoryMeta {

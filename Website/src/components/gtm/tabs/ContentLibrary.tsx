@@ -1,9 +1,11 @@
 "use client"
 
 import React, { useEffect, useState, useCallback } from "react"
-import { Trash2, Copy, Check, ChevronDown, ChevronUp, Loader2 } from "lucide-react"
+import Link from "next/link"
+import { Trash2, Copy, Check, ChevronDown, ChevronUp, Loader2, Mail } from "lucide-react"
 import { dispatchLibraryChanged } from "./SolutionTabs"
 import AssetPanel from "@/components/gtm/AssetPanel"
+import EmailActivityPanel from "@/components/gtm/email/EmailActivityPanel"
 
 const font = "'Inter', system-ui, sans-serif"
 
@@ -145,6 +147,8 @@ export default function ContentLibrary({ solution, solutionLabel }: ContentLibra
         )}
       </div>
 
+      <EmailActivityPanel solution={solution} />
+
       {error && <div style={errBanner}>{error}</div>}
 
       {loading && (
@@ -231,6 +235,14 @@ export default function ContentLibrary({ solution, solutionLabel }: ContentLibra
                     )}
 
                     <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+                      {item.contentType === "cold-emails" && (
+                        <Link
+                          href={`/gtm/email?seed=${encodeURIComponent(item.id)}&touch=0`}
+                          style={{ ...actionBtnStyle, background: "rgba(0,187,165,0.08)", color: "#0AA891", borderColor: "rgba(0,187,165,0.25)", textDecoration: "none" }}
+                        >
+                          <Mail size={12} />Send via Email
+                        </Link>
+                      )}
                       <button onClick={() => handleCopy(item.id, item.content)} style={actionBtnStyle}>
                         {copiedId === item.id ? <Check size={12} /> : <Copy size={12} />}
                         {copiedId === item.id ? "Copied" : "Copy Brief"}

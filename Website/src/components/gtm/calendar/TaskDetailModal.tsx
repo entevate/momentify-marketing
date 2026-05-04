@@ -398,6 +398,15 @@ export default function TaskDetailModal({
                   </div>
                 )}
 
+                {/* Email task preview - renders when this calendar task
+                    represents a scheduled email send (assetType: "email",
+                    emailDraftId set). Pulls the draft, shows subject +
+                    recipient summary + a Send Now button that POSTs to
+                    /api/gtm/email/drafts/[id]/send. */}
+                {task.assetType === "email" && task.emailDraftId && (
+                  <EmailDraftPanel draftId={task.emailDraftId} taskId={task.id} />
+                )}
+
                 {/* Meta row */}
                 <div
                   style={{
@@ -518,5 +527,122 @@ export default function TaskDetailModal({
         </div>
       )}
     </AnimatePresence>
+  )
+}
+
+/**
+ * Inline panel rendered when a CalendarTask is an email send.
+ * Loads the EmailDraft, shows preview + recipients + Send Now button.
+ */
+function EmailDraftPanel({ draftId, taskId }: { draftId: string; taskId: string }) {
+  type DraftLite = {
+    id: string
+    subject: string
+    bodyHtml: string
+    rawHtmlMode: boolean
+    recipients: { kind: string; email?: string; audienceId?: string; contactId?: string }[]
+    status: string
+    autoSend: boolean
+    scheduledFor?: string
+  }
+  const [draft, setDraft] = useState<DraftLite | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetch(`/api/gtm/email/drafts/${draftId}`)
+      .then((r) => r.json())
+      .then((d) => setDraft(d.draft || null))
+      .catch(() => setDraft(null))
+  }, [draftId])
+
+  if (!draft) {
+    return (
+      <div style={{ marginBottom: 20, padding: 12, background: "var(--gtm-bg-page)", borderRadius: 8, fontSize: 12, color: "var(--gtm-text-faint)" }}>
+        Loading email draft...
+      </div>
+    )
+  }
+
+  async function sendNow() {
+    if (!confirm(`Send "${draft?.subject}" to ${draft?.recipients.length || 0} recipient group(s) now?`)) return
+    setBusy(true)
+    setMsg(null)
+    try {
+      const res = await fetch(`/api/gtm/email/drafts/${draftId}/send`, { method: "POST" })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Send failed")
+      setMsg(`Sent ${data.sentCount} of ${data.total}${data.failedCount ? ` (${data.failedCount} failed)` : ""}.`)
+      // Refresh local draft state.
+      const refreshed = await fetch(`/api/gtm/email/drafts/${draftId}`).then((r) => r.json())
+      if (refreshed.draft) setDraft(refreshed.draft)
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Send failed")
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const previewSrc = draft.rawHtmlMode
+    ? draft.bodyHtml
+    : `<!doctype html><html><body style="margin:0;padding:0;background:#F4F5F8;font-family:Inter,system-ui,sans-serif;color:#061341;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          <tr><td align="center" style="padding:24px 16px;">
+            <table role="presentation" width="600" style="max-width:600px;width:100%;background:#fff;border-radius:14px;overflow:hidden;">
+              <tr><td style="background:linear-gradient(135deg,#061341 0%,#1A56DB 55%,#0CF4DF 100%);padding:18px 28px;color:#fff;font-weight:600;">Momentify</td></tr>
+              <tr><td style="padding:28px;font-size:15px;line-height:1.6;">${draft.bodyHtml}</td></tr>
+            </table>
+          </td></tr>
+        </table>
+      </body></html>`
+
+  return (
+    <div style={{ marginBottom: 20, border: "1px solid var(--gtm-border)", borderRadius: 8, overflow: "hidden", background: "#fff" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", background: "var(--gtm-bg-page)", borderBottom: "1px solid var(--gtm-border)", gap: 8, flexWrap: "wrap" }}>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--gtm-text-faint)" }}>
+            {draft.status} {draft.autoSend ? "(auto-send)" : "(manual)"}
+          </div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: "var(--gtm-text-primary)", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {draft.subject || "(no subject)"}
+          </div>
+          <div style={{ fontSize: 11, color: "var(--gtm-text-faint)", marginTop: 2 }}>
+            {draft.recipients.length} recipient group(s)
+            {draft.scheduledFor && ` · scheduled ${new Date(draft.scheduledFor).toLocaleString()}`}
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 6 }}>
+          <a
+            href={`/gtm/email?tab=drafts`}
+            style={{ padding: "6px 12px", fontSize: 12, fontWeight: 600, color: "var(--gtm-text-secondary)", textDecoration: "none", border: "1px solid var(--gtm-border)", borderRadius: 6 }}
+          >
+            Edit
+          </a>
+          {draft.status !== "sent" && (
+            <button
+              type="button"
+              onClick={sendNow}
+              disabled={busy}
+              style={{ padding: "6px 12px", fontSize: 12, fontWeight: 600, color: "#fff", background: "#00BBA5", border: "none", borderRadius: 6, cursor: busy ? "not-allowed" : "pointer", opacity: busy ? 0.6 : 1 }}
+            >
+              {busy ? "Sending..." : "Send Now"}
+            </button>
+          )}
+        </div>
+      </div>
+      <iframe
+        title="Email preview"
+        srcDoc={previewSrc}
+        sandbox=""
+        style={{ width: "100%", height: 360, border: "none", background: "#F4F5F8", display: "block" }}
+      />
+      {msg && (
+        <div style={{ padding: "8px 16px", fontSize: 12, color: "var(--gtm-text-secondary)", borderTop: "1px solid var(--gtm-border)" }}>
+          {msg}
+        </div>
+      )}
+      {/* Suppress unused-var warning - taskId is in scope for downstream features (mark complete linkage). */}
+      {void taskId}
+    </div>
   )
 }

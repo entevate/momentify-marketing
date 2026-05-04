@@ -1034,6 +1034,36 @@ export default function GTMDashboard() {
         </Link>
 
         <Link
+          href="/gtm/email"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: 44,
+            padding: "12px 24px",
+            background: "var(--gtm-bg-card)",
+            color: "var(--gtm-text-primary)",
+            fontSize: 15,
+            fontWeight: 600,
+            fontFamily: font,
+            borderRadius: 8,
+            textDecoration: "none",
+            border: "1px solid var(--gtm-border)",
+            transition: "all 200ms ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "var(--gtm-cyan)"
+            e.currentTarget.style.color = "var(--gtm-cyan)"
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "var(--gtm-border)"
+            e.currentTarget.style.color = "var(--gtm-text-primary)"
+          }}
+        >
+          Open Email
+        </Link>
+
+        <Link
           href="/gtm/trade-shows"
           style={{
             display: "inline-flex",

@@ -14,6 +14,7 @@ import {
   Ticket,
   CalendarDays,
   Images,
+  Mail,
   Sun,
   Moon,
   LogOut,
@@ -22,6 +23,7 @@ import {
 const navItems = [
   { label: "Framework", href: "/gtm", icon: LayoutGrid, color: "#0CF4DF" },
   { label: "Execution Calendar", href: "/gtm/calendar", icon: CalendarDays, color: "#0CF4DF" },
+  { label: "Email", href: "/gtm/email", icon: Mail, color: "#0CF4DF" },
   { label: "Templates", href: "/gtm/templates", icon: Images, color: "#0CF4DF" },
   { label: "Trade Shows", href: "/gtm/trade-shows", icon: Building2, color: "#9B5FE8" },
   { label: "Technical Recruiting", href: "/gtm/recruiting", icon: Target, color: "#5FD9C2" },
