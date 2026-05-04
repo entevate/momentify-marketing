@@ -82,6 +82,19 @@ type BuilderParams = {
  * explicitly forbid the wrong domain language.
  */
 const solutionGuidance: Record<string, string> = {
+  general: `===== SOLUTION DOMAIN: GENERAL MOMENTIFY (CROSS-PILLAR) =====
+This is platform-level / cross-pillar content. Do NOT lock into a single solution domain (trade shows, recruiting, field sales, facilities, or venues). The audience is a mixed buyer who could deploy Momentify across any of those contexts.
+
+Lead with the platform itself, not a single use case. Anchor in:
+- The four-step flow: Web (configure) -> Explorer (capture during the moment) -> Intelligence (real-time ROX scoring + AI summaries) -> Engage (automated CRM/ATS routing).
+- The hero positioning: "The operating system for in-person engagement. Momentify converts attention into outcomes your team can measure and prove."
+- ROX (Return on Experience) as the proprietary measurement standard, scored across four equally-weighted dimensions: Lead Capture Efficiency, Engagement Quality, Follow-Up Speed, Conversion Effectiveness. Tier ranges: 0-39 Critical Gap, 40-69 Needs Optimization, 70-84 High ROX, 85-100 Elite ROX.
+- Cross-pillar proof points: $50B annual US in-person event spend, 10,000+ qualified leads from 50 events in 18 months, 65%+ qualification rate vs. 20% industry baseline, $411M potential pipeline value, 92% YoY lead growth in customer cases.
+
+Audience: cross-pillar buyers - typically a CMO, CRO, COO, or Head of Revenue Operations whose remit spans multiple in-person motions (some combination of trade shows, recruiting, field sales, facility tours, or venue activations) and who needs ONE measurement standard across all of them.
+
+Avoid pillar-specific vocabulary that boxes the platform into a single use case. If you need an example, name multiple contexts side-by-side ("at a booth, on a job site, or in a showroom") so the platform's universality stays visible. ROX framing is fully appropriate.`,
+
   "trade-shows": `===== SOLUTION DOMAIN: TRADE SHOWS & EXHIBITS =====
 The buyer runs in-person trade show and exhibit programs. Activities you can reference: booths, exhibits, show floors, exhibitor lounges, demo stations, booth staff, post-show follow-up, lead capture at the booth, badge scanning, exhibit ROI.
 Audience: VPs of Marketing, Event Managers, Trade Show Managers, Exhibit Directors, Marketing Operations leaders responsible for the trade show portfolio.
@@ -135,6 +148,8 @@ Frame ROX as Return on (fan) Experience: sponsor activation ROI, fan-touchpoint 
  * leaning generic.
  */
 const solutionDefaultICPs: Record<string, string> = {
+  general:
+    "Cross-pillar revenue or operations leader (CMO, CRO, COO, VP RevOps) at a B2B company whose budget spans multiple in-person motions - any combination of trade shows, recruiting events, field sales visits, facility tours, or venue activations - and who needs one measurement standard across all of them",
   "trade-shows":
     "VP of Marketing, Director of Trade Shows, or Event Manager at a B2B company that exhibits at 5+ industry shows per year and is accountable for booth ROI",
   recruiting:
@@ -148,6 +163,7 @@ const solutionDefaultICPs: Record<string, string> = {
 }
 
 const solutionPalettes: Record<string, { name: string; primary: string; light: string; dark: string; heroGrad: string; lightBg: string }> = {
+  general: { name: "Momentify", primary: "#1A56DB", light: "#0CF4DF", dark: "#061341", heroGrad: "linear-gradient(135deg, #061341, #1A56DB 55%, #0CF4DF)", lightBg: "linear-gradient(145deg, #F4F5F8, #ECEFF7)" },
   "trade-shows": { name: "Violet", primary: "#6B21D4", light: "#9B5FE8", dark: "#2D0770", heroGrad: "linear-gradient(135deg, #2D0770, #4A0FA8 55%, #9B5FE8)", lightBg: "linear-gradient(145deg, #F8F4FF, #EDE6FF)" },
   recruiting: { name: "Teal", primary: "#00BBA5", light: "#5FD9C2", dark: "#040E28", heroGrad: "linear-gradient(135deg, #040E28, #1A8A76 55%, #5FD9C2)", lightBg: "linear-gradient(145deg, #E8FDF8, #F0FFFC)" },
   "field-sales": { name: "Amber", primary: "#C48A00", light: "#F2B33D", dark: "#1A1000", heroGrad: "linear-gradient(135deg, #1A1000, #8A5E00 55%, #F2B33D)", lightBg: "linear-gradient(145deg, #FFFAEE, #FFF5E0)" },

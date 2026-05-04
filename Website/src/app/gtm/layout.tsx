@@ -25,6 +25,7 @@ const navItems = [
   { label: "Execution Calendar", href: "/gtm/calendar", icon: CalendarDays, color: "#0CF4DF" },
   { label: "Email", href: "/gtm/email", icon: Mail, color: "#0CF4DF" },
   { label: "Templates", href: "/gtm/templates", icon: Images, color: "#0CF4DF" },
+  { label: "General Momentify", href: "/gtm/general", icon: Layers, color: "#0CF4DF" },
   { label: "Trade Shows", href: "/gtm/trade-shows", icon: Building2, color: "#9B5FE8" },
   { label: "Technical Recruiting", href: "/gtm/recruiting", icon: Target, color: "#5FD9C2" },
   { label: "Field Sales", href: "/gtm/field-sales", icon: MapPin, color: "#F2B33D" },
