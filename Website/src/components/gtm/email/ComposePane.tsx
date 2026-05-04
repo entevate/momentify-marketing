@@ -201,6 +201,13 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
             </p>
           </Field>
 
+          <Field label="Recipients">
+            <RecipientPicker
+              recipients={local.recipients}
+              onChange={(recipients: EmailRecipient[]) => update({ recipients })}
+            />
+          </Field>
+
           <Field label="Subject">
             <input
               type="text"
@@ -240,13 +247,6 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
                 placeholder="Write your email..."
               />
             )}
-          </Field>
-
-          <Field label="Recipients">
-            <RecipientPicker
-              recipients={local.recipients}
-              onChange={(recipients: EmailRecipient[]) => update({ recipients })}
-            />
           </Field>
 
           <Field label="CTA button (optional)">
