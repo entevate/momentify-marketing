@@ -312,13 +312,8 @@ function wrapForPreview(bodyHtml: string, solution?: string): string {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
     <tr><td align="center" style="padding:24px 16px;">
       <table role="presentation" width="600" style="max-width:600px;width:100%;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(6,19,65,0.06),0 8px 24px rgba(6,19,65,0.06);">
-        <tr><td style="background:${palette.heroGrad};padding:24px 28px;">
-          <table role="presentation" width="100%"><tr>
-            <td align="left" valign="middle">
-              <img src="/Momentify-Logo_White.svg" alt="Momentify" width="140" style="display:block;width:140px;height:auto;border:0;"/>
-            </td>
-            <td align="right" valign="middle" style="font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.78);">${palette.name}</td>
-          </tr></table>
+        <tr><td align="left" style="background:${palette.heroGrad};padding:24px 28px;">
+          <img src="/Momentify-Logo_White.svg" alt="Momentify" width="140" style="display:block;width:140px;height:auto;border:0;"/>
         </td></tr>
         <tr><td style="padding:28px;font-size:15px;line-height:1.6;">${bodyHtml}</td></tr>
         <tr><td style="border-top:1px solid #E6E8EE;padding:18px 28px;font-size:12px;color:rgba(6,19,65,0.55);">
