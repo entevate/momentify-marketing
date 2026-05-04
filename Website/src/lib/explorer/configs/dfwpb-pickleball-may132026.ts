@@ -113,7 +113,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
       id: 'welcome',
       title: 'Faith. Tech.',
       gradientWord: 'Community.',
-      subtitle: 'Join us May 13, 2026 for the Pickleball & Prayer Social — a unique gathering of DFW tech leaders, faith, fellowship, and friendly competition on the court.',
+      subtitle: 'Join us May 13, 2026 for the Pickleball & Prayer Social: a unique gathering of DFW tech leaders, faith, fellowship, and friendly competition on the court.',
       buttonText: 'Tap to Begin',
     },
     {
