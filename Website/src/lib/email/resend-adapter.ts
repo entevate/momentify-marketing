@@ -36,8 +36,31 @@ export interface SendBatchResult {
   failures: BatchFailure[]
 }
 
+/**
+ * Build the RFC 5322 `From:` value combining a display name + email
+ * address. Output format: `"Momentify <hello@momentifyapp.com>"` so
+ * recipients see the friendly name in their inbox instead of the bare
+ * email.
+ *
+ * Env vars:
+ *   RESEND_FROM_NAME   - display name (default "Momentify")
+ *   RESEND_FROM_EMAIL  - sender address (default "hello@momentifyapp.com")
+ *
+ * If a caller passes a literal `from` field (e.g. ComposePane sender
+ * override), we use it as-is. They're responsible for valid format.
+ *
+ * Backwards-compat: if RESEND_FROM_EMAIL already contains `<>` (RFC 5322
+ * full form), we pass it through untouched.
+ */
 const getFromAddress = (): string => {
-  return process.env.RESEND_FROM_EMAIL || "noreply@momentify.io"
+  const email = process.env.RESEND_FROM_EMAIL || "hello@momentifyapp.com"
+  // If env var already includes `Name <addr>` form, trust it.
+  if (/<[^>]+>/.test(email)) return email
+  const name = process.env.RESEND_FROM_NAME || "Momentify"
+  // Quote name only if it contains special chars (Resend / RFC 5322
+  // accepts unquoted simple names).
+  const quotedName = /[",;:<>@]/.test(name) ? `"${name.replace(/"/g, '\\"')}"` : name
+  return `${quotedName} <${email}>`
 }
 
 export async function send(params: SendParams): Promise<SendResult> {

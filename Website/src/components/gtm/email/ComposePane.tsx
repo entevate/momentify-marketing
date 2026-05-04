@@ -183,6 +183,28 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
       {/* Body: 2-column compose + preview */}
       <div style={twoColumn}>
         <div style={{ ...column, borderRight: "1px solid var(--gtm-border)" }}>
+          <details open style={{ fontFamily: font }}>
+            <summary style={{ cursor: "pointer", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--gtm-text-faint)", padding: "0 0 6px 0" }}>
+              Sender + reply-to
+            </summary>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
+              <input
+                type="email"
+                value={local.fromEmail || ""}
+                onChange={(e) => update({ fromEmail: e.target.value || undefined })}
+                placeholder="From (default: Momentify <hello@momentifyapp.com>)"
+                style={subjectInput}
+              />
+              <input
+                type="email"
+                value={local.replyTo || ""}
+                onChange={(e) => update({ replyTo: e.target.value || undefined })}
+                placeholder="Reply-To (optional)"
+                style={subjectInput}
+              />
+            </div>
+          </details>
+
           <Field label="Brand context">
             <select
               value={local.solution || ""}
@@ -271,27 +293,6 @@ export default function ComposePane({ draft, onDraftChange, onAfterSend, onAfter
             </p>
           </Field>
 
-          <details style={{ fontFamily: font }}>
-            <summary style={{ cursor: "pointer", fontSize: 12, color: "var(--gtm-text-faint)" }}>
-              Sender + reply-to (optional)
-            </summary>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginTop: 8 }}>
-              <input
-                type="email"
-                value={local.fromEmail || ""}
-                onChange={(e) => update({ fromEmail: e.target.value || undefined })}
-                placeholder={`From (default: ${process.env.NEXT_PUBLIC_RESEND_FROM_EMAIL || "noreply@momentifyapp.com"})`}
-                style={subjectInput}
-              />
-              <input
-                type="email"
-                value={local.replyTo || ""}
-                onChange={(e) => update({ replyTo: e.target.value || undefined })}
-                placeholder="Reply-To (optional)"
-                style={subjectInput}
-              />
-            </div>
-          </details>
         </div>
 
         {/* Preview */}
