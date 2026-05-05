@@ -120,6 +120,21 @@ import {
   PhoneCall,
   PiggyBank,
   CalendarDays,
+  Factory,
+  CloudRain,
+  ShieldCheck,
+  Mountain,
+  MountainSnow,
+  Disc3,
+  Film,
+  Trophy,
+  History,
+  User,
+  Store,
+  Bus,
+  Car,
+  Container,
+  CloudSun,
 } from 'lucide-react';
 
 import type { ComponentType } from 'react';
@@ -275,6 +290,23 @@ export const LUCIDE_ICON_MAP: Record<string, ComponentType<{ className?: string 
   'phone-call': PhoneCall,
   'piggy-bank': PiggyBank,
   'calendar-days': CalendarDays,
+
+  // Automotive / tire / weather
+  'factory': Factory,
+  'cloud-rain': CloudRain,
+  'cloud-sun': CloudSun,
+  'shield-check': ShieldCheck,
+  'mountain': Mountain,
+  'mountain-snow': MountainSnow,
+  'disc-3': Disc3,
+  'film': Film,
+  'trophy': Trophy,
+  'history': History,
+  'user': User,
+  'store': Store,
+  'bus': Bus,
+  'car': Car,
+  'container': Container,
 };
 
 /**

@@ -21,6 +21,9 @@ export interface ThemeColors {
 
 export interface BrandingConfig {
   logo: { dark: string; light: string };
+  /** When true, applies `filter: brightness(0)` to the logo on light theme.
+   * Use when the light-mode logo asset is white-on-transparent and would otherwise be invisible. */
+  invertLogoOnLight?: boolean;
   icon: string;
   colors: {
     primary: string;    // accent color (maps to --cyan/--teal)

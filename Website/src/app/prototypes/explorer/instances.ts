@@ -313,4 +313,16 @@ export const instances: ExplorerInstance[] = [
     formFactor: "mobile",
     hidden: true,
   },
+  {
+    slug: "fortune-tire",
+    name: "Fortune Tire Explorer",
+    company: "Fortune Tire",
+    industry: "Automotive",
+    prototypeFile: "/explorer/fortune-tire",
+    logo: "/brand/assets/fortune-tire-icon.png",
+    gateLogo: "/brand/assets/fortune-tire-logo-reverse.png",
+    accentColor: "#0067C0",
+    createdAt: "2026-05-05",
+    password: "fortune-tire2026",
+  },
 ];

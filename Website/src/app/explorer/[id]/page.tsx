@@ -15,6 +15,7 @@ import { DFWPB_PICKLEBALL_CONFIG } from '@/lib/explorer/configs/dfwpb-pickleball
 import { DFWPB_PICKLEBALL_MOBILE_CONFIG } from '@/lib/explorer/configs/dfwpb-pickleball-may132026-mobile';
 import { CARTER_MACHINERY_CONFIG } from '@/lib/explorer/configs/carter-machinery';
 import { CARTER_MACHINERY_MOBILE_CONFIG } from '@/lib/explorer/configs/carter-machinery-mobile';
+import { FORTUNE_TIRE_CONFIG } from '@/lib/explorer/configs/fortune-tire';
 
 import type { ExplorerConfig } from '@/lib/explorer/types';
 
@@ -33,6 +34,7 @@ const CONFIGS: Record<string, ExplorerConfig> = {
   'dfwpb-pickleball-may132026-mobile': DFWPB_PICKLEBALL_MOBILE_CONFIG,
   'carter-machinery': CARTER_MACHINERY_CONFIG,
   'carter-machinery-mobile': CARTER_MACHINERY_MOBILE_CONFIG,
+  'fortune-tire': FORTUNE_TIRE_CONFIG,
 };
 
 export default async function ExplorerPage({

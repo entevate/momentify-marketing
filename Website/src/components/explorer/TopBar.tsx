@@ -13,6 +13,7 @@ import {
   StickyNote,
   Mic,
   Camera,
+  Calculator,
   UserPlus,
   Library,
   Power,
@@ -23,6 +24,7 @@ interface TopBarProps {
   onOpenNotes?: () => void;
   onOpenVoice?: () => void;
   onOpenMedia?: () => void;
+  onOpenCalculator?: () => void;
   onEndSession?: () => void;
 }
 
@@ -32,7 +34,7 @@ const modeIcons = {
   search: Search,
 } as const;
 
-export default function TopBar({ showModeSwitcher, onOpenNotes, onOpenVoice, onOpenMedia, onEndSession }: TopBarProps) {
+export default function TopBar({ showModeSwitcher, onOpenNotes, onOpenVoice, onOpenMedia, onOpenCalculator, onEndSession }: TopBarProps) {
   const { config, session, toggleTheme, setMode, savedCount, goToStep } = useExplorer();
   const [toolsOpen, setToolsOpen] = useState(false);
 
@@ -86,12 +88,28 @@ export default function TopBar({ showModeSwitcher, onOpenNotes, onOpenVoice, onO
       onClick: () => { setToolsOpen(false); onOpenMedia?.(); },
     });
   }
+  if (features.calculator === true) {
+    toolItems.push({
+      id: 'calculator',
+      label: 'Tire Advisor',
+      icon: Calculator,
+      onClick: () => { setToolsOpen(false); onOpenCalculator?.(); },
+    });
+  }
 
   return (
     <div className="exp-top-bar">
       {!isThankYou && (
         <div className="exp-logo">
-          <img src={logoSrc} alt={config.name} />
+          <img
+            src={logoSrc}
+            alt={config.name}
+            style={
+              session.theme === 'light' && config.branding.invertLogoOnLight
+                ? { filter: 'brightness(0)' }
+                : undefined
+            }
+          />
         </div>
       )}
 

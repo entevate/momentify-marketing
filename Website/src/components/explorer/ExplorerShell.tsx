@@ -19,6 +19,7 @@ import ShareDialog from './overlays/ShareDialog';
 import NotesDialog from './overlays/NotesDialog';
 import VoiceCaptureDialog from './overlays/VoiceCaptureDialog';
 import MediaCaptureDialog from './overlays/MediaCaptureDialog';
+import TireAdvisorDialog from './overlays/TireAdvisorDialog';
 import type { ContentCard } from '@/lib/explorer/types';
 
 export default function ExplorerShell() {
@@ -33,6 +34,7 @@ export default function ExplorerShell() {
   const [notesOpen, setNotesOpen] = useState(false);
   const [voiceOpen, setVoiceOpen] = useState(false);
   const [mediaOpen, setMediaOpen] = useState(false);
+  const [calculatorOpen, setCalculatorOpen] = useState(false);
 
   const currentStep = config.steps[session.currentStepIndex];
   const isSplash = currentStep?.type === 'splash';
@@ -197,6 +199,7 @@ export default function ExplorerShell() {
           onOpenNotes={() => setNotesOpen(true)}
           onOpenVoice={() => setVoiceOpen(true)}
           onOpenMedia={() => setMediaOpen(true)}
+          onOpenCalculator={() => setCalculatorOpen(true)}
           onEndSession={() => setEndSessionOpen(true)}
         />
 
@@ -235,6 +238,9 @@ export default function ExplorerShell() {
       <NotesDialog open={notesOpen} onClose={() => setNotesOpen(false)} />
       <VoiceCaptureDialog open={voiceOpen} onClose={() => setVoiceOpen(false)} />
       <MediaCaptureDialog open={mediaOpen} onClose={() => setMediaOpen(false)} />
+      {config.id === 'fortune-tire' && (
+        <TireAdvisorDialog open={calculatorOpen} onClose={() => setCalculatorOpen(false)} />
+      )}
     </div>
   );
 }
