@@ -107,6 +107,19 @@ import {
   Wifi,
   Cloud,
   HardDrive,
+  GraduationCap,
+  Heart,
+  School,
+  Circle,
+  BatteryCharging,
+  Gift,
+  Landmark,
+  Hammer,
+  HardHat,
+  Droplets,
+  PhoneCall,
+  PiggyBank,
+  CalendarDays,
 } from 'lucide-react';
 
 import type { ComponentType } from 'react';
@@ -247,6 +260,21 @@ export const LUCIDE_ICON_MAP: Record<string, ComponentType<{ className?: string 
   'wifi': Wifi,
   'cloud': Cloud,
   'hard-drive': HardDrive,
+
+  // Recruiting / education / careers
+  'graduation-cap': GraduationCap,
+  'heart': Heart,
+  'school': School,
+  'circle': Circle,
+  'battery-charging': BatteryCharging,
+  'gift': Gift,
+  'landmark': Landmark,
+  'hammer': Hammer,
+  'hard-hat': HardHat,
+  'droplets': Droplets,
+  'phone-call': PhoneCall,
+  'piggy-bank': PiggyBank,
+  'calendar-days': CalendarDays,
 };
 
 /**

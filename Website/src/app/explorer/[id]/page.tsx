@@ -13,6 +13,8 @@ import { SALAS_OBRIEN_CONFIG } from '@/lib/explorer/configs/salas-o-brien';
 import { SALAS_OBRIEN_MOBILE_CONFIG } from '@/lib/explorer/configs/salas-o-brien-mobile';
 import { DFWPB_PICKLEBALL_CONFIG } from '@/lib/explorer/configs/dfwpb-pickleball-may132026';
 import { DFWPB_PICKLEBALL_MOBILE_CONFIG } from '@/lib/explorer/configs/dfwpb-pickleball-may132026-mobile';
+import { CARTER_MACHINERY_CONFIG } from '@/lib/explorer/configs/carter-machinery';
+import { CARTER_MACHINERY_MOBILE_CONFIG } from '@/lib/explorer/configs/carter-machinery-mobile';
 
 import type { ExplorerConfig } from '@/lib/explorer/types';
 
@@ -29,6 +31,8 @@ const CONFIGS: Record<string, ExplorerConfig> = {
   'salas-o-brien-mobile': SALAS_OBRIEN_MOBILE_CONFIG,
   'dfwpb-pickleball-may132026': DFWPB_PICKLEBALL_CONFIG,
   'dfwpb-pickleball-may132026-mobile': DFWPB_PICKLEBALL_MOBILE_CONFIG,
+  'carter-machinery': CARTER_MACHINERY_CONFIG,
+  'carter-machinery-mobile': CARTER_MACHINERY_MOBILE_CONFIG,
 };
 
 export default async function ExplorerPage({
