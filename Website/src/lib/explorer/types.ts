@@ -24,6 +24,8 @@ export interface BrandingConfig {
   /** When true, applies `filter: brightness(0)` to the logo on light theme.
    * Use when the light-mode logo asset is white-on-transparent and would otherwise be invisible. */
   invertLogoOnLight?: boolean;
+  /** Optional per-config logo height in px. Overrides the locked 28px default in explorer.css. */
+  logoHeight?: number;
   icon: string;
   colors: {
     primary: string;    // accent color (maps to --cyan/--teal)

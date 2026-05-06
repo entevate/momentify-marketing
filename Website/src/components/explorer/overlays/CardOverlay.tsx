@@ -1,6 +1,7 @@
 'use client';
 
-import { X, Bookmark, Play, FileText, Headphones, Globe } from 'lucide-react';
+import { useState } from 'react';
+import { X, Bookmark, Play, FileText, Headphones, Globe, Maximize2 } from 'lucide-react';
 import { useExplorer } from '@/components/explorer/ExplorerContext';
 import type { ContentCard } from '@/lib/explorer/types';
 
@@ -21,6 +22,7 @@ const mediaIcons: Record<string, typeof Play> = {
 
 export default function CardOverlay({ card, onClose }: CardOverlayProps) {
   const { toggleSaveCard, isCardSaved, showToast } = useExplorer();
+  const [pdfFullscreen, setPdfFullscreen] = useState(false);
 
   if (!card) return null;
 
@@ -55,8 +57,48 @@ export default function CardOverlay({ card, onClose }: CardOverlayProps) {
           {/* Description */}
           <p className="exp-overlay-desc">{card.description.overlay}</p>
 
-          {/* Media preview placeholder */}
-          {card.mediaType && (
+          {/* PDF inline embed with fullscreen expand */}
+          {card.mediaType === 'pdf' && card.url ? (
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                aspectRatio: '4/3',
+                borderRadius: 12,
+                overflow: 'hidden',
+                background: '#fff',
+                border: '1px solid var(--exp-card-border)',
+              }}
+            >
+              <iframe
+                src={card.url}
+                title={card.title}
+                style={{ width: '100%', height: '100%', border: 'none', background: '#fff' }}
+              />
+              <button
+                onClick={() => setPdfFullscreen(true)}
+                title="View full document"
+                style={{
+                  position: 'absolute',
+                  bottom: 12,
+                  right: 12,
+                  width: 36,
+                  height: 36,
+                  borderRadius: 9,
+                  border: 'none',
+                  background: 'rgba(0,0,0,0.7)',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  backdropFilter: 'blur(4px)',
+                }}
+              >
+                <Maximize2 style={{ width: 16, height: 16 }} />
+              </button>
+            </div>
+          ) : card.mediaType ? (
             <div
               style={{
                 width: '100%',
@@ -75,7 +117,7 @@ export default function CardOverlay({ card, onClose }: CardOverlayProps) {
               {MediaIcon && <MediaIcon style={{ width: 24, height: 24 }} />}
               <span>{card.mediaType} preview</span>
             </div>
-          )}
+          ) : null}
 
           {/* Save button */}
           <button
@@ -87,6 +129,58 @@ export default function CardOverlay({ card, onClose }: CardOverlayProps) {
           </button>
         </div>
       </div>
+
+      {/* Fullscreen PDF viewer */}
+      {pdfFullscreen && card.mediaType === 'pdf' && card.url && (
+        <div
+          onClick={(e) => { e.stopPropagation(); setPdfFullscreen(false); }}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 11000,
+            background: 'rgba(0,0,0,0.95)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 24,
+          }}
+        >
+          <button
+            onClick={(e) => { e.stopPropagation(); setPdfFullscreen(false); }}
+            title="Close"
+            style={{
+              position: 'absolute',
+              top: 16,
+              right: 16,
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+              border: 'none',
+              background: 'rgba(255,255,255,0.15)',
+              color: '#fff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 1,
+            }}
+          >
+            <X style={{ width: 18, height: 18 }} />
+          </button>
+          <iframe
+            src={card.url}
+            title={`${card.title} (fullscreen)`}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: '90%',
+              height: '90vh',
+              border: 'none',
+              borderRadius: 10,
+              background: '#fff',
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

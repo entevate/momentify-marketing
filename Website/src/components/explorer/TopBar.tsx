@@ -100,7 +100,10 @@ export default function TopBar({ showModeSwitcher, onOpenNotes, onOpenVoice, onO
   return (
     <div className="exp-top-bar">
       {!isThankYou && (
-        <div className="exp-logo">
+        <div
+          className="exp-logo"
+          style={config.branding.logoHeight ? { height: config.branding.logoHeight } : undefined}
+        >
           <img
             src={logoSrc}
             alt={config.name}

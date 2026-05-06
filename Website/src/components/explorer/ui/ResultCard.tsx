@@ -60,7 +60,12 @@ export default function ResultCard({ card, viewSize, onOpenOverlay }: ResultCard
         </div>
       )}
 
-      <p className="exp-card-desc">{description}</p>
+      <p
+        className="exp-card-desc"
+        style={viewSize === 'small' ? { marginTop: 12 } : undefined}
+      >
+        {description}
+      </p>
     </div>
   );
 }
