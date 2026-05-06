@@ -261,7 +261,7 @@ export const instances: ExplorerInstance[] = [
   },
   {
     slug: "dfwpb-pickleball-may132026",
-    name: "DFWTPB Pickleball Social",
+    name: "DFWTPB Explorer",
     company: "DFW Technology Prayer Breakfast",
     industry: "Technology",
     prototypeFile: "/explorer/dfwpb-pickleball-may132026",
@@ -274,7 +274,7 @@ export const instances: ExplorerInstance[] = [
   },
   {
     slug: "dfwpb-pickleball-may132026-mobile",
-    name: "DFWTPB Pickleball Social (Mobile)",
+    name: "DFWTPB Explorer (Mobile)",
     company: "DFW Technology Prayer Breakfast",
     industry: "Technology",
     prototypeFile: "/explorer/dfwpb-pickleball-may132026-mobile",

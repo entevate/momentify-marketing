@@ -39,7 +39,7 @@ const DFWPB_LIGHT: ThemeColors = {
 
 export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
   id: 'dfwpb-pickleball-may132026',
-  name: 'DFWTPB Pickleball Social',
+  name: 'DFWTPB Explorer',
   version: 1,
   createdAt: '2026-05-04T00:00:00.000Z',
   updatedAt: '2026-05-04T00:00:00.000Z',
@@ -74,14 +74,10 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
     ctaTextColor: '#FFFFFF',
     gradientWord: 'linear-gradient(135deg, #BF353D, #255194)',
     roleBackgrounds: {
-      'tech-leader': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(191,53,61,0.20) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 15% 15%, rgba(37,81,148,0.12) 0%, transparent 55%)',
-      'vp-director': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(37,81,148,0.18) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 85% 15%, rgba(191,53,61,0.10) 0%, transparent 55%)',
-      'engineer': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(122,35,41,0.16) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 15% 25%, rgba(37,81,148,0.10) 0%, transparent 55%)',
-      'sponsor': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(191,53,61,0.20) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 85% 25%, rgba(122,35,41,0.12) 0%, transparent 55%)',
-      'partner-org': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(37,81,148,0.16) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 25% 15%, rgba(191,53,61,0.10) 0%, transparent 55%)',
-      'faith-leader': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(122,35,41,0.18) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 75% 15%, rgba(37,81,148,0.10) 0%, transparent 55%)',
-      'student': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(37,81,148,0.14) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 15% 15%, rgba(191,53,61,0.08) 0%, transparent 55%)',
-      'guest': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(191,53,61,0.10) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 85% 25%, rgba(37,81,148,0.10) 0%, transparent 55%)',
+      'table-host': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(191,53,61,0.20) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 15% 15%, rgba(37,81,148,0.12) 0%, transparent 55%)',
+      'volunteer': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(37,81,148,0.18) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 85% 15%, rgba(191,53,61,0.10) 0%, transparent 55%)',
+      'partner': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(191,53,61,0.20) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 85% 25%, rgba(122,35,41,0.12) 0%, transparent 55%)',
+      'curious-guest': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(191,53,61,0.10) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 85% 25%, rgba(37,81,148,0.10) 0%, transparent 55%)',
     },
   },
 
@@ -113,7 +109,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
       id: 'welcome',
       title: 'Faith. Tech.',
       gradientWord: 'Community.',
-      subtitle: 'Join us May 13, 2026 for the Pickleball & Prayer Social: a unique gathering of DFW tech leaders, faith, fellowship, and friendly competition on the court.',
+      subtitle: 'DFWTPB unites Dallas-Fort Worth tech professionals around faith, fellowship, and community at the annual breakfast, on the court, and year-round.',
       buttonText: 'Tap to Begin',
     },
     {
@@ -129,14 +125,10 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
       showGreeting: true,
       showSelectAll: false,
       options: [
-        { value: 'tech-leader', label: 'Tech Leader / CEO / Founder', icon: 'crown', iconType: 'lucide' },
-        { value: 'vp-director', label: 'VP / Director', icon: 'presentation', iconType: 'lucide' },
-        { value: 'engineer', label: 'Engineer / IC', icon: 'code', iconType: 'lucide' },
-        { value: 'sponsor', label: 'Sponsor', icon: 'handshake', iconType: 'lucide' },
-        { value: 'partner-org', label: 'Partner Organization', icon: 'building-2', iconType: 'lucide' },
-        { value: 'faith-leader', label: 'Faith Leader / Pastor', icon: 'church', iconType: 'lucide' },
-        { value: 'student', label: 'Student', icon: 'graduation-cap', iconType: 'lucide' },
-        { value: 'guest', label: 'Guest', icon: 'user', iconType: 'lucide' },
+        { value: 'table-host', label: 'Table Host', icon: 'utensils', iconType: 'lucide' },
+        { value: 'volunteer', label: 'Volunteer', icon: 'heart', iconType: 'lucide' },
+        { value: 'partner', label: 'Partner', icon: 'handshake', iconType: 'lucide' },
+        { value: 'curious-guest', label: 'Curious Guest', icon: 'compass', iconType: 'lucide' },
       ],
     },
     {
@@ -192,7 +184,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
       type: 'thank-you',
       id: 'thanks',
       title: 'Thank You!',
-      subtitle: 'We appreciate your time. See you on May 13, 2026 for the Pickleball & Prayer Social.',
+      subtitle: 'We appreciate your time. We hope to see you at an upcoming DFWTPB gathering.',
       showNewSessionButton: true,
       showAddNotesButton: true,
     },
@@ -214,7 +206,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'Since launching, DFW Technology Prayer Breakfast has welcomed 1,000+ technology professionals from companies across the metroplex. Whether you are a CEO, engineer, or student, this is a community that meets you where you are and connects faith to your everyday work.',
       },
       tags: ['networking', 'prayer-community'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'guest'],
+      targetRoles: ['table-host', 'partner', 'volunteer', 'curious-guest'],
     },
     {
       id: 'o2',
@@ -230,7 +222,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'Once a year, DFW tech professionals come together for a flagship breakfast featuring inspiring keynote speakers, intentional prayer, and fellowship. It is a singular opportunity to step back from day-to-day work and connect with peers around shared values.',
       },
       tags: ['speakers', 'prayer-community'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'sponsor', 'partner-org', 'guest'],
+      targetRoles: ['table-host', 'partner', 'curious-guest'],
     },
     {
       id: 'o3',
@@ -246,7 +238,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'DFWTPB is supported by 50+ partner organizations spanning the DFW tech ecosystem and faith community. From early-stage startups to enterprise leaders to local ministries, our partners make this work possible and provide a wider network for attendees.',
       },
       tags: ['sponsorship', 'networking'],
-      targetRoles: ['sponsor', 'partner-org', 'tech-leader'],
+      targetRoles: ['partner', 'table-host'],
     },
     {
       id: 'o4',
@@ -262,7 +254,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'On May 13, 2026, DFWTPB launches its newest annual event: the Pickleball & Prayer Social. It is a relaxed, fun setting where DFW tech professionals connect on the court, share a meal, and join in prayer together. All skill levels welcome.',
       },
       tags: ['pickleball-social', 'networking', 'prayer-community'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'sponsor', 'partner-org', 'student', 'guest'],
+      targetRoles: ['table-host', 'partner', 'volunteer', 'curious-guest'],
     },
     {
       id: 'o5',
@@ -278,7 +270,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'DFWTPB is more than a once-a-year event. The community connects year-round through smaller socials, prayer groups, partnered church events, and ad-hoc gatherings — so there is always a way to plug in regardless of when you discover us.',
       },
       tags: ['prayer-community', 'networking'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'faith-leader', 'student', 'guest'],
+      targetRoles: ['table-host', 'partner', 'volunteer', 'curious-guest'],
     },
     {
       id: 'o6',
@@ -294,7 +286,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'Tech work can be isolating, fast-paced, and ethically complex. DFWTPB exists to help DFW technology professionals connect personal faith with their day-to-day work — through honest conversation, shared prayer, and a community of peers walking the same road.',
       },
       tags: ['prayer-community', 'speakers'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'faith-leader'],
+      targetRoles: ['table-host', 'partner', 'curious-guest'],
     },
 
     // ── Learn (6) ─────────────────────────────────────
@@ -313,7 +305,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'The Pickleball & Prayer Social happens May 13, 2026. Visit the DFWTPB site for the full event schedule, location and parking info, what to bring (or rent on-site), the prayer/program portion timing, and how to invite a colleague.',
       },
       tags: ['pickleball-social'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'sponsor', 'partner-org', 'student', 'guest'],
+      targetRoles: ['table-host', 'partner', 'volunteer', 'curious-guest'],
     },
     {
       id: 'l2',
@@ -330,7 +322,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'If you are new to DFWTPB, this is the place to start. Learn how the breakfast started, the mission behind it, and meet the team and community of DFW tech professionals making it happen. It is a quick read that will help you understand what to expect at any DFWTPB gathering.',
       },
       tags: ['prayer-community', 'networking'],
-      targetRoles: ['guest', 'student', 'engineer', 'faith-leader'],
+      targetRoles: ['curious-guest', 'volunteer'],
     },
     {
       id: 'l3',
@@ -347,7 +339,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'This is the heart of DFWTPB explained simply: why a faith-driven tech community matters in 2026, what we have seen happen in attendees\' lives and careers, and why this is worth your time. If you are skeptical, start here.',
       },
       tags: ['prayer-community', 'speakers'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'guest', 'student'],
+      targetRoles: ['table-host', 'partner', 'curious-guest'],
     },
     {
       id: 'l4',
@@ -364,7 +356,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'Wondering what to expect? This prep guide covers what to wear, what to bring (paddles available on-site if needed), arrival timing, the rough flow of the day, and how the prayer/program time integrates with the pickleball matches. Arrive ready, leave refreshed.',
       },
       tags: ['pickleball-social'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'guest', 'student', 'partner-org'],
+      targetRoles: ['table-host', 'partner', 'volunteer', 'curious-guest'],
     },
     {
       id: 'l5',
@@ -381,7 +373,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'Highlights from past DFWTPB breakfasts: keynote clips, panel discussions, prayer moments, and the texture of the room. The best way to understand the experience without attending in person is to spend a few minutes here.',
       },
       tags: ['speakers', 'prayer-community'],
-      targetRoles: ['tech-leader', 'vp-director', 'guest', 'sponsor'],
+      targetRoles: ['table-host', 'partner', 'curious-guest'],
     },
     {
       id: 'l6',
@@ -398,7 +390,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'Stay connected: subscribe to the DFWTPB email list for event announcements, follow on social channels for day-to-day inspiration and prayer requests, and watch for ad-hoc gatherings and prayer groups happening across DFW between flagship events.',
       },
       tags: ['networking', 'prayer-community'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'student', 'guest', 'faith-leader'],
+      targetRoles: ['table-host', 'partner', 'volunteer', 'curious-guest'],
     },
 
     // ── Solutions / Get Involved (6) ──────────────────
@@ -416,7 +408,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'The Pickleball & Prayer Social on May 13, 2026 is open to all DFW tech professionals — from never-played-before to competitive league players. Paddles available on-site, food provided, and the prayer/program portion is woven throughout the day. Bring a colleague who needs a break from the keyboard.',
       },
       tags: ['pickleball-social'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'sponsor', 'partner-org', 'student', 'guest'],
+      targetRoles: ['table-host', 'partner', 'volunteer', 'curious-guest'],
     },
     {
       id: 's2',
@@ -432,7 +424,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'Reserve your spot at the next flagship DFWTPB breakfast. Single seats and full tables are both available. The morning includes a keynote speaker, panel discussion, intentional prayer, and time for community connection over breakfast.',
       },
       tags: ['speakers', 'networking', 'prayer-community'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'guest'],
+      targetRoles: ['table-host', 'partner', 'curious-guest'],
     },
     {
       id: 's3',
@@ -448,7 +440,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'DFWTPB sponsorship tiers cover the flagship breakfast, the Pickleball & Prayer Social, and year-round programs. Each tier includes branded visibility, dedicated tables or court time, and the chance to support a community that matters to your team. Reach out to discuss what fits.',
       },
       tags: ['sponsorship'],
-      targetRoles: ['sponsor', 'partner-org', 'tech-leader'],
+      targetRoles: ['partner', 'table-host'],
     },
     {
       id: 's4',
@@ -464,7 +456,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'Churches, ministries, and tech-affiliated organizations are invited to partner with DFWTPB. Partners get listed on the site, gain access to our community channels, and collaborate on programming. It is the right fit if your org cares about faith-work integration in DFW tech.',
       },
       tags: ['sponsorship', 'networking'],
-      targetRoles: ['partner-org', 'faith-leader', 'sponsor'],
+      targetRoles: ['partner'],
     },
     {
       id: 's5',
@@ -480,7 +472,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'Volunteers are the backbone of DFWTPB. Roles range from event-day logistics (registration, hospitality, court coordination at the Pickleball Social) to leading or co-hosting smaller prayer groups across DFW throughout the year. Sign up — no minimum commitment required.',
       },
       tags: ['volunteering'],
-      targetRoles: ['student', 'engineer', 'guest', 'faith-leader'],
+      targetRoles: ['volunteer', 'curious-guest'],
     },
     {
       id: 's6',
@@ -496,7 +488,7 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
         overlay: 'The simplest way to be part of DFWTPB is to join the email list: a few times a month you will get event invitations, community prayer requests, and updates on what is happening across DFW tech. Unsubscribe any time. No spam, no upsells.',
       },
       tags: ['networking', 'prayer-community'],
-      targetRoles: ['tech-leader', 'vp-director', 'engineer', 'student', 'guest', 'faith-leader'],
+      targetRoles: ['table-host', 'partner', 'volunteer', 'curious-guest'],
     },
   ],
 

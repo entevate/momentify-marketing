@@ -8,7 +8,7 @@ import { DFWPB_PICKLEBALL_CONFIG } from './dfwpb-pickleball-may132026';
 export const DFWPB_PICKLEBALL_MOBILE_CONFIG: ExplorerConfig = {
   ...DFWPB_PICKLEBALL_CONFIG,
   id: 'dfwpb-pickleball-may132026-mobile',
-  name: 'DFWTPB Pickleball Social (Mobile)',
+  name: 'DFWTPB Explorer (Mobile)',
   formFactor: 'mobile',
   updatedAt: '2026-05-04T00:00:00.000Z',
 };
