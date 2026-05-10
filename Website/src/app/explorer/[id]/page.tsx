@@ -22,6 +22,7 @@ import type { ExplorerConfig } from '@/lib/explorer/types';
 
 const CONFIGS: Record<string, ExplorerConfig> = {
   'momentify-default': MOMENTIFY_DEFAULT_CONFIG,
+  'momentify': MOMENTIFY_DEFAULT_CONFIG,
   'clarium': CLARIUM_CONFIG,
   'clarium-mobile': CLARIUM_MOBILE_CONFIG,
   'maven-fp': MAVEN_FP_CONFIG,

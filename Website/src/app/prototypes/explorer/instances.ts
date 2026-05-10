@@ -27,7 +27,7 @@ export const instances: ExplorerInstance[] = [
     name: "Momentify Explorer",
     company: "Momentify",
     industry: "Demo",
-    prototypeFile: "/brand/explorer-prototype_momentify.html",
+    prototypeFile: "/explorer/momentify",
     logo: "/brand/assets/Momentify-Icon.svg",
     accentColor: "#0CF4DF",
     createdAt: "2025-01-01",
