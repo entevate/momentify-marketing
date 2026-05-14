@@ -31,8 +31,7 @@ const stats = [
 
 const outcomes = [
   {
-    logo: "/logos/caterpillar-logo_black.png",
-    logoAlt: "Caterpillar",
+    logoAlt: "Fortune 75 Heavy Equipment Manufacturer",
     headline: "92% more leads across three consecutive years at the same industry event.",
     body: "The Electric Power Division used Momentify across three consecutive years at DistribuTECH. Same booth. Same show. Better data every time. Engagement depth, opt-in rates, and follow-up speed all improved year over year. The results compounded because the team could finally see what was working and what was not.",
     tags: ["Trade Shows and Exhibits"],
@@ -47,8 +46,7 @@ const outcomes = [
     link: "/case-studies/mustang-cat",
   },
   {
-    logo: "/logos/caterpillar-logo_black.png",
-    logoAlt: "Caterpillar",
+    logoAlt: "Fortune 75 Heavy Equipment Manufacturer",
     headline: "40 dealers received matched candidates from a single national recruiting program.",
     body: "The Global Dealer Learning group used Momentify at national student events to identify technician candidates and route them to the right dealers. Students were matched by interest and fit before anyone left the floor. What used to end with a stack of business cards ended with qualified candidates delivered automatically.",
     tags: ["Technical Recruiting", "Trade Shows and Exhibits"],

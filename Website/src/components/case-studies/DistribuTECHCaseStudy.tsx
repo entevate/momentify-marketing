@@ -304,7 +304,7 @@ export default function DistribuTECHCaseStudy() {
               marginBottom: "48px",
             }}
           >
-            How Caterpillar grew qualified trade show leads 92% over three consecutive years at DistribuTECH.
+            How a Fortune 75 Heavy Equipment Manufacturer grew qualified trade show leads 92% over three consecutive years at DistribuTECH.
           </motion.p>
 
           {/* Stat row */}
@@ -367,12 +367,6 @@ export default function DistribuTECHCaseStudy() {
             className="flex items-center gap-3"
             style={{ marginTop: "40px" }}
           >
-            <img
-              src="/logos/caterpillar.png"
-              alt="Caterpillar"
-              style={{ maxHeight: "36px", width: "auto", opacity: 0.85 }}
-            />
-            <span style={{ color: "rgba(255, 255, 255, 0.20)", fontSize: "12px" }}>·</span>
             <span
               style={{
                 fontFamily: "var(--font-inter)",
@@ -381,7 +375,7 @@ export default function DistribuTECHCaseStudy() {
                 color: "rgba(255, 255, 255, 0.50)",
               }}
             >
-              Electric Power Division
+              Fortune 75 Heavy Equipment Manufacturer · Electric Power Division
             </span>
           </motion.div>
         </div>
@@ -441,7 +435,7 @@ export default function DistribuTECHCaseStudy() {
                     marginBottom: "20px",
                   }}
                 >
-                  Caterpillar&apos;s Electric Power Division showed up to DistribuTECH every year with a strong booth, experienced reps, and a product portfolio that covered the full range of power generation. But when the show floor closed, the data walked out the door.
+                  A Fortune 75 Heavy Equipment Manufacturer&apos;s Electric Power Division showed up to DistribuTECH every year with a strong booth, experienced reps, and a product portfolio that covered the full range of power generation. But when the show floor closed, the data walked out the door.
                 </p>
                 <p
                   style={{
@@ -782,7 +776,7 @@ export default function DistribuTECHCaseStudy() {
                     color: "rgba(255, 255, 255, 0.50)",
                   }}
                 >
-                  Electric Power Division, Caterpillar
+                  Electric Power Division, Fortune 75 Heavy Equipment Manufacturer
                 </p>
               </div>
             </motion.div>
@@ -1051,7 +1045,7 @@ export default function DistribuTECHCaseStudy() {
                     color: "rgba(6, 19, 65, 0.50)",
                   }}
                 >
-                  Electric Power Division, Caterpillar
+                  Electric Power Division, Fortune 75 Heavy Equipment Manufacturer
                 </p>
               </div>
             </motion.div>

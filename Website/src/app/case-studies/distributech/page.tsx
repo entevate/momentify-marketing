@@ -6,11 +6,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "DistribuTECH Case Study | Momentify",
   description:
-    "How Caterpillar's Electric Power Division used Momentify to grow trade show leads by 92% over three consecutive years at DistribuTECH.",
+    "How a Fortune 75 Heavy Equipment Manufacturer's Electric Power Division used Momentify to grow trade show leads by 92% over three consecutive years at DistribuTECH.",
   keywords: [
     "trade show case study",
     "trade show lead growth",
-    "Caterpillar trade show",
+    "heavy equipment trade show",
     "event marketing case study",
     "DistribuTECH results",
     "trade show ROI case study",
@@ -29,7 +29,7 @@ const jsonLd = {
       "@type": "Article",
       headline: "DistribuTECH: 92% more leads at the same event, three years running.",
       description:
-        "How Caterpillar's Electric Power Division used Momentify across three consecutive years at DistribuTECH to grow leads by 92% with better data every time.",
+        "How a Fortune 75 Heavy Equipment Manufacturer's Electric Power Division used Momentify across three consecutive years at DistribuTECH to grow leads by 92% with better data every time.",
       author: { "@type": "Organization", name: "Momentify" },
       publisher: {
         "@type": "Organization",

@@ -36,7 +36,7 @@ const heroStats = [
 const challengeCards = [
   {
     label: "No candidate routing",
-    body: "Students met Caterpillar at national events but had no direct connection to the local dealer who could offer them a job. Intent was captured but never delivered.",
+    body: "Students met a Fortune 75 Heavy Equipment Manufacturer at national events but had no direct connection to the local dealer who could offer them a job. Intent was captured but never delivered.",
   },
   {
     label: "Inconsistent capture across events",
@@ -444,12 +444,6 @@ export default function GlobalDealerLearningCaseStudy() {
             className="flex items-center gap-3"
             style={{ marginTop: "40px" }}
           >
-            <img
-              src="/logos/caterpillar.png"
-              alt="Caterpillar"
-              style={{ maxHeight: "36px", width: "auto", opacity: 0.85 }}
-            />
-            <span style={{ color: "rgba(255, 255, 255, 0.20)", fontSize: "12px" }}>·</span>
             <span
               style={{
                 fontFamily: "var(--font-inter)",
@@ -458,7 +452,7 @@ export default function GlobalDealerLearningCaseStudy() {
                 color: "rgba(255, 255, 255, 0.50)",
               }}
             >
-              Global Dealer Learning
+              Fortune 75 Heavy Equipment Manufacturer · Global Dealer Learning
             </span>
           </motion.div>
         </div>
@@ -518,7 +512,7 @@ export default function GlobalDealerLearningCaseStudy() {
                     marginBottom: "20px",
                   }}
                 >
-                  Caterpillar&apos;s Global Dealer Learning group runs one of the largest technician recruiting programs in the industry. They attend SkillsUSA and FFA events nationwide, meeting thousands of students who are already interested in skilled trades careers.
+                  A Fortune 75 Heavy Equipment Manufacturer&apos;s Global Dealer Learning group runs one of the largest technician recruiting programs in the industry. They attend SkillsUSA and FFA events nationwide, meeting thousands of students who are already interested in skilled trades careers.
                 </p>
                 <p
                   style={{
@@ -863,7 +857,7 @@ export default function GlobalDealerLearningCaseStudy() {
                     color: "rgba(255, 255, 255, 0.50)",
                   }}
                 >
-                  Global Dealer Learning, Caterpillar
+                  Global Dealer Learning, Fortune 75 Heavy Equipment Manufacturer
                 </p>
               </div>
             </motion.div>
@@ -1050,7 +1044,7 @@ export default function GlobalDealerLearningCaseStudy() {
                 zIndex: 1,
               }}
             >
-              By connecting national events to local dealers through a single platform, GDL established the benchmark for scalable, data-driven technician recruiting across the Caterpillar dealer network.
+              By connecting national events to local dealers through a single platform, GDL established the benchmark for scalable, data-driven technician recruiting across the manufacturer&apos;s dealer network.
             </p>
           </motion.div>
         </div>
@@ -1132,7 +1126,7 @@ export default function GlobalDealerLearningCaseStudy() {
                     color: "rgba(6, 19, 65, 0.50)",
                   }}
                 >
-                  Global Dealer Learning, Caterpillar
+                  Global Dealer Learning, Fortune 75 Heavy Equipment Manufacturer
                 </p>
               </div>
             </motion.div>

@@ -614,7 +614,6 @@ export default function TradeShowsSolution() {
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.1 }} variants={fadeUp} style={{ background: "#F8F9FC", border: "1px solid rgba(6, 19, 65, 0.08)", borderRadius: "20px", padding: "48px" }}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
               <div>
-                <Image src="/logos/caterpillar-logo_black.png" alt="Caterpillar" width={200} height={40} style={{ height: "32px", width: "auto", marginBottom: "20px", objectFit: "contain" }} />
                 <h3 style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "22px", color: "#061341", marginBottom: "16px" }}>DistribuTECH, Electric Power Division</h3>
                 <ul className="space-y-2" style={{ marginBottom: "24px" }}>
                   {[

@@ -6,14 +6,14 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Global Dealer Learning Case Study | Momentify",
   description:
-    "How Caterpillar's Global Dealer Learning group used Momentify to unify technician recruiting across SkillsUSA and FFA, routing candidates to 40 dealers in real time.",
+    "How a Fortune 75 Heavy Equipment Manufacturer's Global Dealer Learning group used Momentify to unify technician recruiting across SkillsUSA and FFA, routing candidates to 40 dealers in real time.",
   keywords: [
     "dealer recruiting case study",
     "SkillsUSA recruiting",
     "FFA recruiting",
     "multi-event recruiting",
     "distributed recruiting platform",
-    "Caterpillar dealer recruiting",
+    "heavy equipment dealer recruiting",
     "technician recruiting case study",
     "real-time candidate routing",
   ],
@@ -29,7 +29,7 @@ const jsonLd = {
       "@type": "Article",
       headline: "Global Dealer Learning: 40 dealers. One platform. Zero lost candidates.",
       description:
-        "How Caterpillar's Global Dealer Learning group used Momentify to unify technician recruiting across SkillsUSA and FFA events, routing qualified candidates to 40 dealers in real time.",
+        "How a Fortune 75 Heavy Equipment Manufacturer's Global Dealer Learning group used Momentify to unify technician recruiting across SkillsUSA and FFA events, routing qualified candidates to 40 dealers in real time.",
       author: { "@type": "Organization", name: "Momentify" },
       publisher: {
         "@type": "Organization",

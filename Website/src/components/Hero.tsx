@@ -103,7 +103,6 @@ function TypewriterWord() {
 /* ── Client logos ─────────────────────────────────────── */
 
 const logos = [
-  { src: "/logos/caterpillar.png", alt: "Caterpillar", height: "22px" },
   { src: "/logos/mustang-cat.png", alt: "Mustang Cat", height: "28px" },
   { src: "/logos/thompson-tractor.png", alt: "Thompson Tractor", height: "28px" },
   { src: "/logos/blanchard-machinery.png", alt: "Blanchard Machinery", height: "28px" },

@@ -103,12 +103,11 @@ const CASE_STUDIES: CaseStudy[] = [
     published: true,
   },
   {
-    name: "Caterpillar at DistribuTECH",
+    name: "Fortune 75 Heavy Equipment Manufacturer at DistribuTECH",
     category: "trade-shows",
     headline: "92% more leads at the same event, three years running.",
     description:
-      "How Caterpillar's Electric Power Division used Momentify across three consecutive years at DistribuTECH to grow leads by 92% with better data every time.",
-    logo: "/logos/caterpillar-logo_black.png",
+      "How a Fortune 75 Heavy Equipment Manufacturer's Electric Power Division used Momentify across three consecutive years at DistribuTECH to grow leads by 92% with better data every time.",
     stats: [
       { value: "92%", label: "Lead Growth" },
       { value: "1,952", label: "Companies" },
@@ -118,12 +117,11 @@ const CASE_STUDIES: CaseStudy[] = [
     published: true,
   },
   {
-    name: "Caterpillar Global Dealer Learning",
+    name: "Fortune 75 Heavy Equipment Manufacturer Global Dealer Learning",
     category: "recruiting",
     headline: "40 dealers. One platform. Zero lost candidates.",
     description:
-      "Caterpillar's Global Dealer Learning group used Momentify at national student events to match technician candidates to the right dealers by interest and fit.",
-    logo: "/logos/caterpillar-logo_black.png",
+      "A Fortune 75 Heavy Equipment Manufacturer's Global Dealer Learning group used Momentify at national student events to match technician candidates to the right dealers by interest and fit.",
     stats: [
       { value: "5,400+", label: "Opt-ins" },
       { value: "40", label: "Dealers" },

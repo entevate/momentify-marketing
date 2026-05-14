@@ -166,7 +166,7 @@ const heavyEquipmentLayers: GTMLayer[] = [
       },
       {
         heading: "One-Pager",
-        body: "Caterpillar Electric Power case study and ROX one-pager",
+        body: "Fortune 75 Heavy Equipment Manufacturer Electric Power case study and ROX one-pager",
       },
     ],
   },
