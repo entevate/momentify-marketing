@@ -40,13 +40,19 @@
   flex-direction: column;
 }
 
-/* ─── Top Bar (iOS-style, clears Dynamic Island) ────────── */
-/* Dynamic Island is 34px tall, starts 14px from top of device chrome.
-   The shell sits inside an 8px bezel padding, so the island intrudes
-   roughly the first ~50px of the shell. Push content below. */
+/* ─── Top Bar (iOS-style, clears Dynamic Island + browser chrome) ─── */
+/* Phase 8.10g — device-adaptive top inset (mirrored from fan-gallery
+   runtime). The previous hardcoded 56px assumed an iPhone with a
+   Dynamic Island. In production the mobile shell auto-activates on
+   iPad portrait and on non-notched phones too — both lose ~30px of
+   usable space to that hardcode. env(safe-area-inset-top) reports
+   the actual inset the device wants (notch / Dynamic Island /
+   status-bar overlay in PWA mode); +8px is breathing room. The 20px
+   floor keeps the bar feeling intentional on devices that report a 0
+   inset (Android Chrome, desktop). */
 .explorer-shell[data-form="mobile"] .exp-top-bar {
   padding: 12px 16px;
-  padding-top: 56px;
+  padding-top: max(20px, calc(env(safe-area-inset-top, 0px) + 8px));
   min-height: 96px;
   flex-shrink: 0;
   gap: 8px;
