@@ -17,6 +17,10 @@
  */
 import { NextResponse } from 'next/server';
 import { getPrototypeConfig, getPrototypeMetadata } from '@/lib/explorer/configs/registry';
+import {
+  getInterviewPrototypeConfig,
+  getInterviewPrototypeIndex,
+} from '@/lib/interview/configs/registry';
 
 export const dynamic = 'force-static';
 export const revalidate = 60;
@@ -26,23 +30,58 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
-  const config = getPrototypeConfig(slug);
-  const metadata = getPrototypeMetadata(slug);
 
-  if (!config || !metadata) {
+  // Try Explorer first (the historical default), then Interview. Both
+  // registries use the same slug → response shape contract so the
+  // ingest endpoint downstream can branch on metadata.kind.
+  const explorerConfig = getPrototypeConfig(slug);
+  if (explorerConfig) {
+    const metadata = getPrototypeMetadata(slug);
+    if (!metadata) {
+      return notFound();
+    }
     return NextResponse.json(
-      { error: 'Prototype not found' },
-      { status: 404, headers: { 'Access-Control-Allow-Origin': '*' } },
+      { metadata: { ...metadata, kind: 'explorer' as const }, config: explorerConfig, kind: 'explorer' as const },
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        },
+      },
     );
   }
 
-  return NextResponse.json(
-    { metadata, config },
-    {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+  const interviewConfig = getInterviewPrototypeConfig(slug);
+  if (interviewConfig) {
+    // The interview registry only exposes tablet rows from getIndex();
+    // detail metadata for mobile is synthesized here.
+    const tabletMeta = getInterviewPrototypeIndex().find((p) => p.slug === slug);
+    const metadata = tabletMeta ?? {
+      slug,
+      name: interviewConfig.name,
+      kind: 'interview' as const,
+      formFactor: (interviewConfig.formFactor ?? 'tablet') as 'tablet' | 'mobile',
+      mobileSlug: null,
+      tabletSlug: slug.endsWith('-mobile') ? slug.replace(/-mobile$/, '') : null,
+      isDefault: false,
+    };
+    return NextResponse.json(
+      { metadata, config: interviewConfig, kind: 'interview' as const },
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        },
       },
-    },
+    );
+  }
+
+  return notFound();
+}
+
+function notFound() {
+  return NextResponse.json(
+    { error: 'Prototype not found' },
+    { status: 404, headers: { 'Access-Control-Allow-Origin': '*' } },
   );
 }

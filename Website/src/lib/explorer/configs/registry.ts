@@ -28,8 +28,8 @@ import { CARTER_MACHINERY_CONFIG } from './carter-machinery';
 import { CARTER_MACHINERY_MOBILE_CONFIG } from './carter-machinery-mobile';
 import { FORTUNE_TIRE_CONFIG } from './fortune-tire';
 import { FORTUNE_TIRE_MOBILE_CONFIG } from './fortune-tire-mobile';
-import { MUSTANGCAT_INTERVIEW_CONFIG } from './mustangcat-interview';
-import { MUSTANGCAT_INTERVIEW_MOBILE_CONFIG } from './mustangcat-interview-mobile';
+// Mustang Cat Open Interview moved out of Explorer — now lives in the
+// `interview` template kind registry at lib/interview/configs/.
 
 /** All prototype configs by slug. */
 export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
@@ -49,8 +49,6 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'carter-machinery-mobile': CARTER_MACHINERY_MOBILE_CONFIG,
   'fortune-tire': FORTUNE_TIRE_CONFIG,
   'fortune-tire-mobile': FORTUNE_TIRE_MOBILE_CONFIG,
-  'mustangcat-interview': MUSTANGCAT_INTERVIEW_CONFIG,
-  'mustangcat-interview-mobile': MUSTANGCAT_INTERVIEW_MOBILE_CONFIG,
 };
 
 export interface PrototypeMetadata {

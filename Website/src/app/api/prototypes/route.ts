@@ -14,12 +14,18 @@
  */
 import { NextResponse } from 'next/server';
 import { getPrototypeIndex } from '@/lib/explorer/configs/registry';
+import { getInterviewPrototypeIndex } from '@/lib/interview/configs/registry';
 
 export const dynamic = 'force-static';
 export const revalidate = 60;
 
 export async function GET() {
-  const prototypes = getPrototypeIndex();
+  // Merge Explorer + Interview kinds into one listing. Each entry now
+  // carries an explicit `kind` so consumers (Momentify Web ingest) can
+  // route the slug to the right gallery_templates.kind on insert.
+  const explorerIndex = getPrototypeIndex().map((p) => ({ ...p, kind: 'explorer' as const }));
+  const interviewIndex = getInterviewPrototypeIndex();
+  const prototypes = [...explorerIndex, ...interviewIndex];
   return NextResponse.json({ prototypes }, {
     headers: {
       // CORS — Momentify Web's server-side fetch happens from a
