@@ -53,13 +53,16 @@ export const MUSTANGCAT_INTERVIEW_CONFIG: ExplorerConfig = {
   version: 1,
   createdAt: '2026-05-14T00:00:00.000Z',
   updatedAt: '2026-05-14T00:00:00.000Z',
+  formFactor: 'tablet',
 
   branding: {
     logo: {
-      dark: '/logos/mustang-cat.png',
+      // Full-color brand logo (mustang-cat.png is a smaller single-color
+      // fallback). Mustang's brand mark stays color on both themes.
+      dark: '/logos/mustang-cat-color.png',
       light: '/logos/mustang-cat-color.png',
     },
-    icon: '/logos/mustang-cat.png',
+    icon: '/logos/mustang-cat-color.png',
     colors: {
       primary: '#FFCC00',
       secondary: '#000000',
