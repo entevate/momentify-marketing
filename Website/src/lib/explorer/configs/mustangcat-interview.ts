@@ -127,7 +127,7 @@ export const MUSTANGCAT_INTERVIEW_CONFIG: ExplorerConfig = {
       id: 'q1-interviewed',
       selectionMode: 'single',
       title: 'Have you interviewed with Mustang Cat within the last 6 months?',
-      subtitle: 'Question 1 of 6',
+      subtitle: 'Question 1 of 7',
       showGreeting: false,
       showSelectAll: false,
       options: [
@@ -140,7 +140,7 @@ export const MUSTANGCAT_INTERVIEW_CONFIG: ExplorerConfig = {
       id: 'q2-application',
       selectionMode: 'single',
       title: 'Have you already filled out an application with Mustang Cat?',
-      subtitle: 'Question 2 of 6',
+      subtitle: 'Question 2 of 7',
       showGreeting: false,
       showSelectAll: false,
       options: [
@@ -153,7 +153,7 @@ export const MUSTANGCAT_INTERVIEW_CONFIG: ExplorerConfig = {
       id: 'q3-technician',
       selectionMode: 'single',
       title: 'Are you applying for a technician/mechanic position?',
-      subtitle: 'Question 3 of 6',
+      subtitle: 'Question 3 of 7',
       showGreeting: false,
       showSelectAll: false,
       options: [
@@ -166,7 +166,7 @@ export const MUSTANGCAT_INTERVIEW_CONFIG: ExplorerConfig = {
       id: 'q4-tools',
       selectionMode: 'single',
       title: 'Do you have your own basic mechanic tools?',
-      subtitle: 'Question 4 of 6',
+      subtitle: 'Question 4 of 7',
       showGreeting: false,
       showSelectAll: false,
       options: [
@@ -180,7 +180,7 @@ export const MUSTANGCAT_INTERVIEW_CONFIG: ExplorerConfig = {
       id: 'q5-cat-experience',
       selectionMode: 'single',
       title: 'Do you have CAT (Caterpillar) specific experience?',
-      subtitle: 'Question 5a of 6',
+      subtitle: 'Question 5 of 7',
       showGreeting: false,
       showSelectAll: false,
       options: [
@@ -193,7 +193,7 @@ export const MUSTANGCAT_INTERVIEW_CONFIG: ExplorerConfig = {
       id: 'q5b-referral',
       selectionMode: 'single',
       title: 'Were you referred by a current Mustang Cat employee?',
-      subtitle: 'Question 5b of 6',
+      subtitle: 'Question 6 of 7',
       showGreeting: false,
       showSelectAll: false,
       options: [
@@ -206,7 +206,7 @@ export const MUSTANGCAT_INTERVIEW_CONFIG: ExplorerConfig = {
       id: 'q6-locations',
       selectionMode: 'multi',
       title: 'Which Mustang Cat locations are you most interested in?',
-      subtitle: 'Question 6 of 6 — Select all that apply',
+      subtitle: 'Question 7 of 7 — Select all that apply',
       showGreeting: false,
       showSelectAll: false,
       options: [
