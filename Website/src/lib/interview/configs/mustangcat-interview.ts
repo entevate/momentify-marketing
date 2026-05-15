@@ -12,7 +12,10 @@ export const MUSTANGCAT_INTERVIEW_CONFIG: InterviewConfig = {
   version: 1,
   createdAt: '2026-05-14T00:00:00.000Z',
   updatedAt: '2026-05-14T00:00:00.000Z',
-  formFactor: 'tablet',
+  // Phase 12 — formFactor removed from template config. Form factor
+  // is now picked at moment-creation time in Momentify Web and stamped
+  // onto moments.formFactor. The runtime injects it back into the
+  // rendered config blob so the shells still read config.formFactor.
 
   branding: {
     logo: '/logos/mustang-cat-color.png',
