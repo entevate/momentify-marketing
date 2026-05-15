@@ -10,12 +10,13 @@
 
 import type { InterviewConfig } from '../types';
 import { MUSTANGCAT_INTERVIEW_CONFIG } from './mustangcat-interview';
-import { MUSTANGCAT_INTERVIEW_MOBILE_CONFIG } from './mustangcat-interview-mobile';
+// Phase 12 — `-mobile` companion configs dropped. Form factor is now a
+// property of the moment, not the template. One canonical config per
+// interview prototype.
 
 /** All interview prototype configs by slug. */
 export const INTERVIEW_PROTOTYPE_CONFIGS: Record<string, InterviewConfig> = {
   'mustangcat-interview': MUSTANGCAT_INTERVIEW_CONFIG,
-  'mustangcat-interview-mobile': MUSTANGCAT_INTERVIEW_MOBILE_CONFIG,
 };
 
 export interface InterviewPrototypeMetadata {

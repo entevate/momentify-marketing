@@ -2,38 +2,36 @@ import { ImageResponse } from "next/og";
 import { instances } from "@/app/prototypes/explorer/instances";
 import { MOMENTIFY_DEFAULT_CONFIG } from "@/lib/explorer/defaults";
 import { CLARIUM_CONFIG } from "@/lib/explorer/configs/clarium";
-import { CLARIUM_MOBILE_CONFIG } from "@/lib/explorer/configs/clarium-mobile";
 import { MAVEN_FP_CONFIG } from "@/lib/explorer/configs/maven-fp";
 import { CDK_CONFIG } from "@/lib/explorer/configs/cdk";
 import { SALESFLOWIQ_CONFIG } from "@/lib/explorer/configs/salesflowiq";
 import { DEALROOM_CONFIG } from "@/lib/explorer/configs/dealroom";
-import { DEALROOM_MOBILE_CONFIG } from "@/lib/explorer/configs/dealroom-mobile";
 import { SALAS_OBRIEN_CONFIG } from "@/lib/explorer/configs/salas-o-brien";
-import { SALAS_OBRIEN_MOBILE_CONFIG } from "@/lib/explorer/configs/salas-o-brien-mobile";
 import { DFWPB_PICKLEBALL_CONFIG } from "@/lib/explorer/configs/dfwpb-pickleball-may132026";
-import { DFWPB_PICKLEBALL_MOBILE_CONFIG } from "@/lib/explorer/configs/dfwpb-pickleball-may132026-mobile";
 import type { ExplorerConfig, SplashStepConfig } from "@/lib/explorer/types";
 
 export const runtime = "edge";
 
+// Phase 12 — `-mobile` configs dropped. OG image route dedupes slug
+// requests to the canonical (base) prototype for cover art.
 const CONFIGS: Record<string, ExplorerConfig> = {
   "momentify-default": MOMENTIFY_DEFAULT_CONFIG,
   clarium: CLARIUM_CONFIG,
-  "clarium-mobile": CLARIUM_MOBILE_CONFIG,
   "maven-fp": MAVEN_FP_CONFIG,
   cdk: CDK_CONFIG,
   salesflowiq: SALESFLOWIQ_CONFIG,
   dealroom: DEALROOM_CONFIG,
-  "dealroom-mobile": DEALROOM_MOBILE_CONFIG,
   "salas-o-brien": SALAS_OBRIEN_CONFIG,
-  "salas-o-brien-mobile": SALAS_OBRIEN_MOBILE_CONFIG,
   "dfwpb-pickleball-may132026": DFWPB_PICKLEBALL_CONFIG,
-  "dfwpb-pickleball-may132026-mobile": DFWPB_PICKLEBALL_MOBILE_CONFIG,
 };
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const slug = searchParams.get("slug");
+  const rawSlug = searchParams.get("slug");
+  // Phase 12 — incoming `-mobile` slugs map back to the canonical config
+  // so old shared links (e.g. /api/prototypes/og?slug=clarium-mobile)
+  // still render OG art instead of falling through to the default.
+  const slug = rawSlug?.endsWith("-mobile") ? rawSlug.replace(/-mobile$/, "") : rawSlug;
   const instance = instances.find((i) => i.slug === slug);
   const config = slug ? CONFIGS[slug] : undefined;
 

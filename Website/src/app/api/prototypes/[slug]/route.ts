@@ -29,7 +29,11 @@ export async function GET(
   _req: Request,
   { params }: { params: Promise<{ slug: string }> },
 ) {
-  const { slug } = await params;
+  const { slug: rawSlug } = await params;
+  // Phase 12 — `-mobile` slug variants no longer exist as separate
+  // configs. Strip the suffix so legacy callers (older Momentify Web
+  // deploys, bookmarked links) still resolve to the canonical config.
+  const slug = rawSlug.endsWith("-mobile") ? rawSlug.replace(/-mobile$/, "") : rawSlug;
 
   // Try Explorer first (the historical default), then Interview. Both
   // registries use the same slug → response shape contract so the

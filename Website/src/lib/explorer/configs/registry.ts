@@ -14,41 +14,31 @@
 import type { ExplorerConfig } from '../types';
 import { MOMENTIFY_DEFAULT_CONFIG } from '../defaults';
 import { CLARIUM_CONFIG } from './clarium';
-import { CLARIUM_MOBILE_CONFIG } from './clarium-mobile';
 import { MAVEN_FP_CONFIG } from './maven-fp';
 import { CDK_CONFIG } from './cdk';
 import { SALESFLOWIQ_CONFIG } from './salesflowiq';
 import { DEALROOM_CONFIG } from './dealroom';
-import { DEALROOM_MOBILE_CONFIG } from './dealroom-mobile';
 import { SALAS_OBRIEN_CONFIG } from './salas-o-brien';
-import { SALAS_OBRIEN_MOBILE_CONFIG } from './salas-o-brien-mobile';
 import { DFWPB_PICKLEBALL_CONFIG } from './dfwpb-pickleball-may132026';
-import { DFWPB_PICKLEBALL_MOBILE_CONFIG } from './dfwpb-pickleball-may132026-mobile';
 import { CARTER_MACHINERY_CONFIG } from './carter-machinery';
-import { CARTER_MACHINERY_MOBILE_CONFIG } from './carter-machinery-mobile';
 import { FORTUNE_TIRE_CONFIG } from './fortune-tire';
-import { FORTUNE_TIRE_MOBILE_CONFIG } from './fortune-tire-mobile';
-// Mustang Cat Open Interview moved out of Explorer — now lives in the
-// `interview` template kind registry at lib/interview/configs/.
+// Phase 12 — `-mobile` companion files dropped. Form factor is now a
+// property of the moment (set at moment-creation time in Momentify
+// Web), not the template. Each prototype ships ONE canonical config.
+// Mustang Cat Open Interview lives in the `interview` registry.
 
 /** All prototype configs by slug. */
 export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'momentify-default': MOMENTIFY_DEFAULT_CONFIG,
   'clarium': CLARIUM_CONFIG,
-  'clarium-mobile': CLARIUM_MOBILE_CONFIG,
   'maven-fp': MAVEN_FP_CONFIG,
   'cdk': CDK_CONFIG,
   'salesflowiq': SALESFLOWIQ_CONFIG,
   'dealroom': DEALROOM_CONFIG,
-  'dealroom-mobile': DEALROOM_MOBILE_CONFIG,
   'salas-o-brien': SALAS_OBRIEN_CONFIG,
-  'salas-o-brien-mobile': SALAS_OBRIEN_MOBILE_CONFIG,
   'dfwpb-pickleball-may132026': DFWPB_PICKLEBALL_CONFIG,
-  'dfwpb-pickleball-may132026-mobile': DFWPB_PICKLEBALL_MOBILE_CONFIG,
   'carter-machinery': CARTER_MACHINERY_CONFIG,
-  'carter-machinery-mobile': CARTER_MACHINERY_MOBILE_CONFIG,
   'fortune-tire': FORTUNE_TIRE_CONFIG,
-  'fortune-tire-mobile': FORTUNE_TIRE_MOBILE_CONFIG,
 };
 
 export interface PrototypeMetadata {
