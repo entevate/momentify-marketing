@@ -89,9 +89,15 @@ export default function TopBar({ showModeSwitcher, onOpenNotes, onOpenVoice, onO
     });
   }
   if (features.calculator === true) {
+    // Calculator label is config-specific — each config provides its own dialog component
+    // in ExplorerShell and its own purpose-built label here.
+    const calculatorLabel =
+      config.id === 'fortune-tire' ? 'Tire Advisor' :
+      config.id === 'momentify' ? 'ROX Calculator' :
+      'Calculator';
     toolItems.push({
       id: 'calculator',
-      label: 'Tire Advisor',
+      label: calculatorLabel,
       icon: Calculator,
       onClick: () => { setToolsOpen(false); onOpenCalculator?.(); },
     });

@@ -20,6 +20,7 @@ import NotesDialog from './overlays/NotesDialog';
 import VoiceCaptureDialog from './overlays/VoiceCaptureDialog';
 import MediaCaptureDialog from './overlays/MediaCaptureDialog';
 import TireAdvisorDialog from './overlays/TireAdvisorDialog';
+import RoxCalculatorDialog from './overlays/RoxCalculatorDialog';
 import type { ContentCard } from '@/lib/explorer/types';
 
 export default function ExplorerShell() {
@@ -47,6 +48,26 @@ export default function ExplorerShell() {
   const hideBottomBar = isSplash || isThankYou || isResults || isSummary || isContentLibrary;
 
   const auroraOrbs = config.branding.auroraOrbs;
+
+  // Splash typewriter — if the splash step ships `typewriterWords`, render
+  // 6 cycling gradient ORBS at the SHELL level. Each orb is a brand-colored
+  // radial gradient anchored to a different position on the canvas; opacity
+  // is staggered so they cascade through one-by-one over a 24s loop.
+  // Together they read as "the gradient cycle is here right now" while still
+  // feeling like a constellation of glows rather than a flat panning sheet.
+  const splashStep = currentStep?.type === 'splash' ? currentStep : null;
+  const showCyclingGlow =
+    isSplash && splashStep && Array.isArray(splashStep.typewriterWords) && splashStep.typewriterWords.length > 0;
+  // Each orb anchors to a different region so the cycle visually traverses
+  // the canvas as it advances through the 6 brand solutions.
+  const CYCLING_ORBS: { color: string; x: string; y: string; label: string }[] = [
+    { color: '#254FE5', x: '22%', y: '28%', label: 'action' },         // brand blue — top-left
+    { color: '#6B21D4', x: '78%', y: '22%', label: 'violet' },         // Trade Shows — top-right
+    { color: '#5FD9C2', x: '85%', y: '58%', label: 'sol-teal' },       // Tech Recruiting — right
+    { color: '#F2B33D', x: '68%', y: '85%', label: 'amber' },          // Field Sales — bottom-right
+    { color: '#5B4499', x: '28%', y: '82%', label: 'indigo' },         // Facilities — bottom-left
+    { color: '#F25E3D', x: '12%', y: '58%', label: 'crimson' },        // Venues & Events — left
+  ];
 
   // Determine content width class
   const isWideStep = currentStep?.type === 'trait-selection' || currentStep?.type === 'results' ||
@@ -178,12 +199,78 @@ export default function ExplorerShell() {
           background: var(--exp-dialog-overlay-bg) !important;
         }
       `}</style>
+      {/* Splash orb pulse keyframes + transparent top-bar override.
+          Both scoped to the splash via the showCyclingGlow gate — when the
+          user leaves splash this style tag unmounts and the top bar reverts.
+          Each orb runs the same 24s pulse but staggered by -4s per orb so
+          they cascade one-by-one through the 6 brand colors. */}
+      {showCyclingGlow && (
+        <style>{`
+          @keyframes exp-orb-pulse {
+            0%,  100% { opacity: 0;    transform: translate(-50%, -50%) scale(0.85); }
+            12%       { opacity: 0.55; transform: translate(-50%, -50%) scale(1.05); }
+            22%       { opacity: 0.55; transform: translate(-50%, -50%) scale(1.05); }
+            34%       { opacity: 0;    transform: translate(-50%, -50%) scale(0.95); }
+          }
+          .explorer-shell .exp-top-bar {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            border-bottom: none !important;
+            box-shadow: none !important;
+          }
+        `}</style>
+      )}
+
       <div className="exp-shell-inner">
         {/* Role background overlay */}
         <div
           className={`exp-role-bg${session.selectedRole && !isSplash && !isThankYou ? ' active' : ''}`}
           style={roleGradient ? { background: roleGradient, ...(session.theme === 'light' ? { opacity: 0.45 } : {}) } : undefined}
         />
+
+        {/* Splash cycling brand-gradient ORBS. Each orb is a soft radial
+            gradient in one brand color, anchored to a different region of
+            the canvas. Opacity is staggered so they cascade one-by-one
+            through the 6 brand solutions over a 24s loop. Sits ABOVE the
+            theme bg, BELOW the top bar/aurora/content, full-bleed so the
+            glow extends behind the top bar with no seam. */}
+        {showCyclingGlow && (
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              zIndex: 0,
+              pointerEvents: 'none',
+              overflow: 'hidden',
+            }}
+          >
+            {CYCLING_ORBS.map((orb, i) => (
+              <div
+                key={orb.label}
+                style={{
+                  position: 'absolute',
+                  left: orb.x,
+                  top: orb.y,
+                  width: '70%',
+                  height: '70%',
+                  // Soft, edge-faded radial gradient — single brand color
+                  // bleeds out to transparent so the orb feels organic.
+                  backgroundImage: `radial-gradient(circle, ${orb.color} 0%, ${orb.color}66 28%, transparent 65%)`,
+                  filter: 'blur(40px)',
+                  opacity: 0,
+                  transformOrigin: 'center',
+                  animation: 'exp-orb-pulse 24s ease-in-out infinite',
+                  // Stagger so the orbs cascade — orb 0 starts at 0s, orb 1
+                  // peaks 4s later, and so on. Negative delay = already in
+                  // progress on mount, so the cycle is mid-flight immediately.
+                  animationDelay: `${i * -4}s`,
+                }}
+              />
+            ))}
+          </div>
+        )}
 
         {/* Aurora orbs on splash and thank you */}
         {(isSplash || isThankYou) && auroraOrbs && (
@@ -240,6 +327,9 @@ export default function ExplorerShell() {
       <MediaCaptureDialog open={mediaOpen} onClose={() => setMediaOpen(false)} />
       {config.id === 'fortune-tire' && (
         <TireAdvisorDialog open={calculatorOpen} onClose={() => setCalculatorOpen(false)} />
+      )}
+      {config.id === 'momentify' && (
+        <RoxCalculatorDialog open={calculatorOpen} onClose={() => setCalculatorOpen(false)} />
       )}
     </div>
   );

@@ -22,6 +22,8 @@ import { SALAS_OBRIEN_CONFIG } from './salas-o-brien';
 import { DFWPB_PICKLEBALL_CONFIG } from './dfwpb-pickleball-may132026';
 import { CARTER_MACHINERY_CONFIG } from './carter-machinery';
 import { FORTUNE_TIRE_CONFIG } from './fortune-tire';
+import { MOMENTIFY_CONFIG } from './momentify';
+import { FORMATION_CONFIG } from './formation';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -39,6 +41,8 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'dfwpb-pickleball-may132026': DFWPB_PICKLEBALL_CONFIG,
   'carter-machinery': CARTER_MACHINERY_CONFIG,
   'fortune-tire': FORTUNE_TIRE_CONFIG,
+  'momentify': MOMENTIFY_CONFIG,
+  'formation': FORMATION_CONFIG,
 };
 
 export interface PrototypeMetadata {

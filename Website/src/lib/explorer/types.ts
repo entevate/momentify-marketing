@@ -108,6 +108,13 @@ export interface SplashStepConfig {
   gradientWord: string;
   subtitle: string;
   buttonText: string;
+  /** Optional typewriter mode. When set, replaces the static gradientWord with a
+   *  rotating typewriter that cycles through these words. The gradient cycles
+   *  continuously across the 6 brand gradients via CSS animation. */
+  typewriterWords?: string[];
+  /** Optional override of the cycling gradient. If omitted, uses the Momentify
+   *  6-stop brand cycle (action → violet → sol-teal → amber → indigo → crimson). */
+  typewriterGradient?: string;
   screensaver?: {
     type: 'video' | 'youtube' | 'vimeo' | 'image';
     url: string;
