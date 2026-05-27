@@ -45,7 +45,7 @@ const MOMENTIFY_LIGHT: ThemeColors = {
 
 export const MOMENTIFY_CONFIG: ExplorerConfig = {
   id: 'momentify',
-  name: 'Momentify Explorer',
+  name: 'Momentify Explorer v2',
   version: 1,
   createdAt: '2026-05-25T00:00:00.000Z',
   updatedAt: '2026-05-25T00:00:00.000Z',

@@ -24,7 +24,7 @@ export interface ExplorerInstance {
 export const instances: ExplorerInstance[] = [
   {
     slug: "momentify",
-    name: "Momentify Explorer",
+    name: "Momentify Explorer v2",
     company: "Momentify",
     industry: "Technology",
     prototypeFile: "/explorer/momentify",
