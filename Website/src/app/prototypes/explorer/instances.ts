@@ -354,4 +354,16 @@ export const instances: ExplorerInstance[] = [
     createdAt: "2026-05-26",
     password: "formation2026",
   },
+  {
+    slug: "proven",
+    name: "PROVEN Explorer",
+    company: "PROVEN",
+    industry: "Sports Technology",
+    prototypeFile: "/explorer/proven",
+    logo: "/brand/assets/proven-icon.png",
+    gateLogo: "/brand/assets/proven-logo-reverse.png",
+    accentColor: "#50C8EC",
+    createdAt: "2026-05-29",
+    password: "proven2026",
+  },
 ];
