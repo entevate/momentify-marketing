@@ -25,6 +25,7 @@ import { FORTUNE_TIRE_CONFIG } from './fortune-tire';
 import { MOMENTIFY_CONFIG } from './momentify';
 import { FORMATION_CONFIG } from './formation';
 import { PROVEN_CONFIG } from './proven';
+import { PROVEN_MOBILE_CONFIG } from './proven-mobile';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -45,6 +46,7 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'momentify': MOMENTIFY_CONFIG,
   'formation': FORMATION_CONFIG,
   'proven': PROVEN_CONFIG,
+  'proven-mobile': PROVEN_MOBILE_CONFIG,
 };
 
 export interface PrototypeMetadata {
