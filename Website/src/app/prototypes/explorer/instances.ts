@@ -381,4 +381,16 @@ export const instances: ExplorerInstance[] = [
     formFactor: "mobile",
     hidden: true,
   },
+  {
+    slug: "poweringu",
+    name: "PoweringU Foundation Explorer",
+    company: "PoweringU Foundation",
+    industry: "Education",
+    prototypeFile: "/explorer/poweringu",
+    logo: "/brand/assets/poweringu-icon.png",
+    gateLogo: "/brand/assets/poweringu-logo-reverse.png",
+    accentColor: "#14669A",
+    createdAt: "2026-06-02",
+    password: "poweringu2026",
+  },
 ];
