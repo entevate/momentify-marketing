@@ -54,10 +54,11 @@ export const POWERINGU_CONFIG: ExplorerConfig = {
       dark: '/brand/assets/poweringu-logo-reverse.png',
       light: '/brand/assets/poweringu-logo.png',
     },
-    // PUF logo is a combined monogram + wordmark in a 300×300 square.
-    // Bumped above the 28px default so both the PUF mark and the
-    // "POWERINGU FOUNDATION" wordmark beneath it remain legible.
-    logoHeight: 56,
+    // PUF logo is a combined monogram + wordmark in a 300×300 square,
+    // so both elements need real estate to read. 92px gives the PUF
+    // mark presence and keeps the "POWERINGU FOUNDATION" wordmark
+    // beneath legible at kiosk distance.
+    logoHeight: 92,
     icon: '/brand/assets/poweringu-icon.png',
     colors: {
       // From intake: PUF blue + PUF green. Supplemented with darker
