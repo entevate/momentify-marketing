@@ -393,4 +393,16 @@ export const instances: ExplorerInstance[] = [
     createdAt: "2026-06-02",
     password: "poweringu2026",
   },
+  {
+    slug: "dossani-paradise",
+    name: "Dossani Paradise Explorer",
+    company: "Dossani Paradise Management",
+    industry: "Retail",
+    prototypeFile: "/explorer/dossani-paradise",
+    logo: "/brand/assets/dossani-paradise-icon.png",
+    gateLogo: "/brand/assets/dossani-paradise-logo-reverse.png",
+    accentColor: "#FF0404",
+    createdAt: "2026-06-03",
+    password: "dossani2026",
+  },
 ];
