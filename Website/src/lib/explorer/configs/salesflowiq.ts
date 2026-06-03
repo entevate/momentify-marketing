@@ -4,7 +4,7 @@
 import type { ExplorerConfig, ThemeColors } from '../types';
 
 const SALESFLOWIQ_DARK: ThemeColors = {
-  bg: '#060D18',
+  bg: '#03141B',
   bgGradient: 'linear-gradient(135deg, #CC5A3D 0%, #081E30 55%, #0E3D5C 100%)',
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -56,10 +56,10 @@ export const SALESFLOWIQ_CONFIG: ExplorerConfig = {
       teal: '#2899CC',
       blue: '#FF7A59',
       deepBlue: '#1B6B99',
-      navy: '#0E3D5C',
-      midnight: '#081E30',
+      navy: '#072C3B',
+      midnight: '#041820',
       plum: '#CC5A3D',
-      bgDark: '#060D18',
+      bgDark: '#041820',
       dark: SALESFLOWIQ_DARK,
       light: SALESFLOWIQ_LIGHT,
     },

@@ -4,7 +4,7 @@
 import type { ExplorerConfig, ThemeColors } from '../types';
 
 const DFWPB_DARK: ThemeColors = {
-  bg: '#070D1F',
+  bg: '#180708',
   bgGradient: 'linear-gradient(135deg, #1A2347 0%, #070D1F 55%, #2A1014 100%)',
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -57,10 +57,10 @@ export const DFWPB_PICKLEBALL_CONFIG: ExplorerConfig = {
       teal: '#D9534F',
       blue: '#255194',
       deepBlue: '#1A3A6F',
-      navy: '#0F1E3D',
-      midnight: '#070D1F',
+      navy: '#340E11',
+      midnight: '#1C0809',
       plum: '#7A2329',
-      bgDark: '#070D1F',
+      bgDark: '#1C0809',
       dark: DFWPB_DARK,
       light: DFWPB_LIGHT,
     },

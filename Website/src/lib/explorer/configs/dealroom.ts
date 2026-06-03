@@ -4,7 +4,7 @@
 import type { ExplorerConfig, ThemeColors } from '../types';
 
 const DEALROOM_DARK: ThemeColors = {
-  bg: '#010E1F',
+  bg: '#02111D',
   bgGradient: 'linear-gradient(135deg, #012B52 0%, #010E1F 55%, #01183A 100%)',
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -56,10 +56,10 @@ export const DEALROOM_CONFIG: ExplorerConfig = {
       teal: '#38BDF8',
       blue: '#0278DB',
       deepBlue: '#0156A2',
-      navy: '#012B52',
-      midnight: '#010E1F',
+      navy: '#03243F',
+      midnight: '#021322',
       plum: '#1E3A8A',
-      bgDark: '#010E1F',
+      bgDark: '#021322',
       dark: DEALROOM_DARK,
       light: DEALROOM_LIGHT,
     },

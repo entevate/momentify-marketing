@@ -5,7 +5,7 @@
 import type { ExplorerConfig, ThemeColors } from '../types';
 
 const PROVEN_DARK: ThemeColors = {
-  bg: '#0A0E24',
+  bg: '#03161C',
   bgGradient: 'linear-gradient(135deg, #19224D 0%, #0A0E24 55%, #112B52 100%)',
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -57,10 +57,10 @@ export const PROVEN_CONFIG: ExplorerConfig = {
       teal: '#50C8EC',      // cyan drives selected-state tints
       blue: '#3B9FE0',
       deepBlue: '#1E5AA8',
-      navy: '#19224D',      // brand navy — drives overlay backdrop
-      midnight: '#0E1430',  // near-black navy — drives dialog background
+      navy: '#06303C',      // brand navy — drives overlay backdrop
+      midnight: '#031A20',  // near-black navy — drives dialog background
       plum: '#F68A32',      // warm accent used in gradients
-      bgDark: '#0A0E24',
+      bgDark: '#031A20',
       dark: PROVEN_DARK,
       light: PROVEN_LIGHT,
     },

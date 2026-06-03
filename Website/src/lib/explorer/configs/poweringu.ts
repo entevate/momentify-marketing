@@ -9,7 +9,7 @@
 import type { ExplorerConfig, ThemeColors } from '../types';
 
 const PUF_DARK: ThemeColors = {
-  bg: '#03101C',
+  bg: '#04121B',
   bgGradient: 'linear-gradient(135deg, #0B2E47 0%, #052033 55%, #03101C 100%)',
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -70,10 +70,10 @@ export const POWERINGU_CONFIG: ExplorerConfig = {
       teal: '#3A9CD8',         // lighter PUF blue for highlights
       blue: '#14669A',
       deepBlue: '#0F4F77',
-      navy: '#0B2E47',
-      midnight: '#03101C',
+      navy: '#08273B',
+      midnight: '#041520',
       plum: '#1A9458',         // PUF green stands in as warm anchor
-      bgDark: '#03101C',
+      bgDark: '#041520',
       dark: PUF_DARK,
       light: PUF_LIGHT,
     },

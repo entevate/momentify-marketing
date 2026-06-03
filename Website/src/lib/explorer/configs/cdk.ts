@@ -4,7 +4,7 @@
 import type { ExplorerConfig, ThemeColors } from '../types';
 
 const CDK_DARK: ThemeColors = {
-  bg: '#0A0A0A',
+  bg: '#080E17',
   bgGradient: 'linear-gradient(135deg, #1A1A1A 0%, #0A0A0A 55%, #141414 100%)',
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -56,10 +56,10 @@ export const CDK_CONFIG: ExplorerConfig = {
       teal: '#CCCCCC',
       blue: '#505150',
       deepBlue: '#333333',
-      navy: '#1A1A1A',
-      midnight: '#0A0A0A',
+      navy: '#111E32',
+      midnight: '#09101B',
       plum: '#505150',
-      bgDark: '#0A0A0A',
+      bgDark: '#09101B',
       dark: CDK_DARK,
       light: CDK_LIGHT,
     },

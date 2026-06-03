@@ -10,7 +10,7 @@ const CARTER_DOTS_DARK = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.o
 const CARTER_DOTS_LIGHT = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='1.2' fill='%231A1A1A' fill-opacity='0.09'/%3E%3C/svg%3E\")";
 
 const CARTER_DARK: ThemeColors = {
-  bg: '#0A0A0A',
+  bg: '#1D1802',
   bgGradient: `${CARTER_DOTS_DARK} repeat, linear-gradient(135deg, #1A1A1A 0%, #0A0A0A 55%, #2A2A2A 100%)`,
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -62,10 +62,10 @@ export const CARTER_MACHINERY_CONFIG: ExplorerConfig = {
       teal: '#FFD633',
       blue: '#FFB800',
       deepBlue: '#404040',
-      navy: '#1A1A1A',
-      midnight: '#0A0A0A',
+      navy: '#3F3303',
+      midnight: '#221B02',
       plum: '#FF8C00',
-      bgDark: '#0A0A0A',
+      bgDark: '#221B02',
       dark: CARTER_DARK,
       light: CARTER_LIGHT,
     },

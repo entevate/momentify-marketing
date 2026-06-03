@@ -4,7 +4,7 @@
 import type { ExplorerConfig, ThemeColors } from '../types';
 
 const CLARIUM_DARK: ThemeColors = {
-  bg: '#0A0B1E',
+  bg: '#05041B',
   bgGradient: 'linear-gradient(135deg, #1E1B4B 0%, #0A0B1E 55%, #172554 100%)',
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -56,10 +56,10 @@ export const CLARIUM_CONFIG: ExplorerConfig = {
       teal: '#818CF8',
       blue: '#005AFF',
       deepBlue: '#3730A3',
-      navy: '#1E1B4B',
-      midnight: '#0A0B1E',
+      navy: '#0B083A',
+      midnight: '#06041F',
       plum: '#6D28D9',
-      bgDark: '#0A0B1E',
+      bgDark: '#06041F',
       dark: CLARIUM_DARK,
       light: CLARIUM_LIGHT,
     },

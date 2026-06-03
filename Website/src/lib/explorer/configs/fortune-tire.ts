@@ -5,7 +5,7 @@
 import type { ExplorerConfig, ThemeColors } from '../types';
 
 const FORTUNE_DARK: ThemeColors = {
-  bg: '#0A1428',
+  bg: '#04131A',
   bgGradient: 'linear-gradient(135deg, #0A1F3D 0%, #060F1F 55%, #0A1428 100%)',
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -58,10 +58,10 @@ export const FORTUNE_TIRE_CONFIG: ExplorerConfig = {
       teal: '#3FAAE0',
       blue: '#0067C0',
       deepBlue: '#003F87',
-      navy: '#0A1F3D',
-      midnight: '#060F1F',
+      navy: '#092939',
+      midnight: '#05161F',
       plum: '#5C3D7A',
-      bgDark: '#0A1428',
+      bgDark: '#05161F',
       dark: FORTUNE_DARK,
       light: FORTUNE_LIGHT,
     },

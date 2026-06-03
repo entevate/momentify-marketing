@@ -4,7 +4,7 @@
 import type { ExplorerConfig, ThemeColors } from '../types';
 
 const SALAS_OBRIEN_DARK: ThemeColors = {
-  bg: '#071D2F',
+  bg: '#02151D',
   bgGradient: 'linear-gradient(135deg, #0A2540 0%, #071D2F 55%, #082035 100%)',
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -56,10 +56,10 @@ export const SALAS_OBRIEN_CONFIG: ExplorerConfig = {
       teal: '#009DE0',
       blue: '#0077B6',
       deepBlue: '#005A8E',
-      navy: '#003A5C',
-      midnight: '#00253D',
+      navy: '#032D3F',
+      midnight: '#021822',
       plum: '#004870',
-      bgDark: '#071D2F',
+      bgDark: '#021822',
       dark: SALAS_OBRIEN_DARK,
       light: SALAS_OBRIEN_LIGHT,
     },

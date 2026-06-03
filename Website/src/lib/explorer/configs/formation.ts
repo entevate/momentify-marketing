@@ -6,7 +6,7 @@
 import type { ExplorerConfig, ThemeColors } from '../types';
 
 const FORMATION_DARK: ThemeColors = {
-  bg: '#010816',
+  bg: '#081317',
   bgGradient: 'linear-gradient(135deg, #041E42 0%, #020F22 55%, #010816 100%)',
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -64,10 +64,10 @@ export const FORMATION_CONFIG: ExplorerConfig = {
       teal: '#B5C0C4',      // lighter platinum for highlights
       blue: '#041E42',
       deepBlue: '#031633',
-      navy: '#020F22',
-      midnight: '#010816',
+      navy: '#112A32',
+      midnight: '#09171B',
       plum: '#5C6166',      // warm gray-brown
-      bgDark: '#010816',
+      bgDark: '#09171B',
       dark: FORMATION_DARK,
       light: FORMATION_LIGHT,
     },

@@ -4,7 +4,7 @@
 import type { ExplorerConfig, ThemeColors } from '../types';
 
 const MAVEN_DARK: ThemeColors = {
-  bg: '#0C161E',
+  bg: '#081217',
   bgGradient: 'linear-gradient(135deg, #1A3040 0%, #0C161E 55%, #162A3A 100%)',
   surface: 'rgba(255,255,255,0.06)',
   surfaceHover: 'rgba(255,255,255,0.10)',
@@ -56,10 +56,10 @@ export const MAVEN_FP_CONFIG: ExplorerConfig = {
       teal: '#8FB8C8',
       blue: '#5A8394',
       deepBlue: '#3D6474',
-      navy: '#1A3040',
-      midnight: '#0C161E',
+      navy: '#112732',
+      midnight: '#09151B',
       plum: '#6E7F8C',
-      bgDark: '#0C161E',
+      bgDark: '#09151B',
       dark: MAVEN_DARK,
       light: MAVEN_LIGHT,
     },
