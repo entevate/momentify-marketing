@@ -98,6 +98,73 @@ export default function CardOverlay({ card, onClose }: CardOverlayProps) {
                 <Maximize2 style={{ width: 16, height: 16 }} />
               </button>
             </div>
+          ) : card.url ? (
+            // Non-PDF URL with a real destination: render a scan-to-view
+            // QR card. Most external sites (banks especially) refuse to
+            // load in an iframe due to X-Frame-Options, so the kiosk-
+            // appropriate path is a QR that visitors scan with their
+            // phone to open the URL there. Caption shows the media type
+            // ("Scan to view website") plus the bare host so the visitor
+            // knows where they're being sent.
+            <div
+              style={{
+                width: '100%',
+                borderRadius: 12,
+                background: 'var(--exp-card-bg)',
+                border: '1px solid var(--exp-card-border)',
+                padding: 18,
+                display: 'flex',
+                gap: 18,
+                alignItems: 'center',
+              }}
+            >
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=8&bgcolor=ffffff&color=0F172A&data=${encodeURIComponent(card.url)}`}
+                alt={`Scan to view ${card.title}`}
+                width={180}
+                height={180}
+                style={{
+                  width: 180,
+                  height: 180,
+                  flexShrink: 0,
+                  borderRadius: 10,
+                  background: '#FFFFFF',
+                  padding: 6,
+                  boxSizing: 'border-box',
+                }}
+              />
+              <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    color: 'var(--exp-text-3)',
+                    fontSize: 12,
+                    fontWeight: 500,
+                    textTransform: 'uppercase',
+                    letterSpacing: 0.5,
+                  }}
+                >
+                  {MediaIcon && <MediaIcon style={{ width: 14, height: 14, strokeWidth: 1.5 }} />}
+                  <span>Scan to view {card.mediaType ?? 'link'}</span>
+                </div>
+                <div style={{ fontSize: 15, fontWeight: 500, color: 'var(--exp-text-1)', lineHeight: 1.35 }}>
+                  Open on your phone
+                </div>
+                <div
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 300,
+                    color: 'var(--exp-text-2)',
+                    wordBreak: 'break-all',
+                    lineHeight: 1.45,
+                  }}
+                >
+                  {card.url.replace(/^https?:\/\//, '')}
+                </div>
+              </div>
+            </div>
           ) : card.mediaType ? (
             <div
               style={{
