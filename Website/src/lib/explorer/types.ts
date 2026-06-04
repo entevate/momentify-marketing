@@ -90,6 +90,12 @@ export interface TraitOption {
   icon: string;          // SVG string
   iconType: 'svg' | 'lucide' | 'image';
   backgroundImage?: string;
+  /** Optional conditional-mapping hint. On a multi-select interests step,
+   *  declares which role values this option is relevant for. Currently
+   *  informational — consumed by ingest pipelines / template editors to
+   *  build a role→interest graph for downstream filtering. The runtime
+   *  shows every option regardless. */
+  relevantRoles?: string[];
 }
 
 export type StepConfig =

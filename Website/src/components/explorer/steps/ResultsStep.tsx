@@ -43,15 +43,55 @@ export default function ResultsStep({ step, onOpenOverlay }: ResultsStepProps) {
       solutions: 'solution',
     };
     const cardType = typeMap[activeTab] || activeTab as 'outcome' | 'learn' | 'solution';
-    let cards = getContentByType(cardType);
+    const allCards = getContentByType(cardType);
 
-    // Apply filter if active (for learn tab)
+    // Personalization filter — two-stage, role-first.
+    //
+    // Stage 1 (HARD): role gate. Role is required by the flow (Next is
+    // disabled on the role step until a role is picked), so we always
+    // narrow to cards that target the selected role. Cards with no
+    // role targeting pass through ("everyone-relevant"). Tabs CAN end
+    // up empty by design — the Content Library tool in the top bar is
+    // the "view everything" escape, not this step.
+    //
+    // Stage 2 (SOFT): interest gate. If the user selected interests,
+    // prefer cards that match. If that combo returns zero, fall back
+    // to the role-filtered list (still role-respecting, never "all").
+    // "Browsing" interest bypasses the interest gate entirely.
+    const selectedRole = session.selectedRole;
+    const selectedInterests = session.selectedInterests ?? [];
+    const hasBrowsing = selectedInterests.includes('browsing');
+
+    const roleFiltered = selectedRole
+      ? allCards.filter(c => {
+          const hasRoleTargeting = c.targetRoles && c.targetRoles.length > 0;
+          return !hasRoleTargeting || c.targetRoles!.includes(selectedRole);
+        })
+      : allCards;
+
+    let cards = roleFiltered;
+    if (selectedInterests.length > 0 && !hasBrowsing) {
+      const interestFiltered = roleFiltered.filter(c => {
+        const interestPool = new Set<string>([
+          ...(c.targetInterests ?? []),
+          ...(c.tags ?? []),
+        ]);
+        // "Everyone-relevant" cards (no interest targeting) always pass.
+        if (interestPool.size === 0) return true;
+        return selectedInterests.some(i => interestPool.has(i));
+      });
+      // Soft fallback — never escape the role gate.
+      cards = interestFiltered.length > 0 ? interestFiltered : roleFiltered;
+    }
+
+    // Apply mediaType filter (learn tab) AFTER personalization so the
+    // user-facing filter buttons still narrow correctly.
     if (activeFilter && tabConfig?.filters) {
       cards = cards.filter(c => c.mediaType === activeFilter);
     }
 
     return cards;
-  }, [activeTab, activeFilter, getContentByType, tabConfig]);
+  }, [activeTab, activeFilter, getContentByType, tabConfig, session.selectedRole, session.selectedInterests]);
 
   // Mobile scrolls the full list instead of paginating
   const isMobile = config.formFactor === 'mobile';
