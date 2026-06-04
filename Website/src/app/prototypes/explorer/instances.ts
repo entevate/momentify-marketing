@@ -405,4 +405,16 @@ export const instances: ExplorerInstance[] = [
     createdAt: "2026-06-03",
     password: "dossani2026",
   },
+  {
+    slug: "cutx",
+    name: "CUTX Explorer",
+    company: "Credit Union of Texas",
+    industry: "Financial Services",
+    prototypeFile: "/explorer/cutx",
+    logo: "/brand/assets/cutx-icon.jpg",
+    gateLogo: "/brand/assets/cutx-logo-reverse.png",
+    accentColor: "#005290",
+    createdAt: "2026-06-03",
+    password: "cutx2026",
+  },
 ];

@@ -26,6 +26,7 @@ import { MOMENTIFY_CONFIG } from './momentify';
 import { FORMATION_CONFIG } from './formation';
 import { POWERINGU_CONFIG } from './poweringu';
 import { DOSSANI_PARADISE_CONFIG } from './dossani-paradise';
+import { CUTX_CONFIG } from './cutx';
 import { PROVEN_CONFIG } from './proven';
 import { PROVEN_MOBILE_CONFIG } from './proven-mobile';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
@@ -51,6 +52,7 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'proven-mobile': PROVEN_MOBILE_CONFIG,
   'poweringu': POWERINGU_CONFIG,
   'dossani-paradise': DOSSANI_PARADISE_CONFIG,
+  'cutx': CUTX_CONFIG,
 };
 
 export interface PrototypeMetadata {
