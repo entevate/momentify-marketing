@@ -232,6 +232,36 @@ export default function ExplorerShell() {
           display: flex;
           flex-direction: column;
         }
+        /* Registration <select> dropdowns match the text-input styling. The
+           locked CSS only targets inputs; mirror the same look on selects. */
+        .explorer-shell .exp-form-field select {
+          padding: 12px 38px 12px 14px;
+          background: var(--exp-input-bg);
+          border: 1px solid var(--exp-border);
+          border-radius: 10px;
+          font-family: inherit;
+          font-size: 15px;
+          font-weight: 400;
+          color: var(--exp-input-text);
+          outline: none;
+          transition: var(--exp-transition);
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none' stroke='currentColor' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M1 1.5l5 5 5-5'/%3e%3c/svg%3e");
+          background-repeat: no-repeat;
+          background-position: right 14px center;
+          cursor: pointer;
+          width: 100%;
+        }
+        .explorer-shell .exp-form-field select:focus {
+          border-color: var(--exp-border-focus);
+          box-shadow: 0 0 0 3px var(--exp-focus-ring);
+        }
+        .explorer-shell .exp-form-field select option {
+          color: var(--exp-input-text);
+          background: var(--exp-input-bg);
+        }
         .explorer-shell .exp-view-small .exp-card-grid {
           flex: 1;
           min-height: 0;
