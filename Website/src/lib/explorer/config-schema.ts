@@ -42,6 +42,17 @@ export interface SelectionStep {
   showSelectAll: boolean;
   options: TraitOption[];
   nextStepMapping?: Record<string, string>;
+  /** Layout for the option grid. 'grid' (default) uses the 4-col tablet /
+   *  2-col mobile grid. 'list' renders a vertically-scrolling single-column
+   *  list with shorter rows — best for long option sets (10+ items). */
+  layout?: 'grid' | 'list';
+  /** Optional explicit column count. Overrides `layout` when set. */
+  gridColumns?: number;
+  /** Pin a "Most Selected" row at the top with the top-N choices across all
+   *  prior sessions. Backed by /api/prototypes/trait-counts. */
+  showMostSelected?: boolean;
+  /** How many most-selected rows to pin. Default 3. */
+  mostSelectedLimit?: number;
 }
 
 export interface ContentDescription {

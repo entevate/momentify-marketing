@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Mail, MessageSquare, QrCode, X, Send } from 'lucide-react';
 import { useExplorer } from '../ExplorerContext';
 
@@ -15,6 +15,13 @@ interface ShareDialogProps {
 export default function ShareDialog({ open, type, onClose }: ShareDialogProps) {
   const { showToast, session } = useExplorer();
   const [inputValue, setInputValue] = useState('');
+
+  // Pre-fill the input with the registered email / phone when the dialog opens.
+  useEffect(() => {
+    if (!open) return;
+    if (type === 'email') setInputValue(session.registeredEmail || '');
+    else if (type === 'text') setInputValue(session.registeredPhone || '');
+  }, [open, type, session.registeredEmail, session.registeredPhone]);
 
   if (!open) return null;
 

@@ -124,6 +124,24 @@ function StepEditor({ step, onChange, onDelete }: { step: SelectionStep; onChang
           <Toggle label="Show Greeting" value={step.showGreeting} onChange={v => onChange({ ...step, showGreeting: v })} />
           <Toggle label="Show Select All" value={step.showSelectAll} onChange={v => onChange({ ...step, showSelectAll: v })} />
 
+          {/* Layout: grid (default 4-col tablet / 2-col mobile) vs list (single col, scrollable).
+              Use list for long option sets (10+ items) like Areas of Study. */}
+          <div className="text-[11px] font-medium text-white/50 uppercase tracking-wider mt-3 mb-1">Layout</div>
+          <div className="flex gap-1 mb-3 bg-white/4 rounded-lg p-0.5">
+            <button
+              onClick={() => onChange({ ...step, layout: 'grid' })}
+              className={`flex-1 py-1.5 rounded-md text-xs font-medium transition-colors ${(step.layout ?? 'grid') === 'grid' ? 'bg-white/8 text-white/80' : 'text-white/30'}`}
+            >
+              Grid
+            </button>
+            <button
+              onClick={() => onChange({ ...step, layout: 'list' })}
+              className={`flex-1 py-1.5 rounded-md text-xs font-medium transition-colors ${step.layout === 'list' ? 'bg-white/8 text-white/80' : 'text-white/30'}`}
+            >
+              List (scrollable)
+            </button>
+          </div>
+
           <div className="mt-3">
             <div className="text-[11px] font-medium text-white/50 uppercase tracking-wider mb-2">Options</div>
             {step.options.map((opt, i) => (

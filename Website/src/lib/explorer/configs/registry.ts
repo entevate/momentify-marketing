@@ -29,6 +29,7 @@ import { DOSSANI_PARADISE_CONFIG } from './dossani-paradise';
 import { CUTX_CONFIG } from './cutx';
 import { PROVEN_CONFIG } from './proven';
 import { PROVEN_MOBILE_CONFIG } from './proven-mobile';
+import { MUSTANG_CAT_MTP_CONFIG } from './mustang-cat-mtp';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -53,6 +54,7 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'poweringu': POWERINGU_CONFIG,
   'dossani-paradise': DOSSANI_PARADISE_CONFIG,
   'cutx': CUTX_CONFIG,
+  'mustang-cat-mtp': MUSTANG_CAT_MTP_CONFIG,
 };
 
 export interface PrototypeMetadata {

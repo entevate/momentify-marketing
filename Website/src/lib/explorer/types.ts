@@ -121,6 +121,16 @@ export interface SplashStepConfig {
   /** Optional override of the cycling gradient. If omitted, uses the Momentify
    *  6-stop brand cycle (action → violet → sol-teal → amber → indigo → crimson). */
   typewriterGradient?: string;
+  /** Optional background image rendered behind the splash content (under the
+   *  aurora orbs and brand gradient). Use a public asset path like
+   *  `/brand/assets/mybg.jpg`. A dark overlay is applied automatically for
+   *  readability — tune with `backgroundImageOverlay` if needed. */
+  backgroundImage?: string;
+  /** CSS background-position for `backgroundImage`. Defaults to `center`. */
+  backgroundImagePosition?: string;
+  /** Optional dark overlay color stacked on top of `backgroundImage` so the
+   *  headline + CTA stay legible. Defaults to `rgba(0,0,0,0.55)`. */
+  backgroundImageOverlay?: string;
   screensaver?: {
     type: 'video' | 'youtube' | 'vimeo' | 'image';
     url: string;
@@ -144,6 +154,19 @@ export interface TraitSelectionStepConfig {
   options: TraitOption[];
   /** Maps option value → next step ID for branching */
   nextStepMapping?: Record<string, string>;
+  /** Layout for the option grid. 'grid' (default) uses the locked 4-col tablet /
+   *  2-col mobile grid. 'list' renders a vertically-scrolling single-column list
+   *  with shorter rows — best for long option sets (10+ items). */
+  layout?: 'grid' | 'list';
+  /** Override the grid column count. If set, takes precedence over `layout`.
+   *  Pairs with `overflow-y: auto` so the grid scrolls when items overflow. */
+  gridColumns?: number;
+  /** When true, the step renders a pinned "Most Selected" row at the top
+   *  showing the most popular options across all prior sessions. Backed by the
+   *  /api/prototypes/trait-counts endpoint. Empty until enough data accrues. */
+  showMostSelected?: boolean;
+  /** How many "most selected" rows to pin. Default 3. */
+  mostSelectedLimit?: number;
 }
 
 export interface ResultsTabConfig {

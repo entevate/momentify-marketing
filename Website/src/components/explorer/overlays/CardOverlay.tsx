@@ -57,8 +57,31 @@ export default function CardOverlay({ card, onClose }: CardOverlayProps) {
           {/* Description */}
           <p className="exp-overlay-desc">{card.description.overlay}</p>
 
-          {/* PDF inline embed with fullscreen expand */}
-          {card.mediaType === 'pdf' && card.url ? (
+          {/* Direct video file → inline HTML5 player */}
+          {card.mediaType === 'video' && card.url && /\.(mp4|webm|mov|m4v)(\?|$)/i.test(card.url) ? (
+            <div
+              style={{
+                width: '100%',
+                aspectRatio: '16/9',
+                borderRadius: 12,
+                overflow: 'hidden',
+                background: '#000',
+                border: '1px solid var(--exp-card-border)',
+              }}
+            >
+              <video
+                key={card.url}
+                src={card.url}
+                controls
+                autoPlay
+                muted
+                playsInline
+                preload="auto"
+                style={{ width: '100%', height: '100%', display: 'block', background: '#000', objectFit: 'contain' }}
+              />
+            </div>
+          ) : /* PDF inline embed with fullscreen expand */
+          card.mediaType === 'pdf' && card.url ? (
             <div
               style={{
                 position: 'relative',

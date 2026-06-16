@@ -93,7 +93,13 @@ export default function ExplorerShell() {
       case 'trait-selection':
         return <TraitSelectionStep step={currentStep} />;
       case 'results':
-        return <ResultsStep step={currentStep} onOpenOverlay={setOverlayCard} />;
+        return (
+          <ResultsStep
+            step={currentStep}
+            onOpenOverlay={setOverlayCard}
+            onShare={(type) => setShareOpen({ open: true, type })}
+          />
+        );
       case 'content-library':
         return <ContentLibraryStep step={currentStep} />;
       case 'summary':
@@ -149,6 +155,55 @@ export default function ExplorerShell() {
           background: var(--exp-selected-bg);
           border-color: var(--exp-selected-border);
           box-shadow: 0 2px 16px var(--exp-selected-glow), inset 0 1px 0 var(--exp-selected-inset);
+        }
+        /* Trait grid scrolls when content exceeds available height (keeps card min-height).
+           Scope under [data-form] to match/beat the mobile CSS specificity. */
+        .explorer-shell[data-form] .exp-trait-grid {
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
+          align-content: start;
+          grid-auto-rows: auto;
+          scrollbar-width: thin;
+          scrollbar-color: var(--exp-border) transparent;
+          padding-right: 4px;
+          max-height: calc(100% - 8px);
+        }
+        .explorer-shell[data-form] .exp-trait-grid::-webkit-scrollbar { width: 6px; }
+        .explorer-shell[data-form] .exp-trait-grid::-webkit-scrollbar-thumb {
+          background: var(--exp-border);
+          border-radius: 3px;
+        }
+        .explorer-shell[data-form="mobile"] .exp-trait-card {
+          min-height: 96px;
+        }
+        /* For trait grids to scroll, the chain ABOVE the grid must have bounded
+           height. Locked tablet CSS doesn't constrain .exp-center or .exp-content
+           vertically, so the grid sees infinite available space and never scrolls.
+           These rules stretch the chain so the grid actually has a max-height. */
+        .explorer-shell[data-form] .exp-center:has(.exp-trait-grid) {
+          align-items: stretch;
+        }
+        .explorer-shell[data-form] .exp-content:has(.exp-trait-grid) {
+          height: 100%;
+          min-height: 0;
+          display: flex;
+          flex-direction: column;
+        }
+        /* Trait-selection root wrapper (parent of header + grid) must be a flex column
+           with bounded height so the grid can claim leftover space and scroll. */
+        .explorer-shell[data-form] .exp-content > div:has(> .exp-trait-grid) {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          flex: 1;
+          min-height: 0;
+        }
+        .explorer-shell[data-form] .exp-content > div:has(> .exp-trait-grid) > .exp-trait-header {
+          flex-shrink: 0;
+        }
+        .explorer-shell[data-form] .exp-content > div:has(> .exp-trait-grid) > .exp-trait-grid {
+          flex: 1;
+          min-height: 0;
         }
         .explorer-shell .exp-center {
           overflow: hidden;

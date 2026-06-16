@@ -107,12 +107,24 @@ export default function RegistrationStep() {
                       {field.label}
                       {field.required && <span className="exp-required"> *</span>}
                     </label>
-                    <input
-                      type={field.type === 'select' ? 'text' : field.type}
-                      placeholder={field.placeholder}
-                      value={formValues[field.id] || ''}
-                      onChange={e => handleFormChange(field.id, e.target.value)}
-                    />
+                    {field.type === 'select' && field.options && field.options.length > 0 ? (
+                      <select
+                        value={formValues[field.id] || ''}
+                        onChange={e => handleFormChange(field.id, e.target.value)}
+                      >
+                        <option value="" disabled>{field.placeholder || 'Select…'}</option>
+                        {field.options.map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        type={field.type === 'select' ? 'text' : field.type}
+                        placeholder={field.placeholder}
+                        value={formValues[field.id] || ''}
+                        onChange={e => handleFormChange(field.id, e.target.value)}
+                      />
+                    )}
                   </div>
                 ))}
               </div>
@@ -125,12 +137,24 @@ export default function RegistrationStep() {
                 {field.label}
                 {field.required && <span className="exp-required"> *</span>}
               </label>
-              <input
-                type={field.type === 'select' ? 'text' : field.type}
-                placeholder={field.placeholder}
-                value={formValues[field.id] || ''}
-                onChange={e => handleFormChange(field.id, e.target.value)}
-              />
+              {field.type === 'select' && field.options && field.options.length > 0 ? (
+                <select
+                  value={formValues[field.id] || ''}
+                  onChange={e => handleFormChange(field.id, e.target.value)}
+                >
+                  <option value="" disabled>{field.placeholder || 'Select…'}</option>
+                  {field.options.map(opt => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type={field.type === 'select' ? 'text' : field.type}
+                  placeholder={field.placeholder}
+                  value={formValues[field.id] || ''}
+                  onChange={e => handleFormChange(field.id, e.target.value)}
+                />
+              )}
             </div>
           );
         })}

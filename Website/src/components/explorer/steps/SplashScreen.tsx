@@ -81,6 +81,33 @@ export default function SplashScreen({ step }: { step: SplashStepConfig }) {
 
   return (
     <div className="exp-welcome" style={{ position: 'relative', zIndex: 2 }}>
+      {step.backgroundImage && (
+        <>
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `url(${step.backgroundImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: step.backgroundImagePosition || 'center',
+              backgroundRepeat: 'no-repeat',
+              zIndex: -2,
+              pointerEvents: 'none',
+            }}
+          />
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: step.backgroundImageOverlay || 'rgba(0,0,0,0.55)',
+              zIndex: -1,
+              pointerEvents: 'none',
+            }}
+          />
+        </>
+      )}
       <div className="exp-welcome-content">
         <h1 className="exp-welcome-title">
           {titleParts.map((part, i) => (

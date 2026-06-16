@@ -32,7 +32,14 @@ export default function BottomBar() {
   const traitHasSelection = (() => {
     if (!isTrait || currentStep?.type !== 'trait-selection') return true;
     const isSingle = currentStep.selectionMode === 'single';
-    if (isSingle) return !!session.selectedRole;
+    // The first single-select step is the "role" step (writes to selectedRole);
+    // every other single-select step writes to selectedTraits[step.id].
+    const firstTraitStep = config.steps.find(s => s.type === 'trait-selection');
+    const isRoleStep = isSingle && firstTraitStep?.id === currentStep.id;
+    if (isRoleStep) return !!session.selectedRole;
+    if (isSingle) {
+      return (session.selectedTraits[currentStep.id]?.length ?? 0) > 0;
+    }
     // Multi-select: check selectedTraits map first, then selectedInterests
     const traitValues = session.selectedTraits[currentStep.id];
     if (traitValues && traitValues.length > 0) return true;

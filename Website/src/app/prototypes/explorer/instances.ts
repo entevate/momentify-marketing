@@ -23,6 +23,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "mustang-cat-mtp",
+    name: "Mustang CAT — MTP Recruiting",
+    company: "Mustang CAT",
+    industry: "Construction / Recruiting",
+    prototypeFile: "/explorer/mustang-cat-mtp",
+    logo: "/brand/assets/mustang-cat-mtp-light.png",
+    gateLogo: "/brand/assets/mustang-cat-mtp-dark.png",
+    accentColor: "#FFCC00",
+    createdAt: "2026-06-16",
+    password: "mustang2026",
+  },
+  {
     slug: "momentify",
     name: "Momentify Explorer v2",
     company: "Momentify",
