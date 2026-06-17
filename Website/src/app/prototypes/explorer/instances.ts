@@ -23,6 +23,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "airpro",
+    name: "AirPro Fan & Blower Explorer",
+    company: "AirPro",
+    industry: "Manufacturing",
+    prototypeFile: "/explorer/airpro",
+    logo: "/brand/assets/airpro-icon.png",
+    gateLogo: "/brand/assets/airpro-logo-dark.png",
+    accentColor: "#FFD940",
+    createdAt: "2026-06-17",
+    password: "airpro2026",
+  },
+  {
     slug: "mustang-cat-mtp",
     name: "Mustang CAT — MTP Recruiting",
     company: "Mustang CAT",

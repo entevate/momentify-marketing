@@ -5,6 +5,9 @@
 import {
   Star,
   Shield,
+  Settings2,
+  Wind,
+  Thermometer,
   Presentation,
   Boxes,
   Banknote,
@@ -214,6 +217,9 @@ export const LUCIDE_ICON_MAP: Record<string, ComponentType<{ className?: string 
   'truck': Truck,
   'wrench': Wrench,
   'settings': Settings,
+  'settings-2': Settings2,
+  'wind': Wind,
+  'thermometer': Thermometer,
   'cog': Cog,
 
   // Navigation
