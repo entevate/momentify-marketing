@@ -222,6 +222,24 @@ export default function PrivacyContent() {
                 you may turn them off in your device&apos;s settings.
               </P>
               <P>
+                <strong>SMS / Text Messaging.</strong> When you participate in a Momentify-equipped event, you may
+                voluntarily provide your mobile phone number at a staffed kiosk or via an opt-in form to receive
+                event-related text messages. These messages may include session content, requested documents, confirmation
+                of activities, and follow-up communications from the event organizer. Message frequency varies by event
+                participation and is generally low. Standard message and data rates may apply per your wireless carrier
+                agreement. To stop receiving messages at any time, reply <strong>STOP</strong> to any message; for
+                assistance, reply <strong>HELP</strong>.
+                {" "}
+                <strong>
+                  We do not share or sell mobile phone numbers or SMS opt-in consent with any third party for marketing
+                  or promotional purposes.
+                </strong>
+                {" "}
+                Mobile information is used solely to deliver the messages you opted in to receive and to maintain service
+                quality. Opt-in consent collected for SMS is never transferred to affiliates, partners, or other third
+                parties for their own marketing.
+              </P>
+              <P>
                 This information is primarily needed to maintain the security and operation of our application(s), for
                 troubleshooting, and for our internal analytics and reporting purposes. All personal information that you
                 provide to us must be true, complete, and accurate, and you must notify us of any changes to such personal
