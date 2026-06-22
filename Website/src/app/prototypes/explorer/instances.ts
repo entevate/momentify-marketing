@@ -23,6 +23,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "friends-of-medicine",
+    name: "Friends of Medicine Explorer",
+    company: "Friends of Medicine",
+    industry: "Healthcare Network",
+    prototypeFile: "/explorer/friends-of-medicine",
+    logo: "/brand/assets/friends-of-medicine-icon.png",
+    gateLogo: "/brand/assets/friends-of-medicine-logo-dark.png",
+    accentColor: "#1D9DAA",
+    createdAt: "2026-06-22",
+    password: "fom2026",
+  },
+  {
     slug: "airpro",
     name: "AirPro Fan & Blower Explorer",
     company: "AirPro",

@@ -31,6 +31,7 @@ import { PROVEN_CONFIG } from './proven';
 import { PROVEN_MOBILE_CONFIG } from './proven-mobile';
 import { MUSTANG_CAT_MTP_CONFIG } from './mustang-cat-mtp';
 import { AIRPRO_CONFIG } from './airpro';
+import { FRIENDS_OF_MEDICINE_CONFIG } from './friends-of-medicine';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -57,6 +58,7 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'cutx': CUTX_CONFIG,
   'mustang-cat-mtp': MUSTANG_CAT_MTP_CONFIG,
   'airpro': AIRPRO_CONFIG,
+  'friends-of-medicine': FRIENDS_OF_MEDICINE_CONFIG,
 };
 
 export interface PrototypeMetadata {
