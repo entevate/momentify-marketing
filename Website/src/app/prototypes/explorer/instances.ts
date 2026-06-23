@@ -468,4 +468,16 @@ export const instances: ExplorerInstance[] = [
     createdAt: "2026-06-03",
     password: "cutx2026",
   },
+  {
+    slug: "medc",
+    name: "McKinney EDC Explorer",
+    company: "McKinney Economic Development Corporation",
+    industry: "Government",
+    prototypeFile: "/explorer/medc",
+    logo: "/brand/assets/medc-icon.jpg",
+    gateLogo: "/brand/assets/medc-logo-reverse.png",
+    accentColor: "#013243",
+    createdAt: "2026-06-23",
+    password: "medc2026",
+  },
 ];

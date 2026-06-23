@@ -33,6 +33,7 @@ import { MUSTANG_CAT_MTP_CONFIG } from './mustang-cat-mtp';
 import { AIRPRO_CONFIG } from './airpro';
 import { FRIENDS_OF_MEDICINE_CONFIG } from './friends-of-medicine';
 import { FRIENDS_OF_MEDICINE_MOBILE_CONFIG } from './friends-of-medicine-mobile';
+import { MEDC_CONFIG } from './medc';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -61,6 +62,7 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'airpro': AIRPRO_CONFIG,
   'friends-of-medicine': FRIENDS_OF_MEDICINE_CONFIG,
   'friends-of-medicine-mobile': FRIENDS_OF_MEDICINE_MOBILE_CONFIG,
+  'medc': MEDC_CONFIG,
 };
 
 export interface PrototypeMetadata {
