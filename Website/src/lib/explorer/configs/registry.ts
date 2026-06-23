@@ -78,6 +78,9 @@ export interface PrototypeMetadata {
   tabletSlug: string | null;
   /** Whether this config is intended as a starter (vs a finished prototype). */
   isDefault: boolean;
+  /** ISO date the prototype config was added (config.createdAt). Lets
+   *  consumers (e.g. the ingest modal) sort the list by date added. */
+  createdAt: string;
 }
 
 function isMobileSlug(slug: string): boolean {
@@ -107,6 +110,7 @@ export function getPrototypeIndex(): PrototypeMetadata[] {
       mobileSlug: hasMobile ? mobileSlug : null,
       tabletSlug: null,
       isDefault: slug === 'momentify-default',
+      createdAt: config.createdAt,
     };
   });
 }
@@ -132,5 +136,6 @@ export function getPrototypeMetadata(slug: string): PrototypeMetadata | null {
     mobileSlug: mobile ? null : (counterpartExists ? counterpartSlug : null),
     tabletSlug: mobile ? (counterpartExists ? counterpartSlug : null) : null,
     isDefault: slug === 'momentify-default',
+    createdAt: config.createdAt,
   };
 }
