@@ -23,6 +23,33 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "the-expo-group",
+    name: "The Expo Group Explorer",
+    company: "The Expo Group",
+    industry: "Event Services",
+    prototypeFile: "/explorer/the-expo-group",
+    logo: "/brand/assets/the-expo-group-icon.png",
+    gateLogo: "/brand/assets/the-expo-group-logo-dark.png",
+    accentColor: "#E86028",
+    createdAt: "2026-06-25",
+    password: "the-expo-group2026",
+    mobileSlug: "the-expo-group-mobile",
+  },
+  {
+    slug: "the-expo-group-mobile",
+    name: "The Expo Group Explorer (Mobile)",
+    company: "The Expo Group",
+    industry: "Event Services",
+    prototypeFile: "/explorer/the-expo-group-mobile",
+    logo: "/brand/assets/the-expo-group-icon.png",
+    gateLogo: "/brand/assets/the-expo-group-logo-light.png",
+    accentColor: "#E86028",
+    createdAt: "2026-06-25",
+    password: "the-expo-group2026",
+    formFactor: "mobile",
+    hidden: true,
+  },
+  {
     slug: "friends-of-medicine",
     name: "Friends of Medicine Explorer",
     company: "Friends of Medicine",

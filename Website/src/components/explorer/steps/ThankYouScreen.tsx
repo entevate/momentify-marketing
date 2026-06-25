@@ -18,7 +18,11 @@ export default function ThankYouScreen({ step, onOpenNotes }: { step: ThankYouSt
           <img
             src={logoSrc}
             alt="Logo"
-            style={{ width: 'auto', height: 40 }}
+            style={{
+              width: 'auto',
+              height: 40,
+              mixBlendMode: session.theme === 'dark' ? 'screen' : 'multiply',
+            }}
           />
         )}
         <h1 className="exp-thank-you-title">{step.title}</h1>

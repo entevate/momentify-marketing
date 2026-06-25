@@ -34,6 +34,8 @@ import { AIRPRO_CONFIG } from './airpro';
 import { FRIENDS_OF_MEDICINE_CONFIG } from './friends-of-medicine';
 import { FRIENDS_OF_MEDICINE_MOBILE_CONFIG } from './friends-of-medicine-mobile';
 import { MEDC_CONFIG } from './medc';
+import { THE_EXPO_GROUP_CONFIG } from './the-expo-group';
+import { THE_EXPO_GROUP_MOBILE_CONFIG } from './the-expo-group-mobile';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -63,6 +65,8 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'friends-of-medicine': FRIENDS_OF_MEDICINE_CONFIG,
   'friends-of-medicine-mobile': FRIENDS_OF_MEDICINE_MOBILE_CONFIG,
   'medc': MEDC_CONFIG,
+  'the-expo-group': THE_EXPO_GROUP_CONFIG,
+  'the-expo-group-mobile': THE_EXPO_GROUP_MOBILE_CONFIG,
 };
 
 export interface PrototypeMetadata {
