@@ -13,10 +13,12 @@ export const THE_EXPO_GROUP_MOBILE_CONFIG: ExplorerConfig = {
   formFactor: 'mobile',
   steps: [
     {
-      ...THE_EXPO_GROUP_CONFIG.steps[0],
+      type: 'splash',
+      id: 'welcome',
       title: 'We Design',
       gradientWord: 'Impact.',
       subtitle: "35 years of trade show expertise, CROWDPulse intelligence, and Single Source Solution® — all in one partner.",
+      buttonText: 'Tap to Begin',
     },
     ...THE_EXPO_GROUP_CONFIG.steps.slice(1),
   ],
