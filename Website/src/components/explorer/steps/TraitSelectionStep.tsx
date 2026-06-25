@@ -220,8 +220,11 @@ export default function TraitSelectionStep({ step }: { step: TraitSelectionStepC
     flex: 1,
     minHeight: 0,
     overflowY: 'auto',
-    alignContent: 'start',
-    gridAutoRows: 'auto',
+    // Mobile CSS sets grid-auto-rows: 1fr and align-content: stretch so cards
+    // fill the viewport. Inline styles win over CSS, so mirror those values
+    // here on mobile to avoid overriding the locked mobile layout.
+    alignContent: isMobile ? 'stretch' : 'start',
+    gridAutoRows: isMobile ? '1fr' : 'auto',
     WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'],
     paddingRight: 4,
     ...(colsOverride ? { gridTemplateColumns: `repeat(${colsOverride}, 1fr)` } : {}),
