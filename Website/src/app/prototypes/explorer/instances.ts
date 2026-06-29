@@ -23,6 +23,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "snd",
+    name: "Success North Dallas Explorer",
+    company: "Success North Dallas",
+    industry: "Event Services",
+    prototypeFile: "/explorer/snd",
+    logo: "/brand/assets/snd-icon.png",
+    gateLogo: "/brand/assets/snd-logo-reverse.png",
+    accentColor: "#CE8224",
+    createdAt: "2026-06-29",
+    password: "snd2026",
+  },
+  {
     slug: "the-expo-group",
     name: "The Expo Group Explorer",
     company: "The Expo Group",
