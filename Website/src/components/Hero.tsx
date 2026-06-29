@@ -106,6 +106,7 @@ const logos = [
   { src: "/logos/mustang-cat.png", alt: "Mustang Cat", height: "28px" },
   { src: "/logos/thompson-tractor.png", alt: "Thompson Tractor", height: "28px" },
   { src: "/logos/blanchard-machinery.png", alt: "Blanchard Machinery", height: "28px" },
+  { src: "/brand/assets/proven-logo-reverse.png", alt: "Proven", height: "28px", mono: true },
 ];
 
 const logoSet = logos.map((logo) => (
@@ -114,7 +115,12 @@ const logoSet = logos.map((logo) => (
     src={logo.src}
     alt={logo.alt}
     className="flex-shrink-0 opacity-50 hover:opacity-90 transition-opacity duration-200"
-    style={{ height: logo.height, width: "auto" }}
+    style={{
+      height: logo.height,
+      width: "auto",
+      // Force pure-white monochrome to match the other (already white) client logos
+      ...(logo.mono ? { filter: "brightness(0) invert(1)" } : {}),
+    }}
   />
 ));
 
