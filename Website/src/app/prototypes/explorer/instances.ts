@@ -23,6 +23,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "essntl-supplements",
+    name: "Essntl Wellness Explorer",
+    company: "Essntl Wellness",
+    industry: "Healthcare",
+    prototypeFile: "/explorer/essntl-supplements",
+    logo: "/brand/assets/essntl-supplements-icon.png",
+    gateLogo: "/brand/assets/essntl-supplements-logo-reverse.png",
+    accentColor: "#918974",
+    createdAt: "2026-06-30",
+    password: "essntl2026",
+  },
+  {
     slug: "snd",
     name: "Success North Dallas Explorer",
     company: "Success North Dallas",
