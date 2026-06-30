@@ -88,15 +88,16 @@ If no intake exists, prompt the user for the following:
 1. **Company Name** - Full company name (e.g., "Caterpillar", "Freeman")
 2. **Company Logo** - Two logo files: dark background version (reverse/white) and light background version. Also need a square icon version. Ask where logos are located or if they need to be added to `/Website/public/brand/assets/`
 3. **Brand Colors** - Primary accent color, secondary color, and any brand palette. If not provided, extract from their website
-4. **Industry** - The company's industry vertical (e.g., "Electric Power", "Event Services", "Defense & Aerospace")
-5. **Website URL or Existing Docs** - Source for extracting content to generate traits, results cards, and content
+4. **Brand Font** - The brand's primary typeface, written to `branding.font`. If not provided, detect it from their website (see Step 1). Defaults to Inter.
+5. **Industry** - The company's industry vertical (e.g., "Electric Power", "Event Services", "Defense & Aerospace")
+6. **Website URL or Existing Docs** - Source for extracting content to generate traits, results cards, and content
 
 ### Optional Inputs
-6. **Links** - Quick links to show in the explorer (external URLs, product pages, etc.)
-7. **Calculators** - An interactive calculator (e.g., ROI calculator, cost estimator) presented in a popup modal overlay. Can be an existing URL loaded in an iframe within the modal, or a custom-built calculator created as part of the prototype. Similar to the PHIL prototype's calculator but displayed in a modal rather than inline
-8. **Screensaver** - Optional idle screensaver (video, YouTube, Vimeo, or image). NOT enabled by default. Only add if the user specifically requests it
-9. **Password** - Access password for the prototype (default: generate one as `{companyslug}2026`)
-10. **Background Style** - Gradient with aurora orbs (default) or custom background image
+7. **Links** - Quick links to show in the explorer (external URLs, product pages, etc.)
+8. **Calculators** - An interactive calculator (e.g., ROI calculator, cost estimator) presented in a popup modal overlay. Can be an existing URL loaded in an iframe within the modal, or a custom-built calculator created as part of the prototype. Similar to the PHIL prototype's calculator but displayed in a modal rather than inline
+9. **Screensaver** - Optional idle screensaver (video, YouTube, Vimeo, or image). NOT enabled by default. Only add if the user specifically requests it
+10. **Password** - Access password for the prototype (default: generate one as `{companyslug}2026`)
+11. **Background Style** - Gradient with aurora orbs (default) or custom background image
 
 ## Execution Steps
 
@@ -104,6 +105,7 @@ If no intake exists, prompt the user for the following:
 
 If the user provides a website URL, use WebFetch to:
 - Extract the brand color palette (primary, secondary, accent colors)
+- **Detect the brand's primary typeface** — inspect the homepage for the dominant `font-family` (headings/body), any `fonts.googleapis.com` stylesheet `<link>`s, and `@font-face` declarations. Take the leading family name.
 - Identify the company's products, services, and value propositions
 - Understand their target personas/roles
 - Catalog content types available (case studies, whitepapers, videos, webinars, etc.)
@@ -111,7 +113,11 @@ If the user provides a website URL, use WebFetch to:
 
 If the user provides documents, read them and extract the same information.
 
-**Ask the user to confirm or adjust** the extracted brand colors and content themes before proceeding.
+**Setting `branding.font`:** write the detected typeface as a **bare family name** (e.g. `"Poppins"`, `"Montserrat"`), NOT a full CSS stack — Momentify Web builds the fallback chain and loads the font file itself. Momentify Web only *loads* a curated set of Google families; pick the detected family if it's in the list below, otherwise choose the closest match, otherwise leave it as `Inter` (the default). Any non-loadable family silently falls back to Inter, so don't set an obscure or licensed-only typeface expecting it to render.
+
+Curated loadable families (kept in sync with `fan-gallery/src/lib/fonts.ts` → `CURATED_FONTS`): Inter, Poppins, Montserrat, Roboto, Lato, Open Sans, Work Sans, DM Sans, Plus Jakarta Sans, Source Sans 3, Manrope, Nunito, Raleway, Outfit, Figtree, Sora, Space Grotesk, Playfair Display.
+
+**Ask the user to confirm or adjust** the extracted brand colors, typeface, and content themes before proceeding.
 
 ### Step 2: Generate Theme Colors
 
