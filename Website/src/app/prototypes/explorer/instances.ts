@@ -531,4 +531,16 @@ export const instances: ExplorerInstance[] = [
     createdAt: "2026-06-23",
     password: "medc2026",
   },
+  {
+    slug: "expedited-service-partners",
+    name: "Expedited Service Partners Explorer",
+    company: "Expedited Service Partners",
+    industry: "Energy & Utilities",
+    prototypeFile: "/explorer/expedited-service-partners",
+    logo: "/brand/assets/expedited-service-partners-icon.webp",
+    gateLogo: "/brand/assets/expedited-service-partners-logo-reverse.webp",
+    accentColor: "#F7951D",
+    createdAt: "2026-06-30",
+    password: "esp2026",
+  },
 ];

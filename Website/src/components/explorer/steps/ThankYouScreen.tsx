@@ -20,7 +20,7 @@ export default function ThankYouScreen({ step, onOpenNotes }: { step: ThankYouSt
             alt="Logo"
             style={{
               width: 'auto',
-              height: 40,
+              height: config.branding.logoHeight ?? 40,
               mixBlendMode: session.theme === 'dark' ? 'screen' : 'multiply',
             }}
           />

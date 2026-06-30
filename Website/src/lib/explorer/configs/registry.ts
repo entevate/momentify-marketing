@@ -38,6 +38,7 @@ import { THE_EXPO_GROUP_CONFIG } from './the-expo-group';
 import { THE_EXPO_GROUP_MOBILE_CONFIG } from './the-expo-group-mobile';
 import { SND_CONFIG } from './snd';
 import { ESSNTL_SUPPLEMENTS_CONFIG } from './essntl-supplements';
+import { EXPEDITED_SERVICE_PARTNERS_CONFIG } from './expedited-service-partners';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -71,6 +72,7 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'the-expo-group-mobile': THE_EXPO_GROUP_MOBILE_CONFIG,
   'snd': SND_CONFIG,
   'essntl-supplements': ESSNTL_SUPPLEMENTS_CONFIG,
+  'expedited-service-partners': EXPEDITED_SERVICE_PARTNERS_CONFIG,
 };
 
 export interface PrototypeMetadata {
