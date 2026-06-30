@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { HexColorPicker } from 'react-colorful';
-import { Plus, X, ChevronDown, Sparkles, Link2, Calculator, MonitorPlay, Sun, Moon, Pipette, Globe, Loader2 } from 'lucide-react';
+import { Plus, X, ChevronDown, Sparkles, Link2, Calculator, MonitorPlay, Sun, Moon, Pipette, Globe, Loader2, Copy, Check } from 'lucide-react';
 import IntakeDropZone from '@/components/explorer-builder/IntakeDropZone';
 
 // ── Types ──────────────────────────────────────────
@@ -514,9 +514,15 @@ export default function ExplorerIntakePage() {
             <Sparkles style={{ width: 24, height: 24, color: T.accent }} />
           </div>
           <h2 style={{ fontSize: 22, fontWeight: 500, color: T.text1, marginBottom: 8 }}>Explorer Intake Saved</h2>
-          <p style={{ fontSize: 14, fontWeight: 300, color: T.text2, marginBottom: 24, lineHeight: 1.6 }}>
-            The intake data for <strong style={{ color: T.accent }}>{form.companyName}</strong> has been saved. Run the <code style={{ background: 'rgba(6,19,65,0.05)', padding: '2px 6px', borderRadius: 4, fontSize: 13, color: T.text1 }}>momentify-explorer</code> skill in Claude Code to generate the full prototype.
+          <p style={{ fontSize: 14, fontWeight: 300, color: T.text2, marginBottom: 20, lineHeight: 1.6 }}>
+            The intake data for <strong style={{ color: T.accent }}>{form.companyName}</strong> has been saved. Copy the prompt below and paste it into <code style={{ background: 'rgba(6,19,65,0.05)', padding: '2px 6px', borderRadius: 4, fontSize: 13, color: T.text1 }}>Claude Code</code> to run the momentify-explorer skill and generate the full prototype.
           </p>
+          <div style={{ marginBottom: 24 }}>
+            <CopyPromptButton
+              t={T}
+              text={`Use the momentify-explorer skill to build the Explorer prototype from the saved intake "${form.slug}"${form.companyName ? ` for ${form.companyName}` : ''}.`}
+            />
+          </div>
           <div style={{ display: 'flex', gap: 8, justifyContent: 'center' }}>
             <button
               onClick={() => { setSubmitted(false); setForm({ companyName: '', templateName: '', slug: '', slugEdited: false, solutionType: '', industry: '', websiteUrl: '', contentFiles: [], logos: { dark: null, light: null, icon: null }, colors: { primary: '#0CF4DF', secondary: '#254FE5' }, password: '', screensaver: { enabled: false, url: '' }, calculator: { enabled: false, url: '' }, quickLinks: [] }); }}
@@ -1050,6 +1056,42 @@ export default function ExplorerIntakePage() {
 // ── Sub-components (accept theme tokens via `t` prop) ──
 
 type ThemeTokens = (typeof THEMES)[Theme];
+
+/** Confirmation-screen button that copies a ready-to-run momentify-explorer
+ *  prompt to the clipboard so the operator can paste it straight into
+ *  Claude Code. Self-contained (own copied state) — mirrors the CopyButton
+ *  pattern used elsewhere in the app. */
+function CopyPromptButton({ text, t }: { text: string; t: ThemeTokens }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* clipboard unavailable — no-op */
+    }
+  };
+  return (
+    <button
+      onClick={handleCopy}
+      title="Copy the Claude Code prompt"
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 8,
+        padding: '10px 16px', borderRadius: 10,
+        border: `1px solid ${copied ? t.accent : t.border}`,
+        background: copied ? t.accentSoft : 'transparent',
+        color: copied ? t.accent : t.text1,
+        fontSize: 13, fontWeight: 500, fontFamily: 'inherit', cursor: 'pointer',
+        transition: 'all 200ms ease',
+      }}
+    >
+      {copied
+        ? <><Check style={{ width: 15, height: 15 }} /> Copied</>
+        : <><Copy style={{ width: 15, height: 15 }} /> Copy prompt for Claude Code</>}
+    </button>
+  );
+}
 
 function Section({ label, hint, children, t }: { label: string; hint?: string; children: React.ReactNode; t: ThemeTokens }) {
   return (
