@@ -59,9 +59,14 @@
   align-items: center;
 }
 
-/* Logo: left-anchored, never stretches, cap to half the width */
+/* Logo: left-anchored, never stretches, cap to half the width.
+   max-height guards against a per-config branding.logoHeight (tuned for
+   the taller tablet top bar) overflowing the tighter ~96px mobile bar —
+   the config value still scales the logo up from the 22px default, just
+   clamped to what actually fits here. */
 .explorer-shell[data-form="mobile"] .exp-logo {
   height: 22px;
+  max-height: 40px;
   max-width: 140px;
   flex-shrink: 0;
   flex-grow: 0;
@@ -70,7 +75,7 @@
 
 .explorer-shell[data-form="mobile"] .exp-logo img,
 .explorer-shell[data-form="mobile"] .exp-logo svg {
-  height: 22px;
+  height: 100%;
   width: auto;
   max-width: 100%;
   object-fit: contain;
