@@ -1,29 +1,15 @@
 import { ImageResponse } from "next/og";
 import { instances } from "@/app/prototypes/explorer/instances";
-import { MOMENTIFY_DEFAULT_CONFIG } from "@/lib/explorer/defaults";
-import { CLARIUM_CONFIG } from "@/lib/explorer/configs/clarium";
-import { MAVEN_FP_CONFIG } from "@/lib/explorer/configs/maven-fp";
-import { CDK_CONFIG } from "@/lib/explorer/configs/cdk";
-import { SALESFLOWIQ_CONFIG } from "@/lib/explorer/configs/salesflowiq";
-import { DEALROOM_CONFIG } from "@/lib/explorer/configs/dealroom";
-import { SALAS_OBRIEN_CONFIG } from "@/lib/explorer/configs/salas-o-brien";
-import { DFWPB_PICKLEBALL_CONFIG } from "@/lib/explorer/configs/dfwpb-pickleball-may132026";
-import type { ExplorerConfig, SplashStepConfig } from "@/lib/explorer/types";
+import { PROTOTYPE_CONFIGS } from "@/lib/explorer/configs/registry";
+import type { SplashStepConfig } from "@/lib/explorer/types";
 
 export const runtime = "edge";
 
 // Phase 12 — `-mobile` configs dropped. OG image route dedupes slug
 // requests to the canonical (base) prototype for cover art.
-const CONFIGS: Record<string, ExplorerConfig> = {
-  "momentify-default": MOMENTIFY_DEFAULT_CONFIG,
-  clarium: CLARIUM_CONFIG,
-  "maven-fp": MAVEN_FP_CONFIG,
-  cdk: CDK_CONFIG,
-  salesflowiq: SALESFLOWIQ_CONFIG,
-  dealroom: DEALROOM_CONFIG,
-  "salas-o-brien": SALAS_OBRIEN_CONFIG,
-  "dfwpb-pickleball-may132026": DFWPB_PICKLEBALL_CONFIG,
-};
+// Sourced from the central registry so every registered prototype gets
+// its real branded splash card — no separate list to keep in sync.
+const CONFIGS = PROTOTYPE_CONFIGS;
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

@@ -46,13 +46,13 @@ export const EXPEDITED_SERVICE_PARTNERS_CONFIG: ExplorerConfig = {
 
   branding: {
     logo: {
-      dark: '/brand/assets/expedited-service-partners-logo-reverse.webp',
-      light: '/brand/assets/expedited-service-partners-logo.webp',
+      dark: '/brand/assets/expedited-service-partners-logo-reverse.png',
+      light: '/brand/assets/expedited-service-partners-logo.png',
     },
     // ESP logo is a circular badge with "EXPEDITED SERVICE PARTNERS" wrapped
     // around the ring — illegible at the locked 28px default, needs real size.
     logoHeight: 96,
-    icon: '/brand/assets/expedited-service-partners-icon.webp',
+    icon: '/brand/assets/expedited-service-partners-icon.png',
     colors: {
       primary: '#F7951D',
       secondary: '#59595B',
