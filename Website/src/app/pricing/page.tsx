@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import PricingContent from "@/components/PricingContent";
 
 export const metadata: Metadata = {
-  title: "Pricing | Momentify",
+  title: "Pricing",
   description:
     "Momentify plans for teams and individuals. From Solo personal lead capture at $49/mo to enterprise dealer networks. Self-serve checkout launching soon.",
   alternates: { canonical: "https://momentifyapp.com/pricing" },
