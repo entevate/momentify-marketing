@@ -1,6 +1,6 @@
 /**
  * Pricing display data. MIRROR of fan-gallery repo
- * src/lib/billing/pricing.ts — if you change prices here, change them there
+ * src/lib/billing/pricing.ts. If you change prices here, change them there
  * and run `npm run billing:sync` in that repo too.
  */
 export type Cadence = "monthly" | "annual";
@@ -13,10 +13,12 @@ export interface PricingTier {
   annual: number | null;
   monthly: number | null;
   onboarding: string | null;
+  /** Short onboarding note appended to the monthly-cadence price sub-line. */
+  onboardingShort?: string;
   tagline: string;
   bullets: string[];
   /** Self-serve checkout not live yet: render a disabled Coming Soon button
-   *  instead of cta. Flip to false (or remove) when checkout ships — the
+   *  instead of cta. Flip to false (or remove) when checkout ships, the
    *  cta.href intent links below are already wired for that day. */
   comingSoon?: boolean;
   cta: { label: string; href: (cadence: Cadence) => string };
@@ -24,6 +26,9 @@ export interface PricingTier {
 }
 
 const APP_SIGNUP = "https://mymomentify.com/sign-up"; // TODO-CONFIRM before enabling checkout CTAs
+
+/** Enterprise price sub-line. Keep in sync with the Enterprise FAQ answer. */
+export const ENTERPRISE_FLOOR = "starting at $6,500/mo";
 
 export const PRICING_TIERS: PricingTier[] = [
   {
@@ -37,6 +42,7 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     key: "team", name: "Team", audience: "business",
     annual: 1750, monthly: 1995, onboarding: "$1,250 one-time on monthly billing, waived on annual",
+    onboardingShort: "$1,250 onboarding",
     tagline: "For multi-team organizations with a full event calendar.",
     bullets: ["7 seats", "12 events per year", "10,000 sessions per month", "All four template kinds", "SMS bundle", "Salesforce and HubSpot integrations", "Remove Momentify badge, custom domain"],
     comingSoon: true,

@@ -8,6 +8,7 @@ import {
   PRICING_TIERS,
   COMPARISON_ROWS,
   PRICING_FAQ,
+  ENTERPRISE_FLOOR,
   type Cadence,
   type PricingTier,
 } from "@/lib/pricing-content";
@@ -66,12 +67,12 @@ function TierCard({ tier, cadence }: { tier: PricingTier; cadence: Cadence }) {
 
   let subLine: string;
   if (tier.key === "enterprise") {
-    subLine = "starting at $6,500/mo";
+    subLine = ENTERPRISE_FLOOR;
   } else if (cadence === "annual") {
     subLine = "per month, billed annually";
   } else {
     subLine = "billed monthly";
-    if (tier.key === "team") subLine += " + $1,250 onboarding";
+    if (tier.onboardingShort) subLine += ` + ${tier.onboardingShort}`;
   }
 
   return (
@@ -149,6 +150,7 @@ function TierCard({ tier, cadence }: { tier: PricingTier; cadence: Cadence }) {
         <div>
           <button
             disabled
+            aria-describedby={`coming-soon-${tier.key}`}
             className="w-full inline-flex items-center justify-center text-[14px] py-3 px-6"
             style={{
               fontFamily: "var(--font-inter)",
@@ -163,7 +165,7 @@ function TierCard({ tier, cadence }: { tier: PricingTier; cadence: Cadence }) {
           >
             Coming Soon!
           </button>
-          <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.4)", textAlign: "center", marginTop: "8px" }}>
+          <p id={`coming-soon-${tier.key}`} style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "11px", color: "rgba(6,19,65,0.4)", textAlign: "center", marginTop: "8px" }}>
             Self-serve checkout launching soon
           </p>
         </div>
@@ -421,10 +423,13 @@ export default function PricingContent() {
               <table style={{ width: "100%", minWidth: "720px", borderCollapse: "collapse" }}>
                 <thead>
                   <tr style={{ background: "#F8F9FC" }}>
-                    <th style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: DEEP_NAVY, textAlign: "left", padding: "16px 20px" }} />
+                    <th scope="col" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: DEEP_NAVY, textAlign: "left", padding: "16px 20px" }}>
+                      <span className="sr-only">Feature</span>
+                    </th>
                     {["Solo", "Starter", "Team", "Pro", "Enterprise"].map((plan) => (
                       <th
                         key={plan}
+                        scope="col"
                         style={{
                           fontFamily: "var(--font-inter)",
                           fontWeight: plan === "Team" ? 600 : 500,
@@ -481,7 +486,7 @@ export default function PricingContent() {
                 Run your own numbers with our free ROX calculators, built for trade shows, recruiting, field sales, facilities, and venues.
               </p>
               <a
-                href="/rox"
+                href="/what-is-rox"
                 className="inline-flex items-center justify-center text-[14px] py-3.5 px-8 transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"
                 style={{
                   fontFamily: "var(--font-inter)",
@@ -492,7 +497,7 @@ export default function PricingContent() {
                   letterSpacing: "-0.01em",
                 }}
               >
-                Try the ROX calculators
+                Learn about ROX and run your numbers
               </a>
             </motion.div>
           </div>
