@@ -157,6 +157,7 @@ export default function Navigation() {
                 <span>?</span>
               </span>
             </a>
+            <a href="/pricing" className={`text-[13px] font-medium transition-colors duration-300 leading-none ${linkColor}`}>Pricing</a>
             <a href="/case-studies" className={`text-[13px] font-medium transition-colors duration-300 leading-none ${linkColor}`}>Case Studies</a>
           </div>
 
@@ -250,6 +251,7 @@ export default function Navigation() {
                     <span>?</span>
                   </span>
                 </a>
+                <a href="/pricing" className="block text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>Pricing</a>
                 <a href="/case-studies" className="block text-charcoal/70 text-sm" onClick={() => setMobileOpen(false)}>Case Studies</a>
               </div>
               <div className="flex flex-col gap-3">

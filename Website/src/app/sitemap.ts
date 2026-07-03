@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Core
     { path: "/", priority: 1.0, changeFrequency: "weekly" as const },
     { path: "/demo", priority: 0.9, changeFrequency: "monthly" as const },
+    { path: "/pricing", priority: 0.9, changeFrequency: "monthly" as const },
     { path: "/what-is-rox", priority: 0.9, changeFrequency: "monthly" as const },
 
     // Solutions
