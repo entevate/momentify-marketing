@@ -426,7 +426,7 @@ export default function PricingContent() {
                     <th scope="col" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: DEEP_NAVY, textAlign: "left", padding: "16px 20px" }}>
                       <span className="sr-only">Feature</span>
                     </th>
-                    {["Solo", "Starter", "Team", "Pro", "Enterprise"].map((plan) => (
+                    {["Solo", "Basic", "Team", "Pro", "Enterprise"].map((plan) => (
                       <th
                         key={plan}
                         scope="col"
