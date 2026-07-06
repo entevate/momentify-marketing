@@ -35,7 +35,7 @@ export const PRICING_TIERS: PricingTier[] = [
     key: "basic", name: "Basic", audience: "business",
     annual: 650, monthly: 750, onboarding: null,
     tagline: "For a single team running a handful of events a year.",
-    bullets: ["3 seats", "4 events per year", "2,500 sessions per month", "Fan Gallery + Explorer templates", "QR code registration", "Custom colors and branding", "Email follow-up"],
+    bullets: ["3 seats", "4 events per year", "2,500 sessions per month", "Fan Gallery + Explorer templates", "Database registration", "Custom colors and branding", "Email follow-up"],
     comingSoon: true,
     cta: { label: "Start 14-day trial", href: (c) => `${APP_SIGNUP}?intent=basic-${c}` },
   },
@@ -44,7 +44,7 @@ export const PRICING_TIERS: PricingTier[] = [
     annual: 1750, monthly: 1995, onboarding: "$1,250 one-time on monthly billing, waived on annual",
     onboardingShort: "$1,250 onboarding",
     tagline: "For multi-team organizations with a full event calendar.",
-    bullets: ["7 seats", "12 events per year", "10,000 sessions per month", "All four template kinds", "SMS bundle", "Salesforce and HubSpot integrations", "Remove Momentify badge, custom domain"],
+    bullets: ["7 seats", "12 events per year", "10,000 sessions per month", "All four template kinds", "SMS bundle", "QR code registration", "Salesforce and HubSpot integrations", "Custom domain"],
     comingSoon: true,
     cta: { label: "Start 14-day trial", href: (c) => `${APP_SIGNUP}?intent=team-${c}` },
     highlight: true,
@@ -53,7 +53,7 @@ export const PRICING_TIERS: PricingTier[] = [
     key: "pro", name: "Pro", audience: "business",
     annual: 3250, monthly: 3750, onboarding: "$2,500 one-time",
     tagline: "For multi-facility organizations that run events year-round.",
-    bullets: ["15 seats", "Unlimited events", "50,000 sessions per month", "AI Intelligence and advanced analytics", "API access", "Multi-workspace (5)", "Branded SMS sender"],
+    bullets: ["15 seats", "Unlimited events", "50,000 sessions per month", "AI Intelligence and advanced analytics", "API access", "Multi-workspace (5)", "Remove Momentify badge", "Branded SMS sender"],
     cta: { label: "Contact sales", href: () => "/demo" },
   },
   {
@@ -84,8 +84,8 @@ export const COMPARISON_ROWS: ComparisonRow[] = [
   { label: "Sessions / month", values: ["100", "2,500", "10,000", "50,000", "Unlimited"] },
   { label: "Storage", values: ["2 GB", "20 GB", "100 GB", "500 GB", "Unlimited"] },
   { label: "Template kinds", values: ["On-the-Go", "Fan Gallery, Explorer", "All four", "All four", "All four"] },
-  { label: "Registration modes", values: ["Guest, Form", "+ QR codes", "+ Database", "All", "All"] },
-  { label: "Branding", values: ["-", "Custom colors + branding", "+ Remove badge, custom domain", "+ Branded SMS sender", "Full white-label"] },
+  { label: "Registration modes", values: ["Guest, Form", "+ Database", "+ QR codes", "All", "All"] },
+  { label: "Branding", values: ["-", "Custom colors + branding", "+ Custom domain", "+ Remove Momentify badge, branded SMS sender", "Full white-label"] },
 ];
 
 export const PRICING_FAQ: Array<{ q: string; a: string }> = [
