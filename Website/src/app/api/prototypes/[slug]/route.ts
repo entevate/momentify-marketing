@@ -44,8 +44,9 @@ export async function GET(
     if (!metadata) {
       return notFound();
     }
+    const explorerKind = explorerConfig.kind ?? ('explorer' as const);
     return NextResponse.json(
-      { metadata: { ...metadata, kind: 'explorer' as const }, config: explorerConfig, kind: 'explorer' as const },
+      { metadata: { ...metadata, kind: explorerKind }, config: explorerConfig, kind: explorerKind },
       {
         headers: {
           'Access-Control-Allow-Origin': '*',

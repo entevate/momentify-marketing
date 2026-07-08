@@ -38,6 +38,7 @@ import { THE_EXPO_GROUP_CONFIG } from './the-expo-group';
 import { THE_EXPO_GROUP_MOBILE_CONFIG } from './the-expo-group-mobile';
 import { SND_CONFIG } from './snd';
 import { ESSNTL_SUPPLEMENTS_CONFIG } from './essntl-supplements';
+import { MUSTANG_CAT_RECRUIT_CONFIG } from './mustang-cat-recruit';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -71,6 +72,7 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'the-expo-group-mobile': THE_EXPO_GROUP_MOBILE_CONFIG,
   'snd': SND_CONFIG,
   'essntl-supplements': ESSNTL_SUPPLEMENTS_CONFIG,
+  'mustang-cat-recruit': MUSTANG_CAT_RECRUIT_CONFIG,
 };
 
 export interface PrototypeMetadata {
@@ -89,6 +91,10 @@ export interface PrototypeMetadata {
   /** ISO date the prototype config was added (config.createdAt). Lets
    *  consumers (e.g. the ingest modal) sort the list by date added. */
   createdAt: string;
+  /** Template kind — 'recruiter' for Technical Recruiting prototypes
+   *  (identical Explorer runtime, presented/ingested as Recruiter).
+   *  Defaults to 'explorer'. */
+  kind: 'explorer' | 'recruiter';
 }
 
 function isMobileSlug(slug: string): boolean {
@@ -119,6 +125,7 @@ export function getPrototypeIndex(): PrototypeMetadata[] {
       tabletSlug: null,
       isDefault: slug === 'momentify-default',
       createdAt: config.createdAt,
+      kind: config.kind ?? 'explorer',
     };
   });
 }
@@ -145,5 +152,6 @@ export function getPrototypeMetadata(slug: string): PrototypeMetadata | null {
     tabletSlug: mobile ? (counterpartExists ? counterpartSlug : null) : null,
     isDefault: slug === 'momentify-default',
     createdAt: config.createdAt,
+    kind: config.kind ?? 'explorer',
   };
 }

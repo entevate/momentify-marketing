@@ -44,6 +44,7 @@ const MUSTANG_LIGHT: ThemeColors = {
 export const MUSTANG_CAT_MTP_CONFIG: ExplorerConfig = {
   id: 'mustang-cat-mtp',
   name: 'Mustang CAT — MTP Recruiting',
+  kind: 'recruiter',
   version: 1,
   createdAt: '2026-06-16T00:00:00.000Z',
   updatedAt: '2026-06-16T00:00:00.000Z',

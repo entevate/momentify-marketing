@@ -19,6 +19,10 @@ export interface ExplorerInstance {
   mobileSlug?: string;
   /** Hide this instance from the dashboard listing. Still accessible by URL. */
   hidden?: boolean;
+  /** Template kind — 'recruiter' for Technical Recruiting prototypes. Same
+   *  Explorer runtime; the dashboard badges these "Recruiter" and Momentify
+   *  Web ingests them as recruiter-kind templates. Default 'explorer'. */
+  kind?: "explorer" | "recruiter";
 }
 
 export const instances: ExplorerInstance[] = [
@@ -113,8 +117,22 @@ export const instances: ExplorerInstance[] = [
     password: "airpro2026",
   },
   {
+    slug: "mustang-cat-recruit",
+    name: "Mustang CAT — Recruiting Explorer",
+    kind: "recruiter",
+    company: "Mustang CAT",
+    industry: "Construction / Recruiting",
+    prototypeFile: "/explorer/mustang-cat-recruit",
+    logo: "/brand/assets/mustang-cat-recruit-icon.png",
+    gateLogo: "/brand/assets/mustang-cat-recruit-logo-dark.png",
+    accentColor: "#FFCC00",
+    createdAt: "2026-07-08",
+    password: "mustang2026",
+  },
+  {
     slug: "mustang-cat-mtp",
     name: "Mustang CAT — MTP Recruiting",
+    kind: "recruiter",
     company: "Mustang CAT",
     industry: "Construction / Recruiting",
     prototypeFile: "/explorer/mustang-cat-mtp",
