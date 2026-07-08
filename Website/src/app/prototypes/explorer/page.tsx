@@ -26,6 +26,35 @@ function formatDate(iso: string) {
   });
 }
 
+/** "Recruiter" chip for Technical Recruiting prototypes (kind: 'recruiter').
+ *  Teal per the Tech Recruiting solution vertical. Explorer instances render
+ *  nothing — Explorer is the unlabeled default. */
+function KindBadge({ instance }: { instance: ExplorerInstance }) {
+  if (instance.kind !== "recruiter") return null;
+  const color = "#00BBA5";
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 4,
+        padding: "2px 8px",
+        borderRadius: 10,
+        border: `1px solid ${color}`,
+        color: color,
+        fontSize: 10,
+        fontWeight: 500,
+        textTransform: "uppercase",
+        letterSpacing: "0.06em",
+        lineHeight: 1,
+        height: 18,
+      }}
+    >
+      Recruiter
+    </span>
+  );
+}
+
 function FormFactorBadge({ instance }: { instance: ExplorerInstance }) {
   const isMobile =
     instance.formFactor === "mobile" || instance.bezel === "iphone-portrait";
@@ -144,6 +173,7 @@ function InstanceCard({
                 >
                   {instance.name}
                 </div>
+                <KindBadge instance={instance} />
                 <FormFactorBadge instance={instance} />
               </div>
               <div

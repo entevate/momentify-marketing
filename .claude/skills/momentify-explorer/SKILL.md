@@ -10,6 +10,16 @@ Create a fully branded, interactive Explorer prototype that matches the exact UX
 
 Invoke this skill when asked to create a new Explorer prototype, generate a new kiosk experience, or build an Explorer for a specific company.
 
+## Solution Type → Template Kind
+
+When the intake's **Solution Type is Technical Recruiting** (`solutionType: 'recruiting'`), the prototype is a **Recruiter** — identical Explorer runtime and build process (this entire skill applies unchanged), but a distinct template kind so it presents and ingests as "Recruiter" instead of "Explorer":
+
+1. Set `kind: 'recruiter'` on the ExplorerConfig (top-level, next to `id`/`name`).
+2. Set `kind: "recruiter"` on the instance card in `prototypes/explorer/instances.ts` (the dashboard renders a teal "Recruiter" badge).
+3. Prefer "Recruiter" over "Explorer" in the instance's display name (e.g. "Acme Talent Recruiter", not "Acme Explorer").
+
+Every other Solution Type omits `kind` (defaults to `'explorer'`). Nothing else in this skill changes — CSS, config layers, registration, content rules are identical. The Publisher endpoints and Momentify Web ingest read `config.kind` and create a recruiter-kind template automatically.
+
 ---
 
 ## Three-Layer Architecture (LOCKED 2026-04-07)

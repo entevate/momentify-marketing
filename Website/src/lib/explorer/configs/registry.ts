@@ -40,6 +40,7 @@ import { SND_CONFIG } from './snd';
 import { ESSNTL_SUPPLEMENTS_CONFIG } from './essntl-supplements';
 import { EXPEDITED_SERVICE_PARTNERS_CONFIG } from './expedited-service-partners';
 import { EXPEDITED_SERVICE_PARTNERS_MOBILE_CONFIG } from './expedited-service-partners-mobile';
+import { MUSTANG_CAT_RECRUIT_CONFIG } from './mustang-cat-recruit';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -75,6 +76,7 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'essntl-supplements': ESSNTL_SUPPLEMENTS_CONFIG,
   'expedited-service-partners': EXPEDITED_SERVICE_PARTNERS_CONFIG,
   'expedited-service-partners-mobile': EXPEDITED_SERVICE_PARTNERS_MOBILE_CONFIG,
+  'mustang-cat-recruit': MUSTANG_CAT_RECRUIT_CONFIG,
 };
 
 export interface PrototypeMetadata {
@@ -93,6 +95,10 @@ export interface PrototypeMetadata {
   /** ISO date the prototype config was added (config.createdAt). Lets
    *  consumers (e.g. the ingest modal) sort the list by date added. */
   createdAt: string;
+  /** Template kind — 'recruiter' for Technical Recruiting prototypes
+   *  (identical Explorer runtime, presented/ingested as Recruiter).
+   *  Defaults to 'explorer'. */
+  kind: 'explorer' | 'recruiter';
 }
 
 function isMobileSlug(slug: string): boolean {
@@ -123,6 +129,7 @@ export function getPrototypeIndex(): PrototypeMetadata[] {
       tabletSlug: null,
       isDefault: slug === 'momentify-default',
       createdAt: config.createdAt,
+      kind: config.kind ?? 'explorer',
     };
   });
 }
@@ -149,5 +156,6 @@ export function getPrototypeMetadata(slug: string): PrototypeMetadata | null {
     tabletSlug: mobile ? (counterpartExists ? counterpartSlug : null) : null,
     isDefault: slug === 'momentify-default',
     createdAt: config.createdAt,
+    kind: config.kind ?? 'explorer',
   };
 }

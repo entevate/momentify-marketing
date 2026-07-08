@@ -262,6 +262,14 @@ export interface ExplorerConfig {
    * and the locked mobile CSS (430x932 portrait). Default: 'tablet'.
    */
   formFactor?: FormFactor;
+  /**
+   * Template kind this prototype presents/ingests as. 'recruiter' is the
+   * Technical Recruiting variant — identical Explorer runtime, but the
+   * prototypes dashboard and Momentify Web label it "Recruiter" and ingest
+   * creates a recruiter-kind template. Set when the intake's Solution Type
+   * is Technical Recruiting. Default: 'explorer'.
+   */
+  kind?: 'explorer' | 'recruiter';
   branding: BrandingConfig;
   registration: RegistrationConfig;
   steps: StepConfig[];

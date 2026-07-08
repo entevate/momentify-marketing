@@ -20,10 +20,12 @@ export const dynamic = 'force-static';
 export const revalidate = 60;
 
 export async function GET() {
-  // Merge Explorer + Interview kinds into one listing. Each entry now
+  // Merge Explorer + Interview kinds into one listing. Each entry
   // carries an explicit `kind` so consumers (Momentify Web ingest) can
-  // route the slug to the right gallery_templates.kind on insert.
-  const explorerIndex = getPrototypeIndex().map((p) => ({ ...p, kind: 'explorer' as const }));
+  // route the slug to the right gallery_templates.kind on insert. The
+  // explorer registry emits per-config kind ('recruiter' for Technical
+  // Recruiting prototypes, 'explorer' otherwise).
+  const explorerIndex = getPrototypeIndex();
   const interviewIndex = getInterviewPrototypeIndex();
   const prototypes = [...explorerIndex, ...interviewIndex];
   return NextResponse.json({ prototypes }, {
