@@ -41,6 +41,7 @@ import { ESSNTL_SUPPLEMENTS_CONFIG } from './essntl-supplements';
 import { EXPEDITED_SERVICE_PARTNERS_CONFIG } from './expedited-service-partners';
 import { EXPEDITED_SERVICE_PARTNERS_MOBILE_CONFIG } from './expedited-service-partners-mobile';
 import { MUSTANG_CAT_RECRUIT_CONFIG } from './mustang-cat-recruit';
+import { WORLD_LINK_CONFIG } from './world-link';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -77,6 +78,7 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'expedited-service-partners': EXPEDITED_SERVICE_PARTNERS_CONFIG,
   'expedited-service-partners-mobile': EXPEDITED_SERVICE_PARTNERS_MOBILE_CONFIG,
   'mustang-cat-recruit': MUSTANG_CAT_RECRUIT_CONFIG,
+  'world-link': WORLD_LINK_CONFIG,
 };
 
 export interface PrototypeMetadata {

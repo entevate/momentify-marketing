@@ -27,6 +27,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "world-link",
+    name: "WorldLink Explorer",
+    company: "WorldLink",
+    industry: "Technology",
+    prototypeFile: "/explorer/world-link",
+    logo: "/brand/assets/world-link-icon.png",
+    gateLogo: "/brand/assets/world-link-logo-reverse.svg",
+    accentColor: "#EF2D3E",
+    createdAt: "2026-07-10",
+    password: "worldlink2026",
+  },
+  {
     slug: "essntl-supplements",
     name: "Essntl Wellness Explorer",
     company: "Essntl Wellness",
