@@ -27,6 +27,19 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "warren-cat",
+    name: "Warren CAT Talent Recruiter",
+    company: "Warren CAT",
+    industry: "Manufacturing",
+    prototypeFile: "/explorer/warren-cat",
+    logo: "/brand/assets/warren-cat-icon.jpg",
+    gateLogo: "/brand/assets/warren-cat-logo-reverse.svg",
+    accentColor: "#FFCC00",
+    createdAt: "2026-07-29",
+    password: "warren-cat2026",
+    kind: "recruiter",
+  },
+  {
     slug: "vital-edge",
     name: "VitalEdge Explorer",
     company: "VitalEdge Technologies",
