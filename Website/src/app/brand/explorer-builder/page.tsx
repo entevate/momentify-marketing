@@ -494,8 +494,10 @@ export default function ExplorerIntakePage() {
 
       const res = await fetch('/api/explorer/intake', { method: 'POST', body: formData });
       if (!res.ok) {
-        const body = await res.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(body.error || `Server error (${res.status})`);
+        const text = await res.text().catch(() => '');
+        let errMsg = `Server error (${res.status})`;
+        try { errMsg = JSON.parse(text).error || errMsg; } catch { if (text) errMsg += `: ${text.slice(0, 120)}`; }
+        throw new Error(errMsg);
       }
       setSubmitted(true);
     } catch (err) {
