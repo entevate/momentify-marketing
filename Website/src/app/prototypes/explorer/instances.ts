@@ -27,6 +27,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "vital-edge",
+    name: "VitalEdge Explorer",
+    company: "VitalEdge Technologies",
+    industry: "Technology",
+    prototypeFile: "/explorer/vital-edge",
+    logo: "/brand/assets/vital-edge-icon.jpg",
+    gateLogo: "/brand/assets/vital-edge-logo-reverse.svg",
+    accentColor: "#DB1A21",
+    createdAt: "2026-07-28",
+    password: "vital-edge2026",
+  },
+  {
     slug: "world-link",
     name: "WorldLink Explorer",
     company: "WorldLink",
