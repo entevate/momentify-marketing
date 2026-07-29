@@ -467,7 +467,39 @@ export default function ExplorerIntakePage() {
     setSubmitError(null);
 
     try {
-      const formData = new FormData();
+      const { upload } = await import('@vercel/blob/client');
+      const slug = form.slug || slugify(form.companyName);
+
+      // Upload files directly to Vercel Blob from the browser (bypasses the
+      // 4.5 MB serverless body limit). Logos and content files go straight to
+      // blob storage; only the resulting URLs are sent to the API route.
+      async function uploadFile(file: File, pathname: string): Promise<string> {
+        const blob = await upload(pathname, file, {
+          access: 'public',
+          handleUploadUrl: '/api/explorer/intake/upload',
+        });
+        return blob.url;
+      }
+
+      const logoKeys = ['dark', 'light', 'icon'] as const;
+      const logoPaths: Record<string, string> = {};
+      for (const key of logoKeys) {
+        const file = form.logos[key];
+        if (file) {
+          const ext = file.name.split('.').pop() ?? 'png';
+          logoPaths[`logo-${key}`] = await uploadFile(
+            file,
+            `explorer-intake/${slug}/logos/${slug}-${key}.${ext}`,
+          );
+        }
+      }
+
+      const contentPaths: string[] = [];
+      for (const file of form.contentFiles) {
+        contentPaths.push(
+          await uploadFile(file, `explorer-intake/${slug}/content/${file.name}`),
+        );
+      }
 
       const intake = {
         companyName: form.companyName,
@@ -475,24 +507,21 @@ export default function ExplorerIntakePage() {
         solutionType: form.solutionType,
         industry: form.industry,
         websiteUrl: form.websiteUrl,
-        slug: form.slug || slugify(form.companyName),
+        slug,
         colors: form.colors,
-        password: form.password || `${slugify(form.companyName)}2026`,
+        password: form.password || `${slug}2026`,
         screensaver: form.screensaver,
         calculator: form.calculator,
         quickLinks: form.quickLinks.filter(l => l.label && l.url),
+        logos: logoPaths,
+        contentFiles: contentPaths,
       };
-      formData.append('data', JSON.stringify(intake));
 
-      if (form.logos.dark) formData.append('logo-dark', form.logos.dark);
-      if (form.logos.light) formData.append('logo-light', form.logos.light);
-      if (form.logos.icon) formData.append('logo-icon', form.logos.icon);
-
-      form.contentFiles.forEach((file, i) => {
-        formData.append(`content-${i}`, file);
+      const res = await fetch('/api/explorer/intake', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(intake),
       });
-
-      const res = await fetch('/api/explorer/intake', { method: 'POST', body: formData });
       if (!res.ok) {
         const text = await res.text().catch(() => '');
         let errMsg = `Server error (${res.status})`;
