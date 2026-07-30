@@ -18,19 +18,32 @@ import {
   Sun,
   Moon,
   LogOut,
+  PenSquare,
+  CreditCard,
+  FileText,
+  type LucideIcon,
 } from "lucide-react"
 
-const navItems = [
-  { label: "Framework", href: "/gtm", icon: LayoutGrid, color: "#0CF4DF" },
-  { label: "Execution Calendar", href: "/gtm/calendar", icon: CalendarDays, color: "#0CF4DF" },
-  { label: "Email", href: "/gtm/email", icon: Mail, color: "#0CF4DF" },
-  { label: "Templates", href: "/gtm/templates", icon: Images, color: "#0CF4DF" },
-  { label: "General Momentify", href: "/gtm/general", icon: Layers, color: "#0CF4DF" },
-  { label: "Trade Shows", href: "/gtm/trade-shows", icon: Building2, color: "#9B5FE8" },
-  { label: "Technical Recruiting", href: "/gtm/recruiting", icon: Target, color: "#5FD9C2" },
-  { label: "Field Sales", href: "/gtm/field-sales", icon: MapPin, color: "#F2B33D" },
-  { label: "Facilities", href: "/gtm/facilities", icon: Layers, color: "#5B4499" },
-  { label: "Events & Venues", href: "/gtm/events-venues", icon: Ticket, color: "#D43D1A" },
+type NavEntry =
+  | { kind: "section"; label: string }
+  | { kind: "link"; label: string; href: string; icon: LucideIcon; color: string }
+
+const navItems: NavEntry[] = [
+  { kind: "link", label: "Framework", href: "/gtm", icon: LayoutGrid, color: "#0CF4DF" },
+  { kind: "link", label: "Execution Calendar", href: "/gtm/calendar", icon: CalendarDays, color: "#0CF4DF" },
+  { kind: "link", label: "Email", href: "/gtm/email", icon: Mail, color: "#0CF4DF" },
+  { kind: "link", label: "Templates", href: "/gtm/templates", icon: Images, color: "#0CF4DF" },
+  { kind: "link", label: "General Momentify", href: "/gtm/general", icon: Layers, color: "#0CF4DF" },
+  { kind: "section", label: "Collateral" },
+  { kind: "link", label: "Email Signature", href: "/gtm/email-signature", icon: PenSquare, color: "#0CF4DF" },
+  { kind: "link", label: "Business Card", href: "/gtm/business-card", icon: CreditCard, color: "#0CF4DF" },
+  { kind: "link", label: "Letterhead", href: "/gtm/letterhead", icon: FileText, color: "#0CF4DF" },
+  { kind: "section", label: "Solutions" },
+  { kind: "link", label: "Trade Shows", href: "/gtm/trade-shows", icon: Building2, color: "#9B5FE8" },
+  { kind: "link", label: "Technical Recruiting", href: "/gtm/recruiting", icon: Target, color: "#5FD9C2" },
+  { kind: "link", label: "Field Sales", href: "/gtm/field-sales", icon: MapPin, color: "#F2B33D" },
+  { kind: "link", label: "Facilities", href: "/gtm/facilities", icon: Layers, color: "#5B4499" },
+  { kind: "link", label: "Events & Venues", href: "/gtm/events-venues", icon: Ticket, color: "#D43D1A" },
 ]
 
 function Sidebar({
@@ -101,7 +114,25 @@ function Sidebar({
 
       {/* Nav items */}
       <nav style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        {navItems.map((item) => {
+        {navItems.map((item, i) => {
+          if (item.kind === "section") {
+            return (
+              <div
+                key={`section-${i}-${item.label}`}
+                style={{
+                  padding: "16px 24px 6px",
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: "rgba(255, 255, 255, 0.45)",
+                  letterSpacing: "0.14em",
+                  textTransform: "uppercase",
+                  fontFamily: "'Inter', system-ui, sans-serif",
+                }}
+              >
+                {item.label}
+              </div>
+            )
+          }
           const active = isActive(item.href)
           const Icon = item.icon
           return (

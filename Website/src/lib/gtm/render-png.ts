@@ -51,7 +51,7 @@ function localChromeExecutable(): string | null {
  * Launch a headless browser appropriate for the current environment.
  * Caller is responsible for `await browser.close()`.
  */
-async function launchBrowser(): Promise<Browser> {
+export async function launchBrowser(): Promise<Browser> {
   const puppeteer = await import("puppeteer-core")
   const isServerless = !!process.env.VERCEL || !!process.env.AWS_LAMBDA_FUNCTION_NAME
 
