@@ -341,8 +341,8 @@ export default function PricingContent() {
               <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "12px", color: "rgba(6,19,65,0.35)", marginBottom: "14px" }}>
                 Trusted for lead capture at
               </p>
-              <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
-                {["Mustang Cat", "DISTRIBUTECH", "Global Dealer Learning"].map((name) => (
+              <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+                {["Mustang Cat", "DISTRIBUTECH", "THSCA", "THSADA", "DFW Technology Prayer Breakfast", "FFA", "SkillsUSA"].map((name) => (
                   <span
                     key={name}
                     className="transition-colors duration-200 group-hover:text-charcoal/60"
