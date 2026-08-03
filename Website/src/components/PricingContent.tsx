@@ -55,7 +55,6 @@ const fadeUp = {
   transition: { duration: 0.5 },
 };
 
-type Audience = "business" | "individual";
 
 function formatPrice(n: number) {
   return `$${n.toLocaleString("en-US")}`;
@@ -190,11 +189,9 @@ function TierCard({ tier, cadence }: { tier: PricingTier; cadence: Cadence }) {
 }
 
 export default function PricingContent() {
-  const [audience, setAudience] = useState<Audience>("business");
   const [cadence, setCadence] = useState<Cadence>("annual");
 
   const businessTiers = PRICING_TIERS.filter((t) => t.audience === "business");
-  const soloTier = PRICING_TIERS.find((t) => t.key === "solo")!;
 
   const pillBase = "text-[13px] font-medium px-5 py-2 rounded-full transition-all duration-200 cursor-pointer";
 
@@ -243,7 +240,7 @@ export default function PricingContent() {
                 transition={{ duration: 0.5, delay: 0.24 }}
                 style={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "15px", color: "rgba(255, 255, 255, 0.55)", lineHeight: 1.5, maxWidth: "680px" }}
               >
-                From a single rep capturing leads on the go to enterprise dealer networks.
+                From a single team running a few events a year to enterprise dealer networks.
               </motion.p>
             </div>
           </div>
@@ -253,43 +250,6 @@ export default function PricingContent() {
         <section style={{ padding: "56px 0 8px" }}>
           <div className="mx-auto max-w-7xl px-6 lg:px-12">
             <motion.div {...fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
-              {/* Audience toggle */}
-              <div
-                role="tablist"
-                aria-label="Plan audience"
-                className="inline-flex items-center gap-1 p-1 rounded-full"
-                style={{ background: "#F0F2F7", border: "1px solid rgba(6,19,65,0.06)" }}
-              >
-                <button
-                  role="tab"
-                  aria-selected={audience === "business"}
-                  onClick={() => setAudience("business")}
-                  className={pillBase}
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    background: audience === "business" ? "#FFFFFF" : "transparent",
-                    color: audience === "business" ? DEEP_NAVY : "rgba(6,19,65,0.5)",
-                    boxShadow: audience === "business" ? "0 1px 4px rgba(6,19,65,0.1)" : "none",
-                  }}
-                >
-                  For teams
-                </button>
-                <button
-                  role="tab"
-                  aria-selected={audience === "individual"}
-                  onClick={() => setAudience("individual")}
-                  className={pillBase}
-                  style={{
-                    fontFamily: "var(--font-inter)",
-                    background: audience === "individual" ? "#FFFFFF" : "transparent",
-                    color: audience === "individual" ? DEEP_NAVY : "rgba(6,19,65,0.5)",
-                    boxShadow: audience === "individual" ? "0 1px 4px rgba(6,19,65,0.1)" : "none",
-                  }}
-                >
-                  For individuals
-                </button>
-              </div>
-
               {/* Cadence toggle */}
               <div className="flex items-center gap-3">
                 <div
@@ -340,19 +300,11 @@ export default function PricingContent() {
         {/* Tier cards */}
         <section style={{ padding: "48px 0 40px" }}>
           <div className="mx-auto max-w-7xl px-6 lg:px-12">
-            {audience === "business" ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
-                {businessTiers.map((tier) => (
-                  <TierCard key={tier.key} tier={tier} cadence={cadence} />
-                ))}
-              </div>
-            ) : (
-              <div className="flex justify-center">
-                <div className="w-full max-w-sm">
-                  <TierCard tier={soloTier} cadence={cadence} />
-                </div>
-              </div>
-            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+              {businessTiers.map((tier) => (
+                <TierCard key={tier.key} tier={tier} cadence={cadence} />
+              ))}
+            </div>
           </div>
         </section>
 
@@ -426,7 +378,7 @@ export default function PricingContent() {
                     <th scope="col" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: DEEP_NAVY, textAlign: "left", padding: "16px 20px" }}>
                       <span className="sr-only">Feature</span>
                     </th>
-                    {["Solo", "Basic", "Team", "Pro", "Enterprise"].map((plan) => (
+                    {["Basic", "Team", "Pro", "Enterprise"].map((plan) => (
                       <th
                         key={plan}
                         scope="col"

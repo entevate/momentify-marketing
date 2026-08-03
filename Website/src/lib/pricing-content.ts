@@ -6,9 +6,9 @@
 export type Cadence = "monthly" | "annual";
 
 export interface PricingTier {
-  key: "solo" | "basic" | "team" | "pro" | "enterprise";
+  key: "basic" | "team" | "pro" | "enterprise";
   name: string;
-  audience: "individual" | "business";
+  audience: "business";
   /** Dollars per month. null = custom pricing. */
   annual: number | null;
   monthly: number | null;
@@ -63,33 +63,25 @@ export const PRICING_TIERS: PricingTier[] = [
     bullets: ["Unlimited seats, events, and sessions", "SSO/SAML", "Audit log retention", "Custom data residency", "Dedicated CSM and SLA", "White-glove onboarding"],
     cta: { label: "Contact sales", href: () => "/demo" },
   },
-  {
-    key: "solo", name: "Solo", audience: "individual",
-    annual: 49, monthly: 59, onboarding: null,
-    tagline: "Personal lead capture for one rep, recruiter, or consultant.",
-    bullets: ["1 seat", "1 event per month", "100 sessions per month", "On-the-Go capture from your phone", "Email follow-up", "No kiosks or team features"],
-    comingSoon: true,
-    cta: { label: "Start 14-day trial", href: (c) => `${APP_SIGNUP}?intent=solo-${c}` },
-  },
 ];
 
-export interface ComparisonRow { label: string; values: [string, string, string, string, string] }
-/** Column order: Solo, Basic, Team, Pro, Enterprise. */
+export interface ComparisonRow { label: string; values: [string, string, string, string] }
+/** Column order: Basic, Team, Pro, Enterprise. */
 export const COMPARISON_ROWS: ComparisonRow[] = [
-  { label: "Seats", values: ["1", "3", "7", "15", "Unlimited"] },
-  { label: "Events", values: ["1 / month", "4 / year", "12 / year", "Unlimited", "Unlimited"] },
-  { label: "Facilities", values: ["-", "1", "3", "10", "Unlimited"] },
-  { label: "Custom templates", values: ["-", "3", "10", "Unlimited", "Unlimited"] },
-  { label: "Moments per event", values: ["1", "5", "15", "Unlimited", "Unlimited"] },
-  { label: "Sessions / month", values: ["100", "2,500", "10,000", "50,000", "Unlimited"] },
-  { label: "Storage", values: ["2 GB", "20 GB", "100 GB", "500 GB", "Unlimited"] },
-  { label: "Template kinds", values: ["On-the-Go", "Fan Gallery, Explorer", "All four", "All four", "All four"] },
-  { label: "Registration modes", values: ["Guest, Form", "+ Database", "+ QR codes", "All", "All"] },
-  { label: "Branding", values: ["-", "Custom colors + branding", "+ Custom domain", "+ Remove Momentify badge, branded SMS sender", "Full white-label"] },
+  { label: "Seats", values: ["3", "7", "15", "Unlimited"] },
+  { label: "Events", values: ["4 / year", "12 / year", "Unlimited", "Unlimited"] },
+  { label: "Facilities", values: ["1", "3", "10", "Unlimited"] },
+  { label: "Custom templates", values: ["3", "10", "Unlimited", "Unlimited"] },
+  { label: "Moments per event", values: ["5", "15", "Unlimited", "Unlimited"] },
+  { label: "Sessions / month", values: ["2,500", "10,000", "50,000", "Unlimited"] },
+  { label: "Storage", values: ["20 GB", "100 GB", "500 GB", "Unlimited"] },
+  { label: "Template kinds", values: ["Fan Gallery, Explorer", "All four", "All four", "All four"] },
+  { label: "Registration modes", values: ["+ Database", "+ QR codes", "All", "All"] },
+  { label: "Branding", values: ["Custom colors + branding", "+ Custom domain", "+ Remove Momentify badge, branded SMS sender", "Full white-label"] },
 ];
 
 export const PRICING_FAQ: Array<{ q: string; a: string }> = [
-  { q: "How does the 14-day trial work?", a: "Self-serve checkout is launching soon. Solo, Basic, and Team will start with a 14-day free trial: you enter a card at checkout and are not charged until the trial ends, and you can cancel any time from the billing portal. Want in before launch? Schedule a demo and we will set you up." },
+  { q: "How does the 14-day trial work?", a: "Self-serve checkout is launching soon. Basic and Team will start with a 14-day free trial: you enter a card at checkout and are not charged until the trial ends, and you can cancel any time from the billing portal. Want in before launch? Schedule a demo and we will set you up." },
   { q: "What happens if I go over my monthly sessions?", a: "Nothing breaks. Attendee capture always keeps working at live events. We flag the overage in your dashboard and suggest a plan that fits your volume." },
   { q: "What is the onboarding fee?", a: "Team includes hands-on onboarding, billed as a one-time fee on monthly billing and waived when you choose annual. Pro and Enterprise onboarding is scoped with our team during the sales process." },
   { q: "Can I change plans later?", a: "Yes. Upgrades take effect immediately with prorated billing. Downgrades and cancellations are handled from the billing portal and take effect at the end of your billing period." },
