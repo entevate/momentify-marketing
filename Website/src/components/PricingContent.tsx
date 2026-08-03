@@ -337,7 +337,7 @@ export default function PricingContent() {
         {/* Social proof strip */}
         <section style={{ padding: "0 0 72px" }}>
           <div className="mx-auto max-w-7xl px-6 lg:px-12">
-            <motion.a {...fadeUp} href="/case-studies" className="block text-center group" style={{ textDecoration: "none" }}>
+            <motion.a {...fadeUp} href="/demo" className="block text-center group" style={{ textDecoration: "none" }}>
               <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "12px", color: "rgba(6,19,65,0.35)", marginBottom: "14px" }}>
                 Trusted for lead capture at
               </p>
