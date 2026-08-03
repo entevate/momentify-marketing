@@ -17,15 +17,17 @@ export interface PricingTier {
   onboardingShort?: string;
   tagline: string;
   bullets: string[];
-  /** Self-serve checkout not live yet: render a disabled Coming Soon button
-   *  instead of cta. Flip to false (or remove) when checkout ships, the
-   *  cta.href intent links below are already wired for that day. */
+  /** Render a disabled Coming Soon button instead of cta. Unset on every
+   *  tier since self-serve checkout went live on 2026-08-03. Kept for a
+   *  future tier that ships its pricing ahead of its checkout. */
   comingSoon?: boolean;
   cta: { label: string; href: (cadence: Cadence) => string };
   highlight?: boolean;
 }
 
-const APP_SIGNUP = "https://mymomentify.com/sign-up"; // TODO-CONFIRM before enabling checkout CTAs
+// Confirmed 2026-08-03 against the Clerk production instance, whose OAuth
+// callback is https://clerk.mymomentify.com/v1/oauth_callback.
+const APP_SIGNUP = "https://mymomentify.com/sign-up";
 
 /** Enterprise price sub-line. Keep in sync with the Enterprise FAQ answer. */
 export const ENTERPRISE_FLOOR = "starting at $6,500/mo";
@@ -36,7 +38,6 @@ export const PRICING_TIERS: PricingTier[] = [
     annual: 650, monthly: 750, onboarding: null,
     tagline: "For a single team running a handful of events a year.",
     bullets: ["3 seats", "4 events per year", "2,500 sessions per month", "Fan Gallery + Explorer templates", "Database registration", "Custom colors and branding", "Email follow-up"],
-    comingSoon: true,
     cta: { label: "Start 14-day trial", href: (c) => `${APP_SIGNUP}?intent=basic-${c}` },
   },
   {
@@ -45,7 +46,6 @@ export const PRICING_TIERS: PricingTier[] = [
     onboardingShort: "$1,250 onboarding",
     tagline: "For multi-team organizations with a full event calendar.",
     bullets: ["7 seats", "12 events per year", "10,000 sessions per month", "All four template kinds", "SMS bundle", "QR code registration", "Salesforce and HubSpot integrations", "Custom domain"],
-    comingSoon: true,
     cta: { label: "Start 14-day trial", href: (c) => `${APP_SIGNUP}?intent=team-${c}` },
     highlight: true,
   },
