@@ -25,7 +25,9 @@ export interface PricingTier {
   highlight?: boolean;
 }
 
-const APP_SIGNUP = "https://mymomentify.com/sign-up"; // TODO-CONFIRM before enabling checkout CTAs
+// Confirmed 2026-08-03 against the Clerk production instance, whose OAuth
+// callback is https://clerk.mymomentify.com/v1/oauth_callback.
+const APP_SIGNUP = "https://mymomentify.com/sign-up";
 
 /** Enterprise price sub-line. Keep in sync with the Enterprise FAQ answer. */
 export const ENTERPRISE_FLOOR = "starting at $6,500/mo";
