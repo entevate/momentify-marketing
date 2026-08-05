@@ -109,7 +109,7 @@ export default function PrivacyContent() {
                 transition={{ duration: 0.5, delay: 0.24 }}
                 style={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "15px", color: "rgba(255, 255, 255, 0.55)", lineHeight: 1.5, maxWidth: "680px" }}
               >
-                How ENTEVATE, INC. collects, uses, and protects your information when you use the Momentify platform and services. Last updated August 14, 2024.
+                How ENTEVATE, INC. collects, uses, and protects your information when you use the Momentify platform and services. Last updated August 5, 2026.
               </motion.p>
             </div>
           </div>
@@ -144,10 +144,10 @@ export default function PrivacyContent() {
                 make, and the products and features you use.
               </P>
               <P>
-                <strong>Do we process any sensitive personal information?</strong> We do not process sensitive personal information.
+                <strong>Do we process any sensitive personal information?</strong> We may. Depending on the experience an event organizer configures, we may collect photographs, video, or voice recordings of you. Where an organizer enables an age check, we collect date of birth information and, for minors, a parent or guardian&apos;s contact details. We do not collect government identifiers, financial account details, health information, or information about your racial or ethnic origin, religious beliefs, sexual orientation, or political opinions.
               </P>
               <P>
-                <strong>Do we collect any information from third parties?</strong> We do not collect any information from third parties.
+                <strong>Do we collect any information from third parties?</strong> Yes, in two situations. Where an event organizer uses a badge scanning or registration provider, we may receive your contact details from that provider when your badge is scanned. Organizers may also upload a list of registered attendees to us ahead of an event so their staff can find your record when you arrive. In both cases the organizer, not Momentify, decides what to provide to us.
               </P>
               <P>
                 <strong>How do we process your information?</strong> We process your information to provide, improve, and
@@ -175,6 +175,27 @@ export default function PrivacyContent() {
             </div>
 
             {/* 1 */}
+            {/* Roles framing. The substantial processing this platform performs
+                is attendee data captured at events on customer instruction, which
+                is a processor role, not a controller one. Determines who answers a
+                data subject request and who signs a data processing agreement. */}
+            <div style={{ background: "#F8F9FC", borderRadius: "16px", padding: "32px", marginBottom: "48px", border: "1px solid rgba(6,19,65,0.08)" }}>
+              <h2 style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "20px", color: DEEP_NAVY, marginBottom: "16px" }}>
+                Two kinds of information, two different roles
+              </h2>
+              <P>
+                When you visit our website, contact us, or hold an account with us, we decide how and why your
+                information is used. For that information we are the controller.
+              </P>
+              <P>
+                When you take part in an experience at an event, the organization running that event decides what to
+                collect, which consents to require, how long to keep it, and what to do with it afterwards. We process
+                that information on their behalf and under their instructions. For that information the organizer is the
+                controller and we are a processor. If you want information collected at an event corrected or deleted,
+                you may contact us and we will assist, but the organizer directs the outcome.
+              </P>
+            </div>
+
             <Section id="information-collected" title="1. What Information Do We Collect?">
               <SubHead>Personal information you disclose to us</SubHead>
               <P>
@@ -306,6 +327,22 @@ export default function PrivacyContent() {
             </Section>
 
             {/* 3 */}
+            {/* 2a */}
+            <Section id="ai-processing" title="2a. Automated Processing and Artificial Intelligence">
+              <P>
+                We use an external artificial intelligence provider to help event organizers draft and summarize content
+                they have written themselves, and to suggest starting targets from answers they provide during setup.
+                Only text an organizer has authored is sent to that provider.
+              </P>
+              <P>
+                <strong>We do not send attendee names, contact details, photographs, recordings, or captured responses
+                to any external artificial intelligence provider.</strong> Where we match keywords against event data,
+                that happens inside our own platform. We do not use artificial intelligence to make decisions about
+                attendees, and we do not carry out profiling that produces legal or similarly significant effects.
+              </P>
+            </Section>
+
+            {/* 3 */}
             <Section id="legal-bases" title="3. What Legal Bases Do We Rely On to Process Your Information?">
               <P>
                 We only process your personal information when we believe it is necessary and we have a valid legal reason
@@ -362,6 +399,26 @@ export default function PrivacyContent() {
                 <><strong>When we use Google Maps Platform APIs.</strong> We may share your information with certain Google Maps Platform APIs (e.g., Google Maps API, Places API). Google Maps uses GPS, Wi-Fi, and cell towers to estimate your location. GPS is accurate to about 20 meters, while Wi-Fi and cell towers help improve accuracy when GPS signals are weak, like indoors. This data helps Google Maps provide directions, but it is not always perfectly precise.</>,
                 <><strong>Affiliates.</strong> We may share your information with our affiliates, in which case we will require those affiliates to honor this Privacy Notice. Affiliates include our parent company and any subsidiaries, joint venture partners, or other companies that we control or that are under common control with us.</>,
               ]} />
+              <SubHead>Service providers who process information for us</SubHead>
+              <P>
+                We use the following categories of service provider to operate the platform. Each processes personal
+                information on our behalf, under contract, and only as needed to provide their service:
+              </P>
+              <BulletList items={[
+                <><strong>Hosting and application infrastructure.</strong> Runs the platform and stores uploaded photographs, video, and voice recordings.</>,
+                <><strong>Database.</strong> Stores contact details, consent records, engagement data, and event configuration.</>,
+                <><strong>Authentication.</strong> Manages sign-in and organization membership for our business customers&apos; staff. Does not receive attendee information.</>,
+                <><strong>Email delivery.</strong> Sends recaps and follow-up messages, and records delivery, open, click, and bounce events.</>,
+                <><strong>Text message delivery.</strong> Sends recaps and follow-up messages by SMS.</>,
+                <><strong>Payment processing.</strong> Handles our business customers&apos; subscription billing. Does not receive attendee information.</>,
+                <><strong>Artificial intelligence provider.</strong> Summarizes and suggests content that an organizer has written. Does not receive attendee information. See section 2a.</>,
+                <><strong>Location and venue lookup.</strong> Suggests venues as an organizer types them during event setup.</>,
+                <><strong>Badge scanning and event registration providers.</strong> Where an organizer enables this, returns your details when your badge is scanned.</>,
+              ]} />
+              <P>
+                We do not sell your personal information, and we do not share it for cross-context behavioral
+                advertising.
+              </P>
             </Section>
 
             {/* 5 */}
@@ -409,6 +466,18 @@ export default function PrivacyContent() {
                 has been stored in backup archives), then we will securely store your personal information and isolate it
                 from any further processing until deletion is possible.
               </P>
+              <SubHead>Information collected at an event</SubHead>
+              <P>
+                For information collected at an event, the organizer sets the retention period, and may set a different
+                one for an individual event. Where they enable a retention policy, we automatically anonymize or delete
+                the record once their configured period has passed. Anonymizing removes your name, email address, phone
+                number, company, and job title, and where the organizer has chosen it, deletes your photographs and
+                recordings, while keeping non-identifying engagement statistics. Deleting removes the record entirely.
+              </P>
+              <P>
+                Retention policies are configured by each organizer rather than applied platform-wide, so the period that
+                applies to you depends on the organization running the event.
+              </P>
             </Section>
 
             {/* 7 */}
@@ -423,18 +492,50 @@ export default function PrivacyContent() {
                 of personal information to and from our Services is at your own risk. You should only access the Services
                 within a secure environment.
               </P>
+              <SubHead>Measures we have in place</SubHead>
+              <BulletList items={[
+                <><strong>Separation between customers.</strong> Every request for event data is resolved against the workspace it belongs to before any information is returned.</>,
+                <><strong>Role-based access.</strong> Staff at an organization hold defined roles, and actions that delete records or export data require the relevant permission.</>,
+                <><strong>Masking of contact details.</strong> Organizations can require that contact details are obscured for staff outside a nominated set of roles, applied before the information reaches the browser.</>,
+                <><strong>Record of administrative access.</strong> An append-only log records who viewed unmasked contact details, changed data settings, exported records, or deleted them.</>,
+                <><strong>Verified integrations.</strong> Messages we receive from our email, text messaging, payment, and authentication providers are cryptographically verified before they are processed.</>,
+                <><strong>Encryption.</strong> Information is encrypted in transit and at rest by our hosting and database providers.</>,
+              ]} />
+              <P>
+                We have not yet completed an independent security certification such as SOC 2, and we do not claim one.
+                If you are evaluating Momentify for an enterprise deployment and need detail beyond this summary, contact
+                us at{" "}
+                <a href="mailto:hello@entevate.com" className="underline hover:opacity-70" style={{ color: TEAL }}>hello@entevate.com</a>.
+              </P>
             </Section>
 
             {/* 8 */}
             <Section id="minors" title="8. Do We Collect Information from Minors?">
               <P>
-                We do not knowingly collect, solicit data from, or market to children under 18 years of age, nor do we
-                knowingly sell such personal information. By using the Services, you represent that you are at least 18 or
-                that you are the parent or guardian of such a minor and consent to such minor dependent&apos;s use of the
-                Services. If we learn that personal information from users less than 18 years of age has been collected, we
-                will deactivate the account and take reasonable measures to promptly delete such data from our records. If
-                you become aware of any data we may have collected from children under age 18, please contact us at{" "}
-                <a href="mailto:hello@entevate.com" className="underline hover:opacity-70" style={{ color: TEAL }}>hello@entevate.com</a>.
+                Momentify is a business-to-business platform. Our customers, the organizations running events, decide
+                whether their experience is offered to minors and configure an age check accordingly. We do not
+                knowingly collect information from minors through our own website or accounts, which are intended for
+                business users aged 18 or over.
+              </P>
+              <P>
+                Where an event organizer enables the age check, we ask for a birth year or date of birth before you take
+                part, in order to determine whether you are above the age threshold that organizer has set. Participants
+                below the threshold are either prevented from continuing, or are asked to provide a parent or
+                guardian&apos;s consent and contact details before continuing, according to the organizer&apos;s
+                configuration. Where parental consent is collected, we record that it was given together with the parent
+                or guardian contact details supplied.
+              </P>
+              <P>
+                Where a participant is recorded as a minor, we hold back follow-up email, text messages, and any transfer
+                of their record to an organizer&apos;s customer relationship management system unless a parent or
+                guardian has consented.
+              </P>
+              <P>
+                The age information we collect is self-reported, and the parental consent we collect at the point of
+                capture is an affirmation rather than an independently verified consent. If you believe a child&apos;s
+                information has been collected without appropriate consent, contact us at{" "}
+                <a href="mailto:hello@entevate.com" className="underline hover:opacity-70" style={{ color: TEAL }}>hello@entevate.com</a>{" "}
+                and we will work with the relevant organizer to remove it.
               </P>
             </Section>
 

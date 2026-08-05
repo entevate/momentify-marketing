@@ -512,6 +512,37 @@ export default function TermsContent() {
                 Services, you are transferring your data to the United States, and you expressly consent to have your data
                 transferred to and processed in the United States.
               </P>
+              <P>
+                <strong>Attendee data and our role.</strong> Where you use the Services to collect personal information
+                from event attendees, you are the controller of that information and we process it on your behalf and on
+                your documented instructions, being the configuration you set within the Services. This includes which
+                experiences you run, what information you collect, which consents you require, whether you enable an age
+                check and at what thresholds, your retention period and whether records are anonymized or deleted, and
+                whether contact details are masked for particular roles.
+              </P>
+              <P>
+                <strong>Your responsibilities.</strong> You are responsible for ensuring you have a lawful basis to
+                collect and process attendee personal information through the Services, for providing any notice
+                required at the point of collection, for configuring consent requirements appropriate to your events and
+                the jurisdictions you operate in, and for the accuracy and lawfulness of any attendee list you upload to
+                the Services. You are responsible for determining whether your event involves attendees under 18 and for
+                enabling the age check accordingly. Where you capture photographs, video, or voice recordings of
+                identifiable people, you are responsible for obtaining any notice and consent that applicable law
+                requires for that capture.
+              </P>
+              <P>
+                <strong>Messaging.</strong> Where the Services send email or text messages to attendees on your behalf,
+                you are responsible for ensuring you have permission to contact those recipients, for honoring
+                unsubscribe and opt-out requests, and for complying with applicable messaging regulation, including
+                registration requirements that apply to business text messaging.
+              </P>
+              <P>
+                <strong>Data processing agreement.</strong> If your use of the Services requires a separate data
+                processing agreement, contact us at{" "}
+                <a href="mailto:hello@entevate.com" className="underline hover:opacity-70" style={{ color: TEAL }}>hello@entevate.com</a>{" "}
+                and it will govern the processing of attendee personal information in place of this section to the
+                extent of any conflict.
+              </P>
             </Section>
 
             {/* 14 */}
