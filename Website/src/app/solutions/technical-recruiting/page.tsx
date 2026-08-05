@@ -4,7 +4,7 @@ import TechRecruitingSolution from "@/components/solutions/TechRecruitingSolutio
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Technical Recruiting | Momentify",
+  title: "Technical Recruiting",
   description:
     "Stop losing top candidates to slow follow-up. Momentify gives recruiting teams mobile capture, role-based scoring, and same-day pipeline from every career fair.",
   keywords: [

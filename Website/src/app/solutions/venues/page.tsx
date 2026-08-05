@@ -4,7 +4,7 @@ import EventsVenuesSolution from "@/components/solutions/EventsVenuesSolution";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Venues and Events | Momentify",
+  title: "Venues and Events",
   description:
     "Ticket counts do not tell you what happened. Momentify captures attendee engagement, attributes sponsor value, and delivers follow-up clarity for every event.",
   keywords: [

@@ -4,7 +4,7 @@ import FacilitiesSolution from "@/components/solutions/FacilitiesSolution";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Facilities | Momentify",
+  title: "Facilities",
   description:
     "Showroom visits generate pipeline you cannot see. Momentify captures zone-level engagement, tracks visitor intent, and connects facility investment to revenue.",
   keywords: [

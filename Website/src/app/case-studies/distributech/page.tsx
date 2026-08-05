@@ -4,7 +4,7 @@ import DistribuTECHCaseStudy from "@/components/case-studies/DistribuTECHCaseStu
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "DistribuTECH Case Study | Momentify",
+  title: "DistribuTECH Case Study",
   description:
     "How a Fortune 75 Heavy Equipment Manufacturer's Electric Power Division used Momentify to grow trade show leads by 92% over three consecutive years at DistribuTECH.",
   keywords: [

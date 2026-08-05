@@ -4,7 +4,7 @@ import TradeShowsROXCalculator from "@/components/rox/TradeShowsROXCalculator";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Trade Shows ROX\u2122 Calculator | Momentify",
+  title: "Trade Shows ROX\u2122 Calculator",
   description:
     "Score your trade show performance across lead capture, engagement, follow-up speed, and conversion. Get your ROX score in under 3 minutes. No login required.",
   keywords: [

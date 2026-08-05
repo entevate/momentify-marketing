@@ -4,7 +4,7 @@ import MustangCatCaseStudy from "@/components/case-studies/MustangCatCaseStudy";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Mustang CAT Case Study | Momentify",
+  title: "Mustang CAT Case Study",
   description:
     "How Mustang CAT transformed technical recruiting from paper sign-ups to a digital pipeline. 600+ candidates captured, 7 hires, 10/10 NPS.",
   keywords: [

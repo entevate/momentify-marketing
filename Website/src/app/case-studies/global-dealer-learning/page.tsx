@@ -4,7 +4,7 @@ import GlobalDealerLearningCaseStudy from "@/components/case-studies/GlobalDeale
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Global Dealer Learning Case Study | Momentify",
+  title: "Global Dealer Learning Case Study",
   description:
     "How a Fortune 75 Heavy Equipment Manufacturer's Global Dealer Learning group used Momentify to unify technician recruiting across SkillsUSA and FFA, routing candidates to 40 dealers in real time.",
   keywords: [

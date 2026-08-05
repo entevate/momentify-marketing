@@ -4,7 +4,7 @@ import WhatIsROX from "@/components/WhatIsROX";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "What is ROX? | Momentify",
+  title: "What is ROX?",
   description:
     "Return on Experience (ROX) is the measurement standard for in-person engagement. Score every interaction across lead capture, engagement quality, follow-up speed, and conversion.",
   keywords: [
