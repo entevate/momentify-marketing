@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import TermsContent from "@/components/TermsContent";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Momentify",
+  title: "Terms of Service",
   description:
     "Terms of Service for Momentify by ENTEVATE, INC. Review the legal terms governing use of the Momentify platform, mobile app, and related services.",
   alternates: {

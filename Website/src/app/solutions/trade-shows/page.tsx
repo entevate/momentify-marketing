@@ -4,7 +4,7 @@ import TradeShowsSolution from "@/components/solutions/TradeShowsSolution";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Trade Shows and Exhibits | Momentify",
+  title: "Trade Shows and Exhibits",
   description:
     "Your booth captures badge scans. Momentify captures intent. Score leads, prioritize follow-up, and prove trade show ROI with ROX scoring.",
   keywords: [

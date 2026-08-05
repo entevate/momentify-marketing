@@ -15,7 +15,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "SMS Opt-in Flow | Momentify",
+  title: "SMS Opt-in Flow",
   description:
     "How attendees consent to receive SMS messages from Momentify at in-person event kiosks. Disclosure language, opt-in mechanism, opt-out, and links to privacy and terms.",
   alternates: {

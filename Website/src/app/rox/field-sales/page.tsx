@@ -4,7 +4,7 @@ import FieldSalesROXCalculator from "@/components/rox/FieldSalesROXCalculator";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Field Sales ROX\u2122 Calculator | Momentify",
+  title: "Field Sales ROX\u2122 Calculator",
   description:
     "Assess your field sales effectiveness across interaction capture, content engagement, follow-up speed, and deal progression. Get your ROX score in under 3 minutes.",
   keywords: [

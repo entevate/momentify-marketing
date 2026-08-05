@@ -4,7 +4,7 @@ import RecruitingROXCalculator from "@/components/rox/RecruitingROXCalculator";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Technical Recruiting ROX\u2122 Calculator | Momentify",
+  title: "Technical Recruiting ROX\u2122 Calculator",
   description:
     "Benchmark your recruiting events across candidate capture, engagement quality, follow-up speed, and conversion to hire. Get your ROX score in under 3 minutes.",
   keywords: [

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import PrivacyContent from "@/components/PrivacyContent";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Momentify",
+  title: "Privacy Policy",
   description:
     "Privacy Policy for Momentify by ENTEVATE, INC. Learn how we collect, use, and protect your personal information when using our platform and services.",
   alternates: {

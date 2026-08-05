@@ -4,7 +4,7 @@ import FieldSalesSolution from "@/components/solutions/FieldSalesSolution";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Field Sales Enablement | Momentify",
+  title: "Field Sales Enablement",
   description:
     "Field reps have the conversation. Then the insight disappears. Momentify captures interactions, delivers content, and syncs to your CRM before the drive back.",
   keywords: [

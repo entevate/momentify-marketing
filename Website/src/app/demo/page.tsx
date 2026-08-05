@@ -5,7 +5,7 @@ import DemoContent from "@/components/DemoContent";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Schedule a Demo | Momentify",
+  title: "Schedule a Demo",
   description:
     "See Momentify in action. Schedule a personalized demo to learn how ROX scoring captures and proves the value of your in-person interactions.",
   keywords: [

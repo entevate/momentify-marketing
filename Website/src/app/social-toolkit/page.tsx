@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import SocialToolkitContent from "@/components/social-toolkit/SocialToolkitContent";
 
 export const metadata: Metadata = {
-  title: "Social Toolkit | Momentify",
+  title: "Social Toolkit",
   description:
     "Create branded social graphics, generate AI-powered captions, and manage your content library. Built for LinkedIn and B2B social channels.",
   keywords: [

@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import CaseStudiesContent from "@/components/CaseStudiesContent";
 
 export const metadata: Metadata = {
-  title: "Case Studies | Momentify",
+  title: "Case Studies",
   description:
     "Real results from real teams. See how organizations use Momentify to grow trade show leads 92%, capture 600+ candidates, and prove in-person engagement ROI.",
   keywords: [

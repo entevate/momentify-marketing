@@ -4,7 +4,7 @@ import EventsVenuesROXCalculator from "@/components/rox/EventsVenuesROXCalculato
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Venues & Events ROX\u2122 Calculator | Momentify",
+  title: "Venues & Events ROX\u2122 Calculator",
   description:
     "Measure your event performance across attendee capture, engagement quality, follow-up speed, and sponsor conversion. Get your ROX score in under 3 minutes.",
   keywords: [

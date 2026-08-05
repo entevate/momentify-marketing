@@ -4,7 +4,7 @@ import FacilitiesROXCalculator from "@/components/rox/FacilitiesROXCalculator";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Facilities ROX\u2122 Calculator | Momentify",
+  title: "Facilities ROX\u2122 Calculator",
   description:
     "Evaluate your facility performance across visitor capture, engagement quality, follow-up speed, and pipeline attribution. Get your ROX score in under 3 minutes.",
   keywords: [

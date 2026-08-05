@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ContactContent from "@/components/ContactContent";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Momentify",
+  title: "Contact Us",
   description:
     "Get in touch with the Momentify team. Reach out for sales inquiries, support, partnerships, or to schedule a demo of the platform.",
   alternates: {
