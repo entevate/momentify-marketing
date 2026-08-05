@@ -144,7 +144,7 @@ export default function PrivacyContent() {
                 make, and the products and features you use.
               </P>
               <P>
-                <strong>Do we process any sensitive personal information?</strong> We may. Depending on the experience an event organizer configures, we may collect photographs, video, or voice recordings of you. Where an organizer enables an age check, we collect date of birth information and, for minors, a parent or guardian&apos;s contact details. We do not collect government identifiers, financial account details, health information, or information about your racial or ethnic origin, religious beliefs, sexual orientation, or political opinions.
+                <strong>Do we process any sensitive personal information?</strong>{" "}We may. Depending on the experience an event organizer configures, we may collect photographs, video, or voice recordings of you. Where an organizer enables an age check, we collect date of birth information and, for minors, a parent or guardian&apos;s contact details. We do not collect government identifiers, financial account details, health information, or information about your racial or ethnic origin, religious beliefs, sexual orientation, or political opinions.
               </P>
               <P>
                 <strong>Do we collect any information from third parties?</strong> Yes, in two situations. Where an event organizer uses a badge scanning or registration provider, we may receive your contact details from that provider when your badge is scanned. Organizers may also upload a list of registered attendees to us ahead of an event so their staff can find your record when you arrive. In both cases the organizer, not Momentify, decides what to provide to us.
