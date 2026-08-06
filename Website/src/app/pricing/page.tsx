@@ -4,7 +4,7 @@ import PricingContent from "@/components/PricingContent";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Momentify pricing for teams of every size. From a single team at $650/mo to enterprise dealer networks. Self-serve checkout launching soon.",
+    "Momentify pricing for teams of every size. From a single team at $650/mo to enterprise dealer networks. Start a 14-day free trial on Basic or Team today.",
   alternates: { canonical: "https://momentifyapp.com/pricing" },
 };
 
