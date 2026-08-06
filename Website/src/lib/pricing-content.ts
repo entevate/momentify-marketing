@@ -81,7 +81,8 @@ export const COMPARISON_ROWS: ComparisonRow[] = [
 ];
 
 export const PRICING_FAQ: Array<{ q: string; a: string }> = [
-  { q: "How does the 14-day trial work?", a: "Self-serve checkout is launching soon. Basic and Team will start with a 14-day free trial: you enter a card at checkout and are not charged until the trial ends, and you can cancel any time from the billing portal. Want in before launch? Schedule a demo and we will set you up." },
+  { q: "How does the 14-day trial work?", a: "Basic and Team start with a 14-day free trial you can begin right now. You enter a card at checkout and are not charged until the trial ends, and you can cancel any time before then from the billing portal without being billed. Pro and Enterprise are scoped with our team, so schedule a demo and we will set you up." },
+  { q: "What counts as a session?", a: "One attendee going through one capture moment: their photo or video, the contact details they share, and any survey or trivia they complete. A single attendee visiting three different moments at your event counts as three sessions. Sessions reset at the start of each month." },
   { q: "What happens if I go over my monthly sessions?", a: "Nothing breaks. Attendee capture always keeps working at live events. We flag the overage in your dashboard and suggest a plan that fits your volume." },
   { q: "What is the onboarding fee?", a: "Team includes hands-on onboarding, billed as a one-time fee on monthly billing and waived when you choose annual. Pro and Enterprise onboarding is scoped with our team during the sales process." },
   { q: "Can I change plans later?", a: "Yes. Upgrades take effect immediately with prorated billing. Downgrades and cancellations are handled from the billing portal and take effect at the end of your billing period." },

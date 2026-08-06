@@ -241,6 +241,9 @@ export default function PricingContent() {
                 style={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "15px", color: "rgba(255, 255, 255, 0.55)", lineHeight: 1.5, maxWidth: "680px" }}
               >
                 From a single team running a few events a year to enterprise dealer networks.
+                Basic and Team start with a 14-day free trial, annual billing saves about 13%,
+                and attendee capture keeps running at your live events even if you pass your
+                monthly session count.
               </motion.p>
             </div>
           </div>
