@@ -122,13 +122,11 @@ export default function CardOverlay({ card, onClose }: CardOverlayProps) {
               </button>
             </div>
           ) : card.url ? (
-            // Non-PDF URL with a real destination: render a scan-to-view
-            // QR card. Most external sites (banks especially) refuse to
-            // load in an iframe due to X-Frame-Options, so the kiosk-
-            // appropriate path is a QR that visitors scan with their
-            // phone to open the URL there. Caption shows the media type
-            // ("Scan to view website") plus the bare host so the visitor
-            // knows where they're being sent.
+            // Non-PDF URL with a real destination: lead-capture panel.
+            // No QR here by design — handing visitors the link at the
+            // kiosk bypasses registration and kills the follow-up. The
+            // panel routes them to Save instead; the saved card's link
+            // is delivered in the personalized follow-up email.
             <div
               style={{
                 width: '100%',
@@ -141,21 +139,26 @@ export default function CardOverlay({ card, onClose }: CardOverlayProps) {
                 alignItems: 'center',
               }}
             >
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=8&bgcolor=ffffff&color=0F172A&data=${encodeURIComponent(card.url)}`}
-                alt={`Scan to view ${card.title}`}
-                width={180}
-                height={180}
+              <div
                 style={{
-                  width: 180,
-                  height: 180,
+                  width: 64,
+                  height: 64,
                   flexShrink: 0,
-                  borderRadius: 10,
-                  background: '#FFFFFF',
-                  padding: 6,
-                  boxSizing: 'border-box',
+                  borderRadius: 12,
+                  background: 'var(--exp-teal-10)',
+                  border: '1px solid var(--exp-card-border)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--exp-teal)',
                 }}
-              />
+              >
+                {MediaIcon ? (
+                  <MediaIcon style={{ width: 28, height: 28, strokeWidth: 1.5 }} />
+                ) : (
+                  <Bookmark style={{ width: 28, height: 28, strokeWidth: 1.5 }} />
+                )}
+              </div>
               <div style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <div
                   style={{
@@ -169,22 +172,20 @@ export default function CardOverlay({ card, onClose }: CardOverlayProps) {
                     letterSpacing: 0.5,
                   }}
                 >
-                  {MediaIcon && <MediaIcon style={{ width: 14, height: 14, strokeWidth: 1.5 }} />}
-                  <span>Scan to view {card.mediaType ?? 'link'}</span>
+                  <span>{card.mediaType ?? 'link'} included in your follow-up</span>
                 </div>
                 <div style={{ fontSize: 15, fontWeight: 500, color: 'var(--exp-text-1)', lineHeight: 1.35 }}>
-                  Open on your phone
+                  Save this card and we&apos;ll send it to you
                 </div>
                 <div
                   style={{
                     fontSize: 12,
                     fontWeight: 300,
                     color: 'var(--exp-text-2)',
-                    wordBreak: 'break-all',
                     lineHeight: 1.45,
                   }}
                 >
-                  {card.url.replace(/^https?:\/\//, '')}
+                  {card.url.replace(/^https?:\/\//, '').split(/[/?#]/)[0]}
                 </div>
               </div>
             </div>
