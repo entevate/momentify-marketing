@@ -27,6 +27,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "biolabs",
+    name: "BioLabs Explorer",
+    company: "BioLabs",
+    industry: "Healthcare",
+    prototypeFile: "/explorer/biolabs",
+    logo: "/brand/assets/biolabs-icon.png",
+    gateLogo: "/brand/assets/biolabs-logo-reverse.png",
+    accentColor: "#0C6363",
+    createdAt: "2026-08-12",
+    password: "biolabs2026",
+  },
+  {
     slug: "warren-cat",
     name: "Warren CAT Talent Recruiter",
     company: "Warren CAT",
