@@ -83,3 +83,27 @@ describe("PUT /api/gtm/content/[id]", () => {
     expect(res.status).toBe(404)
   })
 })
+
+import { GET as listContent } from "../content/route"
+
+describe("GET /api/gtm/content kept filter", () => {
+  const mocked = jest.requireMock("@/lib/gtm/kv-store")
+  const kv = mocked.kv
+  beforeEach(async () => {
+    // Isolate from other suites that share this module-scoped store.
+    mocked.__store.clear()
+    kv.smembers = jest.fn(async () => ["a", "b"])
+    await kv.set("gtm:content:a", { id: "a", solution: "trade-shows", kept: true, content: "kept", tags: [], createdAt: "2026-01-02T00:00:00Z", contentType: "linkedin-post", motion: "direct" })
+    await kv.set("gtm:content:b", { id: "b", solution: "trade-shows", content: "unkept", tags: [], createdAt: "2026-01-01T00:00:00Z", contentType: "linkedin-post", motion: "direct" })
+  })
+  it("returns all items when kept is not requested (History)", async () => {
+    const res = await listContent(new NextRequest("http://localhost/api/gtm/content?solution=trade-shows"))
+    const { items } = await res.json()
+    expect(items.map((i: { id: string }) => i.id).sort()).toEqual(["a", "b"])
+  })
+  it("returns only kept items when kept=true (Library)", async () => {
+    const res = await listContent(new NextRequest("http://localhost/api/gtm/content?solution=trade-shows&kept=true"))
+    const { items } = await res.json()
+    expect(items.map((i: { id: string }) => i.id)).toEqual(["a"])
+  })
+})

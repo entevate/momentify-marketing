@@ -10,6 +10,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const solution = searchParams.get("solution")
+    const keptOnly = searchParams.get("kept") === "true"
 
     const ids = await kv.smembers(KV.contentIndex) as string[]
     const items: ContentItem[] = []
@@ -18,6 +19,9 @@ export async function GET(request: Request) {
       const item = await kv.get<ContentItem>(KV.content(id))
       if (item) {
         if (!solution || solution === "all" || item.solution === solution) {
+          if (keptOnly && item.kept !== true) {
+            continue
+          }
           items.push(item)
         }
       }
