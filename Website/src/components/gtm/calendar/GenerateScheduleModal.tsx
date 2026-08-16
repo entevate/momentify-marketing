@@ -28,6 +28,7 @@ import {
   pillarLabel,
   pillarMeta,
 } from "@/lib/gtm/schedule-modal-data"
+import { assetTypeForContentType } from "@/lib/gtm/asset-type-map"
 
 const font = "'Inter', system-ui, sans-serif"
 
@@ -302,6 +303,8 @@ export default function GenerateScheduleModal({ onClose, onComplete }: GenerateS
             content,
             tags: [vertical, entry.industry, entry.persona].filter(Boolean),
             createdAt: new Date().toISOString(),
+            assetType: assetTypeForContentType(entry.contentType),
+            kept: false,
           }),
           signal: ctrl.signal,
         })
@@ -325,6 +328,7 @@ export default function GenerateScheduleModal({ onClose, onComplete }: GenerateS
           persona: entry.persona || undefined,
           motion: entry.motion,
           additionalContext: entry.additionalContext,
+          assetType: assetTypeForContentType(entry.contentType),
         }
         const taskRes = await fetch("/api/gtm/calendar", {
           method: "POST",
