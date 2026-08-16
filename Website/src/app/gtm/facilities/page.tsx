@@ -15,6 +15,7 @@ import {
 import type { GTMLayer } from "@/lib/gtm/data/facilities"
 import ContentBuilder from "@/components/gtm/tabs/ContentBuilder"
 import ContentLibrary from "@/components/gtm/tabs/ContentLibrary"
+import ContentHistory from "@/components/gtm/tabs/ContentHistory"
 import LibraryCountBadge from "@/components/gtm/LibraryCountBadge"
 import CustomerJourneyMap from "@/components/gtm/CustomerJourneyMap"
 
@@ -315,7 +316,7 @@ function ComparisonTable() {
 /* ── Main Page ── */
 function FacilitiesContent() {
   const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState<"framework" | "builder" | "library">(
+  const [activeTab, setActiveTab] = useState<"framework" | "builder" | "library" | "history">(
     searchParams.get("builder") === "true" ? "builder" : "framework"
   )
   const [motionIndex, setMotionIndex] = useState(0)
@@ -428,6 +429,7 @@ function FacilitiesContent() {
               { key: "framework", label: "Framework", icon: null },
               { key: "builder", label: "Content Builder", icon: Sparkles },
               { key: "library", label: "Library", icon: null },
+              { key: "history", label: "History", icon: null },
             ] as const
           ).map((tab) => {
             const active = activeTab === tab.key
@@ -480,6 +482,10 @@ function FacilitiesContent() {
       ) : activeTab === "library" ? (
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 48px 80px" }}>
           <ContentLibrary solution="facilities" solutionLabel="Facilities" />
+        </div>
+      ) : activeTab === "history" ? (
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 48px 80px" }}>
+          <ContentHistory solution="facilities" solutionLabel="Facilities" />
         </div>
       ) : (
         <div

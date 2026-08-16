@@ -30,7 +30,7 @@ export default function LibraryCountBadge({
 
   const refresh = useCallback(async () => {
     try {
-      const res = await fetch(`/api/gtm/content?solution=${encodeURIComponent(solution)}`)
+      const res = await fetch(`/api/gtm/content?solution=${encodeURIComponent(solution)}&kept=true`)
       if (!res.ok) {
         if (res.status !== 401) setCount(null)
         return

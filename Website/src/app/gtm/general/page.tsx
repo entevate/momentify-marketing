@@ -21,6 +21,7 @@ import { useSearchParams } from "next/navigation"
 import { Sparkles, ArrowRight, Layers, BarChart3, Smartphone, Zap, Cog } from "lucide-react"
 import ContentBuilder from "@/components/gtm/tabs/ContentBuilder"
 import ContentLibrary from "@/components/gtm/tabs/ContentLibrary"
+import ContentHistory from "@/components/gtm/tabs/ContentHistory"
 import LibraryCountBadge from "@/components/gtm/LibraryCountBadge"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
@@ -141,7 +142,7 @@ const platformFeatures = [
 
 function GeneralContent() {
   const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState<"framework" | "builder" | "library">(
+  const [activeTab, setActiveTab] = useState<"framework" | "builder" | "library" | "history">(
     searchParams.get("builder") === "true" ? "builder" : "framework",
   )
 
@@ -171,6 +172,7 @@ function GeneralContent() {
             { key: "framework", label: "Framework", icon: null },
             { key: "builder", label: "Content Builder", icon: Sparkles },
             { key: "library", label: "Library", icon: null },
+            { key: "history", label: "History", icon: null },
           ] as const).map((tab) => {
             const active = activeTab === tab.key
             const Icon = tab.icon
@@ -203,6 +205,10 @@ function GeneralContent() {
       ) : activeTab === "library" ? (
         <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 48px 80px" }}>
           <ContentLibrary solution="general" solutionLabel="Momentify Platform" />
+        </div>
+      ) : activeTab === "history" ? (
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 48px 80px" }}>
+          <ContentHistory solution="general" solutionLabel="Momentify Platform" />
         </div>
       ) : (
         <FrameworkContent />
