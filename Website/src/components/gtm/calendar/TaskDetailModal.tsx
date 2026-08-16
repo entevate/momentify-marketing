@@ -21,7 +21,11 @@ import {
   Trash2,
 } from "lucide-react"
 import type { CalendarTask } from "@/lib/gtm/calendar-types"
+import type { ContentItem } from "@/lib/gtm/content-types"
 import { taskCategories, solutionMeta } from "@/lib/gtm/calendar-categories"
+import AssetPanel from "../AssetPanel"
+import { dispatchLibraryChanged } from "../tabs/SolutionTabs"
+import { assetTypeForContentType } from "@/lib/gtm/asset-type-map"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
 
@@ -62,6 +66,17 @@ export default function TaskDetailModal({
   const [editDuration, setEditDuration] = useState(30)
   const [confirmDelete, setConfirmDelete] = useState(false)
 
+  // Linked Library item editor state (only active when task.libraryItemId is set).
+  // Loads the ContentItem this calendar piece was scheduled from so its brief can
+  // be edited (PUT), its graphic rendered on demand (AssetPanel), and its Library
+  // membership toggled (kept).
+  const [linkedItem, setLinkedItem] = useState<ContentItem | null>(null)
+  const [briefText, setBriefText] = useState<string>("")
+  const [briefLoading, setBriefLoading] = useState(false)
+  const [briefSaving, setBriefSaving] = useState(false)
+  const [briefSaved, setBriefSaved] = useState(false)
+  const [keepSaving, setKeepSaving] = useState(false)
+
   // Reset edit state when task changes
   useEffect(() => {
     if (task) {
@@ -72,8 +87,36 @@ export default function TaskDetailModal({
       setEditDuration(task.duration)
       setEditing(false)
       setConfirmDelete(false)
+      setBriefSaved(false)
     }
   }, [task])
+
+  // Load the linked ContentItem when a library-linked task opens (or the link
+  // changes). GET /api/gtm/content/{id} returns the raw ContentItem, so
+  // item.content is read directly.
+  useEffect(() => {
+    if (!task?.libraryItemId) {
+      setLinkedItem(null)
+      setBriefText("")
+      return
+    }
+    let cancelled = false
+    setBriefLoading(true)
+    fetch(`/api/gtm/content/${encodeURIComponent(task.libraryItemId)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((item: ContentItem | null) => {
+        if (cancelled || !item) return
+        setLinkedItem(item)
+        setBriefText(item.content || "")
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setBriefLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [task?.libraryItemId])
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -118,6 +161,49 @@ export default function TaskDetailModal({
     onClose()
   }, [task, onDeleteTask, confirmDelete, onClose])
 
+  // Persist the edited brief on the linked ContentItem, then fire the
+  // library-changed event so Library/History views refresh.
+  const handleSaveBrief = useCallback(async () => {
+    if (!task?.libraryItemId) return
+    setBriefSaving(true)
+    setBriefSaved(false)
+    try {
+      const res = await fetch(`/api/gtm/content/${encodeURIComponent(task.libraryItemId)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: briefText }),
+      })
+      if (res.ok) {
+        setLinkedItem((prev) => (prev ? { ...prev, content: briefText } : prev))
+        dispatchLibraryChanged(task.solution)
+        setBriefSaved(true)
+        setTimeout(() => setBriefSaved(false), 2000)
+      }
+    } finally {
+      setBriefSaving(false)
+    }
+  }, [task, briefText])
+
+  // Toggle Library membership (kept) on the linked ContentItem.
+  const handleToggleKeep = useCallback(async () => {
+    if (!task?.libraryItemId || !linkedItem) return
+    const next = !linkedItem.kept
+    setKeepSaving(true)
+    try {
+      const res = await fetch(`/api/gtm/content/${encodeURIComponent(task.libraryItemId)}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kept: next }),
+      })
+      if (res.ok) {
+        setLinkedItem((prev) => (prev ? { ...prev, kept: next } : prev))
+        dispatchLibraryChanged(task.solution)
+      }
+    } finally {
+      setKeepSaving(false)
+    }
+  }, [task, linkedItem])
+
   if (!task) return null
 
   const category = taskCategories[task.category]
@@ -148,8 +234,9 @@ export default function TaskDetailModal({
             onClick={(e) => e.stopPropagation()}
             style={{
               fontFamily: font,
-              maxWidth: 480,
+              maxWidth: task.libraryItemId ? 760 : 480,
               width: "100%",
+              ...(task.libraryItemId ? { maxHeight: "90vh", overflowY: "auto" as const } : {}),
               background: "var(--gtm-bg-card)",
               border: "1px solid var(--gtm-border)",
               borderRadius: 16,
@@ -371,8 +458,12 @@ export default function TaskDetailModal({
                     carousel stores the swipeable shell HTML (which embeds 6
                     rendered cards via iframe). The iframe URL forwards the
                     task's assetType so each one resolves under its own
-                    namespace via /api/gtm/asset-preview. */}
-                {task.libraryItemId && (task.assetType === "social-post" || task.assetType === "carousel") && (
+                    namespace via /api/gtm/asset-preview.
+
+                    NOTE: suppressed for library-linked tasks — the interactive
+                    AssetPanel below is the canonical (and non-stale) surface for
+                    those. This static preview only serves non-library tasks. */}
+                {!task.libraryItemId && (task.assetType === "social-post" || task.assetType === "carousel") && (
                   <div
                     style={{
                       marginBottom: 20,
@@ -386,7 +477,7 @@ export default function TaskDetailModal({
                   >
                     <iframe
                       title="Scheduled asset preview"
-                      src={`/api/gtm/asset-preview?solution=${encodeURIComponent(task.solution)}&assetType=${encodeURIComponent(task.assetType)}&itemId=${encodeURIComponent(task.libraryItemId)}`}
+                      src={`/api/gtm/asset-preview?solution=${encodeURIComponent(task.solution)}&assetType=${encodeURIComponent(task.assetType)}&itemId=${encodeURIComponent(task.libraryItemId || "")}`}
                       style={{
                         width: "100%",
                         height: "100%",
@@ -521,6 +612,144 @@ export default function TaskDetailModal({
                   <Check size={16} />
                   {task.completed ? "Mark incomplete" : "Mark complete"}
                 </button>
+
+                {/* Linked Library piece — editable brief, on-demand graphic, and
+                    Library membership toggle. Only shown when this calendar task
+                    was scheduled from a saved Library item. */}
+                {task.libraryItemId && (
+                  <div
+                    style={{
+                      marginTop: 24,
+                      paddingTop: 20,
+                      borderTop: "1px solid var(--gtm-border)",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 16,
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          gap: 8,
+                          marginBottom: 6,
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontSize: 11,
+                            fontWeight: 700,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.06em",
+                            color: "var(--gtm-text-faint)",
+                          }}
+                        >
+                          Linked Library Brief
+                        </div>
+                        {linkedItem && (
+                          <button
+                            onClick={handleToggleKeep}
+                            disabled={keepSaving}
+                            style={{
+                              fontFamily: font,
+                              fontSize: 11,
+                              fontWeight: 600,
+                              color: linkedItem.kept ? "var(--gtm-text-muted)" : "#00BBA5",
+                              background: "transparent",
+                              border: "1px solid var(--gtm-border)",
+                              borderRadius: 8,
+                              padding: "6px 12px",
+                              cursor: keepSaving ? "not-allowed" : "pointer",
+                              opacity: keepSaving ? 0.6 : 1,
+                            }}
+                          >
+                            {keepSaving
+                              ? "Saving..."
+                              : linkedItem.kept
+                                ? "Remove from Library"
+                                : "Keep in Library"}
+                          </button>
+                        )}
+                      </div>
+
+                      {briefLoading ? (
+                        <div style={{ fontSize: 13, color: "var(--gtm-text-muted)" }}>Loading brief...</div>
+                      ) : (
+                        <>
+                          <textarea
+                            value={briefText}
+                            onChange={(e) => setBriefText(e.target.value)}
+                            rows={10}
+                            style={{
+                              width: "100%",
+                              boxSizing: "border-box",
+                              fontSize: 13,
+                              fontFamily: font,
+                              lineHeight: 1.55,
+                              color: "var(--gtm-text-primary)",
+                              background: "var(--gtm-bg-page)",
+                              border: "1px solid var(--gtm-border)",
+                              borderRadius: 8,
+                              padding: "10px 12px",
+                              outline: "none",
+                              resize: "vertical",
+                              minHeight: 160,
+                            }}
+                          />
+                          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 8 }}>
+                            <button
+                              onClick={handleSaveBrief}
+                              disabled={briefSaving}
+                              style={{
+                                fontFamily: font,
+                                fontSize: 12,
+                                fontWeight: 600,
+                                color: "#fff",
+                                background: briefSaving ? "var(--gtm-text-faint)" : "#00BBA5",
+                                border: "none",
+                                borderRadius: 8,
+                                padding: "8px 16px",
+                                cursor: briefSaving ? "not-allowed" : "pointer",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 6,
+                              }}
+                            >
+                              {briefSaving ? (
+                                "Saving..."
+                              ) : briefSaved ? (
+                                <>
+                                  <Check size={12} />
+                                  Saved
+                                </>
+                              ) : (
+                                "Save brief"
+                              )}
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+
+                    {/* On-demand graphic — mounted once the linked item is loaded so
+                        assetType resolves from the item, then the task, then the
+                        content type. */}
+                    {linkedItem && (
+                      <AssetPanel
+                        solution={task.solution}
+                        assetType={
+                          linkedItem.assetType ||
+                          task.assetType ||
+                          assetTypeForContentType(linkedItem.contentType || "")
+                        }
+                        itemId={task.libraryItemId}
+                        briefText={briefText}
+                      />
+                    )}
+                  </div>
+                )}
               </>
             )}
           </motion.div>
