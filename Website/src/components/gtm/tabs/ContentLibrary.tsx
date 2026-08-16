@@ -6,6 +6,7 @@ import { Trash2, Copy, Check, ChevronDown, ChevronUp, Loader2, Mail, BookmarkX }
 import { dispatchLibraryChanged } from "./SolutionTabs"
 import AssetPanel from "@/components/gtm/AssetPanel"
 import EmailActivityPanel from "@/components/gtm/email/EmailActivityPanel"
+import { isVisualContentType } from "@/lib/gtm/visual-content"
 
 const font = "'Inter', system-ui, sans-serif"
 
@@ -23,9 +24,6 @@ interface ContentLibraryProps {
   solution: string
   solutionLabel: string
 }
-
-// Content types that support an HTML-asset preview (matches Content Builder's one-click set)
-const HTML_ASSET_TYPES = new Set(["infographic", "microsite", "carousel", "social-post", "one-pager", "pitch-deck"])
 
 const CONTENT_TYPE_LABELS: Record<string, string> = {
   "cold-emails": "Cold Email Sequence",
@@ -229,7 +227,7 @@ export default function ContentLibrary({ solution, solutionLabel }: ContentLibra
           {filteredItems.map((item) => {
             const expanded = expandedId === item.id
             const preview = item.content.slice(0, 160).replace(/\n+/g, " ")
-            const isHtmlAsset = HTML_ASSET_TYPES.has(item.contentType)
+            const isHtmlAsset = isVisualContentType(item.contentType)
             return (
               <div key={item.id} style={cardStyle}>
                 <div

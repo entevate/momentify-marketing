@@ -1,4 +1,5 @@
 import { assetTypeForContentType } from "@/lib/gtm/asset-type-map"
+import { isVisualContentType } from "@/lib/gtm/visual-content"
 
 describe("assetTypeForContentType", () => {
   it("maps social content types to social-post", () => {
@@ -105,5 +106,25 @@ describe("GET /api/gtm/content kept filter", () => {
     const res = await listContent(new NextRequest("http://localhost/api/gtm/content?solution=trade-shows&kept=true"))
     const { items } = await res.json()
     expect(items.map((i: { id: string }) => i.id)).toEqual(["a"])
+  })
+})
+
+describe("isVisualContentType", () => {
+  it("recognizes visual content types (get an AssetPanel graphic)", () => {
+    expect(isVisualContentType("social-post")).toBe(true)
+    expect(isVisualContentType("linkedin-post")).toBe(true)
+    expect(isVisualContentType("carousel")).toBe(true)
+    expect(isVisualContentType("infographic")).toBe(true)
+    expect(isVisualContentType("one-pager")).toBe(true)
+    expect(isVisualContentType("microsite")).toBe(true)
+    expect(isVisualContentType("pitch-deck")).toBe(true)
+  })
+  it("rejects non-visual content types (no AssetPanel graphic)", () => {
+    expect(isVisualContentType("cold-emails")).toBe(false)
+    expect(isVisualContentType("lead-magnet")).toBe(false)
+    expect(isVisualContentType("discovery-script")).toBe(false)
+    expect(isVisualContentType("partner-pitch")).toBe(false)
+    expect(isVisualContentType("battle-card")).toBe(false)
+    expect(isVisualContentType("linkedin-dm")).toBe(false)
   })
 })

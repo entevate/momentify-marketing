@@ -26,6 +26,7 @@ import { taskCategories, solutionMeta } from "@/lib/gtm/calendar-categories"
 import AssetPanel from "../AssetPanel"
 import { dispatchLibraryChanged } from "../tabs/SolutionTabs"
 import { assetTypeForContentType } from "@/lib/gtm/asset-type-map"
+import { isVisualContentType } from "@/lib/gtm/visual-content"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
 
@@ -735,8 +736,13 @@ export default function TaskDetailModal({
 
                     {/* On-demand graphic — mounted once the linked item is loaded so
                         assetType resolves from the item, then the task, then the
-                        content type. */}
-                    {linkedItem && (
+                        content type. Gated on the item's contentType being a
+                        genuinely visual type (matches ContentLibrary's gate):
+                        assetType alone can't tell visual pieces from non-visual
+                        ones (cold-emails, lead-magnet, …) because
+                        assetTypeForContentType defaults every unknown content
+                        type to "social-post". */}
+                    {linkedItem && isVisualContentType(linkedItem.contentType) && (
                       <AssetPanel
                         solution={task.solution}
                         assetType={
