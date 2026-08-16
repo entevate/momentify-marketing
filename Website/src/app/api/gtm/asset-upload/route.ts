@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { requireGtmAuth } from "@/lib/gtm/content-types"
 import fs from "fs"
 import path from "path"
 import { put } from "@vercel/blob"
@@ -19,6 +20,11 @@ const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRI
  * When itemId is present, the asset is scoped to that Library item.
  */
 export async function POST(request: Request) {
+  // Gated: writes to the Blob store. It used to be open to anyone who found the URL.
+  if (!(await requireGtmAuth())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
   try {
     const body = await request.json()
     const { solution, assetType, htmlContent, itemId } = body ?? {}

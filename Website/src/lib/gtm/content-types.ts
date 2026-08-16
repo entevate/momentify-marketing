@@ -1,4 +1,5 @@
 import { cookies } from "next/headers"
+import { verifyGtmAuthToken } from "./auth-token"
 
 export { type CalendarTask, type SolutionId, type TaskCategory } from "./calendar-types"
 
@@ -53,8 +54,11 @@ export const KV = {
   recurringIndex: "gtm:recurring:index",
 } as const
 
-// Auth check for API routes (reads gtm_auth cookie)
+// Auth check for API routes: validates the signed gtm_auth cookie (HMAC keyed by
+// GTM_PASSWORD). The old check compared against the literal "true", which any
+// visitor could forge; verifyGtmAuthToken requires the password to have produced
+// the value. Kept cookie-based (httpOnly, server-set) on purpose — see auth-token.ts.
 export async function requireGtmAuth(): Promise<boolean> {
   const cookieStore = await cookies()
-  return cookieStore.get("gtm_auth")?.value === "true"
+  return verifyGtmAuthToken(cookieStore.get("gtm_auth")?.value)
 }

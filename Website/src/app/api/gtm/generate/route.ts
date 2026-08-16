@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server"
+import { requireGtmAuth } from "@/lib/gtm/content-types"
 import { buildUserMessage, systemPrompt } from "@/lib/gtm/builder-prompts"
 
 export async function POST(request: Request) {
+  // Gated: spends Anthropic tokens. It used to be open to anyone who found the URL.
+  if (!(await requireGtmAuth())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
   try {
     const body = await request.json()
     const { solution, vertical, motion, contentType, persona, additionalContext, competitor } = body
@@ -13,14 +19,19 @@ export async function POST(request: Request) {
       )
     }
 
-    const apiKey = process.env.GTM_ANTHROPIC_KEY || process.env.ANTHROPIC_API_KEY
+    const apiKey = process.env.ANTHROPIC_API_KEY
     if (!apiKey) {
-      console.error("Missing API key. GTM_ANTHROPIC_KEY:", !!process.env.GTM_ANTHROPIC_KEY, "ANTHROPIC_API_KEY:", !!process.env.ANTHROPIC_API_KEY)
+      console.error("Missing API key. ANTHROPIC_API_KEY is not set.")
       return NextResponse.json(
         { error: "Generation is not configured. No API key found." },
         { status: 500 }
       )
     }
+
+    // Fleet convention (STRUCTURE.md §4): the model is CLAUDE_MODEL, not a
+    // hardcoded ID. This route used to pin a retired Sonnet 4 snapshot, which
+    // returned not_found once that model was deprecated for the account.
+    const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5"
 
     const userMessage = buildUserMessage({
       solution,
@@ -40,7 +51,7 @@ export async function POST(request: Request) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
+        model: MODEL,
         max_tokens: 4096,
         system: systemPrompt,
         messages: [{ role: "user", content: userMessage }],

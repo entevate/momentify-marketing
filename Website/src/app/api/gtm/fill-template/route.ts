@@ -75,7 +75,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Template HTML missing on disk" }, { status: 500 })
     }
 
-    const apiKey = process.env.GTM_ANTHROPIC_KEY || process.env.ANTHROPIC_API_KEY
+    const apiKey = process.env.ANTHROPIC_API_KEY
     if (!apiKey) {
       return NextResponse.json(
         { error: "Generation is not configured. No API key found." },
@@ -114,7 +114,7 @@ ${slotSpec}
 Return ONLY a JSON object with the slot keys above. No markdown fencing, no commentary, no prose wrapping. Example: {"LABEL": "...", "STAT": "..."}`
 
     // ─── Call Claude ─────────────────────────────────────────────────
-    const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-4-5"
+    const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5"
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {

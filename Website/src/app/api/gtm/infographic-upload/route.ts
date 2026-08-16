@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { requireGtmAuth } from "@/lib/gtm/content-types"
 import fs from "fs"
 import path from "path"
 import { put } from "@vercel/blob"
@@ -8,6 +9,11 @@ import { assetBlobPath, assetKvKey } from "@/lib/gtm/asset-helpers"
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 
 export async function POST(request: Request) {
+  // Gated: writes files. It used to be open to anyone who found the URL.
+  if (!(await requireGtmAuth())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
   try {
     const { solution, htmlContent } = await request.json()
 

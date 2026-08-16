@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server"
+import { requireGtmAuth } from "@/lib/gtm/content-types"
 import fs from "fs"
 import path from "path"
 import { put } from "@vercel/blob"
@@ -23,6 +24,11 @@ const assetPrompts: Record<string, (brief: string, solution: string) => string> 
 }
 
 export async function POST(request: Request) {
+  // Gated: spends Anthropic tokens. It used to be open to anyone who found the URL.
+  if (!(await requireGtmAuth())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
   try {
     const { brief, assetType, solution } = await request.json()
 
@@ -48,14 +54,9 @@ export async function POST(request: Request) {
       )
     }
 
-    const apiKey = process.env.GTM_ANTHROPIC_KEY || process.env.ANTHROPIC_API_KEY
+    const apiKey = process.env.ANTHROPIC_API_KEY
     if (!apiKey) {
-      console.error(
-        "Missing API key. GTM_ANTHROPIC_KEY:",
-        !!process.env.GTM_ANTHROPIC_KEY,
-        "ANTHROPIC_API_KEY:",
-        !!process.env.ANTHROPIC_API_KEY
-      )
+      console.error("Missing API key. ANTHROPIC_API_KEY is not set.")
       return NextResponse.json(
         { error: "Generation is not configured. No API key found." },
         { status: 500 }
@@ -63,7 +64,7 @@ export async function POST(request: Request) {
     }
 
     // Fix #3: Hardcoded model name - use environment variable with fallback
-    const MODEL = process.env.CLAUDE_MODEL || "claude-opus-4-1"
+    const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5"
 
     const prompt = assetPrompts[assetType](brief, solution)
 
