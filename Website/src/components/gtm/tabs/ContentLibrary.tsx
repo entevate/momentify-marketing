@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { Trash2, Copy, Check, ChevronDown, ChevronUp, Loader2, Mail } from "lucide-react"
+import { Trash2, Copy, Check, ChevronDown, ChevronUp, Loader2, Mail, BookmarkX } from "lucide-react"
 import { dispatchLibraryChanged } from "./SolutionTabs"
 import AssetPanel from "@/components/gtm/AssetPanel"
 import EmailActivityPanel from "@/components/gtm/email/EmailActivityPanel"
@@ -96,7 +96,7 @@ export default function ContentLibrary({ solution, solutionLabel }: ContentLibra
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch(`/api/gtm/content?solution=${encodeURIComponent(solution)}`)
+      const res = await fetch(`/api/gtm/content?solution=${encodeURIComponent(solution)}&kept=true`)
       if (!res.ok) throw new Error("Failed to load library")
       const data = await res.json()
       const loadedItems: LibraryItem[] = Array.isArray(data.items) ? data.items : []
@@ -121,6 +121,22 @@ export default function ContentLibrary({ solution, solutionLabel }: ContentLibra
     window.addEventListener("gtm:library-changed", onChange)
     return () => window.removeEventListener("gtm:library-changed", onChange)
   }, [fetchItems, solution])
+
+  async function handleRemoveFromLibrary(id: string) {
+    try {
+      const res = await fetch(`/api/gtm/content/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kept: false }),
+      })
+      if (!res.ok) throw new Error("Failed to remove from library")
+      setItems((prev) => prev.filter((i) => i.id !== id))
+      if (expandedId === id) setExpandedId(null)
+      dispatchLibraryChanged(solution)
+    } catch {
+      setError("Failed to remove item from library.")
+    }
+  }
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this content? This cannot be undone.")) return
@@ -278,6 +294,9 @@ export default function ContentLibrary({ solution, solutionLabel }: ContentLibra
                       <button onClick={() => handleCopy(item.id, item.content)} style={actionBtnStyle}>
                         {copiedId === item.id ? <Check size={12} /> : <Copy size={12} />}
                         {copiedId === item.id ? "Copied" : "Copy Brief"}
+                      </button>
+                      <button onClick={() => handleRemoveFromLibrary(item.id)} style={actionBtnStyle}>
+                        <BookmarkX size={12} />Remove from Library
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}

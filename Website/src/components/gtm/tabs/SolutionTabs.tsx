@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from "react"
 import { Zap } from "lucide-react"
 import ContentBuilder from "./ContentBuilder"
 import ContentLibrary from "./ContentLibrary"
+import ContentHistory from "./ContentHistory"
 import { paletteFor } from "@/lib/gtm/pillar-palettes"
 
 // Event name used by ContentBuilder and ContentLibrary to signal "library contents changed"
@@ -26,12 +27,13 @@ interface SolutionTabsProps {
   children: React.ReactNode
 }
 
-type TabKey = "framework" | "builder" | "library"
+type TabKey = "framework" | "builder" | "library" | "history"
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "framework", label: "Framework" },
   { key: "builder", label: "Content Builder" },
   { key: "library", label: "Library" },
+  { key: "history", label: "History" },
 ]
 
 export default function SolutionTabs({
@@ -50,7 +52,7 @@ export default function SolutionTabs({
   // Fetch library count (auth-gated so it may return 401 when user hasn't unlocked yet)
   const refreshCount = useCallback(async () => {
     try {
-      const res = await fetch(`/api/gtm/content?solution=${encodeURIComponent(solution)}`)
+      const res = await fetch(`/api/gtm/content?solution=${encodeURIComponent(solution)}&kept=true`)
       if (!res.ok) {
         // 401 is expected pre-auth - leave count as null so we don't render "0" misleadingly
         if (res.status !== 401) setLibraryCount(null)
@@ -171,6 +173,9 @@ export default function SolutionTabs({
       )}
       {active === "library" && (
         <ContentLibrary solution={solution} solutionLabel={solutionLabel} />
+      )}
+      {active === "history" && (
+        <ContentHistory solution={solution} solutionLabel={solutionLabel} />
       )}
     </div>
   )
