@@ -23,6 +23,29 @@ export async function GET(
   }
 }
 
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  if (!(await requireGtmAuth())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  const { id } = await params
+  try {
+    const existing = await kv.get<ContentItem>(KV.content(id))
+    if (!existing) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 })
+    }
+    const patch = (await request.json()) as Partial<ContentItem>
+    const updated: ContentItem = { ...existing, ...patch, id: existing.id, createdAt: existing.createdAt }
+    await kv.set(KV.content(id), updated)
+    return NextResponse.json({ success: true, item: updated })
+  } catch {
+    return NextResponse.json({ error: "Failed to update content" }, { status: 500 })
+  }
+}
+
 export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
