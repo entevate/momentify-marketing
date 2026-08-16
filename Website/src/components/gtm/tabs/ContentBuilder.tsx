@@ -292,6 +292,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
           content: generated,
           tags: [vertical],
           createdAt: new Date().toISOString(),
+          kept: true,
         }),
       })
       if (!res.ok) throw new Error("Save failed")
