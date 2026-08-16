@@ -10,8 +10,12 @@ export interface ContentItem {
   motion: "direct" | "partner"
   solution: string
   content: string
-  graphic?: string            // base64 data URL for inline graphics
-  blobUrl?: string            // Vercel Blob URL for attached files
+  persona?: string            // promoted from a smuggled tags[] entry
+  graphic?: string            // base64 data URL for inline graphics (legacy, unused)
+  blobUrl?: string            // rendered graphic URL — the piece self-carries its graphic
+  assetType?: string          // graphic kind (social-post, carousel, …); drives AssetPanel + preview
+  templateId?: string         // which template produced the graphic
+  kept?: boolean              // Library membership. true → shows in Library. Absent/false → History only.
   createdAt: string
   tags: string[]
 }
