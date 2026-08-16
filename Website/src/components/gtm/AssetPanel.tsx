@@ -38,6 +38,25 @@ export interface AssetPanelProps {
   className?: string
 }
 
+// After a graphic renders for a real library item, record the reference on the
+// item so it self-carries its graphic (thumbnails in Library/History/calendar).
+// Skips synthetic draft ids used by the manual builder before a save.
+async function stampGraphicRef(
+  itemId: string | undefined,
+  ref: { blobUrl?: string; assetType?: string; templateId?: string }
+) {
+  if (!itemId || itemId.startsWith("draft-")) return
+  try {
+    await fetch(`/api/gtm/content/${encodeURIComponent(itemId)}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(ref),
+    })
+  } catch {
+    // Best-effort; the graphic still exists in the asset namespace.
+  }
+}
+
 /** Append a cache-bust param, respecting existing query strings. */
 function withCacheBust(url: string): string {
   const sep = url.includes("?") ? "&" : "?"
@@ -141,6 +160,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
         const data = await res.json()
         setAssetUrl(withCacheBust(data.url))
         setPickerOpen(false)
+        stampGraphicRef(itemId, { blobUrl: data.url, assetType, templateId })
       } catch (e: unknown) {
         const err = e as { name?: string; message?: string }
         const msg = err?.name === "AbortError"
@@ -175,6 +195,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
       }
       const data = await res.json()
       setAssetUrl(withCacheBust(data.url))
+      stampGraphicRef(itemId, { blobUrl: data.url, assetType, templateId: undefined })
     } catch (e: unknown) {
       const err = e as { name?: string; message?: string }
       const msg = err?.name === "AbortError"
@@ -218,6 +239,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
         const data = await res.json()
         setAssetUrl(withCacheBust(data.url))
         setPickerOpen(false)
+        stampGraphicRef(itemId, { blobUrl: data.url, assetType, templateId: undefined })
       } catch (e: unknown) {
         const err = e as { message?: string }
         setError(err?.message || "Upload failed.")
