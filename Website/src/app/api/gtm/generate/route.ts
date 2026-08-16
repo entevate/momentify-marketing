@@ -52,6 +52,10 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         model: MODEL,
+        // Content generation needs no reasoning; disabling thinking keeps the
+        // response fast and makes the first content block the text (Sonnet 5
+        // runs adaptive thinking by default, which would otherwise be content[0]).
+        thinking: { type: "disabled" },
         max_tokens: 4096,
         system: systemPrompt,
         messages: [{ role: "user", content: userMessage }],
@@ -69,7 +73,7 @@ export async function POST(request: Request) {
 
     const data = await response.json()
     const text =
-      data.content?.[0]?.type === "text" ? data.content[0].text : ""
+      (data.content?.find((b: { type?: string; text?: string }) => b.type === "text")?.text) ?? ""
 
     return NextResponse.json({ content: text })
   } catch (err) {

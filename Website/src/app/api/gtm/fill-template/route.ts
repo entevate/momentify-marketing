@@ -124,6 +124,10 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
       },
       body: JSON.stringify({
         model: MODEL,
+        // Content generation needs no reasoning; disabling thinking keeps the
+        // response fast and makes the first content block the text (Sonnet 5
+        // runs adaptive thinking by default, which would otherwise be content[0]).
+        thinking: { type: "disabled" },
         max_tokens: 800, // JSON payload only - small budget
         messages: [{ role: "user", content: userPrompt }],
       }),
@@ -141,7 +145,7 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
     }
 
     const data = await response.json()
-    const rawText = data.content?.[0]?.type === "text" ? data.content[0].text : ""
+    const rawText = (data.content?.find((b: { type?: string; text?: string }) => b.type === "text")?.text) ?? ""
     if (!rawText) {
       return NextResponse.json({ error: "Empty response from Claude" }, { status: 500 })
     }

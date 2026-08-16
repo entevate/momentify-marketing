@@ -138,6 +138,10 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
       },
       body: JSON.stringify({
         model: MODEL,
+        // Content generation needs no reasoning; disabling thinking keeps the
+        // response fast and makes the first content block the text (Sonnet 5
+        // runs adaptive thinking by default, which would otherwise be content[0]).
+        thinking: { type: "disabled" },
         max_tokens: 3000, // 6 cards * ~400 chars JSON each, with margin
         messages: [{ role: "user", content: userPrompt }],
       }),
@@ -155,7 +159,7 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
     }
 
     const data = await response.json()
-    const rawText = data.content?.[0]?.type === "text" ? data.content[0].text : ""
+    const rawText = (data.content?.find((b: { type?: string; text?: string }) => b.type === "text")?.text) ?? ""
     if (!rawText) {
       return NextResponse.json({ error: "Empty response from Claude" }, { status: 500 })
     }
