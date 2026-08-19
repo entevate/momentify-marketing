@@ -78,7 +78,7 @@ const SECTIONS: { label: string; items: NavLink[] }[] = [
       { label: "Calendar", href: "/gtm/calendar", icon: CalendarDays, color: ACCENT },
       { label: "Email", href: "/gtm/email", icon: Mail, color: ACCENT },
       { label: "Contacts", href: "/gtm/contacts", icon: Contact, color: ACCENT, hidden: true },
-      { label: "Pages", href: "/gtm/pages", icon: FileText, color: ACCENT, hidden: true },
+      { label: "Pages", href: "/gtm/pages", icon: FileText, color: ACCENT },
       { label: "QR Codes", href: "/gtm/qr", icon: QrCode, color: ACCENT, hidden: true },
     ],
   },
