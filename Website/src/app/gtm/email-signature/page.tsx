@@ -307,7 +307,7 @@ export default function EmailSignaturePage() {
               </button>
             </div>
             <p style={{ margin: "4px 0 0 0", fontSize: 12, color: "var(--gtm-text-faint)", lineHeight: 1.5 }}>
-              <strong>Gmail:</strong> Settings → General → Signature → paste. <strong>Outlook:</strong> Settings → Compose &amp; reply → paste. <strong>Apple Mail:</strong> Preferences → Signatures → paste (uncheck &quot;Always match my default message font&quot;).
+              <strong>Gmail:</strong> Settings → General → Signature → paste. <strong>Outlook:</strong> Settings → Compose &amp; reply → paste. <strong>Apple Mail (Mac):</strong> Preferences → Signatures → paste (uncheck &quot;Always match my default message font&quot;). <strong>Apple Mail (iPhone/iPad):</strong> copy on the device (or email it to yourself and copy it there), then Settings → Mail → Signature → paste; if it pastes as plain text, shake to Undo, then shake again and Redo to restore the styling.
             </p>
           </Card>
         </div>
