@@ -7,7 +7,7 @@
  * file-backed JSON store at `.gtm-kv-fallback.json` in the project root.
  *
  * Same surface as `@vercel/kv`'s `kv` for the methods we actually use:
- *   get, set, del, smembers, sadd, srem
+ *   get, set, del, smembers, sadd, srem, incr, lpush, ltrim, lrange, mget
  *
  * Usage:
  *   import { kv } from "@/lib/gtm/kv-store"   // drop-in for `@vercel/kv`'s `kv`
@@ -138,5 +138,60 @@ export const kv = {
     store[key] = Array.from(set)
     await writeStore()
     return removed
+  },
+
+  /* ---- Redis list + counter ops (used by the QR scan log) ---- */
+
+  async incr(key: string): Promise<number> {
+    if (await resolveMode()) {
+      return vercelKv.incr(key)
+    }
+    const store = await readStore()
+    const next = (typeof store[key] === "number" ? (store[key] as number) : 0) + 1
+    store[key] = next
+    await writeStore()
+    return next
+  },
+
+  async lpush(key: string, ...values: unknown[]): Promise<number> {
+    if (await resolveMode()) {
+      return vercelKv.lpush(key, ...(values as [unknown, ...unknown[]]))
+    }
+    const store = await readStore()
+    const list = Array.isArray(store[key]) ? (store[key] as Json[]) : []
+    // Redis LPUSH prepends each value in turn, so a multi-arg push ends up reversed.
+    for (const v of values) list.unshift(v as Json)
+    store[key] = list
+    await writeStore()
+    return list.length
+  },
+
+  async ltrim(key: string, start: number, stop: number): Promise<string> {
+    if (await resolveMode()) {
+      return vercelKv.ltrim(key, start, stop)
+    }
+    const store = await readStore()
+    const list = Array.isArray(store[key]) ? (store[key] as Json[]) : []
+    store[key] = stop === -1 ? list.slice(start) : list.slice(start, stop + 1)
+    await writeStore()
+    return "OK"
+  },
+
+  async lrange<T = unknown>(key: string, start: number, stop: number): Promise<T[]> {
+    if (await resolveMode()) {
+      return (await vercelKv.lrange(key, start, stop)) as T[]
+    }
+    const store = await readStore()
+    const list = Array.isArray(store[key]) ? (store[key] as unknown as T[]) : []
+    return stop === -1 ? list.slice(start) : list.slice(start, stop + 1)
+  },
+
+  async mget<T = unknown>(...keys: string[]): Promise<(T | null)[]> {
+    if (await resolveMode()) {
+      if (keys.length === 0) return []
+      return (await vercelKv.mget<T[]>(...keys)) as (T | null)[]
+    }
+    const store = await readStore()
+    return keys.map((k) => (store[k] === undefined ? null : (store[k] as unknown as T)))
   },
 }
