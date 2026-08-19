@@ -449,14 +449,18 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
       if (!htmlRes.ok) throw new Error("Couldn't read the generated microsite file")
       const html = await htmlRes.text()
 
-      const res = await fetch("/api/gtm/microsites", {
+      // Reconcile: publish to the canonical pages module (tracked /p/<slug>
+      // with OG + open/read-time analytics), not the legacy microsites store.
+      // Auth rides the signed cookie automatically (same-origin fetch).
+      const res = await fetch("/api/gtm/pages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           slug: publishSlug.trim(),
           title: publishTitle.trim() || `${solutionLabel} Microsite`,
           description: publishDesc.trim() || undefined,
-          solution,
+          pillars: [solution],
+          source: "builder",
           html,
         }),
       })
@@ -465,7 +469,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
         throw new Error(body.error || "Publish failed")
       }
       const data = await res.json()
-      setPublishResult({ blobUrl: data.blobUrl })
+      setPublishResult({ blobUrl: `${window.location.origin}/p/${data.page?.slug ?? publishSlug.trim()}` })
     } catch (e: unknown) {
       const err = e as { message?: string }
       setPublishResult({ error: err.message || "Publish failed" })
