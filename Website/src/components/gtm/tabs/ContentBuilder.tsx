@@ -5,6 +5,7 @@ import { Loader2, Copy, Save, Check, ExternalLink, RefreshCw, Send, Globe, Termi
 import type { VerticalOption } from "./SolutionTabs"
 import { dispatchLibraryChanged } from "./SolutionTabs"
 import AssetPanel from "@/components/gtm/AssetPanel"
+import CaptionsPanel from "@/components/gtm/CaptionsPanel"
 import { solutionPersonas } from "@/lib/gtm/builder-prompts"
 
 // ─── HTML-asset generation contract ───────────────────────────────────────
@@ -169,6 +170,19 @@ export default function ContentBuilder({
     if (twitterMatch) result.twitter = twitterMatch[1].trim()
     return result
   }, [generated, isSocialPost])
+
+  // Canonical captions object for the cards panel (twitter → x; drop empties).
+  // Same {linkedin, instagram, x} shape KINECT/AUTIX use — replaces the platform tabs.
+  const socialCaptions = useMemo<Record<string, string> | null>(() => {
+    if (!socialSections) return null
+    const out: Record<string, string> = {}
+    if (socialSections.linkedin) out.linkedin = socialSections.linkedin
+    if (socialSections.instagram) out.instagram = socialSections.instagram
+    if (socialSections.twitter) out.x = socialSections.twitter
+    // Markers ignored → show the whole output as the primary (LinkedIn) card.
+    if (Object.keys(out).length === 0 && generated) out.linkedin = generated.trim()
+    return Object.keys(out).length ? out : null
+  }, [socialSections, generated])
 
   // Reset platform tab when new content is generated
   useEffect(() => {
@@ -819,42 +833,12 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
           </div>
         )}
 
-        {generated && isSocialPost && socialSections && (
-          <div style={{ display: "flex", gap: 4, marginBottom: 12, background: "var(--gtm-bg-page)", borderRadius: 6, padding: 4 }}>
-            {(["linkedin", "instagram", "twitter"] as const).map((p) => {
-              const isActive = activePlatform === p
-              const labels = { linkedin: "LinkedIn", instagram: "Instagram", twitter: "Twitter / X" }
-              const hasContent = socialSections[p].length > 0
-              return (
-                <button
-                  key={p}
-                  onClick={() => setActivePlatform(p)}
-                  disabled={!hasContent}
-                  style={{
-                    flex: 1,
-                    height: 30,
-                    padding: "0 12px",
-                    fontSize: 12,
-                    fontWeight: 600,
-                    fontFamily: font,
-                    border: "none",
-                    background: isActive ? "#fff" : "transparent",
-                    color: isActive ? "#00BBA5" : hasContent ? "var(--gtm-text-secondary)" : "var(--gtm-text-faint)",
-                    borderRadius: 4,
-                    cursor: hasContent ? "pointer" : "not-allowed",
-                    boxShadow: isActive ? "0 1px 2px rgba(0,0,0,0.06)" : "none",
-                    transition: "all 150ms ease",
-                    opacity: hasContent ? 1 : 0.5,
-                  }}
-                >
-                  {labels[p]}
-                </button>
-              )
-            })}
-          </div>
-        )}
+        {/* Social platform tabs replaced by the canonical cards panel (CaptionsPanel),
+            rendered in place of the markdown block below for social posts. */}
 
-        {generated && (
+        {generated && (isSocialPost && socialCaptions ? (
+          <CaptionsPanel captions={socialCaptions} />
+        ) : (
           <div
             style={{
               margin: 0,
@@ -875,7 +859,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
               {displayContent}
             </pre>
           </div>
-        )}
+        ))}
       </div>
     </div>
 
