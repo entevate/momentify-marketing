@@ -9,6 +9,7 @@ import { NextResponse } from 'next/server'
 import { del, put } from '@vercel/blob'
 import { kv } from '@/lib/gtm/kv-store'
 import { requireGtmAuth } from '@/lib/gtm/content-types'
+import { renderSizedHtmlBatch } from '@/lib/gtm/render-png'
 import { PAGES_KEY, pageStatsKey, slugify, type PageItem, type PageStats, type PageWithStats } from '@/lib/gtm/pages-types'
 
 export const runtime = 'nodejs'
@@ -107,8 +108,24 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
     if (!htmlUrl) return NextResponse.json({ error: 'html required for a new page' }, { status: 400 })
 
-    // TODO(pages-og): auto-screenshot deferred — wire to render-collateral later
-    const ogImage = (body.ogImage || existing?.ogImage || '').trim() || undefined
+    // Auto-generate the OG image by screenshotting the page's own HTML at
+    // 1200×630 when none is provided. Best-effort — a render failure must never
+    // block publishing (the page just ships without a social-preview image).
+    let ogImage = (body.ogImage || existing?.ogImage || '').trim() || undefined
+    if (!ogImage && freshHtml) {
+      try {
+        const [png] = await renderSizedHtmlBatch([{ html: freshHtml, width: 1200, height: 630 }])
+        const ogBlob = await put(`gtm/pages/og/${slug}-${Date.now().toString(36)}.png`, png, {
+          access: 'public',
+          addRandomSuffix: false,
+          contentType: 'image/png',
+          token,
+        })
+        ogImage = ogBlob.url
+      } catch (err) {
+        console.error('pages auto-OG render failed (non-fatal):', err)
+      }
+    }
 
     const item: PageItem = {
       id: existing?.id || `pg_${Date.now().toString(36)}`,
@@ -142,6 +159,8 @@ export async function DELETE(request: Request): Promise<NextResponse> {
   if (page) {
     await kv.del(pageStatsKey(page.slug)).catch(() => {})
     if (page.htmlUrl) await del(page.htmlUrl, { token }).catch(() => {})
+    // Clean up the auto-generated OG image too (only if it's one of ours in Blob).
+    if (page.ogImage && page.ogImage.includes('/gtm/pages/og/')) await del(page.ogImage, { token }).catch(() => {})
   }
   return NextResponse.json({ success: true })
 }
