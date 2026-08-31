@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState } from "react"
-import { Copy, Check, Download, Save } from "lucide-react"
+import { Copy, Check, Download, Save, Mail } from "lucide-react"
 import {
   AccentPicker,
   ASSET_ORIGIN,
@@ -157,6 +157,9 @@ export default function EmailSignaturePage() {
   const [config, setConfig] = useState<SigConfig>(PRESETS.jake.config)
   const [copied, setCopied] = useState<null | "html" | "plain">(null)
   const [saved, setSaved] = useState(false)
+  const [sendTo, setSendTo] = useState("")
+  const [sending, setSending] = useState(false)
+  const [sendMsg, setSendMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const previewRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -165,6 +168,35 @@ export default function EmailSignaturePage() {
   }, [presetId])
 
   const html = useMemo(() => buildSignature(config), [config])
+
+  // Seed the send-to field from the signature's own email; only once.
+  useEffect(() => {
+    setSendTo((cur) => cur || config.email || "")
+  }, [config.email])
+
+  async function emailToMe() {
+    const to = sendTo.trim()
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) {
+      setSendMsg({ ok: false, text: "Enter a valid email to send to." })
+      return
+    }
+    setSending(true)
+    setSendMsg(null)
+    try {
+      const res = await fetch("/api/gtm/collateral/signature/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ html, to, label: config.fullName || "" }),
+      })
+      const json = (await res.json()) as { ok?: boolean; error?: string }
+      if (!res.ok || !json.ok) throw new Error(json.error ?? "The email could not be sent")
+      setSendMsg({ ok: true, text: `Sent to ${to}. Open it in Mail on your phone, then Select All → Copy.` })
+    } catch (e) {
+      setSendMsg({ ok: false, text: e instanceof Error ? e.message : "The email could not be sent" })
+    } finally {
+      setSending(false)
+    }
+  }
 
   function update<K extends keyof SigConfig>(key: K, value: SigConfig[K]) {
     setConfig((c) => ({ ...c, [key]: value }))
@@ -306,6 +338,19 @@ export default function EmailSignaturePage() {
                 Download .html
               </button>
             </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginTop: 10 }}>
+              <input
+                type="email" value={sendTo} onChange={(e) => setSendTo(e.target.value)} placeholder="you@momentify.com"
+                style={{ flex: "1 1 200px", minWidth: 0, padding: "8px 10px", fontSize: 13, borderRadius: 6, border: "1px solid var(--gtm-border, rgba(0,0,0,0.15))", background: "transparent", color: "inherit" }}
+              />
+              <button onClick={emailToMe} disabled={sending} style={ghostBtn}>
+                <Mail size={13} />
+                {sending ? "Sending…" : "Email to me"}
+              </button>
+            </div>
+            {sendMsg && (
+              <p style={{ margin: "6px 0 0", fontSize: 12, color: sendMsg.ok ? "#1a7f37" : "#c0392b" }}>{sendMsg.text}</p>
+            )}
             <p style={{ margin: "4px 0 0 0", fontSize: 12, color: "var(--gtm-text-faint)", lineHeight: 1.5 }}>
               <strong>Gmail:</strong> Settings → General → Signature → paste. <strong>Outlook:</strong> Settings → Compose &amp; reply → paste. <strong>Apple Mail (Mac):</strong> Preferences → Signatures → paste (uncheck &quot;Always match my default message font&quot;). <strong>Apple Mail (iPhone/iPad):</strong> copy on the device (or email it to yourself and copy it there), then Settings → Mail → Signature → paste; if it pastes as plain text, shake to Undo, then shake again and Redo to restore the styling.
             </p>
