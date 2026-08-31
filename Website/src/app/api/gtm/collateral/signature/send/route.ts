@@ -48,7 +48,7 @@ export async function POST(req: Request) {
   if (!EMAIL_RE.test(to)) return Response.json({ error: "A valid recipient email is required" }, { status: 400 })
   if (html.trim().length < 40) return Response.json({ error: "There is no signature to send yet" }, { status: 400 })
 
-  const doc = wrapForEmail(html, body.label)
+  const doc = wrapForEmail(html)
 
   let res: Response
   try {
@@ -58,7 +58,7 @@ export async function POST(req: Request) {
         Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ from, to, subject: "Your Momentify email signature", html: doc }),
+      body: JSON.stringify({ from, to, subject: "Your Momentify signature — open in Mail, Select All, Copy, then paste into Settings → Mail → Signature", html: doc }),
     })
   } catch (err) {
     return Response.json({ error: `Could not reach the email service: ${err instanceof Error ? err.message : "error"}` }, { status: 502 })
@@ -72,25 +72,11 @@ export async function POST(req: Request) {
   return Response.json({ ok: true, to })
 }
 
-/** Frame the signature with the three-step iOS install instructions. */
-function wrapForEmail(signature: string, label?: string): string {
-  const who = label ? ` ${escapeHtml(label)}` : ""
-  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body style="margin:0;padding:24px;background:#F4F5F7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#0C1220;">
-  <div style="max-width:600px;margin:0 auto;">
-    <p style="font-size:15px;line-height:1.5;margin:0 0 6px;font-weight:700;">Install${who} email signature on your iPhone</p>
-    <ol style="font-size:13px;line-height:1.65;color:#5A6577;margin:0 0 20px;padding-left:20px;">
-      <li>Open this email in the <b>Mail</b> app (not a preview).</li>
-      <li>Press and hold the signature below, choose <b>Select&nbsp;All</b>, then <b>Copy</b>.</li>
-      <li>Go to <b>Settings → Mail → Signature</b> and paste. Formatting is kept because you copied it from Mail.</li>
-    </ol>
-    <div style="background:#FFFFFF;border:1px solid #E4E9F0;border-radius:10px;padding:20px;">
-      ${signature}
-    </div>
-    <p style="font-size:11px;line-height:1.5;color:#94A0AD;margin:16px 0 0;">Sent from the Momentify signature builder.</p>
-  </div>
-</body></html>`
-}
-
-function escapeHtml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+/**
+ * The email body is ONLY the signature, so a phone "Select All → Copy" grabs
+ * exactly the signature and nothing else (install steps live in the subject).
+ * color-scheme:light stops Mail from dark-mode-inverting the light signature.
+ */
+function wrapForEmail(signature: string): string {
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light"></head><body style="margin:0;padding:16px;background:#ffffff;-webkit-text-size-adjust:100%;">${signature}</body></html>`
 }

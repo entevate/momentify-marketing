@@ -128,7 +128,8 @@ function buildSignature(c: SigConfig): string {
     ? `<tr><td style="padding:6px 0 0 0;font:400 13px/1.5 ${FONT_STACK};color:${COLORS.muted};">${contactParts.join(` &nbsp;<span style="color:${accent};">&middot;</span>&nbsp; `)}</td></tr>`
     : ""
 
-  return `<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:${FONT_STACK};color:${COLORS.ink};">
+  return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;border-spacing:0;"><tr><td style="background-color:#FFFFFE;border:1px solid #E4E9F0;border-radius:12px;padding:16px;">
+<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:${FONT_STACK};color:${COLORS.ink};">
   <tr>
     ${logoCell}
     <td valign="top" style="padding:0 0 0 ${c.showLogo ? "16px" : "0"};">
@@ -141,7 +142,8 @@ function buildSignature(c: SigConfig): string {
       </table>
     </td>
   </tr>
-</table>`
+</table>
+</td></tr></table>`
 }
 
 function buildStandaloneHtml(sig: string): string {
