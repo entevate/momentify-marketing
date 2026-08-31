@@ -26,7 +26,7 @@ const DEFAULT_ACCENT = '#0CF4DF'
 const FONT = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
 // Optical-centering nudge for the built-in lockup only (not custom logos). '0' here:
 // Momentify's solid mark balances the wordmark, so the lockup is centered as-is.
-const LOGO_OPTICAL_DX = '0'
+const LOGO_OPTICAL_DX = '-4%' // optical nudge left: wordmark-right lockup reads right-heavy when geometrically centered
 
 /** Hand-written single-path social glyphs (no icon library — keeps the string pure). */
 const SOCIAL_SVG: Record<SocialId, string> = {
