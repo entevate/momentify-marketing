@@ -389,3 +389,11 @@ p, h1, h2, h3, h4, h5, h6, span, li {
   border: 2px solid rgba(229, 72, 77, 0.6);
   animation: leaflet-pulse 1.5s ease-out infinite;
 }
+
+/* Mobile: clip horizontal overflow at the page root as a safety net. */
+@media (max-width: 767px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+}

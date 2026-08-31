@@ -176,7 +176,15 @@ function NavLinkRow({
   )
 }
 
-function Sidebar() {
+function Sidebar({
+  isMobile = false,
+  drawerOpen = false,
+  onClose,
+}: {
+  isMobile?: boolean
+  drawerOpen?: boolean
+  onClose?: () => void
+}) {
   const pathname = usePathname()
   const router = useRouter()
   // Per-section fold (chevron on the label), independent of the whole-sidebar
@@ -193,6 +201,11 @@ function Sidebar() {
       // Corrupt state just means everything starts expanded.
     }
   }, [])
+
+  // The mobile drawer always shows the full nav, never the icon strip.
+  useEffect(() => {
+    if (isMobile) setCollapsed(false)
+  }, [isMobile])
 
   function toggleSection(label: string) {
     setFolded((prev) => {
@@ -226,16 +239,54 @@ function Sidebar() {
   return (
     <aside
       style={{
-        width: collapsed ? STRIP_WIDTH : EXPANDED_WIDTH,
-        transition: "width 0.2s ease",
+        width: isMobile ? EXPANDED_WIDTH : collapsed ? STRIP_WIDTH : EXPANDED_WIDTH,
+        transition: isMobile ? "transform 0.22s ease" : "width 0.2s ease",
         minHeight: "100vh",
+        height: isMobile ? "100dvh" : undefined,
         background: "#061341",
         display: "flex",
         flexDirection: "column",
         flexShrink: 0,
         overflow: "hidden",
+        ...(isMobile
+          ? {
+              position: "fixed",
+              top: 0,
+              left: 0,
+              zIndex: 1000,
+              transform: drawerOpen ? "translateX(0)" : "translateX(-100%)",
+              boxShadow: drawerOpen ? "0 0 40px rgba(0,0,0,0.5)" : "none",
+            }
+          : {}),
       }}
     >
+      {isMobile && (
+        <button
+          onClick={onClose}
+          aria-label="Close menu"
+          style={{
+            position: "absolute",
+            top: 14,
+            right: 14,
+            zIndex: 3,
+            width: 32,
+            height: 32,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(255,255,255,0.1)",
+            border: "1px solid rgba(255,255,255,0.3)",
+            borderRadius: 8,
+            cursor: "pointer",
+            color: "#fff",
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="18" y1="6" x2="6" y2="18" />
+          </svg>
+        </button>
+      )}
       {/* Logo */}
       <div style={{ padding: collapsed ? "28px 0 20px" : "28px 24px 20px", textAlign: collapsed ? "center" : undefined }}>
         <Image
@@ -251,7 +302,7 @@ function Sidebar() {
       <div style={{ height: 1, background: "rgba(255, 255, 255, 0.08)", margin: "0 16px" }} />
 
       {/* Nav */}
-      <nav style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 8 }}>
+      <nav style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 8, ...(isMobile ? { flex: 1, minHeight: 0, overflowY: "auto", overflowX: "hidden", WebkitOverflowScrolling: "touch" } : {}) }}>
         {visibleSections.map((section, sIdx) => {
           const isFolded = !collapsed && folded[section.label]
           return (
@@ -302,7 +353,11 @@ function Sidebar() {
             display: "flex",
             alignItems: "center",
             justifyContent: collapsed ? "center" : "space-between",
-            padding: collapsed ? "12px 0" : "10px 20px 16px",
+            padding: isMobile
+              ? "10px 20px calc(16px + env(safe-area-inset-bottom, 20px))"
+              : collapsed
+                ? "12px 0"
+                : "10px 20px 16px",
           }}
         >
           {!collapsed && (
@@ -328,6 +383,7 @@ function Sidebar() {
               Sign Out
             </button>
           )}
+          {!isMobile && (
           <button
             onClick={toggleCollapsed}
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -347,6 +403,7 @@ function Sidebar() {
           >
             {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
           </button>
+          )}
         </div>
       </div>
     </aside>
@@ -355,6 +412,18 @@ function Sidebar() {
 
 export default function GTMLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
+  const [isMobile, setIsMobile] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
+  useEffect(() => {
+    setDrawerOpen(false)
+  }, [pathname])
 
   // Login page renders without the sidebar/layout shell
   if (pathname === "/gtm/login") {
@@ -364,15 +433,51 @@ export default function GTMLayout({ children }: { children: React.ReactNode }) {
   return (
     // Light only, fleet-wide (STRUCTURE.md §1) — the theme toggle is gone.
     <div data-theme="light" style={{ display: "flex", minHeight: "100vh" }}>
-      <Sidebar />
+      {isMobile && drawerOpen && (
+        <div
+          onClick={() => setDrawerOpen(false)}
+          aria-hidden
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 999 }}
+        />
+      )}
+      <Sidebar isMobile={isMobile} drawerOpen={drawerOpen} onClose={() => setDrawerOpen(false)} />
       <main
         style={{
           flex: 1,
+          minWidth: 0,
           background: "var(--gtm-bg-page)",
           overflowY: "auto",
           transition: "background 200ms ease",
+          ...(isMobile ? { height: "100dvh", overflowX: "hidden" as const } : {}),
         }}
       >
+        {isMobile && (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: "10px 14px",
+              background: "#061341",
+              position: "sticky",
+              top: 0,
+              zIndex: 500,
+            }}
+          >
+            <button
+              onClick={() => setDrawerOpen(true)}
+              aria-label="Open menu"
+              style={{ background: "transparent", border: "none", padding: 4, cursor: "pointer", lineHeight: 0, color: "#fff" }}
+            >
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+            <img src="/Momentify-Logo_Reverse.svg" alt="Momentify" style={{ height: 18, display: "block" }} />
+          </div>
+        )}
         {children}
       </main>
     </div>
