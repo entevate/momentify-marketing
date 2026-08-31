@@ -194,4 +194,45 @@ export const kv = {
     const store = await readStore()
     return keys.map((k) => (store[k] === undefined ? null : (store[k] as unknown as T)))
   },
+
+  /* ---- Redis hash ops (used by the Link-in-Bio daily buckets + per-link tallies).
+   * hincrby is atomic on the server so the public click redirect and view beacon
+   * never race a read-modify-write blob. Fallback stores a hash as a nested object. */
+
+  async hincrby(key: string, field: string, by = 1): Promise<number> {
+    if (await resolveMode()) {
+      return vercelKv.hincrby(key, field, by)
+    }
+    const store = await readStore()
+    const hash = (typeof store[key] === "object" && store[key] && !Array.isArray(store[key]) ? store[key] : {}) as Record<string, number>
+    hash[field] = (typeof hash[field] === "number" ? hash[field] : 0) + by
+    store[key] = hash as Json
+    await writeStore()
+    return hash[field]
+  },
+
+  async hgetall<T extends Record<string, unknown> = Record<string, unknown>>(key: string): Promise<T | null> {
+    if (await resolveMode()) {
+      return (await vercelKv.hgetall<T>(key)) as T | null
+    }
+    const store = await readStore()
+    const v = store[key]
+    return (v && typeof v === "object" && !Array.isArray(v) ? (v as unknown as T) : ({} as T))
+  },
+
+  async hdel(key: string, ...fields: string[]): Promise<number> {
+    if (await resolveMode()) {
+      if (fields.length === 0) return 0
+      return vercelKv.hdel(key, ...(fields as [string, ...string[]]))
+    }
+    const store = await readStore()
+    const hash = (typeof store[key] === "object" && store[key] && !Array.isArray(store[key]) ? store[key] : {}) as Record<string, unknown>
+    let removed = 0
+    for (const f of fields) {
+      if (f in hash) { delete hash[f]; removed++ }
+    }
+    store[key] = hash as Json
+    await writeStore()
+    return removed
+  },
 }

@@ -23,6 +23,7 @@ import {
   BarChart3,
   Contact,
   QrCode,
+  Link2,
   ChevronLeft,
   ChevronRight,
   type LucideIcon,
@@ -80,6 +81,7 @@ const SECTIONS: { label: string; items: NavLink[] }[] = [
       { label: "Contacts", href: "/gtm/contacts", icon: Contact, color: ACCENT, hidden: true },
       { label: "Pages", href: "/gtm/pages", icon: FileText, color: ACCENT },
       { label: "QR Codes", href: "/gtm/qr", icon: QrCode, color: ACCENT },
+      { label: "Link in Bio", href: "/gtm/link-in-bio", icon: Link2, color: ACCENT },
     ],
   },
   {
