@@ -397,3 +397,9 @@ p, h1, h2, h3, h4, h5, h6, span, li {
     overflow-x: hidden;
   }
 }
+
+/* Mobile: stack the collateral builders single-column and stop iOS zoom. BUILDER MOBILE STACK */
+@media (max-width: 767px) {
+  .bld-cols { grid-template-columns: 1fr !important; }
+  input, textarea, select { font-size: 16px !important; }
+}

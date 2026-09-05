@@ -10,6 +10,7 @@
  * fork into a non-Momentify Growth Engine only touches those.
  */
 
+import { useEffect, useState } from "react"
 import type { CSSProperties, ChangeEvent, HTMLAttributes, ReactNode } from "react"
 
 // ─── Company-specific knobs ─────────────────────────────────────────────
@@ -46,6 +47,48 @@ export const FONT_STACK =
 // Where server-rendered exports fetch brand assets from. Must be public
 // (no auth) since headless Chromium fetches these URLs server-side.
 export const ASSET_ORIGIN = "https://www.momentifyapp.com"
+
+// ─── Responsive builder layout ──────────────────────────────────────────
+// Desktop: form left, sticky preview right. Mobile: the preview pins to the
+// top with a show/hide chevron and the form stacks below, so the preview
+// stays visible while the fields scroll.
+export function BuilderLayout({ form, preview }: { form: ReactNode; preview: ReactNode }) {
+  const [isMobile, setIsMobile] = useState(false)
+  const [open, setOpen] = useState(true)
+  useEffect(() => {
+    const c = () => setIsMobile(window.innerWidth < 768)
+    c()
+    window.addEventListener("resize", c)
+    return () => window.removeEventListener("resize", c)
+  }, [])
+
+  if (isMobile) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div style={{ position: "sticky", top: 0, zIndex: 30, background: COLORS.pageBg, paddingBottom: 10, borderBottom: `1px solid ${COLORS.border}` }}>
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-expanded={open}
+            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, padding: "10px 12px", background: COLORS.paper, border: `1px solid ${COLORS.border}`, borderRadius: 9, color: COLORS.ink, fontFamily: FONT_STACK, fontSize: 13, fontWeight: 700, cursor: "pointer" }}
+          >
+            <span>Live preview</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? "rotate(180deg)" : "none", transition: "transform .15s ease", flex: "none" }}><polyline points="6 9 12 15 18 9" /></svg>
+          </button>
+          {open && <div style={{ marginTop: 10, maxHeight: "46vh", overflow: "auto" }}>{preview}</div>}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>{form}</div>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 380px) minmax(0, 1fr)", gap: 20, alignItems: "start" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16, minWidth: 0 }}>{form}</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 16, position: "sticky", top: 16, minWidth: 0 }}>{preview}</div>
+    </div>
+  )
+}
 
 // ─── Text helpers ──────────────────────────────────────────────────────
 export function escapeHtml(v: string): string {

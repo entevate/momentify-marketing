@@ -5,6 +5,7 @@ import { Download, Save, Check, Loader2, FileImage, FileText } from "lucide-reac
 import {
   AccentPicker,
   ASSET_ORIGIN,
+  BuilderLayout,
   COLORS,
   Card,
   Field,
@@ -280,7 +281,8 @@ export default function BusinessCardPage() {
         />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 380px) minmax(0, 1fr)", gap: 20, alignItems: "start" }}>
+      <BuilderLayout
+        form={
         <Card title="Details">
           <Field label="Full name">
             <Input value={config.fullName} onChange={(v) => update("fullName", v)} placeholder="Jake Hamann" />
@@ -305,8 +307,9 @@ export default function BusinessCardPage() {
             {saved ? "Saved" : "Save for this preset"}
           </button>
         </Card>
-
-        <div style={{ position: "sticky", top: 16, display: "flex", flexDirection: "column", gap: 16 }}>
+        }
+        preview={
+          <>
           <Card title="Preview (front / back)">
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
               <CardScaledPreview html={previewFront} label="Front" />
@@ -339,8 +342,9 @@ export default function BusinessCardPage() {
               First render after a deploy can take ~5–10s while chromium downloads on the serverless host. Subsequent renders are fast.
             </p>
           </Card>
-        </div>
-      </div>
+          </>
+        }
+      />
     </div>
   )
 }
