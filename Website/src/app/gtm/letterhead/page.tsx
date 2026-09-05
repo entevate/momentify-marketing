@@ -5,6 +5,7 @@ import { Copy, Check, Download, Save, FileText } from "lucide-react"
 import {
   AccentPicker,
   ASSET_ORIGIN,
+  BuilderLayout,
   COLORS,
   Card,
   Field,
@@ -281,7 +282,9 @@ export default function LetterheadPage() {
         />
       </div>
 
-      <div className="bld-cols" style={{ display: "grid", gridTemplateColumns: "minmax(0, 380px) minmax(0, 1fr)", gap: 20, alignItems: "start" }}>
+      <BuilderLayout
+        form={
+          <>
         <Card title="Header + identity">
           <Field label="Full name">
             <Input value={config.fullName} onChange={(v) => update("fullName", v)} />
@@ -313,7 +316,6 @@ export default function LetterheadPage() {
           </button>
         </Card>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <Card title="Body">
             <Field label="Subject / heading (optional)">
               <Input value={config.bodyTitle} onChange={(v) => update("bodyTitle", v)} />
@@ -322,7 +324,10 @@ export default function LetterheadPage() {
               <Textarea value={config.body} onChange={(v) => update("body", v)} rows={10} />
             </Field>
           </Card>
-
+          </>
+        }
+        preview={
+          <>
           <Card title="Preview">
             <div
               ref={previewRef}
@@ -356,8 +361,9 @@ export default function LetterheadPage() {
               <strong>Google Docs:</strong> paste into a blank doc — formatting, logo, and colors carry over. <strong>Word .doc:</strong> opens directly in Word or Pages. <strong>.html:</strong> open in a browser, then File → Print → Save as PDF for a print-perfect version.
             </p>
           </Card>
-        </div>
-      </div>
+          </>
+        }
+      />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { Copy, Check, Download, Save, Mail } from "lucide-react"
 import {
   AccentPicker,
   ASSET_ORIGIN,
+  BuilderLayout,
   COLORS,
   Card,
   Field,
@@ -273,8 +274,8 @@ export default function EmailSignaturePage() {
         />
       </div>
 
-      <div className="bld-cols" style={{ display: "grid", gridTemplateColumns: "minmax(0, 380px) minmax(0, 1fr)", gap: 20, alignItems: "start" }}>
-        {/* Form */}
+      <BuilderLayout
+        form={
         <Card title="Details">
           <Field label="Full name">
             <Input value={config.fullName} onChange={(v) => update("fullName", v)} placeholder="Jake Hamann" />
@@ -312,9 +313,9 @@ export default function EmailSignaturePage() {
             {saved ? "Saved" : "Save for this preset"}
           </button>
         </Card>
-
-        {/* Preview + Export */}
-        <div style={{ position: "sticky", top: 16, display: "flex", flexDirection: "column", gap: 16 }}>
+        }
+        preview={
+          <>
           <Card title="Preview">
             <div
               ref={previewRef}
@@ -357,8 +358,9 @@ export default function EmailSignaturePage() {
               <strong>Gmail:</strong> Settings → General → Signature → paste. <strong>Outlook:</strong> Settings → Compose &amp; reply → paste. <strong>Apple Mail (Mac):</strong> Preferences → Signatures → paste (uncheck &quot;Always match my default message font&quot;). <strong>Apple Mail (iPhone/iPad):</strong> copy on the device (or email it to yourself and copy it there), then Settings → Mail → Signature → paste; if it pastes as plain text, shake to Undo, then shake again and Redo to restore the styling.
             </p>
           </Card>
-        </div>
-      </div>
+          </>
+        }
+      />
     </div>
   )
 }
