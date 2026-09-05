@@ -280,7 +280,7 @@ export default function BusinessCardPage() {
         />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 380px) minmax(0, 1fr)", gap: 20, alignItems: "start" }}>
+      <div className="bld-cols" style={{ display: "grid", gridTemplateColumns: "minmax(0, 380px) minmax(0, 1fr)", gap: 20, alignItems: "start" }}>
         <Card title="Details">
           <Field label="Full name">
             <Input value={config.fullName} onChange={(v) => update("fullName", v)} placeholder="Jake Hamann" />

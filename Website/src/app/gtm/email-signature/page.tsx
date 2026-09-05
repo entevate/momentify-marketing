@@ -273,7 +273,7 @@ export default function EmailSignaturePage() {
         />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 380px) minmax(0, 1fr)", gap: 20, alignItems: "start" }}>
+      <div className="bld-cols" style={{ display: "grid", gridTemplateColumns: "minmax(0, 380px) minmax(0, 1fr)", gap: 20, alignItems: "start" }}>
         {/* Form */}
         <Card title="Details">
           <Field label="Full name">
