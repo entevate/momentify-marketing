@@ -27,6 +27,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "texas-legends",
+    name: "Texas Legends Explorer",
+    company: "Texas Legends",
+    industry: "Event Services",
+    prototypeFile: "/explorer/texas-legends",
+    logo: "/brand/assets/texas-legends-icon.webp",
+    gateLogo: "/brand/assets/texas-legends-dark.webp",
+    accentColor: "#0254BC",
+    createdAt: "2026-09-14",
+    password: "legends2026",
+  },
+  {
     slug: "biolabs",
     name: "BioLabs Explorer",
     company: "BioLabs",

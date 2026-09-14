@@ -45,6 +45,7 @@ import { WORLD_LINK_CONFIG } from './world-link';
 import { VITAL_EDGE_CONFIG } from './vital-edge';
 import { WARREN_CAT_CONFIG } from './warren-cat';
 import { BIOLABS_CONFIG } from './biolabs';
+import { TEXAS_LEGENDS_CONFIG } from './texas-legends';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -85,6 +86,7 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'vital-edge': VITAL_EDGE_CONFIG,
   'warren-cat': WARREN_CAT_CONFIG,
   'biolabs': BIOLABS_CONFIG,
+  'texas-legends': TEXAS_LEGENDS_CONFIG,
 };
 
 export interface PrototypeMetadata {
