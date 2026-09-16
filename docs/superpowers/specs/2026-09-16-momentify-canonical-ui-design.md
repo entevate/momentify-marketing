@@ -183,6 +183,8 @@ Body gains three optional fields: `bgImage?: string` (data URI), `bgOpacity?: nu
 `components/gtm/QrLibrary.tsx` (110 hardcoded) · `components/gtm/PagesView.tsx` (67) · `components/gtm/LinkInBioBuilder.tsx` (47 — its `ACCENT` / `INK` / `PILLAR_SWATCHES` consts become token reads; the mobile chevron work already landed there stays) · `components/gtm/AssetPanel.tsx` (23) · `app/gtm/login/page.tsx` (13).
 
 ### Verification (this Mac stalls on `next dev` — no local dev server)
+**Known-red baseline (decided 2026-09-16):** `app/api/gtm/__tests__/generate-asset-html.test.ts` fails on untouched `main` (23 tests) because `requireGtmAuth()` calls `next/headers` `cookies()` outside a request scope — harness drift from the bearer→cookie auth change, unrelated to this work. It is left as-is and noted in the PR; this work's commits are gated on `tsc` plus the **new** suites below, not on that one.
+
 1. `npx tsc --noEmit` clean.
 2. Jest (`app/api/gtm/__tests__` + new `lib/gtm/templates/__tests__/render.test.ts`): defaults yield `none` / `1`; data URI substituted; opacity clamped; reserved keys beat slots; `slots` override drops non-manifest keys and truncates to `maxChars`; `bgImage` validation rejects wrong MIME and > 4 MB.
 3. One-shot `renderHtmlToPng` script (tsx) on one template per family (bold-stat, headline-quote, wide-banner, rox-report, solution-feature) **with no bg** → pixel-diff against the pre-change render (must be identical); and **with a bg at 60%** → visually inspect the layer order.
