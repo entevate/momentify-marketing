@@ -168,7 +168,10 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
         const data = await res.json()
         setAssetUrl(withCacheBust(data.url))
         if (isCarousel) { setCards(Array.isArray(data.cards) ? data.cards : null); setSlots(null) }
-        else { setSlots(data.slots ?? null); setDraftSlots(data.slots ?? {}); setCards(null) }
+        else {
+          const s = data.slots && typeof data.slots === "object" && !Array.isArray(data.slots) ? (data.slots as Record<string, string>) : null
+          setSlots(s); setDraftSlots(s ?? {}); setCards(null)
+        }
         setPickerOpen(false)
         stampGraphicRef(itemId, { blobUrl: data.url, assetType, templateId })
       } catch (e: unknown) {
@@ -193,26 +196,41 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
       if (isCarousel && !nextCards) return
       setRerendering(true)
       setError(null)
+      const abortCtrl = new AbortController()
+      const timeoutMs = isCarousel ? 120_000 : 60_000
+      const timeoutId = setTimeout(() => abortCtrl.abort(), timeoutMs)
       try {
         const mediaFields = media?.bgImage ? { bgImage: media.bgImage, bgOpacity: media.bgOpacity ?? 100 } : {}
         const endpoint = isCarousel ? "/api/gtm/fill-carousel" : "/api/gtm/fill-template"
         const payload = isCarousel
           ? { templateId: activeTemplateId, pillar: solution, briefText, itemId, cards: nextCards, ...mediaFields }
           : { templateId: activeTemplateId, assetType: "social-post", pillar: solution, briefText, itemId, slots: nextSlots, ...mediaFields }
-        const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          signal: abortCtrl.signal,
+        })
         if (!res.ok) {
           const body = await res.json().catch(() => ({}))
           throw new Error(body.error || "Re-render failed")
         }
         const data = await res.json()
         setAssetUrl(withCacheBust(data.url))
-        if (!isCarousel && data.slots) { setSlots(data.slots); setDraftSlots(data.slots) }
+        if (!isCarousel) {
+          const s = data.slots && typeof data.slots === "object" && !Array.isArray(data.slots) ? (data.slots as Record<string, string>) : null
+          if (s) { setSlots(s); setDraftSlots(s) }
+        }
         if (isCarousel && Array.isArray(data.cards)) setCards(data.cards)
         stampGraphicRef(itemId, { blobUrl: data.url, assetType, templateId: activeTemplateId })
       } catch (e: unknown) {
-        const err = e as { message?: string }
-        setError(err?.message || "Re-render failed.")
+        const err = e as { name?: string; message?: string }
+        const msg = err?.name === "AbortError"
+          ? "Re-render took too long and was cancelled. Try again."
+          : err?.message || "Re-render failed."
+        setError(msg)
       } finally {
+        clearTimeout(timeoutId)
         setRerendering(false)
       }
     },
@@ -220,15 +238,29 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
   )
 
   // Media changed after a fill (photo picked/cleared, slider released) → re-render.
-  const mediaKey = `${media?.bgImage ? media.bgImage.length : 0}:${media?.bgOpacity ?? ""}`
+  // Keyed off what is actually sent, so a slider move with no photo is a no-op and
+  // two different photos of the same byte length still re-render.
+  const mediaKey = media?.bgImage
+    ? `${media.bgImage.length}:${media.bgImage.slice(-32)}:${media.bgOpacity ?? 100}`
+    : "none"
   const lastMediaKey = useRef(mediaKey)
+  const pendingMediaRerender = useRef(false)
   useEffect(() => {
     if (lastMediaKey.current === mediaKey) return
     lastMediaKey.current = mediaKey
     if (!assetUrl || !activeTemplateId) return
+    if (busy) { pendingMediaRerender.current = true; return }
     void rerender(slots, cards)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mediaKey])
+  // A media change that arrived mid-fill re-renders once the panel is idle again.
+  useEffect(() => {
+    if (busy || !pendingMediaRerender.current) return
+    pendingMediaRerender.current = false
+    if (!assetUrl || !activeTemplateId) return
+    void rerender(slots, cards)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [busy])
 
   // ─── Claude full-HTML generation (non-social-post asset types) ──────
   const handleGenerate = useCallback(async () => {
@@ -473,7 +505,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
                   style={{
                     ...pickerCard,
                     borderColor: isActive ? "var(--gtm-accent)" : "var(--gtm-border)",
-                    boxShadow: isActive ? "0 0 0 2px rgba(36,123,150,0.16)" : "none",
+                    boxShadow: isActive ? "0 0 0 2px var(--gtm-accent-bg)" : "none",
                   }}
                 >
                   <div style={pickerThumbWrap(t.aspectRatio)}>
@@ -663,11 +695,11 @@ function SocialPostPreview({ assetUrl, aspect }: { assetUrl: string; aspect: "1:
 
 const errBanner: React.CSSProperties = {
   background: "var(--gtm-danger-bg)",
-  border: "1px solid rgba(239, 68, 68, 0.3)",
+  border: "1px solid var(--gtm-danger-border)",
   borderRadius: 6,
   padding: 12,
   fontSize: 13,
-  color: "#b91c1c",
+  color: "var(--gtm-danger-text)",
   marginTop: 12,
   fontFamily: font,
 }
@@ -678,7 +710,7 @@ const progressBanner: React.CSSProperties = {
   gap: 8,
   padding: 12,
   background: "var(--gtm-accent-bg)",
-  border: "1px solid rgba(0, 187, 165, 0.2)",
+  border: "1px solid var(--gtm-accent-bg)",
   borderRadius: 6,
   fontSize: 12,
   fontWeight: 500,
