@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <style>
   :root {
+    --bg-image:     {{BG_IMAGE}};
+    --bg-opacity:   {{BG_OPACITY}};
     --primary:       {{PRIMARY}};
     --primary-light: {{PRIMARY_LIGHT}};
     --primary-dark:  {{PRIMARY_DARK}};
@@ -115,10 +117,17 @@
     padding: 18px 40px;
     white-space: nowrap;
   }
+  .stage .bg {
+    position: absolute; inset: 0;
+    background: var(--bg-image) center / cover no-repeat;
+    opacity: var(--bg-opacity);
+    pointer-events: none; z-index: 0;
+  }
 </style>
 </head>
 <body>
 <div class="stage">
+  <div class="bg"></div>
 
   <div class="body">
     <div class="col-left">
