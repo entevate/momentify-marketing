@@ -669,6 +669,8 @@ Expected: five `SAME` lines and `PARITY OK`. If any line says `DIFFERS`, open `.
 
 - [x] **Step 5: Verify gate + commit** *(done — commit `3ec73178`; 15/15 patched, `PARITY OK` on all five families. The original patcher assumed every template was rooted on a bare `<div class="stage">`; `wide-banner-11` is rooted on `<div class="card" id="card">` and `wide-banner-169` on `<div class="stage" id="stage">`, so the script above was generalized (prefer `.stage`, fall back to `.card`, tolerate an `id`).)*
 
+> **Amended after review (2026-09-16), follow-up commit:** review found the `.bg` layer painted *above* the text in the nine light templates (`headline-quote-*`, `solution-feature-*`, `rox-report-*`), which declare no stacking at all; six of them also lacked `position: relative` on `.stage`. Parity couldn't see it — with no photo the layer paints nothing. The patcher now (a) emits `.{root} > *:not(.bg) { position: relative; z-index: 1; }` for any template with no positive `z-index` (the six dark templates keep their explicit ladders — the rule would push `.geo` above their overlay), and (b) inserts `position: relative` into the root rule when absent. `render-parity.ts compare` now throws if a with-photo render equals the no-photo render, and the five `.parity/with-bg/*.png` files are inspected by eye. Templates were re-patched from the pre-patch state (`git checkout 3ec73178^ -- …`) so the follow-up diff is insertions-only.
+
 Run the verification gate. Expected: tsc 0, Jest green (16 tests).
 
 ```bash
