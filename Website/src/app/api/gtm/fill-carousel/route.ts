@@ -9,6 +9,18 @@ import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
 import { parseRenderMedia, filterSlots, parseHiddenCards } from "@/lib/gtm/render-media"
+import { solutionGuidance } from "@/lib/gtm/builder-prompts"
+
+/**
+ * Extract the LinkedIn slice from a ContentBuilder multi-platform brief.
+ * See fill-template/route.ts for the rationale — the same shape applies
+ * here since the carousel is fed the same brief.
+ */
+function extractLinkedInBrief(brief: string): string {
+  const m = brief.match(/---\s*LINKEDIN\s*---([\s\S]*?)(?=---\s*(?:INSTAGRAM|TWITTER)\s*---|$)/i)
+  const slice = m?.[1]?.trim()
+  return slice && slice.length > 40 ? slice : brief
+}
 
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 const ASSET_TYPE = "carousel"
@@ -122,24 +134,36 @@ export async function POST(request: Request) {
         .map((s) => `- "${s.key}" (${s.kind}, max ${s.maxChars} chars): ${s.label}. Example: ${s.example}`)
         .join("\n")
 
+      // Pillar-specific reorientation. Prepended so Claude anchors the six
+      // cards in the right domain (trade shows vs recruiting vs field sales,
+      // etc.) BEFORE brand-voice rules and the brief. Without this the six
+      // cards collapse to a generic "engagement" narrative.
+      const guidance = solutionGuidance[pillar] || ""
+      // Ground the fill in the LinkedIn slice of the multi-platform brief.
+      const focusedBrief = extractLinkedInBrief(briefText).slice(0, 2400)
+
       const userPrompt = `You are writing copy for a Momentify ${manifest.aspectRatio} carousel of ${CARD_COUNT} swipeable cards. Each card is one instance of the template "${manifest.label}" (${manifest.description}).
 
 Pillar palette: ${pillar}
 
-BRAND VOICE RULES (non-negotiable):
-- Momentify is a fan engagement and event technology company. Bold, energetic, sports/events-focused tone.
+${guidance ? `${guidance}\n\n` : ""}BRAND VOICE RULES (non-negotiable):
+- Momentify is an in-person engagement operating system (ROX framework). Confident, evidence-first, sharp cadence.
 - Use hyphens (-), commas, or periods. NEVER use em-dashes or en-dashes.
-- CTAs must be action-oriented and low-friction: "Book a Demo", "Reserve Your Spot", "See It Live". NEVER "Sign up", "Subscribe", "Buy now".
-- Speak to event organizers, sports teams, venues, and fan experience professionals.
+- CTAs must be action-oriented and low-friction: "Book a ROX Audit", "See a Demo", "Reserve a Spot". NEVER "Sign up", "Subscribe", "Buy now".
+- Speak to the buyer the guidance block above named. Do not drift into a different pillar's vocabulary.
 - Respect every slot's maxChars. Going over breaks the layout.
-- AVOID WIDOWS AND ORPHANS: never let the last line of a multi-line slot end with a single short word. Prefer copy whose word count divides evenly into 2-4 visual lines. If a sentence wraps to leave one word alone on a line, rewrite it (shorter words, restructured phrasing, or trim the overall length).
-- Vary word lengths so wrapping looks balanced. Long final words help anchor the last line; short throwaways at the end create widows.
+- Prefer copy whose word count divides evenly into 2-4 visual lines; vary word lengths so wrapping looks balanced.
 
-BRIEF (use this as context, not verbatim copy):
-${briefText.slice(0, 2400)}
+BRIEF (context, not verbatim copy):
+${focusedBrief}
 
 TASK:
-Produce ${CARD_COUNT} DISTINCT cards. Each card stands on its own as one slide of the carousel. Cards should progress as a sequence: e.g. setup -> insight -> proof -> action, OR card 1 = hook, cards 2-5 = supporting points, card 6 = CTA. Do not repeat content across cards.
+Produce ${CARD_COUNT} DISTINCT cards that read as ONE story arc, not six unrelated posts. Structure:
+- Card 1 = hook (a sharp observation, question, or contrarian take that stops the scroll)
+- Cards 2-4 = the argument (each card advances the point with a new angle, proof, or contrast — never restates the previous card)
+- Card 5 = the turn (name the outcome, quantify the win, cite a proof point from the brief)
+- Card 6 = the CTA (one action, low-friction, on-brand from the CTA list above)
+Every card must move the reader forward. If a card could be swapped with an earlier one without confusion, rewrite it.
 
 SLOTS PER CARD (return each card as a JSON object with these EXACT keys):
 ${slotSpec}

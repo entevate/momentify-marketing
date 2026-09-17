@@ -9,6 +9,22 @@ import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
 import { parseRenderMedia, filterSlots, parseHidden } from "@/lib/gtm/render-media"
+import { solutionGuidance } from "@/lib/gtm/builder-prompts"
+
+/**
+ * The social-post brief that ContentBuilder saves ships three platform
+ * sections concatenated with `---LINKEDIN---`, `---INSTAGRAM---`, and
+ * `---TWITTER---` markers. A single social-post graphic is almost always
+ * LinkedIn-shaped (long-form professional voice, headline + subhead
+ * pattern), so grounding the fill in the LinkedIn slice removes tone
+ * ambiguity. Fallback: if the brief has no markers (e.g. a legacy save
+ * or a fresh manual paste) we use the whole thing.
+ */
+function extractLinkedInBrief(brief: string): string {
+  const m = brief.match(/---\s*LINKEDIN\s*---([\s\S]*?)(?=---\s*(?:INSTAGRAM|TWITTER)\s*---|$)/i)
+  const slice = m?.[1]?.trim()
+  return slice && slice.length > 40 ? slice : brief
+}
 
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 
@@ -116,23 +132,36 @@ export async function POST(request: Request) {
         .map((s) => `- "${s.key}" (${s.kind}, max ${s.maxChars} chars): ${s.label}. Example: ${s.example}`)
         .join("\n")
 
+      // Pillar-specific reorientation. Prepended so Claude fixes the domain
+      // (trade shows vs recruiting vs field sales, etc.) BEFORE it sees the
+      // brand-voice rules and the brief. Without this the fill leans on
+      // whatever trade-show flavored slot examples happen to be in the
+      // manifest and produces off-domain copy.
+      const guidance = solutionGuidance[pillar] || ""
+
+      // Ground the fill in the LinkedIn slice of the brief when the brief
+      // is the ContentBuilder's ---PLATFORM--- multi-section output. A
+      // single social-post graphic maps to LinkedIn's voice cleanest, and
+      // fill quality collapses when Claude has to arbitrate between three
+      // conflicting tones in one blob.
+      const focusedBrief = extractLinkedInBrief(briefText).slice(0, 2400)
+
       const userPrompt = `You are writing copy for a Momentify ${manifest.aspectRatio} ${manifest.assetType} graphic.
 
 Template: ${manifest.label}
 Design intent: ${manifest.description}
 Pillar palette: ${pillar}
 
-BRAND VOICE RULES (non-negotiable):
-- Momentify is a fan engagement and event technology company. Bold, energetic, sports/events-focused tone.
+${guidance ? `${guidance}\n\n` : ""}BRAND VOICE RULES (non-negotiable):
+- Momentify is an in-person engagement operating system (ROX framework). Confident, evidence-first, sharp cadence.
 - Use hyphens (-), commas, or periods. NEVER use em-dashes ( - ) or en-dashes (-).
-- CTAs must be action-oriented and low-friction: "Book a Demo", "Reserve Your Spot", "See It Live". NEVER "Sign up", "Subscribe", "Buy now".
-- Speak to event organizers, sports teams, venues, and fan experience professionals.
+- CTAs must be action-oriented and low-friction: "Book a ROX Audit", "See a Demo", "Reserve a Spot". NEVER "Sign up", "Subscribe", "Buy now".
+- Speak to the buyer the guidance block above named. Do not drift into a different pillar's vocabulary.
 - Respect every slot's maxChars. Going over breaks the layout.
-- AVOID WIDOWS AND ORPHANS: never let the last line of a multi-line slot end with a single short word. Prefer copy whose word count divides evenly into 2-4 visual lines. If a sentence wraps to leave one word alone on a line, rewrite it (shorter words, restructured phrasing, or trim the overall length).
-- Vary word lengths so wrapping looks balanced. Long final words help anchor the last line; short throwaways at the end create widows.
+- Prefer copy whose word count divides evenly into 2-4 visual lines; vary word lengths so wrapping looks balanced.
 
-BRIEF (use this as context, not verbatim copy):
-${briefText.slice(0, 2400)}
+BRIEF (context, not verbatim copy):
+${focusedBrief}
 
 SLOTS TO FILL (return JSON with these EXACT keys):
 ${slotSpec}
