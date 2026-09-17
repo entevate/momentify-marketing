@@ -54,7 +54,8 @@ export default function TemplatePreviewModal({
     if (!el) return
     const ro = new ResizeObserver((entries) => {
       const w = entries[0]?.contentRect.width ?? 0
-      if (w > 0) setScale(w / size.width)
+      // Never leave the frame hidden: a 0 measurement falls back to 1:1.
+      setScale(w > 0 ? w / size.width : 1)
     })
     ro.observe(el)
     return () => ro.disconnect()
@@ -86,7 +87,7 @@ export default function TemplatePreviewModal({
             <span style={{ fontSize: 17, fontWeight: 600, color: "var(--gtm-text-primary)" }}>{manifest.label}</span>
             <span className="mono" style={{ fontSize: 11, color: "var(--gtm-text-muted)" }}>{manifest.id}</span>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close preview" style={closeButton}>
+          <button type="button" autoFocus onClick={onClose} aria-label="Close preview" style={closeButton}>
             <X size={16} />
           </button>
         </div>
@@ -168,7 +169,7 @@ const backdrop: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   padding: 16,
-  zIndex: 1000,
+  zIndex: 1100, // above the shell's mobile drawer (1000) and app bar (500)
   fontFamily: font,
 }
 
