@@ -215,11 +215,33 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
         if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
           throw new Error("expected object")
         }
-        // Coerce all values to strings + strip em-dashes per brand voice
+        // Per-slot maxChars enforcement. Trim on a word boundary when
+        // possible so a truncated headline doesn't end mid-word; fall
+        // back to a hard slice if there's no whitespace to break at.
+        // The layout is CSS-fixed for the manifest maxChars — silent
+        // overflow was the audit's finding #8, producing cropped/broken
+        // graphics with no signal.
+        const maxByKey = new Map(manifest.slots.map((s) => [s.key, s.maxChars]))
+        const truncate = (key: string, val: string): string => {
+          const max = maxByKey.get(key)
+          if (!max || val.length <= max) return val
+          const soft = val.slice(0, max + 1)
+          const lastSpace = soft.lastIndexOf(" ")
+          const cut = lastSpace >= Math.floor(max * 0.7) ? soft.slice(0, lastSpace) : val.slice(0, max)
+          console.warn(`[fill-template] truncated ${key} from ${val.length} to ${cut.length} chars (maxChars=${max})`)
+          return cut
+        }
+
+        // Coerce all values to strings, strip em-dashes, enforce maxChars.
         slots = {}
         for (const [k, v] of Object.entries(parsed)) {
-          if (typeof v === "string") slots[k] = stripEmDashes(v)
-          else if (v !== undefined && v !== null) slots[k] = stripEmDashes(String(v))
+          if (!maxByKey.has(k)) continue  // ignore keys the manifest doesn't declare
+          const raw = typeof v === "string" ? v : v === undefined || v === null ? "" : String(v)
+          slots[k] = truncate(k, stripEmDashes(raw))
+        }
+        // Warn on missing slots — they'll render blank, which is layout-broken.
+        for (const s of manifest.slots) {
+          if (!(s.key in slots)) console.warn(`[fill-template] missing slot from Claude: ${s.key}`)
         }
       } catch (e) {
         console.error("[fill-template] JSON parse failed", e, rawText.slice(0, 300))

@@ -5,17 +5,47 @@
   "aspectRatio": "1:1",
   "description": "Compact square quote card. White background with solution accent bar on the left, eyebrow and headline at top, pull quote center. For Instagram and LinkedIn square feed.",
   "slots": [
-    { "key": "LABEL",       "label": "Eyebrow label",              "kind": "eyebrow",     "maxChars": 32,  "example": "Customer Story" },
-    { "key": "HEADLINE",    "label": "Bold headline",              "kind": "headline",    "maxChars": 60,  "example": "When Every Scan Counts" },
-    { "key": "QUOTE",       "label": "Pull quote",                 "kind": "quote",       "maxChars": 160, "example": "Our team captured 340 qualified leads in 3 days. The ROX data changed how we allocate trade show budget." },
-    { "key": "ATTRIBUTION", "label": "Attribution",                "kind": "attribution", "maxChars": 50,  "example": "— Director of Field Marketing, Caterpillar" },
-    { "key": "CTA",         "label": "CTA button text",            "kind": "cta_label",   "maxChars": 28,  "example": "See the Results" }
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 32,
+      "example": "Customer Story"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Bold headline",
+      "kind": "headline",
+      "maxChars": 60,
+      "example": "When Every Scan Counts"
+    },
+    {
+      "key": "QUOTE",
+      "label": "Pull quote",
+      "kind": "quote",
+      "maxChars": 160,
+      "example": "Our team captured 340 qualified leads in 3 days. The ROX data changed how we allocate trade show budget."
+    },
+    {
+      "key": "ATTRIBUTION",
+      "label": "Attribution",
+      "kind": "attribution",
+      "maxChars": 50,
+      "example": "- Director of Field Marketing, Caterpillar"
+    },
+    {
+      "key": "CTA",
+      "label": "CTA button text",
+      "kind": "cta_label",
+      "maxChars": 28,
+      "example": "See the Results"
+    }
   ],
   "sampleData": {
     "LABEL": "Customer Story",
     "HEADLINE": "When Every Scan Counts",
     "QUOTE": "Our team captured 340 qualified leads in 3 days. The ROX data changed how we allocate trade show budget.",
-    "ATTRIBUTION": "— Director of Field Marketing, Caterpillar",
+    "ATTRIBUTION": "- Director of Field Marketing, Caterpillar",
     "CTA": "See the Results"
   }
 }

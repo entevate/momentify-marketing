@@ -5,14 +5,62 @@
   "aspectRatio": "3:4",
   "description": "Portrait dark card with three stacked performance metrics. Eyebrow and headline at top, three large stat blocks with dividers, brand footer. For Instagram Stories and Pinterest.",
   "slots": [
-    { "key": "LABEL",   "label": "Eyebrow label",      "kind": "eyebrow",     "maxChars": 40,  "example": "Recruiting Impact · Q1 2025" },
-    { "key": "HEADLINE","label": "Section headline",   "kind": "headline",    "maxChars": 52,  "example": "Qualified Pipeline, Built at the Fair" },
-    { "key": "STAT1",   "label": "First stat value",   "kind": "stat_number", "maxChars": 8,   "example": "340" },
-    { "key": "LABEL1",  "label": "First stat label",   "kind": "stat_label",  "maxChars": 40,  "example": "qualified candidates captured on-site" },
-    { "key": "STAT2",   "label": "Second stat value",  "kind": "stat_number", "maxChars": 8,   "example": "72%" },
-    { "key": "LABEL2",  "label": "Second stat label",  "kind": "stat_label",  "maxChars": 40,  "example": "of scans converted to first interviews" },
-    { "key": "STAT3",   "label": "Third stat value",   "kind": "stat_number", "maxChars": 8,   "example": "18 days" },
-    { "key": "LABEL3",  "label": "Third stat label",   "kind": "stat_label",  "maxChars": 40,  "example": "average time-to-offer from event scan" }
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 40,
+      "example": "Recruiting Impact · Q1 2025"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Section headline",
+      "kind": "headline",
+      "maxChars": 52,
+      "example": "Qualified Pipeline, Built at the Fair"
+    },
+    {
+      "key": "STAT1",
+      "label": "First stat value",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "340"
+    },
+    {
+      "key": "LABEL1",
+      "label": "First stat label",
+      "kind": "stat_label",
+      "maxChars": 40,
+      "example": "qualified candidates captured on-site"
+    },
+    {
+      "key": "STAT2",
+      "label": "Second stat value",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "72%"
+    },
+    {
+      "key": "LABEL2",
+      "label": "Second stat label",
+      "kind": "stat_label",
+      "maxChars": 40,
+      "example": "of scans converted to first interviews"
+    },
+    {
+      "key": "STAT3",
+      "label": "Third stat value",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "18 days"
+    },
+    {
+      "key": "LABEL3",
+      "label": "Third stat label",
+      "kind": "stat_label",
+      "maxChars": 40,
+      "example": "average time-to-offer from event scan"
+    }
   ],
   "sampleData": {
     "LABEL": "Recruiting Impact · Q1 2025",

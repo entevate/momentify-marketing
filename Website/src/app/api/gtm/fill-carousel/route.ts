@@ -218,14 +218,31 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
         if (!arr || arr.length !== CARD_COUNT) {
           throw new Error(`expected cards array of length ${CARD_COUNT}, got ${arr ? arr.length : "n/a"}`)
         }
-        cards = arr.map((card: unknown) => {
+        // Per-slot maxChars enforcement. Same rationale as fill-template:
+        // a slot longer than the manifest allows silently breaks the CSS-
+        // fixed layout; trim on a word boundary when possible.
+        const maxByKey = new Map(manifest.slots.map((s) => [s.key, s.maxChars]))
+        const truncateSlot = (cardIdx: number, key: string, val: string): string => {
+          const max = maxByKey.get(key)
+          if (!max || val.length <= max) return val
+          const soft = val.slice(0, max + 1)
+          const lastSpace = soft.lastIndexOf(" ")
+          const cut = lastSpace >= Math.floor(max * 0.7) ? soft.slice(0, lastSpace) : val.slice(0, max)
+          console.warn(`[fill-carousel] card ${cardIdx + 1} truncated ${key} from ${val.length} to ${cut.length} chars (maxChars=${max})`)
+          return cut
+        }
+        cards = arr.map((card: unknown, i: number) => {
           if (!card || typeof card !== "object" || Array.isArray(card)) {
             throw new Error("each card must be a JSON object")
           }
           const out: Record<string, string> = {}
           for (const [k, v] of Object.entries(card as Record<string, unknown>)) {
-            if (typeof v === "string") out[k] = stripEmDashes(v)
-            else if (v !== undefined && v !== null) out[k] = stripEmDashes(String(v))
+            if (!maxByKey.has(k)) continue
+            const raw = typeof v === "string" ? v : v === undefined || v === null ? "" : String(v)
+            out[k] = truncateSlot(i, k, stripEmDashes(raw))
+          }
+          for (const s of manifest.slots) {
+            if (!(s.key in out)) console.warn(`[fill-carousel] card ${i + 1} missing slot: ${s.key}`)
           }
           return out
         })

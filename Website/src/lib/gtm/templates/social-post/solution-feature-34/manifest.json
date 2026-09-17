@@ -5,12 +5,48 @@
   "aspectRatio": "3:4",
   "description": "Portrait light feature card with solution accent bar, headline, and three capability bullets with room for detail. For Instagram Stories and Pinterest.",
   "slots": [
-    { "key": "LABEL",   "label": "Eyebrow label",       "kind": "eyebrow",  "maxChars": 36,  "example": "Recruiting Solution" },
-    { "key": "HEADLINE","label": "Feature headline",    "kind": "headline", "maxChars": 60,  "example": "Turn Career Fairs Into Qualified Pipelines" },
-    { "key": "BULLET1", "label": "First capability",    "kind": "support",  "maxChars": 88,  "example": "On-site badge scanning syncs directly to your ATS in real time" },
-    { "key": "BULLET2", "label": "Second capability",   "kind": "support",  "maxChars": 88,  "example": "Automated follow-up sequences triggered by candidate scan profile" },
-    { "key": "BULLET3", "label": "Third capability",    "kind": "support",  "maxChars": 88,  "example": "Recruiter performance scoring and pipeline attribution dashboard" },
-    { "key": "CTA",     "label": "CTA text",            "kind": "cta_label","maxChars": 28,  "example": "See How It Works" }
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 36,
+      "example": "Recruiting Solution"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Feature headline",
+      "kind": "headline",
+      "maxChars": 60,
+      "example": "Turn Career Fairs Into Qualified Pipelines"
+    },
+    {
+      "key": "BULLET1",
+      "label": "First capability",
+      "kind": "support",
+      "maxChars": 88,
+      "example": "On-site badge scanning syncs directly to your ATS in real time"
+    },
+    {
+      "key": "BULLET2",
+      "label": "Second capability",
+      "kind": "support",
+      "maxChars": 88,
+      "example": "Automated follow-up sequences triggered by candidate scan profile"
+    },
+    {
+      "key": "BULLET3",
+      "label": "Third capability",
+      "kind": "support",
+      "maxChars": 88,
+      "example": "Recruiter performance scoring and pipeline attribution dashboard"
+    },
+    {
+      "key": "CTA",
+      "label": "CTA text",
+      "kind": "cta_label",
+      "maxChars": 28,
+      "example": "See How It Works"
+    }
   ],
   "sampleData": {
     "LABEL": "Recruiting Solution",

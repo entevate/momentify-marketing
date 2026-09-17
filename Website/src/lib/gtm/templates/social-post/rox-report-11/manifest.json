@@ -5,14 +5,62 @@
   "aspectRatio": "1:1",
   "description": "Dark square card showing three key performance metrics. Eyebrow and headline at top, three stat+label pairs in a row, brand footer. For sharing results and proof points.",
   "slots": [
-    { "key": "LABEL",   "label": "Eyebrow label",      "kind": "eyebrow",     "maxChars": 40,  "example": "2025 Trade Show Performance" },
-    { "key": "HEADLINE","label": "Section headline",   "kind": "headline",    "maxChars": 48,  "example": "The Numbers That Move the Room" },
-    { "key": "STAT1",   "label": "First stat value",   "kind": "stat_number", "maxChars": 8,   "example": "89%" },
-    { "key": "LABEL1",  "label": "First stat label",   "kind": "stat_label",  "maxChars": 32,  "example": "badge scan rate" },
-    { "key": "STAT2",   "label": "Second stat value",  "kind": "stat_number", "maxChars": 8,   "example": "2.4M" },
-    { "key": "LABEL2",  "label": "Second stat label",  "kind": "stat_label",  "maxChars": 32,  "example": "fan touchpoints" },
-    { "key": "STAT3",   "label": "Third stat value",   "kind": "stat_number", "maxChars": 8,   "example": "+28pt" },
-    { "key": "LABEL3",  "label": "Third stat label",   "kind": "stat_label",  "maxChars": 32,  "example": "NPS lift" }
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 40,
+      "example": "2025 Trade Show Performance"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Section headline",
+      "kind": "headline",
+      "maxChars": 48,
+      "example": "The Numbers That Move the Room"
+    },
+    {
+      "key": "STAT1",
+      "label": "First stat value",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "89%"
+    },
+    {
+      "key": "LABEL1",
+      "label": "First stat label",
+      "kind": "stat_label",
+      "maxChars": 32,
+      "example": "badge scan rate"
+    },
+    {
+      "key": "STAT2",
+      "label": "Second stat value",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "2.4M"
+    },
+    {
+      "key": "LABEL2",
+      "label": "Second stat label",
+      "kind": "stat_label",
+      "maxChars": 32,
+      "example": "fan touchpoints"
+    },
+    {
+      "key": "STAT3",
+      "label": "Third stat value",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "+28pt"
+    },
+    {
+      "key": "LABEL3",
+      "label": "Third stat label",
+      "kind": "stat_label",
+      "maxChars": 32,
+      "example": "NPS lift"
+    }
   ],
   "sampleData": {
     "LABEL": "2025 Trade Show Performance",

@@ -5,15 +5,31 @@
   "aspectRatio": "1:1",
   "description": "Full-bleed pillar gradient with a huge numerical stat center-stage, short label above, tagline below, and brand name at the bottom. For LinkedIn/IG/X feed.",
   "slots": [
-    { "key": "LABEL",    "label": "Short label above the stat",  "kind": "eyebrow",     "maxChars": 32,  "example": "Fan Attendance · 2025" },
-    { "key": "STAT",     "label": "Headline stat or number",     "kind": "stat_number", "maxChars": 8,   "example": "2.4M" },
-    { "key": "TAGLINE",  "label": "Tagline below the stat",      "kind": "stat_label",  "maxChars": 120, "example": "fans connected to their favorite moments through seamless event technology." },
-    { "key": "BRAND",    "label": "Company / brand name",        "kind": "eyebrow",     "maxChars": 24,  "example": "Momentify" }
+    {
+      "key": "LABEL",
+      "label": "Short label above the stat",
+      "kind": "eyebrow",
+      "maxChars": 32,
+      "example": "Fan Attendance · 2025"
+    },
+    {
+      "key": "STAT",
+      "label": "Headline stat or number",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "2.4M"
+    },
+    {
+      "key": "TAGLINE",
+      "label": "Tagline below the stat",
+      "kind": "stat_label",
+      "maxChars": 120,
+      "example": "fans connected to their favorite moments through seamless event technology."
+    }
   ],
   "sampleData": {
     "LABEL": "Fan Attendance · 2025",
     "STAT": "2.4M",
-    "TAGLINE": "fans connected to their favorite moments through seamless event technology.",
-    "BRAND": "Momentify"
+    "TAGLINE": "fans connected to their favorite moments through seamless event technology."
   }
 }
