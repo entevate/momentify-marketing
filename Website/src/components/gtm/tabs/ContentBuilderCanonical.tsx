@@ -10,6 +10,7 @@ import TemplatePicker from "@/components/gtm/TemplatePicker"
 import { solutionPersonas } from "@/lib/gtm/builder-prompts"
 import { allTemplates } from "@/lib/gtm/templates/_registry"
 import type { TemplateManifest } from "@/lib/gtm/templates/types"
+import { MAX_BG_BYTES } from "@/lib/gtm/render-media"
 
 // ─── HTML-asset generation contract ───────────────────────────────────────
 // Content types that have a one-click HTML asset pipeline (calls /api/gtm/generate-asset-html).
@@ -30,8 +31,6 @@ const CONTENT_TYPES: { value: string; label: string; description: string; visual
   { value: "partner-pitch", label: "Partner Pitch", description: "Channel/partnership narrative", visual: false },
   { value: "battle-card", label: "Battle Card", description: "Competitive positioning one-pager", visual: false },
 ]
-
-const MAX_BG_BYTES = 3 * 1024 * 1024
 
 // Height of the layout's sticky mobile app bar (src/app/gtm/layout.tsx); the pinned
 // Result must sit below it or it scrolls underneath. Keep in sync with that bar.
@@ -736,7 +735,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
 
       {/* Publish-to-Microsite modal */}
       {publishOpen && (
-        <div onClick={(e) => { if (e.target === e.currentTarget) setPublishOpen(false) }} style={{ position: "fixed", inset: 0, background: "rgba(6,19,65,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: 20 }}>
+        <div onClick={(e) => { if (e.target === e.currentTarget) setPublishOpen(false) }} style={{ position: "fixed", inset: 0, background: "rgba(6,19,65,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1100, padding: 20 }}>
           <div className="card" style={{ width: "100%", maxWidth: 480, display: "flex", flexDirection: "column", gap: 14 }}>
             <div>
               <span className="eyebrow">Publish Microsite</span>

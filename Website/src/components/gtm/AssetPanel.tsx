@@ -19,10 +19,11 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Download, ExternalLink, Loader2, RefreshCw, Upload, Wand2, LayoutGrid } from "lucide-react"
+import { Download, Loader2, RefreshCw, Upload, Wand2, LayoutGrid } from "lucide-react"
 import { allTemplates } from "@/lib/gtm/templates/_registry"
 import type { TemplateManifest } from "@/lib/gtm/templates/types"
 import TemplatePicker from "@/components/gtm/TemplatePicker"
+import { nativeSize } from "@/components/gtm/template-frame"
 
 const font = "'Inter', system-ui, sans-serif"
 
@@ -71,11 +72,6 @@ async function stampGraphicRef(
 function withCacheBust(url: string): string {
   const sep = url.includes("?") ? "&" : "?"
   return `${url}${sep}t=${Date.now()}`
-}
-
-/** Strip the cache-bust `t=...` param from a URL (for Open-in-new-tab). */
-function stripCacheBust(url: string): string {
-  return url.replace(/([?&])t=\d+(&|$)/, (_m, before, after) => (after ? before : "")).replace(/[?&]$/, "")
 }
 
 function iframeHeightFor(contentType: string): number {
@@ -143,6 +139,14 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
   useEffect(() => {
     let cancelled = false
     mountedCheckDoneRef.current = false
+    // Reset per-item state so a new itemId (draftAssetId rotates on every
+    // Generate) never briefly shows the prior draft's asset while this
+    // item's own check is in flight.
+    setAssetUrl(null)
+    setSlots(null)
+    setCards(null)
+    setDraftSlots({})
+    setError(null)
     fetch(
       `/api/gtm/asset-check?solution=${encodeURIComponent(solution)}&assetType=${encodeURIComponent(assetType)}&itemId=${encodeURIComponent(itemId)}`
     )
@@ -643,8 +647,7 @@ function SocialPostPreview({ assetUrl, aspect }: { assetUrl: string; aspect: "1:
   const wrapRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
 
-  const nativeW = aspect === "16:9" ? 1920 : 1080
-  const nativeH = aspect === "1:1" ? 1080 : aspect === "3:4" ? 1440 : 1080
+  const { width: nativeW, height: nativeH } = nativeSize(aspect)
 
   const maxW = aspect === "1:1" ? 540 : aspect === "3:4" ? 480 : 720
 

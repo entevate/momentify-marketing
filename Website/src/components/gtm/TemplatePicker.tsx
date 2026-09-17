@@ -141,7 +141,7 @@ export default function TemplatePicker({
 
 // ─── Styles ──────────────────────────────────────────────────────────
 
-const font = "'Inter', system-ui, sans-serif"
+const font = "var(--gtm-font-body)"
 
 const pickerWrap: React.CSSProperties = {
   background: "var(--gtm-bg-page)",

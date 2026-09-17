@@ -111,7 +111,7 @@ export default function GTMLogin() {
             transition: "border-color 200ms ease",
           }}
           onFocus={(e) =>
-            (e.currentTarget.style.borderColor = "rgba(12, 244, 223, 0.5)")
+            (e.currentTarget.style.borderColor = "var(--gtm-cyan)")
           }
           onBlur={(e) =>
             (e.currentTarget.style.borderColor = "var(--gtm-border-strong)")
