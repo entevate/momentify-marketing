@@ -2226,6 +2226,6 @@ EOF
 
 Two implementers in parallel on disjoint files. Contract: `hidden` is `string[]` (social) / `string[][]` (carousel, 6 entries); hidden keys render empty + `[data-slot="KEY"]{display:none !important}`; KV `${baseKey}:hidden`; `asset-check` returns `hidden`.
 
-- [ ] **Server:** `scripts/add-slot-tags.mjs` + 15 templates tagged; `render.ts` `hidden` param + tests; `render-media.ts` `parseHidden`; `fill-template` / `fill-carousel` / `asset-check` + tests; parity script green.
-- [ ] **Client:** `AssetPanel.tsx` (+ new `SlotEditor.tsx`): two-column result, per-slot switch rows, carousel card selector, hidden state seeded from fill/asset-check, Update preview sends `hidden`.
-- [ ] Gate, review, preview deploy, push to PR #7.
+- [x] **Server:** `scripts/add-slot-tags.mjs` + 15 templates tagged; `render.ts` `hidden` param + tests; `render-media.ts` `parseHidden`; `fill-template` / `fill-carousel` / `asset-check` + tests; parity script green.
+- [x] **Client:** `AssetPanel.tsx` (+ new `SlotEditor.tsx`): two-column result, per-slot switch rows, carousel card selector, hidden state seeded from fill/asset-check, Update preview sends `hidden`.
+- [x] Gate, review, preview deploy, push to PR #7. Review APPROVED; minors folded in (hidden/cards normalized to six entries on ingest, result grid `minmax(0, …)` so it fits TaskDetailModal, spec count 56 → 78, granularity note).

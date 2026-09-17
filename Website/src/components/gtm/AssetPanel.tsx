@@ -90,6 +90,22 @@ function emptyCardHidden(): string[][] {
 function emptyCardValues(): Record<string, string>[] {
   return Array.from({ length: CARD_COUNT }, () => ({}))
 }
+/** Coerce a response/KV value into a hidden-key list (strings only). */
+function normHidden(raw: unknown): string[] {
+  return Array.isArray(raw) ? raw.filter((k): k is string => typeof k === "string") : []
+}
+/** Always exactly CARD_COUNT entries, so a stale or short stored array can't
+ *  silently un-hide slots (parseHiddenCards rejects wrong lengths) or leave
+ *  cards 5-6 without a draft to edit. */
+function normCardHidden(raw: unknown): string[][] {
+  return Array.from({ length: CARD_COUNT }, (_, i) => normHidden(Array.isArray(raw) ? raw[i] : undefined))
+}
+function normCards(raw: unknown): Record<string, string>[] {
+  return Array.from({ length: CARD_COUNT }, (_, i) => {
+    const c = Array.isArray(raw) ? raw[i] : undefined
+    return c && typeof c === "object" && !Array.isArray(c) ? { ...(c as Record<string, string>) } : {}
+  })
+}
 /** Order-independent equality for hidden-key arrays. */
 function sameKeySet(a: string[], b: string[]): boolean {
   if (a.length !== b.length) return false
@@ -205,16 +221,16 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
           // iframe size itself by the template's actual aspect ratio.
           if (d?.templateId) setActiveTemplateId(d.templateId)
           if (isCarousel && Array.isArray(d?.slots)) {
-            const c = d.slots as Record<string, string>[]
+            const c = normCards(d.slots)
             setCards(c)
-            setDraftCards(c.map((card) => ({ ...card })))
-            const h = Array.isArray(d?.hidden) ? (d.hidden as string[][]) : emptyCardHidden()
+            setDraftCards(normCards(c))
+            const h = normCardHidden(d?.hidden)
             setCardsHidden(h)
             setDraftCardsHidden(h.map((arr) => [...arr]))
           } else if (!isCarousel && d?.slots && typeof d.slots === "object" && !Array.isArray(d.slots)) {
             const s = d.slots as Record<string, string>
             setSlots(s); setDraftSlots(s)
-            const h = Array.isArray(d?.hidden) ? (d.hidden as string[]) : []
+            const h = normHidden(d?.hidden)
             setHidden(h); setDraftHidden(h)
           }
         } else if (autoFillRef.current && initialTemplateIdRef.current) {
@@ -266,16 +282,16 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
         const data = await res.json() as { url: string; slots?: unknown; cards?: unknown; hidden?: unknown }
         setAssetUrl(withCacheBust(data.url))
         if (isCarousel) {
-          const c = Array.isArray(data.cards) ? (data.cards as Record<string, string>[]) : null
+          const c = Array.isArray(data.cards) ? normCards(data.cards) : null
           setCards(c); setSlots(null)
-          const h = Array.isArray(data.hidden) ? (data.hidden as string[][]) : emptyCardHidden()
+          const h = normCardHidden(data.hidden)
           setCardsHidden(h)
-          setDraftCards(c ? c.map((card) => ({ ...card })) : emptyCardValues())
+          setDraftCards(c ? normCards(c) : emptyCardValues())
           setDraftCardsHidden(h.map((arr) => [...arr]))
         } else {
           const s = data.slots && typeof data.slots === "object" && !Array.isArray(data.slots) ? (data.slots as Record<string, string>) : null
           setSlots(s); setDraftSlots(s ?? {}); setCards(null)
-          const h = Array.isArray(data.hidden) ? (data.hidden as string[]) : []
+          const h = normHidden(data.hidden)
           setHidden(h); setDraftHidden(h)
         }
         setPickerOpen(false)
@@ -358,14 +374,14 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
         if (!isCarousel) {
           const s = data.slots && typeof data.slots === "object" && !Array.isArray(data.slots) ? (data.slots as Record<string, string>) : null
           if (s) { setSlots(s); setDraftSlots(s) }
-          const h = Array.isArray(data.hidden) ? (data.hidden as string[]) : (nextHidden as string[])
+          const h = Array.isArray(data.hidden) ? normHidden(data.hidden) : (nextHidden as string[])
           setHidden(h); setDraftHidden(h)
         }
         if (isCarousel && Array.isArray(data.cards)) {
-          const c = data.cards as Record<string, string>[]
+          const c = normCards(data.cards)
           setCards(c)
-          setDraftCards(c.map((card) => ({ ...card })))
-          const h = Array.isArray(data.hidden) ? (data.hidden as string[][]) : (nextHidden as string[][])
+          setDraftCards(normCards(c))
+          const h = Array.isArray(data.hidden) ? normCardHidden(data.hidden) : (nextHidden as string[][])
           setCardsHidden(h)
           setDraftCardsHidden(h.map((arr) => [...arr]))
         }
@@ -732,7 +748,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
           <div
             style={
               isDesktopResult
-                ? { display: "grid", gridTemplateColumns: "minmax(300px, 420px) 1fr", gap: 16, alignItems: "start", marginTop: 14 }
+                ? { display: "grid", gridTemplateColumns: "minmax(0, 420px) minmax(0, 1fr)", gap: 16, alignItems: "start", marginTop: 14 }
                 : { display: "flex", flexDirection: "column", gap: 16, marginTop: 14 }
             }
           >
