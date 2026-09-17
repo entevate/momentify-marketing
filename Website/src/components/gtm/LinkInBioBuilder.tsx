@@ -20,9 +20,10 @@ import {
   type SocialId,
 } from '@/lib/gtm/link-page-types'
 
-const ACCENT = '#0CF4DF'
-const INK = '#061341'
-const PILLAR_SWATCHES = ['#0CF4DF', '#9B5FE8', '#F2B33D', '#5FD9C2']
+const ACCENT = 'var(--gtm-accent)'
+const INK = 'var(--gtm-text-primary)'
+// Solution accents (design-tokens.json color.solution) — brand, never normalized.
+const PILLAR_SWATCHES = ['#00BBA5', '#9B5FE8', '#F2B33D', '#5FD9C2']
 
 const SOCIAL_LABELS: Record<SocialId, string> = {
   instagram: 'Instagram',
@@ -34,22 +35,22 @@ const SOCIAL_LABELS: Record<SocialId, string> = {
 
 const card: React.CSSProperties = {
   background: '#fff',
-  border: '1px solid rgba(0,0,0,0.1)',
-  borderRadius: 8,
+  border: '1px solid var(--gtm-border)',
+  borderRadius: 12,
   padding: 14,
   margin: 0,
-  boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+  boxShadow: 'var(--gtm-shadow)',
 }
 const input: React.CSSProperties = {
   width: '100%',
   padding: '8px 10px',
   fontSize: 13,
-  border: '1px solid rgba(0,0,0,0.18)',
-  borderRadius: 6,
+  border: '1px solid var(--gtm-border-strong)',
+  borderRadius: 8,
   color: INK,
   background: '#fff',
 }
-const label: React.CSSProperties = { fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: 'rgba(0,0,0,0.45)' }
+const label: React.CSSProperties = { fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: 'var(--gtm-text-muted)' }
 
 function defaultConfig(): LinkPageConfig {
   return { header: { showLogo: true, logoSize: LOGO_SIZE.default, headline: '', bio: '' }, accent: ACCENT, links: [], socials: {}, seo: { title: '', description: '' }, updatedAt: '' }
@@ -118,7 +119,7 @@ export default function LinkInBioBuilder() {
   }
 
   if (loading || !config) {
-    return <div style={{ padding: '32px 40px' }}><h1 style={{ fontSize: 28, color: INK }}>Link in Bio</h1><p style={{ color: 'rgba(0,0,0,0.5)', marginTop: 12 }}>Loading…</p></div>
+    return <div style={{ padding: '32px 40px' }}><h1 style={{ fontSize: 28, color: INK }}>Link in Bio</h1><p style={{ color: 'var(--gtm-text-muted)', marginTop: 12 }}>Loading…</p></div>
   }
 
   return (
@@ -127,11 +128,11 @@ export default function LinkInBioBuilder() {
         <div style={{ flex: 1, minWidth: 260 }}>
           <p style={{ ...label, color: ACCENT }}>Distribute</p>
           <h1 style={{ fontSize: 30, fontWeight: 900, color: INK, margin: '4px 0 6px' }}>Link in Bio</h1>
-          <p style={{ fontSize: 13.5, color: 'rgba(0,0,0,0.6)', maxWidth: 560 }}>One always-live branded page at <code>/links</code> — the destination for your Instagram bio. Saving publishes immediately.</p>
+          <p style={{ fontSize: 13.5, color: 'var(--gtm-text-secondary)', maxWidth: 560 }}>One always-live branded page at <code>/links</code> — the destination for your Instagram bio. Saving publishes immediately.</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {dirty && <span title="Unsaved changes" style={{ width: 8, height: 8, borderRadius: '50%', background: '#F4B400' }} />}
-          <a href="/links" target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: 'rgba(0,0,0,0.55)' }}>View live ↗</a>
+          <a href="/links" target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: 'var(--gtm-text-secondary)' }}>View live ↗</a>
           <button onClick={() => save(false)} disabled={saving} style={{ padding: '9px 18px', borderRadius: 6, fontSize: 13, fontWeight: 700, color: '#fff', background: dirty ? '#00A14B' : ACCENT, cursor: saving ? 'wait' : 'pointer', opacity: saving ? 0.6 : 1 }}>
             {saving ? 'Saving…' : 'Save & Publish'}
           </button>
@@ -158,7 +159,7 @@ export default function LinkInBioBuilder() {
           </Card>
 
           <Card title="Background Video">
-            <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)', marginBottom: 8 }}>A muted, looping video behind everything. A scrim keeps text readable; reduced-motion visitors see the gradient instead.</p>
+            <p style={{ fontSize: 12, color: 'var(--gtm-text-muted)', marginBottom: 8 }}>A muted, looping video behind everything. A scrim keeps text readable; reduced-motion visitors see the gradient instead.</p>
             <Toggle label="Enable background video" on={!!config.background?.enabled} onToggle={() => patch({ background: { enabled: !config.background?.enabled, url: config.background?.url ?? '' } })} />
             <Field l="Video URL"><input style={input} value={config.background?.url ?? ''} onChange={(e) => patch({ background: { enabled: config.background?.enabled ?? false, url: e.target.value } })} placeholder="https://… .mp4" /></Field>
           </Card>
@@ -166,10 +167,10 @@ export default function LinkInBioBuilder() {
           <Card title={`Links (${config.links.length}/20)`}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {config.links.map((l, i) => (
-                <div key={l.id} style={{ border: '1px solid rgba(0,0,0,0.1)', borderRadius: 8, padding: 12, background: '#fafafa' }}>
+                <div key={l.id} style={{ border: '1px solid var(--gtm-border)', borderRadius: 8, padding: 12, background: 'var(--gtm-bg-page)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                     <Toggle compact label="On" on={l.enabled} onToggle={() => patchLink(i, { enabled: !l.enabled })} />
-                    <button onClick={() => patchLink(i, { featured: !l.featured })} title="Featured (large card)" style={{ fontSize: 12, padding: '3px 8px', borderRadius: 6, border: '1px solid rgba(0,0,0,0.15)', color: l.featured ? ACCENT : 'rgba(0,0,0,0.5)', fontWeight: l.featured ? 700 : 500, cursor: 'pointer', background: '#fff' }}>★ Featured</button>
+                    <button onClick={() => patchLink(i, { featured: !l.featured })} title="Featured (large card)" style={{ fontSize: 12, padding: '3px 8px', borderRadius: 6, border: '1px solid var(--gtm-border-strong)', color: l.featured ? ACCENT : 'var(--gtm-text-muted)', fontWeight: l.featured ? 700 : 500, cursor: 'pointer', background: '#fff' }}>★ Featured</button>
                     <span style={{ marginLeft: 'auto', display: 'flex', gap: 4 }}>
                       <IconBtn label="Move up" onClick={() => moveLink(i, -1)}>▲</IconBtn>
                       <IconBtn label="Move down" onClick={() => moveLink(i, 1)}>▼</IconBtn>
@@ -184,12 +185,12 @@ export default function LinkInBioBuilder() {
               ))}
             </div>
             {config.links.length < 20 && (
-              <button onClick={addLink} style={{ marginTop: 12, fontSize: 12.5, padding: '9px 12px', borderRadius: 6, border: '1px dashed rgba(0,0,0,0.25)', color: INK, width: '100%', cursor: 'pointer', background: '#fff' }}>+ Add Link</button>
+              <button onClick={addLink} style={{ marginTop: 12, fontSize: 12.5, padding: '9px 12px', borderRadius: 6, border: '1px dashed var(--gtm-border-strong)', color: INK, width: '100%', cursor: 'pointer', background: '#fff' }}>+ Add Link</button>
             )}
           </Card>
 
           <Card title="Social Icons">
-            <p style={{ fontSize: 12, color: 'rgba(0,0,0,0.5)', marginBottom: 8 }}>Blank hides the icon.</p>
+            <p style={{ fontSize: 12, color: 'var(--gtm-text-muted)', marginBottom: 8 }}>Blank hides the icon.</p>
             {SOCIAL_IDS.map((id) => (
               <Field key={id} l={SOCIAL_LABELS[id]}><input style={input} value={config.socials[id] ?? ''} onChange={(e) => setSocial(id, e.target.value)} placeholder="https://…" /></Field>
             ))}
@@ -206,8 +207,8 @@ export default function LinkInBioBuilder() {
             <Field l="SEO title"><input style={input} maxLength={120} value={config.seo.title} onChange={(e) => patch({ seo: { ...config.seo, title: e.target.value } })} /></Field>
             <Field l="SEO description"><textarea style={{ ...input, resize: 'vertical' }} rows={2} maxLength={300} value={config.seo.description} onChange={(e) => patch({ seo: { ...config.seo, description: e.target.value } })} /></Field>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 8 }}>
-              {config.seo.ogImage ? <img src={config.seo.ogImage} alt="OG preview" style={{ width: 96, height: 50, objectFit: 'cover', borderRadius: 6, border: '1px solid rgba(0,0,0,0.12)' }} /> : <span style={{ fontSize: 12, color: 'rgba(0,0,0,0.45)' }}>No preview image yet.</span>}
-              <button onClick={() => save(true)} disabled={saving} style={{ fontSize: 12, padding: '7px 11px', borderRadius: 6, border: '1px solid rgba(0,0,0,0.18)', color: INK, cursor: 'pointer', background: '#fff' }}>Refresh preview image</button>
+              {config.seo.ogImage ? <img src={config.seo.ogImage} alt="OG preview" style={{ width: 96, height: 50, objectFit: 'cover', borderRadius: 6, border: '1px solid var(--gtm-border)' }} /> : <span style={{ fontSize: 12, color: 'var(--gtm-text-muted)' }}>No preview image yet.</span>}
+              <button onClick={() => save(true)} disabled={saving} style={{ fontSize: 12, padding: '7px 11px', borderRadius: 6, border: '1px solid var(--gtm-border-strong)', color: INK, cursor: 'pointer', background: '#fff' }}>Refresh preview image</button>
             </div>
           </Card>
         </div>
@@ -240,12 +241,12 @@ function Toggle({ label: lbl, on, onToggle, compact }: { label: string; on: bool
   )
 }
 function IconBtn({ label: lbl, onClick, children }: { label: string; onClick: () => void; children: React.ReactNode }) {
-  return <button onClick={onClick} title={lbl} aria-label={lbl} style={{ width: 26, height: 24, borderRadius: 6, border: '1px solid rgba(0,0,0,0.15)', color: 'rgba(0,0,0,0.5)', fontSize: 11, cursor: 'pointer', background: '#fff' }}>{children}</button>
+  return <button onClick={onClick} title={lbl} aria-label={lbl} style={{ width: 26, height: 24, borderRadius: 6, border: '1px solid var(--gtm-border-strong)', color: 'var(--gtm-text-muted)', fontSize: 11, cursor: 'pointer', background: '#fff' }}>{children}</button>
 }
 function StyleSwatches({ link, onPick }: { link: LinkButton; onPick: (p: Partial<LinkButton>) => void }) {
   const activeFilled = link.style === 'filled'
   function chip(bg: string, active: boolean, onClick: () => void, title: string, border?: string) {
-    return <button key={title} title={title} onClick={onClick} style={{ width: 22, height: 22, borderRadius: 6, background: bg, border: active ? `2px solid ${INK}` : border || '1px solid rgba(0,0,0,0.15)', flex: 'none', cursor: 'pointer' }} />
+    return <button key={title} title={title} onClick={onClick} style={{ width: 22, height: 22, borderRadius: 6, background: bg, border: active ? `2px solid ${INK}` : border || '1px solid var(--gtm-border-strong)', flex: 'none', cursor: 'pointer' }} />
   }
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
