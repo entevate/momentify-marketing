@@ -12,6 +12,7 @@
 
 import { useEffect, useState } from "react"
 import type { CSSProperties, ChangeEvent, HTMLAttributes, ReactNode } from "react"
+import { MOBILE_BAR_H } from "@/lib/gtm/mobile"
 
 // ─── Company-specific knobs ─────────────────────────────────────────────
 // Momentify brand tokens. Match Website/design-tokens.json.
@@ -65,7 +66,7 @@ export function BuilderLayout({ form, preview }: { form: ReactNode; preview: Rea
   if (isMobile) {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <div style={{ position: "sticky", top: 0, zIndex: 30, background: COLORS.pageBg, paddingBottom: 10, borderBottom: `1px solid ${COLORS.border}` }}>
+        <div style={{ position: "sticky", top: MOBILE_BAR_H, zIndex: 30, background: COLORS.pageBg, paddingBottom: 10, borderBottom: `1px solid ${COLORS.border}` }}>
           <button
             type="button"
             onClick={() => setOpen((o) => !o)}

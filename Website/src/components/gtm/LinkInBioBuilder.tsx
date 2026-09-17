@@ -11,6 +11,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { renderLinkPageHtml } from '@/lib/gtm/render-link-page'
+import { MOBILE_BAR_H } from '@/lib/gtm/mobile'
 import {
   LOGO_SIZE,
   newLinkId,
@@ -221,7 +222,7 @@ export default function LinkInBioBuilder() {
           </Card>
         </div>
 
-        <div style={{ flex: isMobile ? 'none' : '0 0 360px', width: isMobile ? '100%' : undefined, position: 'sticky', top: isMobile ? 0 : 20, order: isMobile ? -1 : 0, zIndex: isMobile ? 30 : undefined, background: isMobile ? '#fff' : undefined, paddingBottom: isMobile ? 10 : 0, borderBottom: isMobile ? '1px solid rgba(0,0,0,0.12)' : undefined }}>
+        <div style={{ flex: isMobile ? 'none' : '0 0 360px', width: isMobile ? '100%' : undefined, position: 'sticky', top: isMobile ? MOBILE_BAR_H : 20, order: isMobile ? -1 : 0, zIndex: isMobile ? 30 : undefined, background: isMobile ? '#fff' : undefined, paddingBottom: isMobile ? 10 : 0, borderBottom: isMobile ? '1px solid rgba(0,0,0,0.12)' : undefined }}>
           {isMobile ? (
             <button type="button" onClick={() => setPreviewOpen((o) => !o)} aria-expanded={previewOpen} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '10px 12px', background: '#fff', border: '1px solid rgba(0,0,0,0.14)', borderRadius: 9, color: INK, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
               <span>Live preview</span>
