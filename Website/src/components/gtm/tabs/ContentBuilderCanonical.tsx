@@ -6,7 +6,10 @@ import type { VerticalOption } from "./SolutionTabs"
 import { dispatchLibraryChanged } from "./SolutionTabs"
 import AssetPanel from "@/components/gtm/AssetPanel"
 import CaptionsPanel from "@/components/gtm/CaptionsPanel"
+import TemplatePicker from "@/components/gtm/TemplatePicker"
 import { solutionPersonas } from "@/lib/gtm/builder-prompts"
+import { allTemplates } from "@/lib/gtm/templates/_registry"
+import type { TemplateManifest } from "@/lib/gtm/templates/types"
 
 // ─── HTML-asset generation contract ───────────────────────────────────────
 // Content types that have a one-click HTML asset pipeline (calls /api/gtm/generate-asset-html).
@@ -65,6 +68,9 @@ export default function ContentBuilderCanonical({ solution, solutionLabel, verti
   const [saved, setSaved] = useState(false)
   const [activePlatform, setActivePlatform] = useState<"linkedin" | "instagram" | "twitter">("linkedin")
   const [draftAssetId, setDraftAssetId] = useState<string | null>(null)
+  // Template chosen before Generate (step 3). Passed to AssetPanel, which auto-fills
+  // it on mount instead of opening its own picker.
+  const [templateId, setTemplateId] = useState<string | null>(null)
 
   // Background photo (data URI) + opacity 0-100 for template renders. Part of the session.
   const [bgImage, setBgImage] = useState<string | null>(null)
@@ -114,6 +120,7 @@ export default function ContentBuilderCanonical({ solution, solutionLabel, verti
         if (typeof s.draftAssetId === "string") setDraftAssetId(s.draftAssetId)
         if (typeof s.bgImage === "string") setBgImage(s.bgImage)
         if (typeof s.bgOpacity === "number") { setBgOpacity(s.bgOpacity); setSliderValue(s.bgOpacity) }
+        if (typeof s.templateId === "string") setTemplateId(s.templateId)
       }
     } catch {
       /* corrupted storage is non-fatal */
@@ -126,12 +133,12 @@ export default function ContentBuilderCanonical({ solution, solutionLabel, verti
     try {
       localStorage.setItem(
         storageKey,
-        JSON.stringify({ vertical, persona, motion, contentType, additionalContext, competitor, generated, draftAssetId, bgImage, bgOpacity })
+        JSON.stringify({ vertical, persona, motion, contentType, additionalContext, competitor, generated, draftAssetId, bgImage, bgOpacity, templateId })
       )
     } catch {
       /* storage full / disabled - silently skip */
     }
-  }, [storageKey, vertical, persona, motion, contentType, additionalContext, competitor, generated, draftAssetId, bgImage, bgOpacity])
+  }, [storageKey, vertical, persona, motion, contentType, additionalContext, competitor, generated, draftAssetId, bgImage, bgOpacity, templateId])
 
   function handleClearSession() {
     setVertical(verticals[0]?.id ?? "")
@@ -145,6 +152,7 @@ export default function ContentBuilderCanonical({ solution, solutionLabel, verti
     setBgImage(null)
     setBgOpacity(100)
     setSliderValue(100)
+    setTemplateId(null)
     setError(null)
     setSaved(false)
     setCopied(false)
@@ -155,6 +163,10 @@ export default function ContentBuilderCanonical({ solution, solutionLabel, verti
   const isSocialPost = contentType === "social-post" || contentType === "carousel"
   const isOneClickHtmlAsset = ONE_CLICK_HTML_ASSETS.has(contentType)
   const currentType = CONTENT_TYPES.find((c) => c.value === contentType)
+  const socialTemplates = useMemo<TemplateManifest[]>(
+    () => allTemplates.filter((t) => t.assetType === "social-post").filter((t) => (contentType === "carousel" ? t.aspectRatio === "1:1" : true)),
+    [contentType]
+  )
 
   // ─── HTML asset generation state ─────────────────────────────────────────
   const [generatingAsset, setGeneratingAsset] = useState<string | null>(null)
@@ -213,6 +225,7 @@ export default function ContentBuilderCanonical({ solution, solutionLabel, verti
     setBgOpacity(100)
     setSliderValue(100)
     setBgError(null)
+    if (value === "carousel" && templateId && !allTemplates.some((t) => t.id === templateId && t.aspectRatio === "1:1")) setTemplateId(null)
   }
 
   const rawContent = useMemo(() => {
@@ -469,7 +482,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
       </div>
 
       {isSocialPost && draftAssetId && (
-        <AssetPanel solution={solution} assetType={assetType} itemId={draftAssetId} briefText={rawContent} media={media} />
+        <AssetPanel solution={solution} assetType={assetType} itemId={draftAssetId} briefText={rawContent} media={media} initialTemplateId={templateId} autoFill={!!templateId} />
       )}
 
       {isSocialPost && socialCaptions ? (
@@ -628,7 +641,18 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
         {currentType && <span className="section-note">{currentType.description}</span>}
       </div>
 
-      {/* 4 · Media (social only; the template picker — step 3 — lives inside AssetPanel in Result) */}
+      {/* 3 · Template (social only) — chosen before Generate; the graphic renders with it automatically */}
+      {isSocialPost && (
+        <div className="card" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+            <span className="eyebrow">Template · {socialTemplates.length} available</span>
+            <span className="section-note">{templateId ? "The graphic renders with this template when you generate. Change it any time from the result." : "Pick one now and the graphic renders automatically when you generate — or leave it and choose after."}</span>
+          </div>
+          <TemplatePicker solution={solution} templates={socialTemplates} activeId={templateId} onPick={setTemplateId} />
+        </div>
+      )}
+
+      {/* 4 · Media (social only) */}
       {isSocialPost && (
         <div className="card" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
@@ -672,7 +696,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
       {/* 5 · Generate */}
       <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
         <button className="btn btn-primary" onClick={handleGenerate} disabled={loading || !vertical}>
-          {loading ? <><Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> Generating…</> : generated ? "Regenerate" : "Generate"}
+          {loading ? <><Loader2 size={14} style={{ animation: "spin 1s linear infinite" }} /> Generating…</> : generated ? "Regenerate" : isSocialPost && templateId ? "Generate + render" : "Generate"}
         </button>
         {generated && <button className="btn btn-tertiary" onClick={() => { if (confirm("Start over? The generated brief will be cleared (form inputs stay).")) { setGenerated(null); setDraftAssetId(null); setError(null) } }}>Start over</button>}
         <span className="section-note" style={{ marginLeft: "auto" }}>Kept in this browser — leaving the page doesn&rsquo;t lose the brief.</span>

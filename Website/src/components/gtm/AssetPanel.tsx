@@ -19,9 +19,10 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Check, Download, ExternalLink, Loader2, RefreshCw, Upload, Wand2, LayoutGrid } from "lucide-react"
+import { Download, ExternalLink, Loader2, RefreshCw, Upload, Wand2, LayoutGrid } from "lucide-react"
 import { allTemplates } from "@/lib/gtm/templates/_registry"
 import type { TemplateManifest } from "@/lib/gtm/templates/types"
+import TemplatePicker from "@/components/gtm/TemplatePicker"
 
 const font = "'Inter', system-ui, sans-serif"
 
@@ -36,6 +37,10 @@ export interface AssetPanelProps {
   briefText: string
   /** Optional background photo (data URI) + opacity 0-100, applied to template renders */
   media?: { bgImage?: string; bgOpacity?: number }
+  /** Template chosen before Generate (builder's pre-Generate Template step) */
+  initialTemplateId?: string | null
+  /** When true and initialTemplateId is set, fill it automatically on mount instead of opening the picker */
+  autoFill?: boolean
   /** Optional caller-controlled class for layout tweaks */
   className?: string
 }
@@ -78,7 +83,7 @@ function iframeHeightFor(contentType: string): number {
   return 600
 }
 
-export default function AssetPanel({ solution, assetType, itemId, briefText, media, className }: AssetPanelProps) {
+export default function AssetPanel({ solution, assetType, itemId, briefText, media, initialTemplateId, autoFill, className }: AssetPanelProps) {
   const [assetUrl, setAssetUrl] = useState<string | null>(null)
   const [generating, setGenerating] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -106,9 +111,21 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
     [isCarousel]
   )
 
-  // On mount, check whether this item already has an asset on disk.
-  // If it doesn't AND we're on social-post, open the picker so the user
-  // is prompted to choose a template right away.
+  // Latest-value refs so the mount effect below (keyed only on solution/assetType/
+  // itemId/isSocialPost) can read the current autoFill / initialTemplateId props
+  // without refiring the asset-check fetch on a prop-only change.
+  const autoFillRef = useRef(autoFill)
+  const initialTemplateIdRef = useRef(initialTemplateId)
+  useEffect(() => {
+    autoFillRef.current = autoFill
+    initialTemplateIdRef.current = initialTemplateId
+  }, [autoFill, initialTemplateId])
+
+  // On mount, check whether this item already has an asset on disk. If it
+  // doesn't: when the caller pre-chose a template (builder's pre-Generate
+  // Template step) and asked for autoFill, fill that template automatically;
+  // otherwise, on social-post, open the picker so the user is prompted to
+  // choose a template right away.
   useEffect(() => {
     let cancelled = false
     fetch(
@@ -125,12 +142,19 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
           if (d?.templateId) setActiveTemplateId(d.templateId)
           if (isCarousel && Array.isArray(d?.slots)) setCards(d.slots as Record<string, string>[])
           else if (!isCarousel && d?.slots && typeof d.slots === "object" && !Array.isArray(d.slots)) { setSlots(d.slots as Record<string, string>); setDraftSlots(d.slots as Record<string, string>) }
+        } else if (autoFillRef.current && initialTemplateIdRef.current) {
+          fillRef.current(initialTemplateIdRef.current)
         } else if (isSocialPost) {
           setPickerOpen(true)
         }
       })
       .catch(() => {
-        if (isSocialPost && !cancelled) setPickerOpen(true)
+        if (cancelled) return
+        if (autoFillRef.current && initialTemplateIdRef.current) {
+          fillRef.current(initialTemplateIdRef.current)
+        } else if (isSocialPost) {
+          setPickerOpen(true)
+        }
       })
     return () => {
       cancelled = true
@@ -189,6 +213,15 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
     },
     [solution, briefText, itemId, isCarousel, media]
   )
+
+  // Latest-value ref for the mount effect's auto-fill call. handleFillTemplate
+  // changes identity on every media/brief change; reading it via a ref (rather
+  // than adding it to the mount effect's deps) keeps that effect from refiring
+  // the asset-check fetch on those changes.
+  const fillRef = useRef(handleFillTemplate)
+  useEffect(() => {
+    fillRef.current = handleFillTemplate
+  }, [handleFillTemplate])
 
   // ─── Re-render without Claude (slot edits, opacity slider) ───────────
   const rerender = useCallback(
@@ -483,71 +516,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
 
       {/* Template picker (social-post only) */}
       {isSocialPost && pickerOpen && !busy && (
-        <div style={pickerWrap}>
-          <div style={pickerHeader}>
-            <span style={pickerLabel}>Choose a template</span>
-            <span style={pickerHint}>{socialTemplates.length} designs · rendered in your pillar palette</span>
-          </div>
-          <div style={pickerGrid}>
-            {socialTemplates.map((t) => {
-              const isActive = activeTemplateId === t.id
-              // Each iframe is rendered at NATIVE size so the template's
-              // clamp()-based font math hits the sizes designers tuned it for,
-              // then CSS-scaled down to fit inside the thumbnail box.
-              const is169 = t.aspectRatio === "16:9"
-              const nativeW = is169 ? 1920 : 1080
-              const nativeH =
-                t.aspectRatio === "1:1" ? 1080
-                : t.aspectRatio === "3:4" ? 1440
-                : 1080 // 16:9
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => handleFillTemplate(t.id)}
-                  style={{
-                    ...pickerCard,
-                    borderColor: isActive ? "var(--gtm-accent)" : "var(--gtm-border)",
-                    boxShadow: isActive ? "0 0 0 2px var(--gtm-accent-bg)" : "none",
-                  }}
-                >
-                  <div style={pickerThumbWrap(t.aspectRatio)}>
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: nativeW,
-                        height: nativeH,
-                        transformOrigin: "top left",
-                        transform: `scale(${THUMB_WIDTH / nativeW})`,
-                        pointerEvents: "none",
-                      }}
-                    >
-                      <iframe
-                        src={`/api/gtm/template-preview?assetType=${encodeURIComponent(t.assetType)}&templateId=${encodeURIComponent(t.id)}&pillar=${encodeURIComponent(solution)}`}
-                        title={`${t.label} thumbnail`}
-                        style={{ width: nativeW, height: nativeH, border: "none", display: "block" }}
-                      />
-                    </div>
-                  </div>
-                  <div style={{ padding: "8px 10px" }}>
-                    <div style={{ fontSize: 11, fontWeight: 600, color: "var(--gtm-text-primary)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
-                      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.label}</span>
-                      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "var(--gtm-text-secondary)", background: "var(--gtm-surface-2)", padding: "2px 6px", borderRadius: 100 }}>
-                        {t.aspectRatio}
-                      </span>
-                    </div>
-                    {isActive && (
-                      <div style={{ fontSize: 10, color: "var(--gtm-accent)", marginTop: 4, display: "inline-flex", alignItems: "center", gap: 4 }}>
-                        <Check size={10} /> Last used
-                      </div>
-                    )}
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-        </div>
+        <TemplatePicker solution={solution} templates={socialTemplates} activeId={activeTemplateId} onPick={handleFillTemplate} disabled={busy} activeLabel="Last used" />
       )}
 
       {assetUrl && !busy && (() => {
@@ -721,70 +690,3 @@ const progressBanner: React.CSSProperties = {
   marginBottom: 12,
 }
 
-const pickerWrap: React.CSSProperties = {
-  background: "var(--gtm-bg-page)",
-  border: "1px solid var(--gtm-border)",
-  borderRadius: 6,
-  padding: 12,
-  marginBottom: 12,
-}
-
-const pickerHeader: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "baseline",
-  marginBottom: 10,
-  gap: 8,
-}
-
-const pickerLabel: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 700,
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
-  color: "var(--gtm-text-secondary)",
-  fontFamily: font,
-}
-
-const pickerHint: React.CSSProperties = {
-  fontSize: 11,
-  color: "var(--gtm-text-faint)",
-  fontFamily: font,
-}
-
-// Fixed thumbnail width so we can pre-compute the transform scale.
-const THUMB_WIDTH = 200
-
-const pickerGrid: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: `repeat(auto-fill, ${THUMB_WIDTH}px)`,
-  gap: 12,
-  justifyContent: "start",
-}
-
-const pickerCard: React.CSSProperties = {
-  padding: 0,
-  background: "#fff",
-  border: "1px solid var(--gtm-border)",
-  borderRadius: 6,
-  cursor: "pointer",
-  textAlign: "left",
-  overflow: "hidden",
-  fontFamily: font,
-  transition: "border-color 150ms ease, box-shadow 150ms ease",
-}
-
-function pickerThumbWrap(aspect: "1:1" | "3:4" | "16:9"): React.CSSProperties {
-  let height: number
-  if (aspect === "1:1") height = THUMB_WIDTH
-  else if (aspect === "3:4") height = Math.round((THUMB_WIDTH * 4) / 3)
-  else height = Math.round((THUMB_WIDTH * 9) / 16) // 16:9 landscape
-  return {
-    width: THUMB_WIDTH,
-    height,
-    background: "var(--gtm-surface-2)",
-    borderBottom: "1px solid var(--gtm-border)",
-    overflow: "hidden",
-    position: "relative",
-  }
-}
