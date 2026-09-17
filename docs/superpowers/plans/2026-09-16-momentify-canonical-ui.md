@@ -310,7 +310,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 **Files:**
 - Modify: `src/app/gtm/layout.tsx`
 
-- [ ] **Step 1: Widths** — replace lines 113–114:
+- [x] **Step 1: Widths** — replace lines 113–114:
 
 ```ts
 const EXPANDED_WIDTH = 240
@@ -322,7 +322,7 @@ const EXPANDED_WIDTH = 232
 const STRIP_WIDTH = 64
 ```
 
-- [ ] **Step 2: Nav entry rows** — in `NavLinkRow`, replace the `style={{ ... }}` object on the `<Link>` (lines 142–159) with:
+- [x] **Step 2: Nav entry rows** — in `NavLinkRow`, replace the `style={{ ... }}` object on the `<Link>` (lines 142–159) with:
 
 ```ts
       style={{
@@ -355,7 +355,7 @@ with
       <Icon size={16} style={{ opacity: active ? 1 : 0.55, flexShrink: 0, color: active ? item.color : undefined }} />
 ```
 
-- [ ] **Step 3: Section labels → eyebrow treatment** — replace the section `<button>` style object (lines 316–332) with:
+- [x] **Step 3: Section labels → eyebrow treatment** — replace the section `<button>` style object (lines 316–332) with:
 
 ```ts
                   style={{
@@ -383,9 +383,9 @@ and swap the button's children (lines 334–335) so the chevron sits on the righ
                   <FoldChevron open={!isFolded} />
 ```
 
-- [ ] **Step 4: Logo block + dividers** — replace line 291's padding values: `"28px 0 20px"` → `"22px 0 18px"` and `"28px 24px 20px"` → `"22px 20px 18px"`. Replace every `margin: "0 16px"` on the three divider `<div style={{ height: 1 ...}}>` lines (302, 350) with `margin: "0 14px"`, and line 311's `margin: "8px 16px"` with `margin: "10px 14px"`.
+- [x] **Step 4: Logo block + dividers** — replace line 291's padding values: `"28px 0 20px"` → `"22px 0 18px"` and `"28px 24px 20px"` → `"22px 20px 18px"`. Replace every `margin: "0 16px"` on the three divider `<div style={{ height: 1 ...}}>` lines (302, 350) with `margin: "0 14px"`, and line 311's `margin: "8px 16px"` with `margin: "10px 14px"`.
 
-- [ ] **Step 5: Footer contract sizing** — in the collapse toggle button style (lines 391–402) change `width: 28, height: 28` → `width: 28, height: 24`, `background: "rgba(255, 255, 255, 0.04)"` → `background: "transparent"`, `border: "1px solid rgba(255, 255, 255, 0.10)"` → `border: "1px solid rgba(255, 255, 255, 0.14)"`. In the Sign Out button style (lines 366–378) change `color: "rgba(255, 255, 255, 0.40)"` → `color: "rgba(255, 255, 255, 0.70)"` and the two hover handlers (379–380) to `"rgba(255, 255, 255, 1)"` / `"rgba(255, 255, 255, 0.70)"`.
+- [x] **Step 5: Footer contract sizing** — in the collapse toggle button style (lines 391–402) change `width: 28, height: 28` → `width: 28, height: 24`, `background: "rgba(255, 255, 255, 0.04)"` → `background: "transparent"`, `border: "1px solid rgba(255, 255, 255, 0.10)"` → `border: "1px solid rgba(255, 255, 255, 0.14)"`. In the Sign Out button style (lines 366–378) change `color: "rgba(255, 255, 255, 0.40)"` → `color: "rgba(255, 255, 255, 0.70)"` and the two hover handlers (379–380) to `"rgba(255, 255, 255, 1)"` / `"rgba(255, 255, 255, 0.70)"`.
 
 - [x] **Step 6: Verify + commit** *(done — commit `552e50b4`; combined spec + quality review approved. Polish for a later chrome sweep, not regressions: `onMouseLeave` at `layout.tsx:170` resets inactive rows to `0.70` while the resting color is `0.72`; `transition: "all"` now also animates the pill's width/margin on collapse — narrow to `background, color` if the shimmer shows.)*
 
@@ -410,7 +410,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 - Create: `src/lib/gtm/templates/__tests__/render.test.ts`
 - Modify: `src/lib/gtm/templates/render.ts`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 import { renderTemplate } from "../render"
@@ -461,12 +461,12 @@ describe("renderTemplate media", () => {
 })
 ```
 
-- [ ] **Step 2: Run it — expect failure**
+- [x] **Step 2: Run it — expect failure**
 
 Run: `npx jest --ci src/lib/gtm/templates/__tests__/render.test.ts`
 Expected: FAIL — `--bg-image:none;` not found (the keys currently resolve to empty strings) and TS error `Expected 3 arguments, but got 4`.
 
-- [ ] **Step 3: Implement** — replace the `renderTemplate` function in `src/lib/gtm/templates/render.ts` (lines 18–44) with:
+- [x] **Step 3: Implement** — replace the `renderTemplate` function in `src/lib/gtm/templates/render.ts` (lines 18–44) with:
 
 ```ts
 /** Optional background photo for social-post renders. `bgOpacity` is 0–100. */
@@ -516,12 +516,12 @@ export function renderTemplate(
 }
 ```
 
-- [ ] **Step 4: Run it — expect pass**
+- [x] **Step 4: Run it — expect pass**
 
 Run: `npx jest --ci src/lib/gtm/templates/__tests__/render.test.ts`
 Expected: `Tests: 4 passed, 4 total`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/gtm/templates/render.ts src/lib/gtm/templates/__tests__/render.test.ts
@@ -542,7 +542,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 - Create: `scripts/render-parity.ts`
 - Modify (via script): `src/lib/gtm/templates/social-post/*/template.html`
 
-- [ ] **Step 1: Capture the pre-change renders** (one template per family, sample data, no media)
+- [x] **Step 1: Capture the pre-change renders** (one template per family, sample data, no media)
 
 Create `scripts/render-parity.ts`:
 
@@ -601,7 +601,7 @@ Add `.parity/` to `Website/.gitignore` (append a line `.parity/`).
 Run: `npx tsx scripts/render-parity.ts baseline`
 Expected: five `wrote …` lines; `.parity/baseline/*.png` exist. (If `tsx` is missing: `npm i -D tsx`.)
 
-- [ ] **Step 2: Write the patcher** `scripts/add-bg-hook.mjs`:
+- [x] **Step 2: Write the patcher** `scripts/add-bg-hook.mjs`:
 
 ```js
 /**
@@ -651,7 +651,7 @@ console.log(`patched ${patched}, skipped ${skipped}`)
 if (patched + skipped !== 15) throw new Error(`expected 15 templates, saw ${patched + skipped}`)
 ```
 
-- [ ] **Step 3: Run it**
+- [x] **Step 3: Run it**
 
 Run: `node scripts/add-bg-hook.mjs`
 Expected: `patched 15, skipped 0`
@@ -662,7 +662,7 @@ Expected: `patched 0, skipped 15` (idempotent)
 Run: `grep -L 'class="bg"' src/lib/gtm/templates/social-post/*/template.html`
 Expected: no output (every template has the layer).
 
-- [ ] **Step 4: Parity**
+- [x] **Step 4: Parity**
 
 Run: `npx tsx scripts/render-parity.ts compare`
 Expected: five `SAME` lines and `PARITY OK`. If any line says `DIFFERS`, open `.parity/baseline/<id>.png` next to `.parity/after/<id>.png`: they must be visually identical (byte drift from webfont timing is acceptable; any visible change is a bug in the hook — stop and inspect that template). Then open `.parity/with-bg/*.png`: the single-pixel photo tints the stage at 60% under the darkening overlay, text unchanged.
@@ -696,7 +696,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 - Modify: `src/app/api/gtm/fill-template/route.ts`
 - Modify: `src/app/api/gtm/fill-carousel/route.ts`
 
-- [ ] **Step 1: Failing validation tests** — `src/lib/gtm/__tests__/render-media.test.ts`:
+- [x] **Step 1: Failing validation tests** — `src/lib/gtm/__tests__/render-media.test.ts`:
 
 ```ts
 import { parseRenderMedia, filterSlots, MAX_BG_BYTES } from "../render-media"
@@ -746,7 +746,7 @@ describe("filterSlots", () => {
 Run: `npx jest --ci src/lib/gtm/__tests__/render-media.test.ts`
 Expected: FAIL — `Cannot find module '../render-media'`.
 
-- [ ] **Step 2: Implement** `src/lib/gtm/render-media.ts`:
+- [x] **Step 2: Implement** `src/lib/gtm/render-media.ts`:
 
 ```ts
 import { stripEmDashes } from "@/lib/gtm/sanitize"
@@ -799,7 +799,7 @@ export function filterSlots(input: unknown, spec: SlotSpec[]): Record<string, st
 Run: `npx jest --ci src/lib/gtm/__tests__/render-media.test.ts`
 Expected: `Tests: 8 passed, 8 total`
 
-- [ ] **Step 3: Failing route test** — `src/app/api/gtm/__tests__/fill-template.test.ts`:
+- [x] **Step 3: Failing route test** — `src/app/api/gtm/__tests__/fill-template.test.ts`:
 
 ```ts
 import { POST } from "../fill-template/route"
@@ -880,7 +880,7 @@ describe("POST /api/gtm/fill-template", () => {
 Run: `npx jest --ci src/app/api/gtm/__tests__/fill-template.test.ts`
 Expected: FAIL — test 1 fails because Claude is called and `EVIL`/media are ignored; test 4 fails (200 not 400).
 
-- [ ] **Step 4: Implement in `fill-template/route.ts`**
+- [x] **Step 4: Implement in `fill-template/route.ts`**
 
 Add to the imports (after line 10):
 ```ts
@@ -1029,7 +1029,7 @@ Update the doc comment block (lines 19–26) to add the three optional fields:
 Run: `npx jest --ci src/app/api/gtm/__tests__/fill-template.test.ts`
 Expected: `Tests: 4 passed, 4 total`
 
-- [ ] **Step 5: `fill-carousel`** — same media handling, per card, plus a `cards` override and `cards` in the response.
+- [x] **Step 5: `fill-carousel`** — same media handling, per card, plus a `cards` override and `cards` in the response.
 
 Add the import after the route's existing render import:
 ```ts
@@ -1071,7 +1071,7 @@ Wrap the Claude call + parse (from the `apiKey` check through the end of the `ca
 ```
 (declare `let cards: Record<string, string>[]` before the `if`, removing the inner `let cards` declaration). In the final `NextResponse.json({ … })` of the route add `cards,` so the client can re-render later.
 
-- [ ] **Step 6: Verify gate + commit** *(Tasks 3 and 5 done — commits `d792ffa5`, `5c1cdc04`, `015ddea5`; review approved after fixes. The review's own probe suite confirmed: override-path values are HTML-escaped exactly once for rendering and returned raw; the Claude path is byte-identical (pinned by a regression test); every user-controlled `{{…}}` in all 15 templates is an HTML text node, so entity-escaping is sufficient; `MAX_BG_BYTES` = 3 MB decoded ≈ 4.0 MB base64, under the ~4.5 MB platform body limit; `bgOpacity` accepts numbers / numeric strings only, `0` preserved. Jest is 34 after the added tests. **Deferred follow-ups (pre-existing, out of scope):** Claude-generated slot markup and the unauthenticated `template-preview` GET still reach stored HTML unescaped — a separate security ticket; a committed `fill-carousel` test; the "client always resends the full slot set" contract is unwritten — note it at the `AssetPanel` call site if a partial-update path is ever added.)*
+- [x] **Step 6: Verify gate + commit** *(Tasks 3 and 5 done — commits `d792ffa5`, `5c1cdc04`, `015ddea5`; review approved after fixes. The review's own probe suite confirmed: override-path values are HTML-escaped exactly once for rendering and returned raw; the Claude path is byte-identical (pinned by a regression test); every user-controlled `{{…}}` in all 15 templates is an HTML text node, so entity-escaping is sufficient; `MAX_BG_BYTES` = 3 MB decoded ≈ 4.0 MB base64, under the ~4.5 MB platform body limit; `bgOpacity` accepts numbers / numeric strings only, `0` preserved. Jest is 34 after the added tests. **Deferred follow-ups (pre-existing, out of scope):** Claude-generated slot markup and the unauthenticated `template-preview` GET still reach stored HTML unescaped — a separate security ticket; a committed `fill-carousel` test; the "client always resends the full slot set" contract is unwritten — note it at the `AssetPanel` call site if a partial-update path is ever added.)*
 
 Run the verification gate. Expected: tsc 0; Jest `Tests: 28 passed` (12 + 4 + 8 + 4).
 
@@ -1095,7 +1095,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 **Files:**
 - Modify: `src/components/gtm/AssetPanel.tsx`
 
-- [ ] **Step 1: Props + state.** Replace the `AssetPanelProps` interface (lines 28–39) with:
+- [x] **Step 1: Props + state.** Replace the `AssetPanelProps` interface (lines 28–39) with:
 
 ```ts
 export interface AssetPanelProps {
@@ -1127,7 +1127,7 @@ After `const [pickerOpen, setPickerOpen] = useState(false)` (line 85) add:
 ```
 and change `const busy = generating || uploading` to `const busy = generating || uploading || rerendering`.
 
-- [ ] **Step 2: Send media on fill; keep the returned slots.** In `handleFillTemplate`, replace the `payload` const (lines 147–149) with:
+- [x] **Step 2: Send media on fill; keep the returned slots.** In `handleFillTemplate`, replace the `payload` const (lines 147–149) with:
 
 ```ts
         const mediaFields = media?.bgImage ? { bgImage: media.bgImage, bgOpacity: media.bgOpacity ?? 100 } : {}
@@ -1142,7 +1142,7 @@ After `setAssetUrl(withCacheBust(data.url))` (line 161) add:
 ```
 and add `media` to the `useCallback` deps: `[solution, briefText, itemId, isCarousel, media]`.
 
-- [ ] **Step 3: Re-render helper + media effect.** After `handleFillTemplate` (after line 176) insert:
+- [x] **Step 3: Re-render helper + media effect.** After `handleFillTemplate` (after line 176) insert:
 
 ```ts
   // ─── Re-render without Claude (slot edits, opacity slider) ───────────
@@ -1191,7 +1191,7 @@ and add `media` to the `useCallback` deps: `[solution, briefText, itemId, isCaro
   }, [mediaKey])
 ```
 
-- [ ] **Step 4: Slot editor UI (social-post only).** Directly after the preview block — i.e. after the `})()}` that closes `{assetUrl && !busy && (() => { … })()}` (line 487) and before the panel's closing `</div>` (line 488) — insert:
+- [x] **Step 4: Slot editor UI (social-post only).** Directly after the preview block — i.e. after the `})()}` that closes `{assetUrl && !busy && (() => { … })()}` (line 487) and before the panel's closing `</div>` (line 488) — insert:
 
 ```tsx
       {assetUrl && !isCarousel && slots && activeTemplateId && (() => {
@@ -1222,7 +1222,7 @@ and add `media` to the `useCallback` deps: `[solution, briefText, itemId, isCaro
       })()}
 ```
 
-- [ ] **Step 5: Token swaps in this file** (it is one of the outliers). Apply exactly:
+- [x] **Step 5: Token swaps in this file** (it is one of the outliers). Apply exactly:
 
 | find | replace |
 |---|---|
@@ -1262,7 +1262,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 - Create: `src/components/gtm/tabs/ContentBuilderCanonical.tsx`
 - Modify: `src/components/gtm/tabs/SolutionTabs.tsx` (import swap)
 
-- [ ] **Step 1: Create the file.** Every handler is the existing one, moved; the additions are `bgImage`/`bgOpacity` state (persisted in the session), the Media step, the Visual/Text format chips, and the mobile sticky preview.
+- [x] **Step 1: Create the file.** Every handler is the existing one, moved; the additions are `bgImage`/`bgOpacity` state (persisted in the session), the Media step, the Visual/Text format chips, and the mobile sticky preview.
 
 ```tsx
 "use client"
@@ -1997,11 +1997,11 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
 }
 ```
 
-- [ ] **Step 2: Swap the imports — all seven consumers.** The builder is imported by `src/components/gtm/tabs/SolutionTabs.tsx` (`from "./ContentBuilder"`) AND rendered directly by the six solution pages (`src/app/gtm/{field-sales,general,events-venues,trade-shows,recruiting,facilities}/page.tsx`, each `from "@/components/gtm/tabs/ContentBuilder"`). Change every one of those import paths to `…/ContentBuilderCanonical` (the local binding `ContentBuilder` stays, so no JSX changes). Verify: `grep -rn 'tabs/ContentBuilder"\|from "./ContentBuilder"' src` → nothing; `grep -rn 'ContentBuilderCanonical"' src | wc -l` → `7`. *(An earlier draft assumed a single consumer; the implementer's gate caught the other six.)*
+- [x] **Step 2: Swap the imports — all seven consumers.** The builder is imported by `src/components/gtm/tabs/SolutionTabs.tsx` (`from "./ContentBuilder"`) AND rendered directly by the six solution pages (`src/app/gtm/{field-sales,general,events-venues,trade-shows,recruiting,facilities}/page.tsx`, each `from "@/components/gtm/tabs/ContentBuilder"`). Change every one of those import paths to `…/ContentBuilderCanonical` (the local binding `ContentBuilder` stays, so no JSX changes). Verify: `grep -rn 'tabs/ContentBuilder"\|from "./ContentBuilder"' src` → nothing; `grep -rn 'ContentBuilderCanonical"' src | wc -l` → `7`. *(An earlier draft assumed a single consumer; the implementer's gate caught the other six.)*
 
 > **Review outcome (2026-09-16):** commits `0069049b` (builder + all seven consumers) and `13c7f06e` (3 MB cap). Handler-by-handler parity with the old builder confirmed mechanically (endpoints, payloads, timeouts, error strings identical; the session gains exactly `bgImage`/`bgOpacity`). Two Important findings, both fixed in a follow-up commit: (1) `resultCard` was conditionally rendered in two places, so collapsing the mobile chevron or crossing 768px unmounted `AssetPanel` and dropped its slots — it now mounts once at a fixed DOM position, hidden (not unmounted) when collapsed and placed last on desktop via flex `order`; (2) on a reloaded session `asset-check` restores the blob and template but not the slots, so the first slider change is a silent no-op — **this makes "cache slots/cards in KV" a requirement for acceptance criterion 3, not a deferral**; it is implemented on this branch right after the security follow-up (same routes). Spec deviations accepted: the template picker stays inside `AssetPanel` in Result (parity with the old builder) rather than a separate step-3 card; a solution change does not reset the photo (unreachable — every consumer passes a literal `solution`). **Second review round** (`8e0e981f` fixed the mount; two more Important findings, fixed in a further commit): (a) placing the single Result node first in DOM with `order: 99` made desktop focus/reading order disagree with visual order (WCAG 2.4.3) — it is now DOM-last with `order: -1` on mobile only; (b) pre-existing: the layout's mobile app bar is `sticky; top:0; z-index:500` inside the same `<main>` scroll container, so a preview pinned at `top:0` scrolled underneath it — the Result now pins at `top: MOBILE_BAR_H` (54px). The same `top: 0` bug exists in the collateral/link-in-bio chevrons on PR #6 (separate task raised). Remaining accepted Minors: Schedule popover clips inside the mobile scroll box; modal scrim is a literal navy rgba (no scrim token). **Closing verdict: approved, unconditional** (`0069049b` + `13c7f06e` + `8e0e981f` + `8810dab7`); the reloaded-session gap is closed by `cb023a48` (fill routes persist raw `slots`/`cards` at `<assetKvKey>:slots`, `asset-check` returns them, `AssetPanel` seeds on mount) and the security follow-up `46d7ad9f` moved escaping into `renderTemplate` and added `requireGtmAuth()` to `template-preview` (middleware only guards `/gtm/*` pages, not `/api/gtm/*`). Full gate on the clean tree: tsc 0, Jest 42/42, token check empty.
 
-- [ ] **Step 3: Verify gate + commit**
+- [x] **Step 3: Verify gate + commit**
 
 Run the verification gate. Expected: tsc 0, Jest green. Also run `npx next lint --dir src/components/gtm/tabs` — Expected: no errors (warnings about the intentional `eslint-disable` lines are fine).
 
@@ -2027,7 +2027,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 **Files:**
 - Modify: `src/components/gtm/LinkInBioBuilder.tsx`, `src/components/gtm/QrLibrary.tsx`, `src/components/gtm/PagesView.tsx`, `src/app/gtm/login/page.tsx`
 
-- [ ] **Step 1: LinkInBioBuilder** — replace lines 23–25:
+- [x] **Step 1: LinkInBioBuilder** — replace lines 23–25:
 
 ```ts
 const ACCENT = '#0CF4DF'
@@ -2067,7 +2067,7 @@ sed -i '' \
 ```
 In the `card` const (line 35) set `borderRadius: 12` and add `boxShadow: 'var(--gtm-shadow)'`; in `input` (line 43) set `borderRadius: 8`. Leave the mobile-chevron block (added earlier) and the `#111` phone frame as-is.
 
-- [ ] **Step 2: QrLibrary + PagesView** — same vocabulary. Run:
+- [x] **Step 2: QrLibrary + PagesView** — same vocabulary. Run:
 
 ```bash
 for f in src/components/gtm/QrLibrary.tsx src/components/gtm/PagesView.tsx; do
@@ -2119,7 +2119,7 @@ Finally, on every top-level card container in both files (`borderRadius: 6` on a
 Run: `grep -cE '#12243f|#1A56DB|#0AA891"|rgba\(0,0,0,0\.45\)|rgba\(25,34,77' src/components/gtm/QrLibrary.tsx src/components/gtm/PagesView.tsx`
 Expected: `0` for both files.
 
-- [ ] **Step 3: Login page** — it renders outside the `data-theme="light"` shell (`layout.tsx` early-returns children for `/gtm/login`), so the shared classes (`.card`, `.btn`, `.input`) do NOT apply there and must not be used; tokens do resolve (they live on `:root`), so use `var(--gtm-*)` in inline styles where a token exists. Apply:
+- [x] **Step 3: Login page** — it renders outside the `data-theme="light"` shell (`layout.tsx` early-returns children for `/gtm/login`), so the shared classes (`.card`, `.btn`, `.input`) do NOT apply there and must not be used; tokens do resolve (they live on `:root`), so use `var(--gtm-*)` in inline styles where a token exists. Apply:
 
 | line | find | replace |
 |---|---|---|
@@ -2151,7 +2151,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 **Files:**
 - Delete: `src/components/gtm/tabs/ContentBuilder.tsx`
 
-- [ ] **Step 1: Deploy a preview** (auto-deploy is off; never a production alias). From the **repo root of the worktree** (`~/Development/Momentify/.claude/worktrees/momentify-canonical-ui`), where Vercel's Root Directory is `Website`:
+- [x] **Step 1: Deploy a preview** (auto-deploy is off; never a production alias). From the **repo root of the worktree** (`~/Development/Momentify/.claude/worktrees/momentify-canonical-ui`), where Vercel's Root Directory is `Website`:
 
 Run: `vercel deploy --target preview 2>&1 | tail -3`
 Expected: a `https://…vercel.app` preview URL. Open it and log in.
@@ -2162,7 +2162,7 @@ Expected: a `https://…vercel.app` preview URL. Open it and log in.
 
 > **Preview rounds 3–8 (2026-09-16), user feedback, each fixed + redeployed:** "background is not placing within template previews" → thumbnails paint the photo by setting `--bg-image`/`--bg-opacity` inline on the template root inside the same-origin iframe (`template-frame.ts` `applyMediaToFrame`, mirrors `mediaMap()`); "template preview boundaries aren't conforming to shape" → 16:9 iframes were 1920×1080 while every 16:9 stage is 1280×720 (`nativeSize()`), and the picker grid stretched cards to the row's tallest (`alignItems: start`); "I should be able to preview them like the other growth engines" → `TemplatePreviewModal.tsx` (fleet pattern from Maven's gallery `PreviewModal`): native-size frame scaled to fit, photo applied, description/aspect/viewport/slots, "Use this template"; opened from a corner control on each picker card. Portal gotcha: `data-theme="light"` lives on a shell wrapper div (`layout.tsx:438`), not `<html>`, so a `document.body` portal loses every scoped class — the backdrop re-asserts `data-theme="light"`. z-index 1100 (mobile drawer is 1000). **"Copy link" decision: replaced with Preview** (`TemplatesGallery.tsx` opens the same modal; the file's hex literals tokenized while there — pillar swatch colors stay data).
 
-- [ ] **Step 2: Walk the spec's acceptance criteria on the preview** (desktop and a phone-width window):
+- [x] **Step 2: Walk the spec's acceptance criteria on the preview** (desktop and a phone-width window):
 
 1. Sidebar: 232px expanded / 64px strip; Space Grotesk teal-ish eyebrow section labels; pill active state; folds, strip toggle, Sign Out, mobile drawer all work.
 2. Each solution page: its accent (violet / teal / amber / indigo / crimson) is intact on chips, eyebrows, and the template picker highlight.
@@ -2178,7 +2178,7 @@ Expected: a `https://…vercel.app` preview URL. Open it and log in.
 
 Record anything off; fix, commit, redeploy until the list is clean.
 
-- [ ] **Step 3: Remove the old builder**
+- [x] **Step 3: Remove the old builder**
 
 Run: `grep -rn 'tabs/ContentBuilder"' src --include=*.tsx --include=*.ts`
 Expected: no output (nothing imports it).
@@ -2194,7 +2194,7 @@ git commit -m "Remove the pre-canonical ContentBuilder after parity verification
 Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
 
-- [ ] **Step 4: Open the PR** (push only on Jake's explicit go)
+- [x] **Step 4: Open the PR** (push only on Jake's explicit go)
 
 ```bash
 git push -u origin claude/momentify-canonical-ui
@@ -2219,3 +2219,5 @@ Spec: `docs/superpowers/specs/2026-09-16-momentify-canonical-ui-design.md`
 EOF
 )"
 ```
+
+> **Done (2026-09-17):** old `ContentBuilder.tsx` removed (`6850d446`); final whole-branch review APPROVED, its should-fix items landed as `d4d79754` + `0c7c975d` (dead code, shared `MAX_BG_BYTES`, 16:9 result size via `nativeSize()`, publish-modal z-index, login focus token, four unused theme tokens dropped, `template-preview` 401 test — Jest 44). PR: https://github.com/entevate/momentify-marketing/pull/7. Deferred, not in this PR: modal focus trap/scroll lock, mobile Schedule popover clipping, remaining QrLibrary/PagesView chrome literals.
