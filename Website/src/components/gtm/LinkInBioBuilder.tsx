@@ -11,6 +11,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { renderLinkPageHtml } from '@/lib/gtm/render-link-page'
+import { MOBILE_BAR_H } from '@/lib/gtm/mobile'
 import {
   LOGO_SIZE,
   newLinkId,
@@ -69,6 +70,15 @@ export default function LinkInBioBuilder() {
   const [savedSnap, setSavedSnap] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [previewOpen, setPreviewOpen] = useState(true)
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768)
+    onResize()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   useEffect(() => {
     fetch('/api/gtm/link-page')
@@ -140,7 +150,7 @@ export default function LinkInBioBuilder() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 16 : 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
         <div style={{ flex: '1 1 420px', minWidth: 320, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <Card title="Header">
             <Toggle label="Show logo" on={config.header.showLogo} onToggle={() => patchHeader({ showLogo: !config.header.showLogo })} />
@@ -214,11 +224,22 @@ export default function LinkInBioBuilder() {
           </Card>
         </div>
 
-        <div style={{ flex: '0 0 360px', position: 'sticky', top: 20 }}>
-          <p style={{ ...label, marginBottom: 10 }}>Live preview</p>
-          <div style={{ border: '10px solid #111', borderRadius: 34, overflow: 'hidden', boxShadow: '0 16px 44px rgba(0,0,0,0.25)', width: 340, margin: '0 auto' }}>
-            <iframe title="Link in Bio preview" srcDoc={previewHtml} style={{ width: 340, height: 700, border: 0, display: 'block' }} />
-          </div>
+        <div style={{ flex: isMobile ? 'none' : '0 0 360px', width: isMobile ? '100%' : undefined, position: 'sticky', top: isMobile ? MOBILE_BAR_H : 20, order: isMobile ? -1 : 0, zIndex: isMobile ? 30 : undefined, background: isMobile ? '#fff' : undefined, paddingBottom: isMobile ? 10 : 0, borderBottom: isMobile ? '1px solid rgba(0,0,0,0.12)' : undefined }}>
+          {isMobile ? (
+            <button type="button" onClick={() => setPreviewOpen((o) => !o)} aria-expanded={previewOpen} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, padding: '10px 12px', background: '#fff', border: '1px solid rgba(0,0,0,0.14)', borderRadius: 9, color: INK, fontSize: 13, fontWeight: 700, cursor: 'pointer' }}>
+              <span>Live preview</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: previewOpen ? 'rotate(180deg)' : 'none', transition: 'transform .15s ease', flex: 'none' }}><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+          ) : (
+            <p style={{ ...label, marginBottom: 10 }}>Live preview</p>
+          )}
+          {(!isMobile || previewOpen) && (
+            <div style={{ marginTop: isMobile ? 10 : 0, maxHeight: isMobile ? '52vh' : undefined, overflow: isMobile ? 'auto' : undefined }}>
+              <div style={{ border: '10px solid #111', borderRadius: 34, overflow: 'hidden', boxShadow: '0 16px 44px rgba(0,0,0,0.25)', width: 340, margin: '0 auto' }}>
+                <iframe title="Link in Bio preview" srcDoc={previewHtml} style={{ width: 340, height: 700, border: 0, display: 'block' }} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
