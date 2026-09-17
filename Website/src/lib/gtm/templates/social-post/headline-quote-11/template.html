@@ -123,14 +123,14 @@
   <div class="bg"></div>
 
   <header class="header">
-    <p class="eyebrow">{{LABEL}}</p>
-    <h1 class="headline">{{HEADLINE}}</h1>
+    <p class="eyebrow" data-slot="LABEL">{{LABEL}}</p>
+    <h1 class="headline" data-slot="HEADLINE">{{HEADLINE}}</h1>
   </header>
 
   <main class="main">
     <div class="quote-mark">&ldquo;</div>
-    <p class="quote">{{QUOTE}}</p>
-    <p class="attribution">{{ATTRIBUTION}}</p>
+    <p class="quote" data-slot="QUOTE">{{QUOTE}}</p>
+    <p class="attribution" data-slot="ATTRIBUTION">{{ATTRIBUTION}}</p>
   </main>
 
   <footer class="footer">
@@ -155,7 +155,7 @@
         </linearGradient>
       </defs>
     </svg>
-    <span class="cta-pill">{{CTA}}</span>
+    <span class="cta-pill" data-slot="CTA">{{CTA}}</span>
   </footer>
 
 </div>

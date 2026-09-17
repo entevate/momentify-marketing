@@ -126,14 +126,14 @@
   <div class="bg"></div>
 
   <header class="header">
-    <div class="eyebrow">{{LABEL}}</div>
-    <h1 class="headline">{{HEADLINE}}</h1>
+    <div class="eyebrow" data-slot="LABEL">{{LABEL}}</div>
+    <h1 class="headline" data-slot="HEADLINE">{{HEADLINE}}</h1>
   </header>
 
   <main class="main">
     <div class="quote-mark">&ldquo;</div>
-    <p class="quote">{{QUOTE}}</p>
-    <p class="attribution">{{ATTRIBUTION}}</p>
+    <p class="quote" data-slot="QUOTE">{{QUOTE}}</p>
+    <p class="attribution" data-slot="ATTRIBUTION">{{ATTRIBUTION}}</p>
   </main>
 
   <footer class="footer">
@@ -158,7 +158,7 @@
         </linearGradient>
       </defs>
     </svg>
-    <span class="cta">{{CTA}} &rarr;</span>
+    <span class="cta" data-slot="CTA">{{CTA}} &rarr;</span>
   </footer>
 
 </div>

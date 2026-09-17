@@ -188,17 +188,17 @@
       </svg>
 
       <div class="body-wrap">
-        <div class="eyebrow">{{LABEL}}</div>
-        <h1 class="headline">{{HEADLINE}}</h1>
+        <div class="eyebrow" data-slot="LABEL">{{LABEL}}</div>
+        <h1 class="headline" data-slot="HEADLINE">{{HEADLINE}}</h1>
       </div>
 
       <div class="cta-row">
-        <span class="cta">{{CTA}} &rarr;</span>
+        <span class="cta" data-slot="CTA">{{CTA}} &rarr;</span>
       </div>
     </div>
 
     <div class="right">
-      <p class="subheadline">{{SUBHEADLINE}}</p>
+      <p class="subheadline" data-slot="SUBHEADLINE">{{SUBHEADLINE}}</p>
       <span class="domain">momentifyapp.com</span>
     </div>
   </div>

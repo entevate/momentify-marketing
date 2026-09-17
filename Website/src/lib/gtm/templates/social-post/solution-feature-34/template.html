@@ -121,22 +121,22 @@
   <div class="bg"></div>
 
   <header class="header">
-    <p class="eyebrow">{{LABEL}}</p>
-    <h1 class="headline">{{HEADLINE}}</h1>
+    <p class="eyebrow" data-slot="LABEL">{{LABEL}}</p>
+    <h1 class="headline" data-slot="HEADLINE">{{HEADLINE}}</h1>
   </header>
 
   <main class="main">
     <div class="bullet-row">
       <div class="bullet-dot"></div>
-      <p class="bullet-text">{{BULLET1}}</p>
+      <p class="bullet-text" data-slot="BULLET1">{{BULLET1}}</p>
     </div>
     <div class="bullet-row">
       <div class="bullet-dot"></div>
-      <p class="bullet-text">{{BULLET2}}</p>
+      <p class="bullet-text" data-slot="BULLET2">{{BULLET2}}</p>
     </div>
     <div class="bullet-row">
       <div class="bullet-dot"></div>
-      <p class="bullet-text">{{BULLET3}}</p>
+      <p class="bullet-text" data-slot="BULLET3">{{BULLET3}}</p>
     </div>
   </main>
 
@@ -162,7 +162,7 @@
         </linearGradient>
       </defs>
     </svg>
-    <span class="cta-pill">{{CTA}}</span>
+    <span class="cta-pill" data-slot="CTA">{{CTA}}</span>
   </footer>
 
 </div>
