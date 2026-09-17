@@ -13,8 +13,10 @@
 **Known-red baseline:** `src/app/api/gtm/__tests__/generate-asset-html.test.ts` fails on untouched `main` (cookie auth outside a request scope). It is *not* fixed here. The test command used throughout excludes it:
 
 ```bash
-npx jest --ci --silent --testPathIgnorePatterns '/node_modules/' '/.claude/' 'generate-asset-html'
+npx jest --ci --silent --testPathIgnorePatterns '/node_modules/' 'generate-asset-html'
 ```
+
+(Do **not** add a `/.claude/` ignore: this worktree's own path contains `/.claude/`, so that pattern silently excludes every test. Momentify's app is in `Website/`, which is Jest's rootDir, so nested worktrees at the repo root are never scanned anyway.)
 
 **Verification gate for every commit:** `npx tsc --noEmit` exits 0 **and** the command above is green. This Mac stalls on `next dev`; do not start a dev server. Visual verification happens on a Vercel preview deploy in Task 9.
 
@@ -51,13 +53,7 @@ npx jest --ci --silent --testPathIgnorePatterns '/node_modules/' '/.claude/' 'ge
 - Modify: `jest.config.js`
 - Rewrite: `src/styles/gtm-theme.css`
 
-- [ ] **Step 1: Stop Jest from sweeping nested worktrees** (fleet gotcha; this worktree is clean but the main checkout has eight of them)
-
-In `jest.config.js`, inside `customJestConfig`, add after the `testMatch` line:
-
-```js
-  testPathIgnorePatterns: ['/node_modules/', '/.claude/'],
-```
+- [ ] **Step 1: No Jest config change.** (An earlier draft added `testPathIgnorePatterns: ['/node_modules/', '/.claude/']`; that was implemented and then reverted in a follow-up commit because a bare `/.claude/` pattern matches this worktree's own path and hides every test. Leave `jest.config.js` untouched.)
 
 - [ ] **Step 2: Rewrite `src/styles/gtm-theme.css`** with exactly this content (the five light solution schemes are kept verbatim; the dark block and its five dark overrides are gone; new tokens and shared classes added):
 
