@@ -469,7 +469,9 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
   const commitOpacity = () => { if (sliderValue !== bgOpacity) setBgOpacity(sliderValue) }
 
   const assetType = contentType === "carousel" ? "carousel" : "social-post"
-  const media = bgImage ? { bgImage, bgOpacity } : undefined
+  // Memoized: a fresh object each render would re-run the picker's per-frame
+  // media effect (15 iframes) on every keystroke in the form.
+  const media = useMemo(() => (bgImage ? { bgImage, bgOpacity } : undefined), [bgImage, bgOpacity])
 
   // ─── Sections ─────────────────────────────────────────────────────────────
   const resultCard = generated && (
