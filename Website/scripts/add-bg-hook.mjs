@@ -6,6 +6,14 @@
  * Root element: the single `<div class="stage"…>` (optionally with an id);
  * templates with no `.stage` root use their single `<div class="card"…>`
  * root instead (wide-banner-11). The hook's CSS selector follows the root.
+ *
+ * Stacking: the photo is an absolutely-positioned `.bg` layer, so any
+ * template with no explicit z-index ladder needs its content lifted above
+ * it (`.stage > *:not(.bg) { position: relative; z-index: 1 }`); templates
+ * that already run a positive z-index ladder (the dark ones) skip this, since
+ * it would push their own layers out of order. The root also needs
+ * `position: relative` (or `absolute`) so the photo's `inset: 0` resolves
+ * against it rather than the viewport; the hook adds it if missing.
  */
 import fs from "fs"
 import path from "path"
@@ -34,9 +42,27 @@ for (const dir of fs.readdirSync(ROOT)) {
   const rootLineEnd = html.indexOf("\n", rootIdx) + 1
   html = html.slice(0, rootLineEnd) + ROOT_VARS + html.slice(rootLineEnd)
 
+  // Light templates declare no stacking at all, so an absolutely-positioned photo
+  // would paint above their text. Lift every non-photo child above it. Dark
+  // templates already run an explicit z-index ladder and must NOT get this rule
+  // (it would push .geo above the darkening overlay).
+  const hasStacking = /z-index:\s*[1-9]/.test(html)
+  const CONTENT_RULE = hasStacking ? "" : `  .${cls} > *:not(.bg) {\n    position: relative; z-index: 1;\n  }\n`
+
+  // The photo's inset:0 must resolve against the root, not the viewport.
+  const rootRuleStart = html.indexOf(`\n  .${cls} {`)
+  if (rootRuleStart < 0) throw new Error(`${dir}: no '.${cls} {' rule`)
+  const rootRuleOpenEnd = html.indexOf("\n", rootRuleStart + 1) + 1
+  const rootRuleClose = html.indexOf("\n  }", rootRuleOpenEnd)
+  if (rootRuleClose < 0) throw new Error(`${dir}: unterminated '.${cls} {' rule`)
+  const rootRuleBody = html.slice(rootRuleOpenEnd, rootRuleClose)
+  if (!/position:\s*(relative|absolute)/.test(rootRuleBody)) {
+    html = html.slice(0, rootRuleOpenEnd) + "    position: relative;\n" + html.slice(rootRuleOpenEnd)
+  }
+
   const styleEnd = html.indexOf("</style>")
   if (styleEnd < 0) throw new Error(`${dir}: no </style>`)
-  html = html.slice(0, styleEnd) + bgRule(cls) + html.slice(styleEnd)
+  html = html.slice(0, styleEnd) + bgRule(cls) + CONTENT_RULE + html.slice(styleEnd)
 
   html = html.replace(rootTag, `${rootTag}\n  <div class="bg"></div>`)
 

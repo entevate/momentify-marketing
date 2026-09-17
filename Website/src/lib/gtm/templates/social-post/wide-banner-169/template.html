@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   :root {
+    --bg-image:     {{BG_IMAGE}};
+    --bg-opacity:   {{BG_OPACITY}};
     --primary: {{PRIMARY}};
     --primary-light: {{PRIMARY_LIGHT}};
     --primary-dark: {{PRIMARY_DARK}};
@@ -151,10 +153,17 @@
     border: 1px solid rgba(12,244,223,0.10);
     z-index: 0;
   }
+  .stage .bg {
+    position: absolute; inset: 0;
+    background: var(--bg-image) center / cover no-repeat;
+    opacity: var(--bg-opacity);
+    pointer-events: none; z-index: 0;
+  }
 </style>
 </head>
 <body>
   <div class="stage" id="stage">
+  <div class="bg"></div>
     <svg class="geo" viewBox="0 0 600 500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M600 500 L600 180 L420 0 L220 0 L440 220 L440 500 Z" fill="white" fill-opacity="0.05"/>
       <path d="M600 500 L600 300 L380 80 L180 80 L380 280 L380 500 Z" fill="white" fill-opacity="0.04"/>

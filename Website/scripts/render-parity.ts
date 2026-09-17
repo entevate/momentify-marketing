@@ -37,11 +37,13 @@ async function main() {
       console.log(`${same ? "SAME   " : "DIFFERS"} ${id}`)
       if (!same) mismatches++
       fs.mkdirSync(path.join(OUT, "with-bg"), { recursive: true })
-      fs.writeFileSync(path.join(OUT, "with-bg", `${id}.png`), await render(id, true))
+      const withBg = await render(id, true)
+      fs.writeFileSync(path.join(OUT, "with-bg", `${id}.png`), withBg)
+      if (withBg.equals(png)) throw new Error(`${id}: with-bg render is identical to the no-bg render — the photo layer is not painting`)
     } else {
       console.log(`wrote ${id}`)
     }
   }
-  if (mode === "compare") console.log(mismatches === 0 ? "PARITY OK" : `PARITY: ${mismatches} differ — open .parity/baseline vs .parity/after and confirm visually identical (webfont timing can shift bytes)`)
+  if (mode === "compare") console.log(mismatches === 0 ? "PARITY OK — now open .parity/with-bg/*.png: the 60% red wash must sit UNDER all text, logos, and CTAs" : `PARITY: ${mismatches} differ — open .parity/baseline vs .parity/after and confirm visually identical (webfont timing can shift bytes)`)
 }
 main().catch((e) => { console.error(e); process.exit(1) })

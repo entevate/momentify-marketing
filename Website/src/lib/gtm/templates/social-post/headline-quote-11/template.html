@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <style>
   :root {
+    --bg-image:     {{BG_IMAGE}};
+    --bg-opacity:   {{BG_OPACITY}};
     --primary:       {{PRIMARY}};
     --primary-light: {{PRIMARY_LIGHT}};
     --primary-dark:  {{PRIMARY_DARK}};
@@ -22,6 +24,7 @@
   }
 
   .stage {
+    position: relative;
     width: 1080px; height: 1080px;
     flex-shrink: 0; transform-origin: center center;
     background: #ffffff;
@@ -104,10 +107,20 @@
     padding: 14px 32px;
     white-space: nowrap;
   }
+  .stage .bg {
+    position: absolute; inset: 0;
+    background: var(--bg-image) center / cover no-repeat;
+    opacity: var(--bg-opacity);
+    pointer-events: none; z-index: 0;
+  }
+  .stage > *:not(.bg) {
+    position: relative; z-index: 1;
+  }
 </style>
 </head>
 <body>
 <div class="stage">
+  <div class="bg"></div>
 
   <header class="header">
     <p class="eyebrow">{{LABEL}}</p>
