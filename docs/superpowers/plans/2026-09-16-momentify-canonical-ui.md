@@ -387,7 +387,7 @@ and swap the button's children (lines 334–335) so the chevron sits on the righ
 
 - [ ] **Step 5: Footer contract sizing** — in the collapse toggle button style (lines 391–402) change `width: 28, height: 28` → `width: 28, height: 24`, `background: "rgba(255, 255, 255, 0.04)"` → `background: "transparent"`, `border: "1px solid rgba(255, 255, 255, 0.10)"` → `border: "1px solid rgba(255, 255, 255, 0.14)"`. In the Sign Out button style (lines 366–378) change `color: "rgba(255, 255, 255, 0.40)"` → `color: "rgba(255, 255, 255, 0.70)"` and the two hover handlers (379–380) to `"rgba(255, 255, 255, 1)"` / `"rgba(255, 255, 255, 0.70)"`.
 
-- [ ] **Step 6: Verify + commit**
+- [x] **Step 6: Verify + commit** *(done — commit `552e50b4`; combined spec + quality review approved. Polish for a later chrome sweep, not regressions: `onMouseLeave` at `layout.tsx:170` resets inactive rows to `0.70` while the resting color is `0.72`; `transition: "all"` now also animates the pill's width/margin on collapse — narrow to `background, color` if the shimmer shows.)*
 
 Run the verification gate. Expected: tsc 0, Jest green.
 
@@ -614,15 +614,24 @@ import path from "path"
 
 const ROOT = path.join(process.cwd(), "src/lib/gtm/templates/social-post")
 const ROOT_VARS = `    --bg-image:     {{BG_IMAGE}};\n    --bg-opacity:   {{BG_OPACITY}};\n`
-const BG_RULE = `  .stage .bg {\n    position: absolute; inset: 0;\n    background: var(--bg-image) center / cover no-repeat;\n    opacity: var(--bg-opacity);\n    pointer-events: none; z-index: 0;\n  }\n`
-const BG_DIV = `<div class="stage">\n  <div class="bg"></div>`
+const bgRule = (cls) => `  .${cls} .bg {\n    position: absolute; inset: 0;\n    background: var(--bg-image) center / cover no-repeat;\n    opacity: var(--bg-opacity);\n    pointer-events: none; z-index: 0;\n  }\n`
+const rootTags = (html, cls) => [...html.matchAll(new RegExp(`<div class="${cls}"(?: id="[a-z0-9-]+")?>`, "g"))].map((m) => m[0])
 
 let patched = 0, skipped = 0
 for (const dir of fs.readdirSync(ROOT)) {
   const file = path.join(ROOT, dir, "template.html")
   if (!fs.existsSync(file)) continue
   let html = fs.readFileSync(file, "utf8")
-  if (html.includes(".stage .bg")) { skipped++; continue }
+  if (/\.(stage|card) \.bg \{/.test(html)) { skipped++; continue }
+
+  // Pick the root: prefer .stage; fall back to .card only when no .stage exists
+  // (wide-banner-11). Both roots are position:relative + overflow:hidden with
+  // the same ::before decor / ::after overlay layering.
+  let cls = "stage"
+  let tags = rootTags(html, cls)
+  if (tags.length === 0) { cls = "card"; tags = rootTags(html, cls) }
+  if (tags.length !== 1) throw new Error(`${dir}: expected exactly one <div class="${cls}"[ id=…]> root, found ${tags.length}`)
+  const rootTag = tags[0]
 
   const rootIdx = html.indexOf(":root {")
   if (rootIdx < 0) throw new Error(`${dir}: no ':root {'`)
@@ -631,11 +640,9 @@ for (const dir of fs.readdirSync(ROOT)) {
 
   const styleEnd = html.indexOf("</style>")
   if (styleEnd < 0) throw new Error(`${dir}: no </style>`)
-  html = html.slice(0, styleEnd) + BG_RULE + html.slice(styleEnd)
+  html = html.slice(0, styleEnd) + bgRule(cls) + html.slice(styleEnd)
 
-  const stageCount = html.split('<div class="stage">').length - 1
-  if (stageCount !== 1) throw new Error(`${dir}: expected exactly one <div class="stage">, found ${stageCount}`)
-  html = html.replace('<div class="stage">', BG_DIV)
+  html = html.replace(rootTag, `${rootTag}\n  <div class="bg"></div>`)
 
   fs.writeFileSync(file, html)
   patched++
@@ -660,7 +667,7 @@ Expected: no output (every template has the layer).
 Run: `npx tsx scripts/render-parity.ts compare`
 Expected: five `SAME` lines and `PARITY OK`. If any line says `DIFFERS`, open `.parity/baseline/<id>.png` next to `.parity/after/<id>.png`: they must be visually identical (byte drift from webfont timing is acceptable; any visible change is a bug in the hook — stop and inspect that template). Then open `.parity/with-bg/*.png`: the single-pixel photo tints the stage at 60% under the darkening overlay, text unchanged.
 
-- [ ] **Step 5: Verify gate + commit**
+- [x] **Step 5: Verify gate + commit** *(done — commit `3ec73178`; 15/15 patched, `PARITY OK` on all five families. The original patcher assumed every template was rooted on a bare `<div class="stage">`; `wide-banner-11` is rooted on `<div class="card" id="card">` and `wide-banner-169` on `<div class="stage" id="stage">`, so the script above was generalized (prefer `.stage`, fall back to `.card`, tolerate an `id`).)*
 
 Run the verification gate. Expected: tsc 0, Jest green (16 tests).
 
@@ -2030,11 +2037,16 @@ const PILLAR_SWATCHES = ['#0CF4DF', '#9B5FE8', '#F2B33D', '#5FD9C2']
 ```
 with
 ```ts
-const ACCENT = 'var(--gtm-accent)'
+const ACCENT_CSS = 'var(--gtm-accent)'   // inline styles only
+const ACCENT = '#0CF4DF'                 // DATA: defaultConfig() accent — persisted, rendered into the public link page, bound to <input type="color">; must match the link-page route's fallback
 const INK = 'var(--gtm-text-primary)'
 // Solution accents (design-tokens.json color.solution) — brand, never normalized.
-const PILLAR_SWATCHES = ['#00BBA5', '#9B5FE8', '#F2B33D', '#5FD9C2']
+// DATA: compared with persisted link.color via ===, so the values must not change.
+const PILLAR_SWATCHES = ['#0CF4DF', '#9B5FE8', '#F2B33D', '#5FD9C2']
 ```
+Every *style* usage of `ACCENT` (inline `style`, `accentColor`, template-literal borders) becomes `ACCENT_CSS`; only `defaultConfig()` keeps the hex `ACCENT`.
+
+> **Corrected after review (2026-09-16):** the first version of this step turned `ACCENT` into a CSS var and changed `PILLAR_SWATCHES[0]`; both are *data* (persisted config / `===` comparisons), which broke the public link renderer's hex regex and orphaned saved links. Likewise in Step 2, `PagesView.tsx`'s `PAGE_PILLARS` colors (`general #1A56DB`, `recruiting #0AA891`) are data mirroring `pillar-palettes.ts` and stay literal — the blanket sed must not touch that array. Rule: a `var(--gtm-…)` string is valid only where the browser renders it; anything persisted, compared, passed to a library, or emitted into exported HTML stays hex.
 Then apply these exact substitutions across the file:
 
 ```bash
