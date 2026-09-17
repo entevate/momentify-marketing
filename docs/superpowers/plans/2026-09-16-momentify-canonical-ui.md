@@ -52,7 +52,7 @@ npx jest --ci --silent --testPathIgnorePatterns '/node_modules/' 'generate-asset
 - Modify: `jest.config.js`
 - Rewrite: `src/styles/gtm-theme.css`
 
-- [ ] **Step 1: No Jest config change.** (An earlier draft added `testPathIgnorePatterns: ['/node_modules/', '/.claude/']`; that was implemented and then reverted in a follow-up commit because a bare `/.claude/` pattern matches this worktree's own path and hides every test. Leave `jest.config.js` untouched.)
+- [x] **Step 1: No Jest config change.** (An earlier draft added `testPathIgnorePatterns: ['/node_modules/', '/.claude/']`; that was implemented and then reverted in a follow-up commit because a bare `/.claude/` pattern matches this worktree's own path and hides every test. Leave `jest.config.js` untouched.)
 
 > **Amended after code-quality review (2026-09-16).** The block below is the original spec; the committed file is that block plus these deltas, applied in a follow-up commit so later tasks inherit them:
 > - `--gtm-accent-ink` (per solution; ≥ 4.5:1 on white — default `#067A69`, violet `#6B21D4`, recruiting `#067A69`, amber `#8F6300`, indigo `#3A2073`, crimson `#B8340F`) — `.eyebrow` and `.btn-tertiary` use it instead of the raw accent.
@@ -63,7 +63,7 @@ npx jest --ci --silent --testPathIgnorePatterns '/node_modules/' 'generate-asset
 > - All shared classes are scoped `[data-theme="light"]` (not bare `[data-theme]`).
 > - The gate gains a referenced-vs-defined token check (must print nothing): `comm -23 <(grep -rhoE 'var\(--gtm-[a-z0-9-]+' src | sed 's/var(//' | sort -u) <(grep -oE '^\s*--gtm-[a-z0-9-]+' src/styles/gtm-theme.css | tr -d ' ' | sort -u)`
 
-- [ ] **Step 2: Rewrite `src/styles/gtm-theme.css`** with exactly this content (the five light solution schemes are kept verbatim; the dark block and its five dark overrides are gone; new tokens and shared classes added):
+- [x] **Step 2: Rewrite `src/styles/gtm-theme.css`** with exactly this content (the five light solution schemes are kept verbatim; the dark block and its five dark overrides are gone; new tokens and shared classes added):
 
 ```css
 /* GTM Framework — Theme Variables + shared classes
@@ -278,15 +278,15 @@ npx jest --ci --silent --testPathIgnorePatterns '/node_modules/' 'generate-asset
 }
 ```
 
-- [ ] **Step 3: Verify**
+- [x] **Step 3: Verify** *(done — commits `2d2f9c5c`, `de6f2ccd`, `0ba020ae`; spec + quality reviews approved)*
 
-Run: `npx tsc --noEmit && npx jest --ci --silent --testPathIgnorePatterns '/node_modules/' '/.claude/' 'generate-asset-html'`
+Run: `npx tsc --noEmit && npx jest --ci --silent --testPathIgnorePatterns '/node_modules/' 'generate-asset-html'`
 Expected: tsc exits 0; Jest prints `Tests: 12 passed, 12 total` (the one remaining suite).
 
 Run: `grep -c 'data-theme="dark"' src/styles/gtm-theme.css`
 Expected: `0`
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add jest.config.js src/styles/gtm-theme.css

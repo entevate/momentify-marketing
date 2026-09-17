@@ -65,7 +65,7 @@ Make Momentify's GTM engine look and behave like the rest of the fleet (KINECT /
 
 `--gtm-grad-action` is **fleet-constant** — deliberately *not* overridden per solution (primary buttons look the same on every solution page); `--gtm-accent-grad` *is* overridden per solution (hero bars). The theme file says so in a comment so no later task "fixes" it.
 
-The existing `--gtm-cyan`, `--gtm-tag-*`, `--gtm-layer-*`, `--gtm-accent-light`, `--gtm-accent-grad` stay (still referenced). The five **per-solution `[data-solution]` light schemes are kept verbatim** (violet / teal / amber / indigo / crimson) — brand-specific, never normalized.
+The existing `--gtm-cyan`, `--gtm-tag-*`, `--gtm-layer-*`, `--gtm-accent-grad` stay (still referenced); `--gtm-accent-light`, `--gtm-accent-on-dark` and `--gtm-danger` are defined but currently unreferenced — intentional reserves for later tasks. The five **per-solution `[data-solution]` light schemes are kept verbatim** (violet / teal / amber / indigo / crimson) — brand-specific, never normalized.
 
 **Deleted:** the entire `[data-theme="dark"]` block and the five `[data-theme="dark"] [data-solution=…]` overrides. The layout pins `data-theme="light"` and the toggle is already gone; this CSS is dead.
 
