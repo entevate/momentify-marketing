@@ -1071,7 +1071,7 @@ Wrap the Claude call + parse (from the `apiKey` check through the end of the `ca
 ```
 (declare `let cards: Record<string, string>[]` before the `if`, removing the inner `let cards` declaration). In the final `NextResponse.json({ … })` of the route add `cards,` so the client can re-render later.
 
-- [ ] **Step 6: Verify gate + commit**
+- [ ] **Step 6: Verify gate + commit** *(Tasks 3 and 5 done — commits `d792ffa5`, `5c1cdc04`, `015ddea5`; review approved after fixes. The review's own probe suite confirmed: override-path values are HTML-escaped exactly once for rendering and returned raw; the Claude path is byte-identical (pinned by a regression test); every user-controlled `{{…}}` in all 15 templates is an HTML text node, so entity-escaping is sufficient; `MAX_BG_BYTES` = 3 MB decoded ≈ 4.0 MB base64, under the ~4.5 MB platform body limit; `bgOpacity` accepts numbers / numeric strings only, `0` preserved. Jest is 34 after the added tests. **Deferred follow-ups (pre-existing, out of scope):** Claude-generated slot markup and the unauthenticated `template-preview` GET still reach stored HTML unescaped — a separate security ticket; a committed `fill-carousel` test; the "client always resends the full slot set" contract is unwritten — note it at the `AssetPanel` call site if a partial-update path is ever added.)*
 
 Run the verification gate. Expected: tsc 0; Jest `Tests: 28 passed` (12 + 4 + 8 + 4).
 
