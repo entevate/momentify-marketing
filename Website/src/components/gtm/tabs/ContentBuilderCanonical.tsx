@@ -648,7 +648,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
             <span className="eyebrow">Template · {socialTemplates.length} available</span>
             <span className="section-note">{draftAssetId ? "Pick a different design and the graphic re-renders with your copy." : templateId ? "The graphic renders with this template when you generate. Change it any time from the result." : "Pick one now and the graphic renders automatically when you generate — or leave it and choose after."}</span>
           </div>
-          <TemplatePicker solution={solution} templates={socialTemplates} activeId={templateId} onPick={setTemplateId} />
+          <TemplatePicker solution={solution} templates={socialTemplates} activeId={templateId} onPick={setTemplateId} media={media} />
         </div>
       )}
 

@@ -552,7 +552,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
 
       {/* Template picker (social-post only) */}
       {isSocialPost && pickerOpen && !busy && (
-        <TemplatePicker solution={solution} templates={socialTemplates} activeId={activeTemplateId} onPick={handleFillTemplate} disabled={busy} activeLabel="Last used" />
+        <TemplatePicker solution={solution} templates={socialTemplates} activeId={activeTemplateId} onPick={handleFillTemplate} disabled={busy} activeLabel="Last used" media={media} />
       )}
 
       {assetUrl && !busy && (() => {
