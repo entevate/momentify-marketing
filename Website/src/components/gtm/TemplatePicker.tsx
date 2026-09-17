@@ -50,6 +50,7 @@ export default function TemplatePicker({
           return (
             <button
               key={t.id}
+              type="button"
               onClick={() => onPick(t.id)}
               disabled={disabled}
               style={{
@@ -146,7 +147,7 @@ const pickerGrid: React.CSSProperties = {
 
 const pickerCard: React.CSSProperties = {
   padding: 0,
-  background: "#fff",
+  background: "var(--gtm-bg-card)",
   border: "1px solid var(--gtm-border)",
   borderRadius: 6,
   cursor: "pointer",

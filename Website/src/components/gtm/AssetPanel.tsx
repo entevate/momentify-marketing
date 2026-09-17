@@ -41,6 +41,9 @@ export interface AssetPanelProps {
   initialTemplateId?: string | null
   /** When true and initialTemplateId is set, fill it automatically on mount instead of opening the picker */
   autoFill?: boolean
+  /** Reports the template id whenever a fill completes successfully, so a caller-owned
+   *  templateId (e.g. the builder's pre-Generate choice) can follow "Change template" here. */
+  onTemplateChange?: (id: string) => void
   /** Optional caller-controlled class for layout tweaks */
   className?: string
 }
@@ -83,7 +86,7 @@ function iframeHeightFor(contentType: string): number {
   return 600
 }
 
-export default function AssetPanel({ solution, assetType, itemId, briefText, media, initialTemplateId, autoFill, className }: AssetPanelProps) {
+export default function AssetPanel({ solution, assetType, itemId, briefText, media, initialTemplateId, autoFill, onTemplateChange, className }: AssetPanelProps) {
   const [assetUrl, setAssetUrl] = useState<string | null>(null)
   const [generating, setGenerating] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -116,24 +119,41 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
   // without refiring the asset-check fetch on a prop-only change.
   const autoFillRef = useRef(autoFill)
   const initialTemplateIdRef = useRef(initialTemplateId)
+  const onTemplateChangeRef = useRef(onTemplateChange)
   useEffect(() => {
     autoFillRef.current = autoFill
     initialTemplateIdRef.current = initialTemplateId
-  }, [autoFill, initialTemplateId])
+    onTemplateChangeRef.current = onTemplateChange
+  }, [autoFill, initialTemplateId, onTemplateChange])
 
-  // On mount, check whether this item already has an asset on disk. If it
-  // doesn't: when the caller pre-chose a template (builder's pre-Generate
-  // Template step) and asked for autoFill, fill that template automatically;
-  // otherwise, on social-post, open the picker so the user is prompted to
-  // choose a template right away.
+  // True once the mount asset-check has resolved (success or failure), for
+  // this item. Gates the controlled-template-change effect below so it never
+  // races the mount effect's own first fill, and is reset at the top of the
+  // mount effect for each new item (draftAssetId rotates on every Generate).
+  const mountedCheckDoneRef = useRef(false)
+
+  // On mount, check whether this item already has an asset on disk.
+  //   - Confirmed to not exist (asset-check responded ok): when the caller
+  //     pre-chose a template (builder's pre-Generate Template step) and asked
+  //     for autoFill, fill that template automatically; otherwise, on
+  //     social-post, open the picker so the user is prompted to choose one.
+  //   - Asset-check FAILED (non-ok response, or the fetch itself rejected):
+  //     never auto-fill — a transient failure must not risk overwriting an
+  //     asset that may actually exist. Fall back to opening the picker.
   useEffect(() => {
     let cancelled = false
+    mountedCheckDoneRef.current = false
     fetch(
       `/api/gtm/asset-check?solution=${encodeURIComponent(solution)}&assetType=${encodeURIComponent(assetType)}&itemId=${encodeURIComponent(itemId)}`
     )
-      .then((r) => (r.ok ? r.json() : null))
+      .then((r) => (r.ok ? r.json() : { __failed: true as const }))
       .then((d) => {
         if (cancelled) return
+        mountedCheckDoneRef.current = true
+        if (d?.__failed) {
+          if (isSocialPost) setPickerOpen(true)
+          return
+        }
         if (d?.exists && d?.url) {
           setAssetUrl(d.url)
           setPickerOpen(false)
@@ -150,11 +170,8 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
       })
       .catch(() => {
         if (cancelled) return
-        if (autoFillRef.current && initialTemplateIdRef.current) {
-          fillRef.current(initialTemplateIdRef.current)
-        } else if (isSocialPost) {
-          setPickerOpen(true)
-        }
+        mountedCheckDoneRef.current = true
+        if (isSocialPost) setPickerOpen(true)
       })
     return () => {
       cancelled = true
@@ -200,6 +217,9 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
         }
         setPickerOpen(false)
         stampGraphicRef(itemId, { blobUrl: data.url, assetType, templateId })
+        // Report the successful fill back to the caller (e.g. the builder's
+        // step-3 templateId) so it stays in sync with "Change template" here.
+        onTemplateChangeRef.current?.(templateId)
       } catch (e: unknown) {
         const err = e as { name?: string; message?: string }
         const msg = err?.name === "AbortError"
@@ -222,6 +242,22 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
   useEffect(() => {
     fillRef.current = handleFillTemplate
   }, [handleFillTemplate])
+
+  // Controlled template changes: when the caller updates initialTemplateId
+  // after the mount fill/check has already settled (e.g. the builder's step-3
+  // card is used after Generate), re-fill with the new template. The mount
+  // effect above owns the very first fill for a given item, so this only
+  // fires for a genuine change afterward — including "Change template" here,
+  // whose onTemplateChange echo back into initialTemplateId is a no-op below
+  // because activeTemplateId already matches it.
+  useEffect(() => {
+    if (!autoFill || !initialTemplateId) return
+    if (initialTemplateId === activeTemplateId) return   // already showing it (incl. the echo from onTemplateChange)
+    if (busy) return
+    if (!mountedCheckDoneRef.current) return             // mount effect owns the first fill
+    fillRef.current(initialTemplateId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialTemplateId])
 
   // ─── Re-render without Claude (slot edits, opacity slider) ───────────
   const rerender = useCallback(

@@ -482,7 +482,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
       </div>
 
       {isSocialPost && draftAssetId && (
-        <AssetPanel solution={solution} assetType={assetType} itemId={draftAssetId} briefText={rawContent} media={media} initialTemplateId={templateId} autoFill={!!templateId} />
+        <AssetPanel solution={solution} assetType={assetType} itemId={draftAssetId} briefText={rawContent} media={media} initialTemplateId={templateId} autoFill={!!templateId} onTemplateChange={setTemplateId} />
       )}
 
       {isSocialPost && socialCaptions ? (
@@ -646,7 +646,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
         <div className="card" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
             <span className="eyebrow">Template · {socialTemplates.length} available</span>
-            <span className="section-note">{templateId ? "The graphic renders with this template when you generate. Change it any time from the result." : "Pick one now and the graphic renders automatically when you generate — or leave it and choose after."}</span>
+            <span className="section-note">{draftAssetId ? "Pick a different design and the graphic re-renders with your copy." : templateId ? "The graphic renders with this template when you generate. Change it any time from the result." : "Pick one now and the graphic renders automatically when you generate — or leave it and choose after."}</span>
           </div>
           <TemplatePicker solution={solution} templates={socialTemplates} activeId={templateId} onPick={setTemplateId} />
         </div>
