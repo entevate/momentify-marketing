@@ -159,6 +159,7 @@ ${guidance ? `${guidance}\n\n` : ""}BRAND VOICE RULES (non-negotiable):
 - Speak to the buyer the guidance block above named. Do not drift into a different pillar's vocabulary.
 - Respect every slot's maxChars. Going over breaks the layout.
 - Prefer copy whose word count divides evenly into 2-4 visual lines; vary word lengths so wrapping looks balanced.
+- DATA DISCIPLINE: any stat slot must use a number from the BRIEF or from Momentify's signature proof points ($50B measured, 10,000+ engagements, 65%+ ROX lift, $411M influenced pipeline, 92% utilization). Never fabricate percentages, dollar amounts, headcounts, or timeframes. If no honest number fits, use a descriptive label instead.
 
 BRIEF (context, not verbatim copy):
 ${focusedBrief}

@@ -160,10 +160,15 @@ ${focusedBrief}
 TASK:
 Produce ${CARD_COUNT} DISTINCT cards that read as ONE story arc, not six unrelated posts. Structure:
 - Card 1 = hook (a sharp observation, question, or contrarian take that stops the scroll)
-- Cards 2-4 = the argument (each card advances the point with a new angle, proof, or contrast — never restates the previous card)
+- Cards 2-4 = the argument (each card advances the point with a new angle, proof, contrast, or mechanism — never restates the previous card)
 - Card 5 = the turn (name the outcome, quantify the win, cite a proof point from the brief)
 - Card 6 = the CTA (one action, low-friction, on-brand from the CTA list above)
 Every card must move the reader forward. If a card could be swapped with an earlier one without confusion, rewrite it.
+
+DATA DISCIPLINE — read this before you invent numbers:
+- Use ONLY statistics that appear in the BRIEF above, or the signature Momentify proof points: $50B measured, 10,000+ engagements tracked, 65%+ ROX lift, $411M influenced pipeline, 92% platform utilization. Never fabricate percentages, dollar amounts, headcounts, or timeframes.
+- If the template asks for more stats than the brief supplies, RECAST the same evidence a new way (comparison, ratio, before/after, per-unit) rather than making up new ones.
+- If a stat slot has no honest value, use a descriptive label instead of a fake number. Cards without contrived precision are more credible than cards with invented stats.
 
 SLOTS PER CARD (return each card as a JSON object with these EXACT keys):
 ${slotSpec}
