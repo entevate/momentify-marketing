@@ -64,12 +64,11 @@ export default function GTMLogin() {
         onSubmit={handleSubmit}
         style={{
           background: "#FFFFFF",
-          borderRadius: 16,
+          borderRadius: 12,
           padding: 40,
           maxWidth: 400,
           width: "100%",
-          boxShadow:
-            "0 4px 16px rgba(0,0,0,0.12), 0 8px 32px rgba(0,0,0,0.08)",
+          boxShadow: "0 20px 25px -5px rgba(0,0,0,0.25)",
         }}
       >
         <h1
@@ -77,7 +76,7 @@ export default function GTMLogin() {
             fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 22,
             fontWeight: 700,
-            color: "#061341",
+            color: "var(--gtm-text-primary)",
             margin: 0,
           }}
         >
@@ -87,7 +86,7 @@ export default function GTMLogin() {
           style={{
             fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 14,
-            color: "rgba(6, 19, 65, 0.50)",
+            color: "var(--gtm-text-muted)",
             margin: "8px 0 24px",
           }}
         >
@@ -102,7 +101,7 @@ export default function GTMLogin() {
           autoFocus
           style={{
             width: "100%",
-            border: "1px solid rgba(6, 19, 65, 0.15)",
+            border: "1px solid var(--gtm-border-strong)",
             borderRadius: 8,
             padding: "12px 16px",
             fontSize: 15,
@@ -112,17 +111,17 @@ export default function GTMLogin() {
             transition: "border-color 200ms ease",
           }}
           onFocus={(e) =>
-            (e.currentTarget.style.borderColor = "rgba(12, 244, 223, 0.5)")
+            (e.currentTarget.style.borderColor = "var(--gtm-cyan)")
           }
           onBlur={(e) =>
-            (e.currentTarget.style.borderColor = "rgba(6, 19, 65, 0.15)")
+            (e.currentTarget.style.borderColor = "var(--gtm-border-strong)")
           }
         />
 
         {error && (
           <p
             style={{
-              color: "#ef4444",
+              color: "var(--gtm-danger-text)",
               fontSize: 13,
               fontFamily: "'Inter', system-ui, sans-serif",
               margin: "8px 0 0",
@@ -139,13 +138,13 @@ export default function GTMLogin() {
             width: "100%",
             height: 44,
             marginTop: 16,
-            background: "linear-gradient(135deg, #0CF4DF, #1A56DB)",
+            background: "var(--gtm-grad-action)",
+            borderRadius: 9999,
             color: "#FFFFFF",
             fontSize: 15,
             fontWeight: 700,
             fontFamily: "'Inter', system-ui, sans-serif",
             border: "none",
-            borderRadius: 8,
             cursor: loading ? "not-allowed" : "pointer",
             opacity: loading ? 0.7 : 1,
             transition: "opacity 200ms ease, transform 200ms ease",

@@ -31,6 +31,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# claude code worktrees (nested checkouts must never be committed)
+.claude/worktrees/
+
 
 # typescript
 *.tsbuildinfo

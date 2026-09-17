@@ -8,15 +8,19 @@
  *   - Solution selector (Momentify's five GTM pillars)
  *   - Aspect filter (All / 1:1 / 3:4 / 16:9)
  *   - Reload-all (cache-bust every iframe)
- *   - Copy-link per card
+ *   - Preview per card (the enlarged TemplatePreviewModal, as in the fleet's
+ *     galleries). This replaced "Copy link": template-preview now requires the
+ *     GTM login, so a copied URL 401s for anyone outside the app.
  */
 
 import React, { useCallback, useMemo, useState } from "react"
 import { allTemplates } from "@/lib/gtm/templates/_registry"
+import type { TemplateManifest } from "@/lib/gtm/templates/types"
 import { pillarPalettes, pillarLabels, type PillarId } from "@/lib/gtm/pillar-palettes"
-import { Check, Link as LinkIcon, RefreshCw } from "lucide-react"
+import { Maximize2, RefreshCw } from "lucide-react"
+import TemplatePreviewModal from "@/components/gtm/TemplatePreviewModal"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--gtm-font-body)"
 
 type AspectFilter = "all" | "1:1" | "3:4" | "16:9"
 
@@ -36,7 +40,7 @@ export default function TemplatesGallery({
   // Initialize to 0 so server and client render the same iframe src.
   // After mount, the user can bump it via the reload button to cache-bust.
   const [reloadToken, setReloadToken] = useState(0)
-  const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [preview, setPreview] = useState<TemplateManifest | null>(null)
 
   const visibleTemplates = useMemo(
     () => allTemplates.filter((t) => aspectFilter === "all" || t.aspectRatio === aspectFilter),
@@ -49,20 +53,6 @@ export default function TemplatesGallery({
     [pillar, reloadToken]
   )
 
-  const handleCopyLink = useCallback(
-    async (templateId: string, assetType: string) => {
-      const abs = `${window.location.origin}/api/gtm/template-preview?assetType=${encodeURIComponent(assetType)}&templateId=${encodeURIComponent(templateId)}&pillar=${pillar}`
-      try {
-        await navigator.clipboard.writeText(abs)
-        setCopiedId(templateId)
-        setTimeout(() => setCopiedId((c) => (c === templateId ? null : c)), 1500)
-      } catch {
-        /* ignore clipboard failures */
-      }
-    },
-    [pillar]
-  )
-
   return (
     <div style={{ maxWidth, margin: "0 auto", fontFamily: font }}>
       {/* Controls */}
@@ -72,16 +62,18 @@ export default function TemplatesGallery({
           <div style={chipRowStyle}>
             {(Object.keys(pillarPalettes) as PillarId[]).map((id) => {
               const active = pillar === id
+              // Pillar swatch colors are data (the palette itself), not theme.
               const meta = pillarPalettes[id]
               return (
                 <button
                   key={id}
+                  type="button"
                   onClick={() => setPillar(id)}
                   style={{
                     ...chipStyle,
-                    background: active ? meta.primary : "#fff",
-                    color: active ? "#fff" : "#6b6b6b",
-                    borderColor: active ? meta.primary : "#dde6f0",
+                    background: active ? meta.primary : "var(--gtm-bg-card)",
+                    color: active ? "var(--gtm-bg-card)" : "var(--gtm-text-secondary)", // white on the pillar swatch, as .btn-primary does
+                    borderColor: active ? meta.primary : "var(--gtm-border)",
                   }}
                 >
                   {pillarLabels[id]}
@@ -99,12 +91,13 @@ export default function TemplatesGallery({
               return (
                 <button
                   key={a}
+                  type="button"
                   onClick={() => setAspectFilter(a)}
                   style={{
                     ...chipStyle,
-                    background: active ? "rgba(43,191,168,0.08)" : "#fff",
-                    color: active ? "#00BBA5" : "#6b6b6b",
-                    borderColor: active ? "#00BBA5" : "#dde6f0",
+                    background: active ? "var(--gtm-accent-bg)" : "var(--gtm-bg-card)",
+                    color: active ? "var(--gtm-accent-ink)" : "var(--gtm-text-secondary)",
+                    borderColor: active ? "var(--gtm-accent)" : "var(--gtm-border)",
                   }}
                 >
                   {a}
@@ -114,7 +107,7 @@ export default function TemplatesGallery({
           </div>
         </div>
 
-        <button onClick={() => setReloadToken(Date.now())} style={reloadBtnStyle}>
+        <button type="button" onClick={() => setReloadToken(Date.now())} className="btn btn-primary btn-sm" style={{ marginLeft: "auto" }}>
           <RefreshCw size={13} />
           Reload all
         </button>
@@ -132,8 +125,8 @@ export default function TemplatesGallery({
           <div key={t.id} style={cardStyle}>
             <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10, marginBottom: 10 }}>
               <div style={{ minWidth: 0, flex: 1 }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: "#181818" }}>{t.label}</div>
-                <div style={{ fontSize: 12, color: "#6b6b6b", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis" }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: "var(--gtm-text-primary)" }}>{t.label}</div>
+                <div style={{ fontSize: 12, color: "var(--gtm-text-secondary)", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis" }}>
                   {t.description}
                 </div>
               </div>
@@ -150,26 +143,26 @@ export default function TemplatesGallery({
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, marginTop: 10 }}>
-              <code style={{ fontSize: 11, color: "#a8a8a8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>
+              <code className="mono" style={{ fontSize: 11, color: "var(--gtm-text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>
                 {t.assetType}/{t.id}
               </code>
-              <button onClick={() => handleCopyLink(t.id, t.assetType)} style={copyBtnStyle}>
-                {copiedId === t.id ? (
-                  <>
-                    <Check size={11} />
-                    Copied
-                  </>
-                ) : (
-                  <>
-                    <LinkIcon size={11} />
-                    Copy link
-                  </>
-                )}
+              <button type="button" onClick={() => setPreview(t)} style={previewBtnStyle}>
+                <Maximize2 size={11} />
+                Preview
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {preview && (
+        <TemplatePreviewModal
+          manifest={preview}
+          solution={pillar}
+          isActive={false}
+          onClose={() => setPreview(null)}
+        />
+      )}
     </div>
   )
 }
@@ -181,9 +174,9 @@ const controlsBarStyle: React.CSSProperties = {
   alignItems: "center",
   gap: 24,
   padding: "14px 18px",
-  background: "#fff",
-  border: "1px solid #dde6f0",
-  borderRadius: 6,
+  background: "var(--gtm-bg-card)",
+  border: "1px solid var(--gtm-border)",
+  borderRadius: "var(--gtm-radius-card)",
   marginBottom: 20,
   flexWrap: "wrap",
 }
@@ -195,42 +188,26 @@ const controlLabelStyle: React.CSSProperties = {
   fontWeight: 700,
   letterSpacing: "0.08em",
   textTransform: "uppercase",
-  color: "#a8a8a8",
+  color: "var(--gtm-text-muted)",
 }
 
-const chipRowStyle: React.CSSProperties = { display: "flex", gap: 6 }
+const chipRowStyle: React.CSSProperties = { display: "flex", gap: 6, flexWrap: "wrap" }
 
 const chipStyle: React.CSSProperties = {
   padding: "6px 12px",
   fontSize: 12,
   fontWeight: 600,
   fontFamily: font,
-  border: "1px solid #dde6f0",
+  border: "1px solid var(--gtm-border)",
   borderRadius: 100,
-  cursor: "pointer",
-}
-
-const reloadBtnStyle: React.CSSProperties = {
-  marginLeft: "auto",
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 6,
-  padding: "6px 14px",
-  fontSize: 12,
-  fontWeight: 600,
-  fontFamily: font,
-  background: "#00BBA5",
-  color: "#fff",
-  border: "none",
-  borderRadius: 6,
   cursor: "pointer",
 }
 
 const cardStyle: React.CSSProperties = {
   padding: 14,
-  background: "#fff",
-  border: "1px solid #dde6f0",
-  borderRadius: 6,
+  background: "var(--gtm-bg-card)",
+  border: "1px solid var(--gtm-border)",
+  borderRadius: "var(--gtm-radius-card)",
 }
 
 const aspectPillStyle: React.CSSProperties = {
@@ -240,8 +217,8 @@ const aspectPillStyle: React.CSSProperties = {
   letterSpacing: "0.06em",
   padding: "3px 8px",
   borderRadius: 100,
-  background: "#f6f8fb",
-  color: "#6b6b6b",
+  background: "var(--gtm-surface-2)",
+  color: "var(--gtm-text-secondary)",
 }
 
 function iframeWrapStyle(aspect: "1:1" | "3:4" | "16:9"): React.CSSProperties {
@@ -252,9 +229,9 @@ function iframeWrapStyle(aspect: "1:1" | "3:4" | "16:9"): React.CSSProperties {
   return {
     width: "100%",
     aspectRatio,
-    background: "#f6f8fb",
-    border: "1px solid #dde6f0",
-    borderRadius: 6,
+    background: "var(--gtm-surface-2)",
+    border: "1px solid var(--gtm-border)",
+    borderRadius: "var(--gtm-radius-control)",
     overflow: "hidden",
   }
 }
@@ -264,10 +241,10 @@ const iframeStyle: React.CSSProperties = {
   height: "100%",
   border: "none",
   display: "block",
-  background: "#fff",
+  background: "var(--gtm-bg-card)",
 }
 
-const copyBtnStyle: React.CSSProperties = {
+const previewBtnStyle: React.CSSProperties = {
   display: "inline-flex",
   alignItems: "center",
   gap: 4,
@@ -275,9 +252,9 @@ const copyBtnStyle: React.CSSProperties = {
   fontSize: 11,
   fontWeight: 600,
   fontFamily: font,
-  background: "#fff",
-  color: "#6b6b6b",
-  border: "1px solid #dde6f0",
-  borderRadius: 6,
+  background: "var(--gtm-bg-card)",
+  color: "var(--gtm-text-secondary)",
+  border: "1px solid var(--gtm-border)",
+  borderRadius: "var(--gtm-radius-control)",
   cursor: "pointer",
 }

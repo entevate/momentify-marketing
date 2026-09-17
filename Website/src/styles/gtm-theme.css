@@ -1,142 +1,223 @@
-/* GTM Framework — Theme Variables
-   Scoped to [data-theme] on the GTM layout wrapper only.
+/* GTM Framework — Theme Variables + shared classes
+   Canonical fleet visual language (STRUCTURE.md §1) expressed in Momentify's
+   design-tokens.json values. Light only: the layout pins data-theme="light".
    Never use hardcoded hex values in GTM components — use these variables. */
 
 :root,
 [data-theme="light"] {
-  --gtm-bg-page:      #F8F9FC;
-  --gtm-bg-card:      #FFFFFF;
-  --gtm-border:       rgba(6, 19, 65, 0.08);
-  --gtm-text-primary: #061341;
-  --gtm-text-muted:   rgba(6, 19, 65, 0.50);
-  --gtm-text-faint:   rgba(6, 19, 65, 0.35);
-  --gtm-cyan:         #0CF4DF;
-  --gtm-tag-bg:       rgba(12, 244, 223, 0.10);
-  --gtm-tag-text:     #0AA891;
-  --gtm-layer-bg:     #FFFFFF;
-  --gtm-layer-hover:  #F0F9FF;
-  --gtm-shadow:       0 1px 3px rgba(6,19,65,0.08), 0 4px 12px rgba(6,19,65,0.04);
-  --gtm-shadow-hover: 0 4px 16px rgba(6,19,65,0.12), 0 8px 24px rgba(6,19,65,0.06);
-  /* Accent defaults (overridden per solution) */
-  --gtm-accent:       #0CF4DF;
-  --gtm-accent-light: #0CF4DF;
-  --gtm-accent-grad:  linear-gradient(135deg, #0CF4DF, #1A56DB);
-  --gtm-accent-bg:    rgba(12, 244, 223, 0.10);
-  --gtm-accent-text:  #0AA891;
-}
+  /* surfaces */
+  --gtm-bg-page:        #F4F5FA;                 /* light-mode.bg */
+  --gtm-bg-card:        #FFFFFF;                 /* light-mode.surface */
+  --gtm-bg-input:       var(--gtm-bg-card);
+  --gtm-surface-2:      #ECEEF6;                 /* light-mode.surface-2: chips, wells */
+  --gtm-border:         rgba(11, 11, 60, 0.10);  /* hairline */
+  --gtm-border-strong:  rgba(11, 11, 60, 0.18);  /* form-control edge */
 
-[data-theme="dark"] {
-  --gtm-bg-page:      #070E2B;
-  --gtm-bg-card:      rgba(255, 255, 255, 0.04);
-  --gtm-border:       rgba(255, 255, 255, 0.08);
-  --gtm-text-primary: #FFFFFF;
-  --gtm-text-muted:   rgba(255, 255, 255, 0.55);
-  --gtm-text-faint:   rgba(255, 255, 255, 0.30);
-  --gtm-cyan:         #0CF4DF;
-  --gtm-tag-bg:       rgba(12, 244, 223, 0.12);
-  --gtm-tag-text:     #0CF4DF;
-  --gtm-layer-bg:     rgba(255, 255, 255, 0.04);
-  --gtm-layer-hover:  rgba(12, 244, 223, 0.06);
-  --gtm-shadow:       0 1px 3px rgba(0,0,0,0.30), 0 4px 12px rgba(0,0,0,0.20);
-  --gtm-shadow-hover: 0 4px 20px rgba(0,0,0,0.40), 0 8px 32px rgba(0,0,0,0.25);
-  /* Accent defaults (overridden per solution) */
-  --gtm-accent:       #0CF4DF;
-  --gtm-accent-light: #0CF4DF;
-  --gtm-accent-grad:  linear-gradient(135deg, #0CF4DF, #1A56DB);
-  --gtm-accent-bg:    rgba(12, 244, 223, 0.12);
-  --gtm-accent-text:  #0CF4DF;
+  /* type */
+  --gtm-text-primary:   #061341;                 /* deep-navy */
+  --gtm-text-secondary: #555555;                 /* gray-body */
+  --gtm-text-muted:     rgba(11, 11, 60, 0.50);
+  --gtm-text-faint:     rgba(6, 19, 65, 0.35);
+  --gtm-font-body:      var(--font-inter), system-ui, sans-serif;
+
+  /* accent (default; overridden per solution below) */
+  --gtm-accent:         #00BBA5;                 /* teal: interactive / on-light fills */
+  --gtm-accent-text:    #0AA891;
+  --gtm-accent-ink:     #067A69;                 /* AA-safe accent for TEXT on white (>= 4.5:1) */
+  --gtm-accent-bg:      rgba(0, 187, 165, 0.10);
+  --gtm-accent-grad:    linear-gradient(135deg, #00BBA5 0%, #254FE5 100%);
+  --gtm-layer-hover:    #F0F9FF;
+
+  /* fleet-constant accents — deliberately NOT overridden per solution */
+  --gtm-grad-action:    linear-gradient(135deg, #00BBA5 0%, #254FE5 100%);  /* primary buttons everywhere */
+  --gtm-cyan:           #0CF4DF;
+  --gtm-tag-bg:         rgba(12, 244, 223, 0.10);
+  --gtm-tag-text:       #0AA891;
+  --gtm-layer-bg:       #FFFFFF;
+  --gtm-danger:         #E5484D;                 /* semantic.error: fills, borders, icons */
+  --gtm-danger-text:    #b91c1c;                 /* AA-safe danger for text on white */
+  --gtm-danger-bg:      rgba(229, 72, 77, 0.08);
+  --gtm-danger-border:  rgba(229, 72, 77, 0.30);
+
+  /* shape */
+  --gtm-radius-card:    8px;                     /* radius.lg — between the app's 6px cards and the fleet's 12–14 */
+  --gtm-radius-control: 8px;                     /* radius.lg */
+  --gtm-shadow:         0 4px 12px rgba(0, 0, 0, 0.06);         /* elevation.2 */
+  --gtm-shadow-hover:   0 10px 15px -3px rgba(0, 0, 0, 0.10);   /* elevation.3 */
 }
 
 /* ═══ Solution Color Schemes ═══
    Each solution page sets data-solution on its wrapper.
-   data-theme is on the layout parent, so use descendant selectors. */
+   data-theme is on the layout parent, so use descendant selectors.
+   --gtm-accent-ink is the AA-safe text variant of each accent. */
 
 /* Trade Shows — Violet */
 [data-theme="light"] [data-solution="trade-shows"] {
   --gtm-accent:       #6B21D4;
-  --gtm-accent-light: #9B5FE8;
   --gtm-accent-grad:  linear-gradient(135deg, #6B21D4, #9B5FE8);
   --gtm-accent-bg:    rgba(107, 33, 212, 0.08);
   --gtm-accent-text:  #6B21D4;
+  --gtm-accent-ink:   #6B21D4;
   --gtm-layer-hover:  rgba(107, 33, 212, 0.04);
-}
-[data-theme="dark"] [data-solution="trade-shows"] {
-  --gtm-accent:       #9B5FE8;
-  --gtm-accent-light: #B88BF0;
-  --gtm-accent-grad:  linear-gradient(135deg, #6B21D4, #9B5FE8);
-  --gtm-accent-bg:    rgba(155, 95, 232, 0.12);
-  --gtm-accent-text:  #B88BF0;
-  --gtm-layer-hover:  rgba(107, 33, 212, 0.08);
 }
 
 /* Tech Recruiting — Teal */
 [data-theme="light"] [data-solution="recruiting"] {
   --gtm-accent:       #0AA891;
-  --gtm-accent-light: #5FD9C2;
   --gtm-accent-grad:  linear-gradient(135deg, #0AA891, #5FD9C2);
   --gtm-accent-bg:    rgba(10, 168, 145, 0.08);
   --gtm-accent-text:  #0AA891;
+  --gtm-accent-ink:   #067A69;
   --gtm-layer-hover:  rgba(10, 168, 145, 0.04);
-}
-[data-theme="dark"] [data-solution="recruiting"] {
-  --gtm-accent:       #5FD9C2;
-  --gtm-accent-light: #7FE8D4;
-  --gtm-accent-grad:  linear-gradient(135deg, #0AA891, #5FD9C2);
-  --gtm-accent-bg:    rgba(95, 217, 194, 0.12);
-  --gtm-accent-text:  #5FD9C2;
-  --gtm-layer-hover:  rgba(95, 217, 194, 0.06);
 }
 
 /* Field Sales — Amber */
 [data-theme="light"] [data-solution="field-sales"] {
   --gtm-accent:       #D4940A;
-  --gtm-accent-light: #F2B33D;
   --gtm-accent-grad:  linear-gradient(135deg, #D4940A, #F2B33D);
   --gtm-accent-bg:    rgba(242, 179, 61, 0.10);
   --gtm-accent-text:  #D4940A;
+  --gtm-accent-ink:   #8F6300;
   --gtm-layer-hover:  rgba(242, 179, 61, 0.04);
-}
-[data-theme="dark"] [data-solution="field-sales"] {
-  --gtm-accent:       #F2B33D;
-  --gtm-accent-light: #F5C76A;
-  --gtm-accent-grad:  linear-gradient(135deg, #D4940A, #F2B33D);
-  --gtm-accent-bg:    rgba(242, 179, 61, 0.12);
-  --gtm-accent-text:  #F2B33D;
-  --gtm-layer-hover:  rgba(242, 179, 61, 0.06);
 }
 
 /* Facilities — Indigo */
 [data-theme="light"] [data-solution="facilities"] {
   --gtm-accent:       #3A2073;
-  --gtm-accent-light: #5B3DAA;
   --gtm-accent-grad:  linear-gradient(135deg, #3A2073, #5B3DAA);
   --gtm-accent-bg:    rgba(58, 32, 115, 0.08);
   --gtm-accent-text:  #3A2073;
+  --gtm-accent-ink:   #3A2073;
   --gtm-layer-hover:  rgba(58, 32, 115, 0.04);
-}
-[data-theme="dark"] [data-solution="facilities"] {
-  --gtm-accent:       #7B62C9;
-  --gtm-accent-light: #9B85D9;
-  --gtm-accent-grad:  linear-gradient(135deg, #5B3DAA, #7B62C9);
-  --gtm-accent-bg:    rgba(123, 98, 201, 0.12);
-  --gtm-accent-text:  #9B85D9;
-  --gtm-layer-hover:  rgba(123, 98, 201, 0.06);
 }
 
 /* Events & Venues — Crimson */
 [data-theme="light"] [data-solution="events-venues"] {
   --gtm-accent:       #D43D1A;
-  --gtm-accent-light: #F25E3D;
   --gtm-accent-grad:  linear-gradient(135deg, #D43D1A, #F25E3D);
   --gtm-accent-bg:    rgba(242, 94, 61, 0.08);
   --gtm-accent-text:  #D43D1A;
+  --gtm-accent-ink:   #B8340F;
   --gtm-layer-hover:  rgba(242, 94, 61, 0.04);
 }
-[data-theme="dark"] [data-solution="events-venues"] {
-  --gtm-accent:       #F25E3D;
-  --gtm-accent-light: #F58068;
-  --gtm-accent-grad:  linear-gradient(135deg, #D43D1A, #F25E3D);
-  --gtm-accent-bg:    rgba(242, 94, 61, 0.12);
-  --gtm-accent-text:  #F25E3D;
-  --gtm-layer-hover:  rgba(242, 94, 61, 0.06);
+
+/* ═══ Shared classes (canonical vocabulary) ═══
+   Scoped to the GTM shell's data-theme="light" wrapper only. Note: /gtm/login
+   renders OUTSIDE that wrapper — it gets the tokens (on :root) but none of
+   these classes; style it with var() in inline styles. */
+
+[data-theme="light"] .card {
+  background: var(--gtm-bg-card);
+  border: 1px solid var(--gtm-border);
+  border-radius: var(--gtm-radius-card);
+  padding: 20px 22px;
+  box-shadow: var(--gtm-shadow);
+}
+
+[data-theme="light"] .eyebrow {
+  font-family: var(--gtm-font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gtm-accent-ink);
+}
+
+[data-theme="light"] .section-note {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--gtm-text-secondary);
+}
+
+[data-theme="light"] .mono {
+  font-family: var(--gtm-font-body);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="light"] .field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gtm-text-muted);
+  margin-bottom: 6px;
+}
+
+[data-theme="light"] .input {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--gtm-font-body);
+  font-size: 14px;
+  color: var(--gtm-text-primary);
+  background: var(--gtm-bg-input);
+  border: 1px solid var(--gtm-border-strong);
+  border-radius: var(--gtm-radius-control);
+  padding: 9px 12px;
+}
+[data-theme="light"] .input:focus-visible {
+  border-color: var(--gtm-accent);
+  outline: 2px solid var(--gtm-accent-ink);
+  outline-offset: 1px;
+}
+/* iOS zooms any input under 16px on focus (fleet MOBILE INPUT ZOOM GUARD). */
+@media (max-width: 767px) {
+  [data-theme="light"] .input { font-size: 16px; }
+}
+
+[data-theme="light"] .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 18px;
+  border-radius: 9999px;
+  font-family: var(--gtm-font-body);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: opacity 150ms ease;
+  white-space: nowrap;
+}
+[data-theme="light"] .btn:hover { opacity: 0.9; }
+[data-theme="light"] .btn:focus-visible { outline: 2px solid var(--gtm-accent-ink); outline-offset: 2px; }
+[data-theme="light"] .btn:disabled,
+[data-theme="light"] .btn[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
+[data-theme="light"] .btn-primary { background: var(--gtm-grad-action); color: var(--gtm-bg-card); }
+[data-theme="light"] .btn-secondary { background: var(--gtm-bg-card); color: var(--gtm-text-primary); border-color: var(--gtm-border-strong); }
+[data-theme="light"] .btn-tertiary { background: transparent; color: var(--gtm-accent-ink); padding: 0 8px; }
+[data-theme="light"] .btn-danger { background: var(--gtm-danger-bg); color: var(--gtm-danger-text); border-color: var(--gtm-danger-border); }
+[data-theme="light"] .btn-sm { height: 30px; padding: 0 12px; font-size: 12px; }
+
+[data-theme="light"] .chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid var(--gtm-border);
+  border-radius: 9999px;
+  padding: 5px 12px;
+  font-family: var(--gtm-font-body);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--gtm-text-secondary);
+  background: var(--gtm-bg-card);
+  cursor: pointer;
+  white-space: nowrap;
+}
+[data-theme="light"] .chip:focus-visible { outline: 2px solid var(--gtm-accent-ink); outline-offset: 2px; }
+[data-theme="light"] .chip.on {
+  background: var(--gtm-surface-2);
+  border-color: var(--gtm-surface-2);
+  color: var(--gtm-text-primary);
+  font-weight: 600;
+}
+
+[data-theme="light"] .error-note {
+  background: var(--gtm-danger-bg);
+  border: 1px solid var(--gtm-danger-border);
+  border-radius: var(--gtm-radius-control);
+  padding: 12px;
+  font-size: 13px;
+  color: var(--gtm-danger-text);
 }

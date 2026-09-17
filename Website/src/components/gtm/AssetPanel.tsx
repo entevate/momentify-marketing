@@ -19,9 +19,12 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
-import { Check, Download, ExternalLink, Loader2, RefreshCw, Upload, Wand2, LayoutGrid } from "lucide-react"
+import { Download, Loader2, RefreshCw, Upload, Wand2, LayoutGrid } from "lucide-react"
 import { allTemplates } from "@/lib/gtm/templates/_registry"
 import type { TemplateManifest } from "@/lib/gtm/templates/types"
+import TemplatePicker from "@/components/gtm/TemplatePicker"
+import { nativeSize } from "@/components/gtm/template-frame"
+import SlotEditor from "@/components/gtm/SlotEditor"
 
 const font = "'Inter', system-ui, sans-serif"
 
@@ -34,6 +37,15 @@ export interface AssetPanelProps {
   itemId: string
   /** The saved brief text - passed to Claude as fill context */
   briefText: string
+  /** Optional background photo (data URI) + opacity 0-100, applied to template renders */
+  media?: { bgImage?: string; bgOpacity?: number }
+  /** Template chosen before Generate (builder's pre-Generate Template step) */
+  initialTemplateId?: string | null
+  /** When true and initialTemplateId is set, fill it automatically on mount instead of opening the picker */
+  autoFill?: boolean
+  /** Reports the template id whenever a fill completes successfully, so a caller-owned
+   *  templateId (e.g. the builder's pre-Generate choice) can follow "Change template" here. */
+  onTemplateChange?: (id: string) => void
   /** Optional caller-controlled class for layout tweaks */
   className?: string
 }
@@ -63,11 +75,6 @@ function withCacheBust(url: string): string {
   return `${url}${sep}t=${Date.now()}`
 }
 
-/** Strip the cache-bust `t=...` param from a URL (for Open-in-new-tab). */
-function stripCacheBust(url: string): string {
-  return url.replace(/([?&])t=\d+(&|$)/, (_m, before, after) => (after ? before : "")).replace(/[?&]$/, "")
-}
-
 function iframeHeightFor(contentType: string): number {
   if (contentType === "microsite") return 720
   if (contentType === "carousel") return 520
@@ -76,7 +83,37 @@ function iframeHeightFor(contentType: string): number {
   return 600
 }
 
-export default function AssetPanel({ solution, assetType, itemId, briefText, className }: AssetPanelProps) {
+const CARD_COUNT = 6
+function emptyCardHidden(): string[][] {
+  return Array.from({ length: CARD_COUNT }, () => [])
+}
+function emptyCardValues(): Record<string, string>[] {
+  return Array.from({ length: CARD_COUNT }, () => ({}))
+}
+/** Coerce a response/KV value into a hidden-key list (strings only). */
+function normHidden(raw: unknown): string[] {
+  return Array.isArray(raw) ? raw.filter((k): k is string => typeof k === "string") : []
+}
+/** Always exactly CARD_COUNT entries, so a stale or short stored array can't
+ *  silently un-hide slots (parseHiddenCards rejects wrong lengths) or leave
+ *  cards 5-6 without a draft to edit. */
+function normCardHidden(raw: unknown): string[][] {
+  return Array.from({ length: CARD_COUNT }, (_, i) => normHidden(Array.isArray(raw) ? raw[i] : undefined))
+}
+function normCards(raw: unknown): Record<string, string>[] {
+  return Array.from({ length: CARD_COUNT }, (_, i) => {
+    const c = Array.isArray(raw) ? raw[i] : undefined
+    return c && typeof c === "object" && !Array.isArray(c) ? { ...(c as Record<string, string>) } : {}
+  })
+}
+/** Order-independent equality for hidden-key arrays. */
+function sameKeySet(a: string[], b: string[]): boolean {
+  if (a.length !== b.length) return false
+  const set = new Set(a)
+  return b.every((k) => set.has(k))
+}
+
+export default function AssetPanel({ solution, assetType, itemId, briefText, media, initialTemplateId, autoFill, onTemplateChange, className }: AssetPanelProps) {
   const [assetUrl, setAssetUrl] = useState<string | null>(null)
   const [generating, setGenerating] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -84,7 +121,31 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
   const [activeTemplateId, setActiveTemplateId] = useState<string | null>(null)
   const [pickerOpen, setPickerOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const busy = generating || uploading
+  // Last filled values, so slot edits and media changes re-render without Claude.
+  const [slots, setSlots] = useState<Record<string, string> | null>(null)
+  const [cards, setCards] = useState<Record<string, string>[] | null>(null)
+  const [draftSlots, setDraftSlots] = useState<Record<string, string>>({})
+  // Hidden-slot keys (social-post) and their draft, mirroring slots/draftSlots.
+  const [hidden, setHidden] = useState<string[]>([])
+  const [draftHidden, setDraftHidden] = useState<string[]>([])
+  // Carousel per-card equivalents: 6 committed hidden-key arrays, plus a
+  // draft copy of every card's values and hidden keys, and which card the
+  // editor currently shows.
+  const [cardsHidden, setCardsHidden] = useState<string[][]>(() => emptyCardHidden())
+  const [draftCards, setDraftCards] = useState<Record<string, string>[]>(() => emptyCardValues())
+  const [draftCardsHidden, setDraftCardsHidden] = useState<string[][]>(() => emptyCardHidden())
+  const [activeCard, setActiveCard] = useState(0)
+  const [rerendering, setRerendering] = useState(false)
+  const busy = generating || uploading || rerendering
+
+  // Result layout: two columns (preview | editor) at >=900px, stacked below.
+  const [isDesktopResult, setIsDesktopResult] = useState(false)
+  useEffect(() => {
+    const check = () => setIsDesktopResult(window.innerWidth >= 900)
+    check()
+    window.addEventListener("resize", check)
+    return () => window.removeEventListener("resize", check)
+  }, [])
 
   const isCarousel = assetType === "carousel"
   // "Templated" mode = template picker + slot-fill flow. Both social-post
@@ -99,29 +160,89 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
     [isCarousel]
   )
 
+  // Latest-value refs so the mount effect below (keyed only on solution/assetType/
+  // itemId/isSocialPost) can read the current autoFill / initialTemplateId props
+  // without refiring the asset-check fetch on a prop-only change.
+  const autoFillRef = useRef(autoFill)
+  const initialTemplateIdRef = useRef(initialTemplateId)
+  const onTemplateChangeRef = useRef(onTemplateChange)
+  useEffect(() => {
+    autoFillRef.current = autoFill
+    initialTemplateIdRef.current = initialTemplateId
+    onTemplateChangeRef.current = onTemplateChange
+  }, [autoFill, initialTemplateId, onTemplateChange])
+
+  // True once the mount asset-check has resolved (success or failure), for
+  // this item. Gates the controlled-template-change effect below so it never
+  // races the mount effect's own first fill, and is reset at the top of the
+  // mount effect for each new item (draftAssetId rotates on every Generate).
+  const mountedCheckDoneRef = useRef(false)
+
   // On mount, check whether this item already has an asset on disk.
-  // If it doesn't AND we're on social-post, open the picker so the user
-  // is prompted to choose a template right away.
+  //   - Confirmed to not exist (asset-check responded ok): when the caller
+  //     pre-chose a template (builder's pre-Generate Template step) and asked
+  //     for autoFill, fill that template automatically; otherwise, on
+  //     social-post, open the picker so the user is prompted to choose one.
+  //   - Asset-check FAILED (non-ok response, or the fetch itself rejected):
+  //     never auto-fill — a transient failure must not risk overwriting an
+  //     asset that may actually exist. Fall back to opening the picker.
   useEffect(() => {
     let cancelled = false
+    mountedCheckDoneRef.current = false
+    // Reset per-item state so a new itemId (draftAssetId rotates on every
+    // Generate) never briefly shows the prior draft's asset while this
+    // item's own check is in flight.
+    setAssetUrl(null)
+    setSlots(null)
+    setCards(null)
+    setDraftSlots({})
+    setError(null)
+    setHidden([])
+    setDraftHidden([])
+    setCardsHidden(emptyCardHidden())
+    setDraftCards(emptyCardValues())
+    setDraftCardsHidden(emptyCardHidden())
+    setActiveCard(0)
     fetch(
       `/api/gtm/asset-check?solution=${encodeURIComponent(solution)}&assetType=${encodeURIComponent(assetType)}&itemId=${encodeURIComponent(itemId)}`
     )
-      .then((r) => (r.ok ? r.json() : null))
+      .then((r) => (r.ok ? r.json() : { __failed: true as const }))
       .then((d) => {
         if (cancelled) return
+        mountedCheckDoneRef.current = true
+        if (d?.__failed) {
+          if (isSocialPost) setPickerOpen(true)
+          return
+        }
         if (d?.exists && d?.url) {
           setAssetUrl(d.url)
           setPickerOpen(false)
           // Restore templateId if the server cached it - lets the preview
           // iframe size itself by the template's actual aspect ratio.
           if (d?.templateId) setActiveTemplateId(d.templateId)
+          if (isCarousel && Array.isArray(d?.slots)) {
+            const c = normCards(d.slots)
+            setCards(c)
+            setDraftCards(normCards(c))
+            const h = normCardHidden(d?.hidden)
+            setCardsHidden(h)
+            setDraftCardsHidden(h.map((arr) => [...arr]))
+          } else if (!isCarousel && d?.slots && typeof d.slots === "object" && !Array.isArray(d.slots)) {
+            const s = d.slots as Record<string, string>
+            setSlots(s); setDraftSlots(s)
+            const h = normHidden(d?.hidden)
+            setHidden(h); setDraftHidden(h)
+          }
+        } else if (autoFillRef.current && initialTemplateIdRef.current) {
+          fillRef.current(initialTemplateIdRef.current)
         } else if (isSocialPost) {
           setPickerOpen(true)
         }
       })
       .catch(() => {
-        if (isSocialPost && !cancelled) setPickerOpen(true)
+        if (cancelled) return
+        mountedCheckDoneRef.current = true
+        if (isSocialPost) setPickerOpen(true)
       })
     return () => {
       cancelled = true
@@ -144,9 +265,10 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
       const timeoutId = setTimeout(() => abortCtrl.abort(), timeoutMs)
       try {
         const endpoint = isCarousel ? "/api/gtm/fill-carousel" : "/api/gtm/fill-template"
+        const mediaFields = media?.bgImage ? { bgImage: media.bgImage, bgOpacity: media.bgOpacity ?? 100 } : {}
         const payload = isCarousel
-          ? { templateId, pillar: solution, briefText, itemId }
-          : { templateId, assetType: "social-post", pillar: solution, briefText, itemId }
+          ? { templateId, pillar: solution, briefText, itemId, ...mediaFields }
+          : { templateId, assetType: "social-post", pillar: solution, briefText, itemId, ...mediaFields }
         const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -157,10 +279,26 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
           const body = await res.json().catch(() => ({}))
           throw new Error(body.error || "Template fill failed")
         }
-        const data = await res.json()
+        const data = await res.json() as { url: string; slots?: unknown; cards?: unknown; hidden?: unknown }
         setAssetUrl(withCacheBust(data.url))
+        if (isCarousel) {
+          const c = Array.isArray(data.cards) ? normCards(data.cards) : null
+          setCards(c); setSlots(null)
+          const h = normCardHidden(data.hidden)
+          setCardsHidden(h)
+          setDraftCards(c ? normCards(c) : emptyCardValues())
+          setDraftCardsHidden(h.map((arr) => [...arr]))
+        } else {
+          const s = data.slots && typeof data.slots === "object" && !Array.isArray(data.slots) ? (data.slots as Record<string, string>) : null
+          setSlots(s); setDraftSlots(s ?? {}); setCards(null)
+          const h = normHidden(data.hidden)
+          setHidden(h); setDraftHidden(h)
+        }
         setPickerOpen(false)
         stampGraphicRef(itemId, { blobUrl: data.url, assetType, templateId })
+        // Report the successful fill back to the caller (e.g. the builder's
+        // step-3 templateId) so it stays in sync with "Change template" here.
+        onTemplateChangeRef.current?.(templateId)
       } catch (e: unknown) {
         const err = e as { name?: string; message?: string }
         const msg = err?.name === "AbortError"
@@ -172,8 +310,120 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
         setGenerating(false)
       }
     },
-    [solution, briefText, itemId, isCarousel]
+    [solution, briefText, itemId, isCarousel, media]
   )
+
+  // Latest-value ref for the mount effect's auto-fill call. handleFillTemplate
+  // changes identity on every media/brief change; reading it via a ref (rather
+  // than adding it to the mount effect's deps) keeps that effect from refiring
+  // the asset-check fetch on those changes.
+  const fillRef = useRef(handleFillTemplate)
+  useEffect(() => {
+    fillRef.current = handleFillTemplate
+  }, [handleFillTemplate])
+
+  // Controlled template changes: when the caller updates initialTemplateId
+  // after the mount fill/check has already settled (e.g. the builder's step-3
+  // card is used after Generate), re-fill with the new template. The mount
+  // effect above owns the very first fill for a given item, so this only
+  // fires for a genuine change afterward — including "Change template" here,
+  // whose onTemplateChange echo back into initialTemplateId is a no-op below
+  // because activeTemplateId already matches it.
+  useEffect(() => {
+    if (!autoFill || !initialTemplateId) return
+    if (initialTemplateId === activeTemplateId) return   // already showing it (incl. the echo from onTemplateChange)
+    if (busy) return                                     // retried when busy clears (deps below)
+    if (!mountedCheckDoneRef.current) return             // mount effect owns the first fill
+    fillRef.current(initialTemplateId)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialTemplateId, busy])
+
+  // ─── Re-render without Claude (slot edits, opacity slider) ───────────
+  const rerender = useCallback(
+    async (
+      nextSlots: Record<string, string> | null,
+      nextCards: Record<string, string>[] | null,
+      nextHidden: string[] | string[][]
+    ) => {
+      if (!activeTemplateId) return
+      if (!isCarousel && !nextSlots) return
+      if (isCarousel && !nextCards) return
+      setRerendering(true)
+      setError(null)
+      const abortCtrl = new AbortController()
+      const timeoutMs = isCarousel ? 120_000 : 60_000
+      const timeoutId = setTimeout(() => abortCtrl.abort(), timeoutMs)
+      try {
+        const mediaFields = media?.bgImage ? { bgImage: media.bgImage, bgOpacity: media.bgOpacity ?? 100 } : {}
+        const endpoint = isCarousel ? "/api/gtm/fill-carousel" : "/api/gtm/fill-template"
+        const payload = isCarousel
+          ? { templateId: activeTemplateId, pillar: solution, briefText, itemId, cards: nextCards, hidden: nextHidden, ...mediaFields }
+          : { templateId: activeTemplateId, assetType: "social-post", pillar: solution, briefText, itemId, slots: nextSlots, hidden: nextHidden, ...mediaFields }
+        const res = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          signal: abortCtrl.signal,
+        })
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          throw new Error(body.error || "Re-render failed")
+        }
+        const data = await res.json() as { url: string; slots?: unknown; cards?: unknown; hidden?: unknown }
+        setAssetUrl(withCacheBust(data.url))
+        if (!isCarousel) {
+          const s = data.slots && typeof data.slots === "object" && !Array.isArray(data.slots) ? (data.slots as Record<string, string>) : null
+          if (s) { setSlots(s); setDraftSlots(s) }
+          const h = Array.isArray(data.hidden) ? normHidden(data.hidden) : (nextHidden as string[])
+          setHidden(h); setDraftHidden(h)
+        }
+        if (isCarousel && Array.isArray(data.cards)) {
+          const c = normCards(data.cards)
+          setCards(c)
+          setDraftCards(normCards(c))
+          const h = Array.isArray(data.hidden) ? normCardHidden(data.hidden) : (nextHidden as string[][])
+          setCardsHidden(h)
+          setDraftCardsHidden(h.map((arr) => [...arr]))
+        }
+        stampGraphicRef(itemId, { blobUrl: data.url, assetType, templateId: activeTemplateId })
+      } catch (e: unknown) {
+        const err = e as { name?: string; message?: string }
+        const msg = err?.name === "AbortError"
+          ? "Re-render took too long and was cancelled. Try again."
+          : err?.message || "Re-render failed."
+        setError(msg)
+      } finally {
+        clearTimeout(timeoutId)
+        setRerendering(false)
+      }
+    },
+    [activeTemplateId, isCarousel, media, solution, briefText, itemId, assetType]
+  )
+
+  // Media changed after a fill (photo picked/cleared, slider released) → re-render.
+  // Keyed off what is actually sent, so a slider move with no photo is a no-op and
+  // two different photos of the same byte length still re-render.
+  const mediaKey = media?.bgImage
+    ? `${media.bgImage.length}:${media.bgImage.slice(-32)}:${media.bgOpacity ?? 100}`
+    : "none"
+  const lastMediaKey = useRef(mediaKey)
+  const pendingMediaRerender = useRef(false)
+  useEffect(() => {
+    if (lastMediaKey.current === mediaKey) return
+    lastMediaKey.current = mediaKey
+    if (!assetUrl || !activeTemplateId) return
+    if (busy) { pendingMediaRerender.current = true; return }
+    void rerender(slots, cards, isCarousel ? cardsHidden : hidden)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediaKey])
+  // A media change that arrived mid-fill re-renders once the panel is idle again.
+  useEffect(() => {
+    if (busy || !pendingMediaRerender.current) return
+    pendingMediaRerender.current = false
+    if (!assetUrl || !activeTemplateId) return
+    void rerender(slots, cards, isCarousel ? cardsHidden : hidden)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [busy])
 
   // ─── Claude full-HTML generation (non-social-post asset types) ──────
   const handleGenerate = useCallback(async () => {
@@ -296,7 +546,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
               disabled={busy}
               style={{
                 ...smallBtn,
-                background: busy ? "var(--gtm-text-faint)" : "#00BBA5",
+                background: busy ? "var(--gtm-text-faint)" : "var(--gtm-accent)",
                 color: "#fff",
                 borderColor: "transparent",
                 cursor: busy ? "not-allowed" : "pointer",
@@ -311,7 +561,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
               disabled={busy}
               style={{
                 ...smallBtn,
-                background: busy ? "var(--gtm-text-faint)" : "#00BBA5",
+                background: busy ? "var(--gtm-text-faint)" : "var(--gtm-accent)",
                 color: "#fff",
                 borderColor: "transparent",
                 cursor: busy ? "not-allowed" : "pointer",
@@ -394,74 +644,14 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
 
       {/* Template picker (social-post only) */}
       {isSocialPost && pickerOpen && !busy && (
-        <div style={pickerWrap}>
-          <div style={pickerHeader}>
-            <span style={pickerLabel}>Choose a template</span>
-            <span style={pickerHint}>{socialTemplates.length} designs · rendered in your pillar palette</span>
-          </div>
-          <div style={pickerGrid}>
-            {socialTemplates.map((t) => {
-              const isActive = activeTemplateId === t.id
-              // Each iframe is rendered at NATIVE size so the template's
-              // clamp()-based font math hits the sizes designers tuned it for,
-              // then CSS-scaled down to fit inside the thumbnail box.
-              const is169 = t.aspectRatio === "16:9"
-              const nativeW = is169 ? 1920 : 1080
-              const nativeH =
-                t.aspectRatio === "1:1" ? 1080
-                : t.aspectRatio === "3:4" ? 1440
-                : 1080 // 16:9
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => handleFillTemplate(t.id)}
-                  style={{
-                    ...pickerCard,
-                    borderColor: isActive ? "#00BBA5" : "var(--gtm-border)",
-                    boxShadow: isActive ? "0 0 0 2px rgba(36,123,150,0.16)" : "none",
-                  }}
-                >
-                  <div style={pickerThumbWrap(t.aspectRatio)}>
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: nativeW,
-                        height: nativeH,
-                        transformOrigin: "top left",
-                        transform: `scale(${THUMB_WIDTH / nativeW})`,
-                        pointerEvents: "none",
-                      }}
-                    >
-                      <iframe
-                        src={`/api/gtm/template-preview?assetType=${encodeURIComponent(t.assetType)}&templateId=${encodeURIComponent(t.id)}&pillar=${encodeURIComponent(solution)}`}
-                        title={`${t.label} thumbnail`}
-                        style={{ width: nativeW, height: nativeH, border: "none", display: "block" }}
-                      />
-                    </div>
-                  </div>
-                  <div style={{ padding: "8px 10px" }}>
-                    <div style={{ fontSize: 11, fontWeight: 600, color: "#181818", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
-                      <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.label}</span>
-                      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#6b6b6b", background: "#f6f8fb", padding: "2px 6px", borderRadius: 100 }}>
-                        {t.aspectRatio}
-                      </span>
-                    </div>
-                    {isActive && (
-                      <div style={{ fontSize: 10, color: "#00BBA5", marginTop: 4, display: "inline-flex", alignItems: "center", gap: 4 }}>
-                        <Check size={10} /> Last used
-                      </div>
-                    )}
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-        </div>
+        <TemplatePicker solution={solution} templates={socialTemplates} activeId={activeTemplateId} onPick={handleFillTemplate} disabled={busy} activeLabel="Last used" media={media} />
       )}
 
-      {assetUrl && !busy && (() => {
+      {(() => {
+        const showPreview = !!assetUrl && !busy
+        const showEditor = !!(assetUrl && activeTemplateId && (slots || cards))
+        if (!showPreview && !showEditor) return null
+
         // Default to 1:1 when social-post has no known templateId (e.g., a
         // previously-filled asset from before we started persisting templateId).
         const activeTemplate = isSocialPost && activeTemplateId
@@ -470,18 +660,100 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
         const socialAspect: "1:1" | "3:4" | "16:9" | null = isSocialPost
           ? (activeTemplate?.aspectRatio ?? "1:1")
           : null
-        if (socialAspect) {
-          return <SocialPostPreview assetUrl={assetUrl} aspect={socialAspect} />
-        }
-        // Non-social-post: fall back to fixed-height.
-        return (
+        const previewNode = !showPreview ? null : socialAspect ? (
+          <SocialPostPreview assetUrl={assetUrl!} aspect={socialAspect} />
+        ) : (
           <div style={{ background: "var(--gtm-bg-page)", border: "1px solid var(--gtm-border)", borderRadius: 6, overflow: "hidden" }}>
             <iframe
               key={assetUrl}
-              src={assetUrl}
+              src={assetUrl!}
               title={`${assetType} preview`}
               style={{ width: "100%", height: iframeHeightFor(assetType), border: "none", display: "block", background: "#fff" }}
             />
+          </div>
+        )
+
+        let editorNode: React.ReactNode = null
+        const manifest = showEditor ? socialTemplates.find((t) => t.id === activeTemplateId) : undefined
+        if (manifest) {
+          if (isCarousel) {
+            const dirty = draftCards.some((card, i) => {
+              const committed = cards?.[i] ?? {}
+              const valueDiff = manifest.slots.some((s) => (card[s.key] ?? "") !== (committed[s.key] ?? ""))
+              const hiddenDiff = !sameKeySet(draftCardsHidden[i] ?? [], cardsHidden[i] ?? [])
+              return valueDiff || hiddenDiff
+            })
+            editorNode = (
+              <div className="card" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <span className="eyebrow">Edit copy</span>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {Array.from({ length: CARD_COUNT }, (_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      className={`chip${activeCard === i ? " on" : ""}`}
+                      disabled={busy}
+                      onClick={() => setActiveCard(i)}
+                    >
+                      Card {i + 1}
+                    </button>
+                  ))}
+                </div>
+                <SlotEditor
+                  slots={manifest.slots}
+                  values={draftCards[activeCard] ?? {}}
+                  hidden={draftCardsHidden[activeCard] ?? []}
+                  disabled={busy}
+                  onChange={(values, nextHidden) => {
+                    setDraftCards((d) => d.map((c, i) => (i === activeCard ? values : c)))
+                    setDraftCardsHidden((h) => h.map((arr, i) => (i === activeCard ? nextHidden : arr)))
+                  }}
+                />
+                <div>
+                  <button className="btn btn-secondary btn-sm" disabled={!dirty || busy} onClick={() => void rerender(null, draftCards, draftCardsHidden)}>
+                    {rerendering ? "Updating…" : "Update preview"}
+                  </button>
+                </div>
+                <span className="section-note">Re-renders from your edits — no AI call. Switch a slot off to remove it from the graphic.</span>
+              </div>
+            )
+          } else {
+            const dirty =
+              manifest.slots.some((s) => (draftSlots[s.key] ?? "") !== (slots?.[s.key] ?? "")) ||
+              !sameKeySet(draftHidden, hidden)
+            editorNode = (
+              <div className="card" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <span className="eyebrow">Edit copy</span>
+                <SlotEditor
+                  slots={manifest.slots}
+                  values={draftSlots}
+                  hidden={draftHidden}
+                  disabled={busy}
+                  onChange={(values, nextHidden) => { setDraftSlots(values); setDraftHidden(nextHidden) }}
+                />
+                <div>
+                  <button className="btn btn-secondary btn-sm" disabled={!dirty || busy} onClick={() => void rerender(draftSlots, null, draftHidden)}>
+                    {rerendering ? "Updating…" : "Update preview"}
+                  </button>
+                </div>
+                <span className="section-note">Re-renders from your edits — no AI call. Switch a slot off to remove it from the graphic.</span>
+              </div>
+            )
+          }
+        }
+
+        if (!editorNode) return previewNode
+
+        return (
+          <div
+            style={
+              isDesktopResult
+                ? { display: "grid", gridTemplateColumns: "minmax(0, 420px) minmax(0, 1fr)", gap: 16, alignItems: "start", marginTop: 14 }
+                : { display: "flex", flexDirection: "column", gap: 16, marginTop: 14 }
+            }
+          >
+            {previewNode}
+            {editorNode}
           </div>
         )
       })()}
@@ -493,9 +765,9 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
 
 const panel: React.CSSProperties = {
   border: "1px solid var(--gtm-border)",
-  borderRadius: 6,
+  borderRadius: "var(--gtm-radius-card)",
   padding: 14,
-  background: "#ffffff",
+  background: "var(--gtm-bg-card)",
 }
 
 const smallBtn: React.CSSProperties = {
@@ -522,8 +794,7 @@ function SocialPostPreview({ assetUrl, aspect }: { assetUrl: string; aspect: "1:
   const wrapRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
 
-  const nativeW = aspect === "16:9" ? 1920 : 1080
-  const nativeH = aspect === "1:1" ? 1080 : aspect === "3:4" ? 1440 : 1080
+  const { width: nativeW, height: nativeH } = nativeSize(aspect)
 
   const maxW = aspect === "1:1" ? 540 : aspect === "3:4" ? 480 : 720
 
@@ -580,12 +851,12 @@ function SocialPostPreview({ assetUrl, aspect }: { assetUrl: string; aspect: "1:
 }
 
 const errBanner: React.CSSProperties = {
-  background: "rgba(239, 68, 68, 0.08)",
-  border: "1px solid rgba(239, 68, 68, 0.3)",
+  background: "var(--gtm-danger-bg)",
+  border: "1px solid var(--gtm-danger-border)",
   borderRadius: 6,
   padding: 12,
   fontSize: 13,
-  color: "#b91c1c",
+  color: "var(--gtm-danger-text)",
   marginTop: 12,
   fontFamily: font,
 }
@@ -595,80 +866,13 @@ const progressBanner: React.CSSProperties = {
   alignItems: "center",
   gap: 8,
   padding: 12,
-  background: "rgba(0, 187, 165, 0.06)",
-  border: "1px solid rgba(0, 187, 165, 0.2)",
+  background: "var(--gtm-accent-bg)",
+  border: "1px solid var(--gtm-accent-bg)",
   borderRadius: 6,
   fontSize: 12,
   fontWeight: 500,
-  color: "#00BBA5",
+  color: "var(--gtm-accent)",
   fontFamily: font,
   marginBottom: 12,
 }
 
-const pickerWrap: React.CSSProperties = {
-  background: "var(--gtm-bg-page)",
-  border: "1px solid var(--gtm-border)",
-  borderRadius: 6,
-  padding: 12,
-  marginBottom: 12,
-}
-
-const pickerHeader: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "baseline",
-  marginBottom: 10,
-  gap: 8,
-}
-
-const pickerLabel: React.CSSProperties = {
-  fontSize: 11,
-  fontWeight: 700,
-  letterSpacing: "0.08em",
-  textTransform: "uppercase",
-  color: "#6b6b6b",
-  fontFamily: font,
-}
-
-const pickerHint: React.CSSProperties = {
-  fontSize: 11,
-  color: "var(--gtm-text-faint)",
-  fontFamily: font,
-}
-
-// Fixed thumbnail width so we can pre-compute the transform scale.
-const THUMB_WIDTH = 200
-
-const pickerGrid: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: `repeat(auto-fill, ${THUMB_WIDTH}px)`,
-  gap: 12,
-  justifyContent: "start",
-}
-
-const pickerCard: React.CSSProperties = {
-  padding: 0,
-  background: "#fff",
-  border: "1px solid var(--gtm-border)",
-  borderRadius: 6,
-  cursor: "pointer",
-  textAlign: "left",
-  overflow: "hidden",
-  fontFamily: font,
-  transition: "border-color 150ms ease, box-shadow 150ms ease",
-}
-
-function pickerThumbWrap(aspect: "1:1" | "3:4" | "16:9"): React.CSSProperties {
-  let height: number
-  if (aspect === "1:1") height = THUMB_WIDTH
-  else if (aspect === "3:4") height = Math.round((THUMB_WIDTH * 4) / 3)
-  else height = Math.round((THUMB_WIDTH * 9) / 16) // 16:9 landscape
-  return {
-    width: THUMB_WIDTH,
-    height,
-    background: "#f6f8fb",
-    borderBottom: "1px solid var(--gtm-border)",
-    overflow: "hidden",
-    position: "relative",
-  }
-}

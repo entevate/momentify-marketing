@@ -12,8 +12,8 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { slugify, type PageEvent, type PageWithStats } from "@/lib/gtm/pages-types"
 
 const font = "'Inter', system-ui, -apple-system, sans-serif"
-const NAVY = "#12243f"
-const ACCENT = "#1A56DB"
+const NAVY = "var(--gtm-text-primary)"
+const ACCENT = "var(--gtm-accent-text)"
 
 // Same solution/pillar ids as the GTM sidebar nav (pillar-palettes.ts).
 const PAGE_PILLARS = [
@@ -27,10 +27,10 @@ const PAGE_PILLARS = [
 
 const card: React.CSSProperties = {
   background: "#fff",
-  border: "1px solid rgba(0,0,0,0.1)",
-  borderRadius: "8px",
+  border: "1px solid var(--gtm-border)",
+  borderRadius: "12px",
   padding: "20px",
-  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+  boxShadow: "var(--gtm-shadow)",
 }
 
 const label: React.CSSProperties = {
@@ -39,7 +39,7 @@ const label: React.CSSProperties = {
   fontWeight: 700,
   textTransform: "uppercase",
   letterSpacing: "1px",
-  color: "rgba(0,0,0,0.45)",
+  color: "var(--gtm-text-muted)",
   marginBottom: "6px",
 }
 
@@ -47,7 +47,7 @@ const input: React.CSSProperties = {
   width: "100%",
   padding: "9px 11px",
   fontSize: "13px",
-  border: "1px solid rgba(0,0,0,0.15)",
+  border: "1px solid var(--gtm-border-strong)",
   borderRadius: "6px",
   boxSizing: "border-box",
   color: NAVY,
@@ -115,7 +115,7 @@ export default function PagesView() {
   return (
     <div style={{ fontFamily: font }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "14px", flexWrap: "wrap", marginBottom: "20px" }}>
-        <p style={{ margin: 0, fontSize: "13px", color: "rgba(0,0,0,0.6)", maxWidth: "640px", lineHeight: 1.6 }}>
+        <p style={{ margin: 0, fontSize: "13px", color: "var(--gtm-text-secondary)", maxWidth: "640px", lineHeight: 1.6 }}>
           Upload a standalone HTML page (a case study, a microsite) and get a public link
           with social-preview tags and tracking — opens, unique viewers, and time spent reading.
         </p>
@@ -144,11 +144,11 @@ export default function PagesView() {
       )}
 
       {loading && pages.length === 0 ? (
-        <p style={{ fontSize: "13px", color: "rgba(0,0,0,0.45)" }}>Loading pages...</p>
+        <p style={{ fontSize: "13px", color: "var(--gtm-text-muted)" }}>Loading pages...</p>
       ) : pages.length === 0 ? (
         <div style={{ ...card, textAlign: "center", padding: "48px 24px" }}>
           <p style={{ margin: "0 0 6px 0", fontSize: "15px", fontWeight: 700, color: NAVY }}>No published pages yet</p>
-          <p style={{ margin: 0, fontSize: "13px", color: "rgba(0,0,0,0.5)" }}>Publish your first case study or microsite to get a trackable public link.</p>
+          <p style={{ margin: 0, fontSize: "13px", color: "var(--gtm-text-muted)" }}>Publish your first case study or microsite to get a trackable public link.</p>
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "16px" }}>
@@ -156,12 +156,12 @@ export default function PagesView() {
             <div key={p.id} style={{ ...card, padding: "16px" }}>
               <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", flexWrap: "wrap" }}>
                 {/* OG thumb */}
-                <div style={{ width: "150px", height: "79px", borderRadius: "6px", overflow: "hidden", border: "1px solid rgba(0,0,0,0.1)", background: "#eef2fb", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ width: "150px", height: "79px", borderRadius: "6px", overflow: "hidden", border: "1px solid var(--gtm-border)", background: "var(--gtm-surface-2)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {p.ogImage ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={p.ogImage} alt="OG preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : (
-                    <span style={{ fontSize: "10px", color: "rgba(0,0,0,0.4)", textAlign: "center", padding: "4px" }}>No OG image</span>
+                    <span style={{ fontSize: "10px", color: "var(--gtm-text-muted)", textAlign: "center", padding: "4px" }}>No OG image</span>
                   )}
                 </div>
                 <div style={{ flex: 1, minWidth: "260px" }}>
@@ -174,14 +174,14 @@ export default function PagesView() {
                       {p.pillars!.map((pid) => {
                         const pl = PAGE_PILLARS.find((x) => x.id === pid)
                         return pl ? (
-                          <span key={pid} style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "9.5px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", padding: "2px 8px", borderRadius: "999px", background: "rgba(18,36,63,0.06)", color: NAVY, whiteSpace: "nowrap" }}>
+                          <span key={pid} style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "9.5px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.14em", padding: "2px 8px", borderRadius: "999px", background: "var(--gtm-surface-2)", color: NAVY, whiteSpace: "nowrap" }}>
                             <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: pl.color }} />{pl.label}
                           </span>
                         ) : null
                       })}
                     </div>
                   )}
-                  {p.description && <p style={{ margin: "6px 0 0 0", fontSize: "12px", color: "rgba(0,0,0,0.55)", lineHeight: 1.5 }}>{p.description}</p>}
+                  {p.description && <p style={{ margin: "6px 0 0 0", fontSize: "12px", color: "var(--gtm-text-secondary)", lineHeight: 1.5 }}>{p.description}</p>}
                 </div>
                 {/* stats */}
                 <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
@@ -193,25 +193,25 @@ export default function PagesView() {
                   ].map(([l, v]) => (
                     <div key={l}>
                       <p style={{ margin: 0, fontSize: "20px", fontWeight: 800, color: NAVY, lineHeight: 1.1 }}>{v}</p>
-                      <p style={{ margin: "2px 0 0 0", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(0,0,0,0.5)" }}>{l}</p>
+                      <p style={{ margin: "2px 0 0 0", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--gtm-text-muted)" }}>{l}</p>
                     </div>
                   ))}
                 </div>
               </div>
               <div style={{ display: "flex", gap: "6px", marginTop: "14px", flexWrap: "wrap" }}>
-                <button onClick={() => copy(p)} style={{ padding: "6px 12px", fontSize: "11.5px", fontWeight: 700, background: copiedId === p.id ? "#0AA891" : NAVY, color: "#fff", borderRadius: "5px", cursor: "pointer", border: "none" }}>
+                <button onClick={() => copy(p)} style={{ padding: "6px 12px", fontSize: "11.5px", fontWeight: 700, background: copiedId === p.id ? "var(--gtm-accent-text)" : NAVY, color: "#fff", borderRadius: "5px", cursor: "pointer", border: "none" }}>
                   {copiedId === p.id ? "✓ Copied" : "Copy Public Link"}
                 </button>
-                <button onClick={() => toggleDetail(p)} style={{ padding: "6px 12px", fontSize: "11.5px", fontWeight: 700, background: expanded === p.id ? NAVY : "rgba(18,36,63,0.08)", color: expanded === p.id ? "#fff" : NAVY, borderRadius: "5px", cursor: "pointer", border: "none" }}>
+                <button onClick={() => toggleDetail(p)} style={{ padding: "6px 12px", fontSize: "11.5px", fontWeight: 700, background: expanded === p.id ? NAVY : "var(--gtm-surface-2)", color: expanded === p.id ? "#fff" : NAVY, borderRadius: "5px", cursor: "pointer", border: "none" }}>
                   {expanded === p.id ? "Hide Details" : "Details"}
                 </button>
-                <a href={publicUrl(p.slug)} target="_blank" rel="noreferrer" style={{ padding: "6px 12px", fontSize: "11.5px", fontWeight: 600, background: "#fff", color: NAVY, border: "1px solid rgba(0,0,0,0.15)", borderRadius: "5px", textDecoration: "none" }}>
+                <a href={publicUrl(p.slug)} target="_blank" rel="noreferrer" style={{ padding: "6px 12px", fontSize: "11.5px", fontWeight: 600, background: "#fff", color: NAVY, border: "1px solid var(--gtm-border-strong)", borderRadius: "5px", textDecoration: "none" }}>
                   Open
                 </a>
-                <button onClick={() => setEditing(p)} style={{ padding: "6px 12px", fontSize: "11.5px", fontWeight: 600, background: "#fff", color: NAVY, border: "1px solid rgba(0,0,0,0.15)", borderRadius: "5px", cursor: "pointer" }}>
+                <button onClick={() => setEditing(p)} style={{ padding: "6px 12px", fontSize: "11.5px", fontWeight: 600, background: "#fff", color: NAVY, border: "1px solid var(--gtm-border-strong)", borderRadius: "5px", cursor: "pointer" }}>
                   Edit
                 </button>
-                <button onClick={() => setDeleting(p)} style={{ padding: "6px 12px", fontSize: "11.5px", fontWeight: 600, background: "#fff", color: "#c62828", border: "1px solid rgba(198,40,40,0.3)", borderRadius: "5px", cursor: "pointer", marginLeft: "auto" }}>
+                <button onClick={() => setDeleting(p)} style={{ padding: "6px 12px", fontSize: "11.5px", fontWeight: 600, background: "#fff", color: "var(--gtm-danger)", border: "1px solid var(--gtm-danger-border)", borderRadius: "5px", cursor: "pointer", marginLeft: "auto" }}>
                   Delete
                 </button>
               </div>
@@ -219,7 +219,7 @@ export default function PagesView() {
               {expanded === p.id && (
                 details[p.slug]
                   ? <PageDetail events={details[p.slug]} />
-                  : <p style={{ margin: "14px 0 0 0", fontSize: "12px", color: "rgba(0,0,0,0.45)" }}>Loading details...</p>
+                  : <p style={{ margin: "14px 0 0 0", fontSize: "12px", color: "var(--gtm-text-muted)" }}>Loading details...</p>
               )}
             </div>
           ))}
@@ -244,16 +244,16 @@ function ConfirmModal({ title, message, onConfirm, onCancel }: { title: string; 
   return (
     <div
       onClick={onCancel}
-      style={{ position: "fixed", inset: 0, background: "rgba(18,36,63,0.45)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, fontFamily: font }}
+      style={{ position: "fixed", inset: 0, background: "rgba(6,19,65,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, fontFamily: font }}
     >
       <div onClick={(e) => e.stopPropagation()} style={{ background: "#fff", borderRadius: "10px", padding: "24px", maxWidth: "440px", width: "90%", boxShadow: "0 12px 40px rgba(0,0,0,0.25)" }}>
         <p style={{ margin: "0 0 8px 0", fontSize: "16px", fontWeight: 700, color: NAVY }}>{title}</p>
-        <p style={{ margin: "0 0 20px 0", fontSize: "13px", color: "rgba(0,0,0,0.65)", lineHeight: 1.55 }}>{message}</p>
+        <p style={{ margin: "0 0 20px 0", fontSize: "13px", color: "var(--gtm-text-secondary)", lineHeight: 1.55 }}>{message}</p>
         <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}>
-          <button onClick={onCancel} style={{ padding: "9px 16px", fontSize: "13px", fontWeight: 600, background: "#fff", color: NAVY, border: "1px solid rgba(0,0,0,0.2)", borderRadius: "6px", cursor: "pointer" }}>
+          <button onClick={onCancel} style={{ padding: "9px 16px", fontSize: "13px", fontWeight: 600, background: "#fff", color: NAVY, border: "1px solid var(--gtm-border-strong)", borderRadius: "6px", cursor: "pointer" }}>
             Cancel
           </button>
-          <button onClick={onConfirm} style={{ padding: "9px 16px", fontSize: "13px", fontWeight: 700, background: "#c62828", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
+          <button onClick={onConfirm} style={{ padding: "9px 16px", fontSize: "13px", fontWeight: 700, background: "var(--gtm-danger)", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer" }}>
             Unpublish
           </button>
         </div>
@@ -270,7 +270,7 @@ function PageDetail({ events }: { events: PageEvent[] }) {
   const views = events.filter((e) => e.event === "view")
 
   if (views.length === 0) {
-    return <p style={{ margin: "14px 0 0 0", fontSize: "12.5px", color: "rgba(0,0,0,0.45)" }}>No opens yet. Details appear the first time someone opens the link.</p>
+    return <p style={{ margin: "14px 0 0 0", fontSize: "12.5px", color: "var(--gtm-text-muted)" }}>No opens yet. Details appear the first time someone opens the link.</p>
   }
 
   const days = 14
@@ -296,17 +296,17 @@ function PageDetail({ events }: { events: PageEvent[] }) {
   const locations = breakdown((e) => (e.city ? `${e.city}${e.region ? `, ${e.region}` : ""}` : e.country || "—"))
   const referrers = breakdown((e) => e.referrer || "direct / none")
 
-  const colHead: React.CSSProperties = { display: "block", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "rgba(0,0,0,0.45)", marginBottom: "8px" }
+  const colHead: React.CSSProperties = { display: "block", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px", color: "var(--gtm-text-muted)", marginBottom: "8px" }
 
   return (
-    <div style={{ marginTop: "16px", paddingTop: "16px", borderTop: "1px solid rgba(0,0,0,0.08)" }}>
+    <div style={{ marginTop: "16px", paddingTop: "16px", borderTop: "1px solid var(--gtm-border)" }}>
       <span style={colHead}>Opens — last {days} days</span>
       <div style={{ display: "flex", alignItems: "flex-end", gap: "3px", height: "54px", marginBottom: "4px" }}>
         {bars.map(([day, v]) => (
           <div key={day} title={`${day}: ${v} open${v === 1 ? "" : "s"}`} style={{ flex: 1, height: `${Math.max(4, (v / max) * 100)}%`, background: v ? ACCENT : "rgba(0,0,0,0.08)", borderRadius: "2px 2px 0 0" }} />
         ))}
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", color: "rgba(0,0,0,0.4)", marginBottom: "16px" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", color: "var(--gtm-text-muted)", marginBottom: "16px" }}>
         <span>{bars[0][0].slice(5)}</span>
         <span>{bars[bars.length - 1][0].slice(5)}</span>
       </div>
@@ -316,7 +316,7 @@ function PageDetail({ events }: { events: PageEvent[] }) {
           {devices.map(([d, v]) => (
             <p key={d} style={{ margin: "0 0 4px 0", fontSize: "12px", color: NAVY }}>
               {DEVICE_ICONS[d] || ""} <span style={{ textTransform: "capitalize" }}>{d}</span>
-              <span style={{ color: "rgba(0,0,0,0.45)" }}> — {v} ({Math.round((v / views.length) * 100)}%)</span>
+              <span style={{ color: "var(--gtm-text-muted)" }}> — {v} ({Math.round((v / views.length) * 100)}%)</span>
             </p>
           ))}
         </div>
@@ -324,7 +324,7 @@ function PageDetail({ events }: { events: PageEvent[] }) {
           <span style={colHead}>Locations</span>
           {locations.map(([c, v]) => (
             <p key={c} style={{ margin: "0 0 4px 0", fontSize: "12px", color: NAVY }}>
-              {c}<span style={{ color: "rgba(0,0,0,0.45)" }}> — {v}</span>
+              {c}<span style={{ color: "var(--gtm-text-muted)" }}> — {v}</span>
             </p>
           ))}
         </div>
@@ -332,14 +332,14 @@ function PageDetail({ events }: { events: PageEvent[] }) {
           <span style={colHead}>Came From</span>
           {referrers.map(([r, v]) => (
             <p key={r} style={{ margin: "0 0 4px 0", fontSize: "12px", color: NAVY }}>
-              {r}<span style={{ color: "rgba(0,0,0,0.45)" }}> — {v}</span>
+              {r}<span style={{ color: "var(--gtm-text-muted)" }}> — {v}</span>
             </p>
           ))}
         </div>
         <div>
           <span style={colHead}>Recent Opens</span>
           {views.slice(0, 6).map((e, i) => (
-            <p key={i} style={{ margin: "0 0 4px 0", fontSize: "12px", color: "rgba(0,0,0,0.6)" }}>
+            <p key={i} style={{ margin: "0 0 4px 0", fontSize: "12px", color: "var(--gtm-text-secondary)" }}>
               {new Date(e.at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
               {" · "}{DEVICE_ICONS[e.device] || e.device}
               {e.city ? ` · ${e.city}` : e.country ? ` · ${e.country}` : ""}
@@ -415,7 +415,7 @@ function Editor({ initial, onDone, onCancel }: { initial: PageWithStats | null; 
         <div>
           <label style={label}>Public URL slug {initial && "(locked — links are out in the wild)"}</label>
           <input
-            style={{ ...input, background: initial ? "#f5f5f5" : "#fff" }}
+            style={{ ...input, background: initial ? "var(--gtm-surface-2)" : "#fff" }}
             value={initial ? initial.slug : slug || slugify(title)}
             onChange={(e) => setSlug(slugify(e.target.value))}
             disabled={!!initial}
@@ -440,7 +440,7 @@ function Editor({ initial, onDone, onCancel }: { initial: PageWithStats | null; 
                   display: "inline-flex", alignItems: "center", gap: "6px", padding: "6px 12px",
                   fontSize: "11.5px", fontWeight: on ? 700 : 500, borderRadius: "999px", cursor: "pointer",
                   background: on ? NAVY : "#fff", color: on ? "#fff" : NAVY,
-                  border: on ? `1px solid ${NAVY}` : "1px solid rgba(0,0,0,0.18)",
+                  border: on ? `1px solid ${NAVY}` : "1px solid var(--gtm-border-strong)",
                 }}
               >
                 <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: p.color, flexShrink: 0 }} />
@@ -450,13 +450,13 @@ function Editor({ initial, onDone, onCancel }: { initial: PageWithStats | null; 
             )
           })}
         </div>
-        <p style={{ margin: "6px 0 0 0", fontSize: "11px", color: "rgba(0,0,0,0.45)" }}>Tag one or more solutions to sort and filter the library.</p>
+        <p style={{ margin: "6px 0 0 0", fontSize: "11px", color: "var(--gtm-text-muted)" }}>Tag one or more solutions to sort and filter the library.</p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", marginBottom: "16px" }}>
         <div>
           <label style={label}>HTML file {initial && "(leave empty to keep current)"}</label>
           <input ref={fileRef} type="file" accept=".html,.htm" onChange={(e) => onFile(e.target.files?.[0])} style={{ fontSize: "12.5px" }} />
-          {htmlFile && <p style={{ margin: "6px 0 0 0", fontSize: "11.5px", color: "#00753a" }}>✓ {htmlFile.name} ({Math.round(htmlFile.content.length / 1024)}KB)</p>}
+          {htmlFile && <p style={{ margin: "6px 0 0 0", fontSize: "11.5px", color: "#0AA891" }}>✓ {htmlFile.name} ({Math.round(htmlFile.content.length / 1024)}KB)</p>}
         </div>
         <div>
           <label style={label}>OG image URL (optional — 1200×630 for best previews)</label>
@@ -464,20 +464,20 @@ function Editor({ initial, onDone, onCancel }: { initial: PageWithStats | null; 
           {ogImage && (
             <div style={{ display: "flex", gap: "8px", alignItems: "center", marginTop: "8px" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={ogImage} alt="OG" style={{ width: "76px", height: "40px", objectFit: "cover", borderRadius: "4px", border: "1px solid rgba(0,0,0,0.12)" }} />
-              <button onClick={() => setOgImage("")} style={{ padding: "8px 10px", fontSize: "12px", background: "none", border: "none", color: "#c62828", cursor: "pointer" }}>
+              <img src={ogImage} alt="OG" style={{ width: "76px", height: "40px", objectFit: "cover", borderRadius: "4px", border: "1px solid var(--gtm-border)" }} />
+              <button onClick={() => setOgImage("")} style={{ padding: "8px 10px", fontSize: "12px", background: "none", border: "none", color: "var(--gtm-danger)", cursor: "pointer" }}>
                 Remove
               </button>
             </div>
           )}
         </div>
       </div>
-      {error && <p style={{ margin: "0 0 10px 0", fontSize: "12px", color: "#c62828" }}>{error}</p>}
+      {error && <p style={{ margin: "0 0 10px 0", fontSize: "12px", color: "var(--gtm-danger)" }}>{error}</p>}
       <div style={{ display: "flex", gap: "10px" }}>
-        <button onClick={save} disabled={saving} style={{ padding: "10px 22px", fontSize: "13px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", background: "#0AA891", color: "#fff", borderRadius: "6px", cursor: saving ? "wait" : "pointer", border: "none" }}>
+        <button onClick={save} disabled={saving} style={{ padding: "10px 22px", fontSize: "13px", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em", background: "var(--gtm-accent-text)", color: "#fff", borderRadius: "6px", cursor: saving ? "wait" : "pointer", border: "none" }}>
           {saving ? "Publishing..." : initial ? "Save Changes" : "Publish"}
         </button>
-        <button onClick={onCancel} style={{ padding: "10px 18px", fontSize: "13px", fontWeight: 600, background: "#fff", color: NAVY, border: "1px solid rgba(0,0,0,0.2)", borderRadius: "6px", cursor: "pointer" }}>
+        <button onClick={onCancel} style={{ padding: "10px 18px", fontSize: "13px", fontWeight: 600, background: "#fff", color: NAVY, border: "1px solid var(--gtm-border-strong)", borderRadius: "6px", cursor: "pointer" }}>
           Cancel
         </button>
       </div>

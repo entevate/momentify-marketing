@@ -110,8 +110,8 @@ const visibleSections = SECTIONS.map((s) => ({
 
 const NAV_FOLDED_KEY = "momentify_gtm_nav_folded"
 const SIDEBAR_COLLAPSED_KEY = "momentify_gtm_sidebar_collapsed"
-const EXPANDED_WIDTH = 240
-const STRIP_WIDTH = 72
+const EXPANDED_WIDTH = 232
+const STRIP_WIDTH = 64
 
 const font = "'Inter', system-ui, sans-serif"
 
@@ -142,17 +142,19 @@ function NavLinkRow({
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 10,
-        height: 44,
-        padding: collapsed ? "0" : "0 24px 0 32px",
+        gap: 9,
+        height: 38,
+        margin: collapsed ? "0 auto 2px" : "0 10px 1px",
+        width: collapsed ? 36 : "auto",
+        padding: collapsed ? "0" : "0 10px 0 20px",
         justifyContent: collapsed ? "center" : "flex-start",
         textDecoration: "none",
         fontSize: 14,
-        fontWeight: 500,
+        fontWeight: active ? 600 : 400,
         fontFamily: font,
-        color: active ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.70)",
+        color: active ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.72)",
         background: active ? "rgba(255, 255, 255, 0.06)" : "transparent",
-        borderLeft: active ? `3px solid ${item.color}` : "3px solid transparent",
+        borderRadius: 8,
         transition: "all 150ms ease",
         whiteSpace: "nowrap",
         overflow: "hidden",
@@ -170,7 +172,7 @@ function NavLinkRow({
         }
       }}
     >
-      <Icon size={16} style={{ opacity: active ? 1 : 0.45, flexShrink: 0 }} />
+      <Icon size={16} style={{ opacity: active ? 1 : 0.55, flexShrink: 0, color: active ? item.color : undefined }} />
       {!collapsed && <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>{item.label}</span>}
     </Link>
   )
@@ -288,7 +290,7 @@ function Sidebar({
         </button>
       )}
       {/* Logo */}
-      <div style={{ padding: collapsed ? "28px 0 20px" : "28px 24px 20px", textAlign: collapsed ? "center" : undefined }}>
+      <div style={{ padding: collapsed ? "22px 0 18px" : "22px 20px 18px", textAlign: collapsed ? "center" : undefined }}>
         <Image
           src={collapsed ? "/Momentify-Icon.svg" : "/Momentify-Logo_Reverse.svg"}
           alt="Momentify"
@@ -299,7 +301,7 @@ function Sidebar({
         />
       </div>
 
-      <div style={{ height: 1, background: "rgba(255, 255, 255, 0.08)", margin: "0 16px" }} />
+      <div style={{ height: 1, background: "rgba(255, 255, 255, 0.08)", margin: "0 14px" }} />
 
       {/* Nav */}
       <nav style={{ display: "flex", flexDirection: "column", gap: 2, marginTop: 8, ...(isMobile ? { flex: 1, minHeight: 0, overflowY: "auto", overflowX: "hidden", WebkitOverflowScrolling: "touch" } : {}) }}>
@@ -308,7 +310,7 @@ function Sidebar({
           return (
             <div key={section.label}>
               {collapsed ? (
-                sIdx > 0 && <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "8px 16px" }} />
+                sIdx > 0 && <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "10px 14px" }} />
               ) : (
                 <button
                   onClick={() => toggleSection(section.label)}
@@ -316,10 +318,11 @@ function Sidebar({
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 6,
-                    width: "100%",
+                    justifyContent: "space-between",
+                    width: "calc(100% - 20px)",
+                    margin: "14px 10px 4px",
                     textAlign: "left",
-                    padding: "16px 24px 6px",
+                    padding: "6px 10px",
                     fontSize: 10,
                     fontWeight: 600,
                     color: ACCENT,
@@ -331,8 +334,8 @@ function Sidebar({
                     cursor: "pointer",
                   }}
                 >
-                  <FoldChevron open={!isFolded} />
                   {section.label}
+                  <FoldChevron open={!isFolded} />
                 </button>
               )}
               {!isFolded &&
@@ -347,7 +350,7 @@ function Sidebar({
       {/* Footer contract (STRUCTURE.md §1): one row — Sign Out left, collapse
           toggle right; strip mode shows the toggle centered. */}
       <div style={{ marginTop: "auto" }}>
-        <div style={{ height: 1, background: "rgba(255, 255, 255, 0.08)", margin: "0 16px" }} />
+        <div style={{ height: 1, background: "rgba(255, 255, 255, 0.08)", margin: "0 14px" }} />
         <div
           style={{
             display: "flex",
@@ -372,12 +375,12 @@ function Sidebar({
                 cursor: "pointer",
                 fontSize: 13,
                 fontFamily: font,
-                color: "rgba(255, 255, 255, 0.40)",
+                color: "rgba(255, 255, 255, 0.70)",
                 padding: 0,
                 transition: "color 150ms ease",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.70)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.40)")}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 1)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.70)")}
             >
               <LogOut size={16} />
               Sign Out
@@ -390,13 +393,13 @@ function Sidebar({
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             style={{
               width: 28,
-              height: 28,
+              height: 24,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               color: "rgba(255, 255, 255, 0.55)",
-              background: "rgba(255, 255, 255, 0.04)",
-              border: "1px solid rgba(255, 255, 255, 0.10)",
+              background: "transparent",
+              border: "1px solid rgba(255, 255, 255, 0.14)",
               borderRadius: 6,
               cursor: "pointer",
             }}

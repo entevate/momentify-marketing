@@ -8,6 +8,7 @@ import { assetBlobPath, assetKvKey, assetFilename } from "@/lib/gtm/asset-helper
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
+import { parseRenderMedia, filterSlots, parseHiddenCards } from "@/lib/gtm/render-media"
 
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 const ASSET_TYPE = "carousel"
@@ -31,7 +32,12 @@ const ALLOWED_TEMPLATES = new Set<string>([
 /**
  * POST /api/gtm/fill-carousel
  *
- * Body: { templateId, pillar, briefText, itemId }
+ * Body: { templateId, pillar, briefText, itemId, cards?, bgImage?, bgOpacity?,
+ *         hidden? }
+ *
+ * `hidden` is per card: an array of exactly 6 arrays of manifest slot keys.
+ * Each card's keys render empty and get a display:none rule on that card
+ * only, so one card can drop a slot the others keep.
  *
  * Generates a 6-card carousel using one social-post template, where each
  * card is a distinct slot-fill of the same template. One Claude call
@@ -51,7 +57,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { templateId, pillar, briefText, itemId } = body ?? {}
+    const { templateId, pillar, briefText, itemId, cards: cardsOverride, bgImage, bgOpacity, hidden: hiddenInput } = body ?? {}
 
     // ─── Validation ─────────────────────────────────────────────────────
     if (!templateId || !pillar || !briefText) {
@@ -90,20 +96,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Template HTML missing on disk" }, { status: 500 })
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: "Generation is not configured. No API key found." },
-        { status: 500 }
-      )
+    const mediaParse = parseRenderMedia({ bgImage, bgOpacity })
+    if (!mediaParse.ok) {
+      return NextResponse.json({ error: mediaParse.error }, { status: 400 })
     }
+    const media = mediaParse.media
 
-    // ─── Build prompt asking for 6 slot-fill variants in one call ───────
-    const slotSpec = manifest.slots
-      .map((s) => `- "${s.key}" (${s.kind}, max ${s.maxChars} chars): ${s.label}. Example: ${s.example}`)
-      .join("\n")
+    // Per-card hidden slot keys. A wrong shape degrades to 6 empty arrays
+    // rather than an error, so hidden can never desynchronise from cards.
+    const hidden = parseHiddenCards(hiddenInput, manifest.slots, CARD_COUNT)
 
-    const userPrompt = `You are writing copy for a Momentify ${manifest.aspectRatio} carousel of ${CARD_COUNT} swipeable cards. Each card is one instance of the template "${manifest.label}" (${manifest.description}).
+    const overridden = cardsOverride !== undefined && cardsOverride !== null
+    let cards: Record<string, string>[]
+    if (!overridden) {
+      const apiKey = process.env.ANTHROPIC_API_KEY
+      if (!apiKey) {
+        return NextResponse.json(
+          { error: "Generation is not configured. No API key found." },
+          { status: 500 }
+        )
+      }
+
+      // ─── Build prompt asking for 6 slot-fill variants in one call ───────
+      const slotSpec = manifest.slots
+        .map((s) => `- "${s.key}" (${s.kind}, max ${s.maxChars} chars): ${s.label}. Example: ${s.example}`)
+        .join("\n")
+
+      const userPrompt = `You are writing copy for a Momentify ${manifest.aspectRatio} carousel of ${CARD_COUNT} swipeable cards. Each card is one instance of the template "${manifest.label}" (${manifest.description}).
 
 Pillar palette: ${pillar}
 
@@ -127,72 +146,83 @@ ${slotSpec}
 
 Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card${CARD_COUNT}>]}. No markdown fencing, no commentary, no prose wrapping. Exactly ${CARD_COUNT} entries in the cards array.`
 
-    // ─── Call Claude ────────────────────────────────────────────────────
-    const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5"
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        // Content generation needs no reasoning; disabling thinking keeps the
-        // response fast and makes the first content block the text (Sonnet 5
-        // runs adaptive thinking by default, which would otherwise be content[0]).
-        thinking: { type: "disabled" },
-        max_tokens: 3000, // 6 cards * ~400 chars JSON each, with margin
-        messages: [{ role: "user", content: userPrompt }],
-      }),
-    })
-
-    if (!response.ok) {
-      const err = await response.text().catch(() => "")
-      console.error("[fill-carousel] Anthropic error", err)
-      let detail: string | undefined
-      try { detail = JSON.parse(err)?.error?.message } catch { /* ignore */ }
-      return NextResponse.json(
-        { error: detail || "Carousel fill failed. Please try again." },
-        { status: response.status === 401 ? 401 : 500 }
-      )
-    }
-
-    const data = await response.json()
-    const rawText = (data.content?.find((b: { type?: string; text?: string }) => b.type === "text")?.text) ?? ""
-    if (!rawText) {
-      return NextResponse.json({ error: "Empty response from Claude" }, { status: 500 })
-    }
-
-    // ─── Parse + normalize cards ────────────────────────────────────────
-    const fenced = rawText.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/)
-    const jsonText = (fenced ? fenced[1] : rawText).trim()
-
-    let cards: Record<string, string>[]
-    try {
-      const parsed = JSON.parse(jsonText)
-      if (!parsed || typeof parsed !== "object") throw new Error("expected object")
-      const arr = Array.isArray(parsed?.cards) ? parsed.cards : null
-      if (!arr || arr.length !== CARD_COUNT) {
-        throw new Error(`expected cards array of length ${CARD_COUNT}, got ${arr ? arr.length : "n/a"}`)
-      }
-      cards = arr.map((card: unknown) => {
-        if (!card || typeof card !== "object" || Array.isArray(card)) {
-          throw new Error("each card must be a JSON object")
-        }
-        const out: Record<string, string> = {}
-        for (const [k, v] of Object.entries(card as Record<string, unknown>)) {
-          if (typeof v === "string") out[k] = stripEmDashes(v)
-          else if (v !== undefined && v !== null) out[k] = stripEmDashes(String(v))
-        }
-        return out
+      // ─── Call Claude ────────────────────────────────────────────────────
+      const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5"
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          // Content generation needs no reasoning; disabling thinking keeps the
+          // response fast and makes the first content block the text (Sonnet 5
+          // runs adaptive thinking by default, which would otherwise be content[0]).
+          thinking: { type: "disabled" },
+          max_tokens: 3000, // 6 cards * ~400 chars JSON each, with margin
+          messages: [{ role: "user", content: userPrompt }],
+        }),
       })
-    } catch (e) {
-      console.error("[fill-carousel] JSON parse failed", e, rawText.slice(0, 500))
-      return NextResponse.json(
-        { error: "Claude returned invalid JSON. Try regenerating." },
-        { status: 502 }
-      )
+
+      if (!response.ok) {
+        const err = await response.text().catch(() => "")
+        console.error("[fill-carousel] Anthropic error", err)
+        let detail: string | undefined
+        try { detail = JSON.parse(err)?.error?.message } catch { /* ignore */ }
+        return NextResponse.json(
+          { error: detail || "Carousel fill failed. Please try again." },
+          { status: response.status === 401 ? 401 : 500 }
+        )
+      }
+
+      const data = await response.json()
+      const rawText = (data.content?.find((b: { type?: string; text?: string }) => b.type === "text")?.text) ?? ""
+      if (!rawText) {
+        return NextResponse.json({ error: "Empty response from Claude" }, { status: 500 })
+      }
+
+      // ─── Parse + normalize cards ────────────────────────────────────────
+      const fenced = rawText.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/)
+      const jsonText = (fenced ? fenced[1] : rawText).trim()
+
+      try {
+        const parsed = JSON.parse(jsonText)
+        if (!parsed || typeof parsed !== "object") throw new Error("expected object")
+        const arr = Array.isArray(parsed?.cards) ? parsed.cards : null
+        if (!arr || arr.length !== CARD_COUNT) {
+          throw new Error(`expected cards array of length ${CARD_COUNT}, got ${arr ? arr.length : "n/a"}`)
+        }
+        cards = arr.map((card: unknown) => {
+          if (!card || typeof card !== "object" || Array.isArray(card)) {
+            throw new Error("each card must be a JSON object")
+          }
+          const out: Record<string, string> = {}
+          for (const [k, v] of Object.entries(card as Record<string, unknown>)) {
+            if (typeof v === "string") out[k] = stripEmDashes(v)
+            else if (v !== undefined && v !== null) out[k] = stripEmDashes(String(v))
+          }
+          return out
+        })
+      } catch (e) {
+        console.error("[fill-carousel] JSON parse failed", e, rawText.slice(0, 500))
+        return NextResponse.json(
+          { error: "Claude returned invalid JSON. Try regenerating." },
+          { status: 502 }
+        )
+      }
+    } else {
+      if (!Array.isArray(cardsOverride) || cardsOverride.length !== CARD_COUNT) {
+        return NextResponse.json({ error: `cards must be an array of ${CARD_COUNT} slot objects` }, { status: 400 })
+      }
+      const filteredCards: Record<string, string>[] = []
+      for (const c of cardsOverride) {
+        const f = filterSlots(c, manifest.slots)
+        if (!f) return NextResponse.json({ error: "each card must be an object of slot values" }, { status: 400 })
+        filteredCards.push(f)
+      }
+      cards = filteredCards
     }
 
     // ─── Render + persist 6 cards ───────────────────────────────────────
@@ -202,7 +232,7 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
     const cardUrls: string[] = []
     for (let i = 0; i < CARD_COUNT; i++) {
       const cardItemId = `${baseItemId}_c${i + 1}`
-      const cardHtml = renderTemplate(templateHtml, cards[i], palette)
+      const cardHtml = renderTemplate(templateHtml, cards[i], palette, media, hidden[i])
       const cardBlobPath = assetBlobPath(pillar, ASSET_TYPE, cardItemId)
       if (!cardBlobPath) {
         return NextResponse.json({ error: `Could not build blob path for card ${i + 1}` }, { status: 500 })
@@ -228,6 +258,11 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
         // Cache the per-card URLs so the zip-download endpoint can pull
         // each card without re-running Claude.
         kv.set(`${baseKey}:cards`, JSON.stringify(cardUrls)),
+        // Cache the raw filtered card slot values, so a restored carousel
+        // can populate the slot editor + media re-render.
+        kv.set(`${baseKey}:slots`, JSON.stringify(cards)),
+        // ...and which slots each card hides, so the toggles restore too.
+        kv.set(`${baseKey}:hidden`, JSON.stringify(hidden)),
       ])
     } catch {
       /* KV cache is best-effort */
@@ -243,6 +278,8 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
       filename: assetFilename(pillar, ASSET_TYPE, baseItemId),
       templateId,
       cardCount: CARD_COUNT,
+      cards,
+      hidden,
     })
   } catch (error) {
     console.error("[fill-carousel] error", error)

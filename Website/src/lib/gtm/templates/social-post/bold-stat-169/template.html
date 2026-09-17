@@ -8,6 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
   :root {
+    --bg-image:     {{BG_IMAGE}};
+    --bg-opacity:   {{BG_OPACITY}};
     --primary:      {{PRIMARY}};
     --primary-light:{{PRIMARY_LIGHT}};
     --primary-dark: {{PRIMARY_DARK}};
@@ -95,10 +97,17 @@
     font-size: 20px; font-weight: 400;
     letter-spacing: 0.05em; color: rgba(255,255,255,0.55);
   }
+  .stage .bg {
+    position: absolute; inset: 0;
+    background: var(--bg-image) center / cover no-repeat;
+    opacity: var(--bg-opacity);
+    pointer-events: none; z-index: 0;
+  }
 </style>
 </head>
 <body>
 <div class="stage">
+  <div class="bg"></div>
   <svg class="geo" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <path d="M600 600 L600 220 L440 0 L220 0 L440 220 L440 600 Z" fill="white" fill-opacity="0.05"/>
     <path d="M600 600 L600 360 L400 100 L200 100 L400 300 L400 600 Z" fill="white" fill-opacity="0.04"/>
@@ -107,11 +116,11 @@
 
   <div class="body-area">
     <div class="left">
-      <div class="eyebrow">{{LABEL}}</div>
-      <p class="tagline">{{TAGLINE}}</p>
+      <div class="eyebrow" data-slot="LABEL">{{LABEL}}</div>
+      <p class="tagline" data-slot="TAGLINE">{{TAGLINE}}</p>
     </div>
     <div class="right">
-      <div class="stat">{{STAT}}</div>
+      <div class="stat" data-slot="STAT">{{STAT}}</div>
     </div>
   </div>
 

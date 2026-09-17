@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <style>
   :root {
+    --bg-image:     {{BG_IMAGE}};
+    --bg-opacity:   {{BG_OPACITY}};
     --primary:       {{PRIMARY}};
     --primary-light: {{PRIMARY_LIGHT}};
     --primary-dark:  {{PRIMARY_DARK}};
@@ -22,6 +24,7 @@
   }
 
   .stage {
+    position: relative;
     width: 1080px; height: 1440px;
     flex-shrink: 0; transform-origin: center center;
     background: #ffffff;
@@ -107,20 +110,30 @@
     letter-spacing: 0.02em;
     white-space: nowrap;
   }
+  .stage .bg {
+    position: absolute; inset: 0;
+    background: var(--bg-image) center / cover no-repeat;
+    opacity: var(--bg-opacity);
+    pointer-events: none; z-index: 0;
+  }
+  .stage > *:not(.bg) {
+    position: relative; z-index: 1;
+  }
 </style>
 </head>
 <body>
 <div class="stage">
+  <div class="bg"></div>
 
   <header class="header">
-    <div class="eyebrow">{{LABEL}}</div>
-    <h1 class="headline">{{HEADLINE}}</h1>
+    <div class="eyebrow" data-slot="LABEL">{{LABEL}}</div>
+    <h1 class="headline" data-slot="HEADLINE">{{HEADLINE}}</h1>
   </header>
 
   <main class="main">
     <div class="quote-mark">&ldquo;</div>
-    <p class="quote">{{QUOTE}}</p>
-    <p class="attribution">{{ATTRIBUTION}}</p>
+    <p class="quote" data-slot="QUOTE">{{QUOTE}}</p>
+    <p class="attribution" data-slot="ATTRIBUTION">{{ATTRIBUTION}}</p>
   </main>
 
   <footer class="footer">
@@ -145,7 +158,7 @@
         </linearGradient>
       </defs>
     </svg>
-    <span class="cta">{{CTA}} &rarr;</span>
+    <span class="cta" data-slot="CTA">{{CTA}} &rarr;</span>
   </footer>
 
 </div>

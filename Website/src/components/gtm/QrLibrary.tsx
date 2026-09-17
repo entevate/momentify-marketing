@@ -23,10 +23,10 @@ import {
 
 const card: React.CSSProperties = {
   background: '#fff',
-  border: '1px solid rgba(0,0,0,0.1)',
-  borderRadius: '8px',
+  border: '1px solid var(--gtm-border)',
+  borderRadius: '12px',
   padding: '20px',
-  boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+  boxShadow: 'var(--gtm-shadow)',
 }
 
 const label: React.CSSProperties = {
@@ -35,7 +35,7 @@ const label: React.CSSProperties = {
   fontWeight: 700,
   textTransform: 'uppercase',
   letterSpacing: '1px',
-  color: 'rgba(0,0,0,0.45)',
+  color: 'var(--gtm-text-muted)',
   marginBottom: '6px',
 }
 
@@ -43,10 +43,10 @@ const input: React.CSSProperties = {
   width: '100%',
   padding: '9px 11px',
   fontSize: '13px',
-  border: '1px solid rgba(0,0,0,0.15)',
+  border: '1px solid var(--gtm-border-strong)',
   borderRadius: '6px',
   boxSizing: 'border-box',
-  color: '#12243f',
+  color: 'var(--gtm-text-primary)',
   background: '#fff',
 }
 
@@ -138,9 +138,9 @@ function QrPreview({ id, fg, bg, px }: { id: string; fg: string; bg: string; px:
     }
   }, [id, fg, bg, px])
   return (
-    <div style={{ width: px, height: px, borderRadius: '8px', border: '1px solid rgba(0,0,0,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'repeating-conic-gradient(#f0f0f0 0% 25%, #fff 0% 50%) 0 0 / 16px 16px', overflow: 'hidden', flexShrink: 0 }}>
+    <div style={{ width: px, height: px, borderRadius: '8px', border: '1px solid var(--gtm-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'repeating-conic-gradient(var(--gtm-surface-2) 0% 25%, #fff 0% 50%) 0 0 / 16px 16px', overflow: 'hidden', flexShrink: 0 }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      {src ? <img src={src} alt="QR preview" width={px} height={px} style={{ display: 'block' }} /> : <span style={{ fontSize: '11px', color: 'rgba(0,0,0,0.4)' }}>…</span>}
+      {src ? <img src={src} alt="QR preview" width={px} height={px} style={{ display: 'block' }} /> : <span style={{ fontSize: '11px', color: 'var(--gtm-text-muted)' }}>…</span>}
     </div>
   )
 }
@@ -213,8 +213,8 @@ function Builder({ initial, campaigns, onSaved, onCancel }: BuilderProps) {
       title={color}
       style={{
         width: '28px', height: '28px', borderRadius: '6px', cursor: 'pointer', padding: 0,
-        background: color === 'transparent' ? 'repeating-conic-gradient(#e0e0e0 0% 25%, #fff 0% 50%) 0 0 / 10px 10px' : color,
-        border: active ? '2px solid #1A56DB' : '1px solid rgba(0,0,0,0.15)',
+        background: color === 'transparent' ? 'repeating-conic-gradient(var(--gtm-border-strong) 0% 25%, #fff 0% 50%) 0 0 / 10px 10px' : color,
+        border: active ? '2px solid var(--gtm-accent-text)' : '1px solid var(--gtm-border-strong)',
         boxShadow: active ? '0 0 0 2px rgba(246,138,50,0.25)' : 'none',
       }}
     />
@@ -228,9 +228,9 @@ function Builder({ initial, campaigns, onSaved, onCancel }: BuilderProps) {
         lineHeight: 1.55,
         padding: '8px 11px',
         borderRadius: '6px',
-        background: tone === 'red' ? '#fee2e2' : tone === 'amber' ? '#fef3c7' : 'rgba(25,34,77,0.05)',
-        border: `1px solid ${tone === 'red' ? '#fecaca' : tone === 'amber' ? '#fde68a' : 'rgba(25,34,77,0.12)'}`,
-        color: tone === 'red' ? '#b91c1c' : tone === 'amber' ? '#92400e' : '#3a4152',
+        background: tone === 'red' ? '#fee2e2' : tone === 'amber' ? '#fef3c7' : 'var(--gtm-surface-2)',
+        border: `1px solid ${tone === 'red' ? '#fecaca' : tone === 'amber' ? '#fde68a' : 'var(--gtm-border)'}`,
+        color: tone === 'red' ? '#b91c1c' : tone === 'amber' ? '#92400e' : 'var(--gtm-text-secondary)',
       }}
     >
       {text}
@@ -238,8 +238,8 @@ function Builder({ initial, campaigns, onSaved, onCancel }: BuilderProps) {
   )
 
   return (
-    <div ref={panelRef} style={{ ...card, marginBottom: '24px', borderTop: '3px solid #1A56DB', scrollMarginTop: '12px' }}>
-      <p style={{ margin: '0 0 18px 0', fontSize: '15px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.02em', color: '#12243f' }}>
+    <div ref={panelRef} style={{ ...card, marginBottom: '24px', borderTop: '3px solid var(--gtm-accent-text)', scrollMarginTop: '12px' }}>
+      <p style={{ margin: '0 0 18px 0', fontSize: '15px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.02em', color: 'var(--gtm-text-primary)' }}>
         {initial ? `Edit QR Code${initial.name ? ` — ${initial.name}` : ''}` : 'New QR Code'}
       </p>
       <div style={{ display: 'flex', gap: '28px', flexWrap: 'wrap' }}>
@@ -252,7 +252,7 @@ function Builder({ initial, campaigns, onSaved, onCancel }: BuilderProps) {
           <div style={{ marginBottom: '14px' }}>
             <label style={label}>Destination URL</label>
             <input style={input} placeholder="https://proven-athlete.com/signup" value={destination} onChange={(e) => setDestination(e.target.value)} />
-            <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: 'rgba(0,0,0,0.45)', lineHeight: 1.5 }}>
+            <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: 'var(--gtm-text-muted)', lineHeight: 1.5 }}>
               The QR encodes a short tracking link, so you can change this later — even after printing.
             </p>
           </div>
@@ -277,8 +277,8 @@ function Builder({ initial, campaigns, onSaved, onCancel }: BuilderProps) {
                     style={{
                       display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 12px',
                       fontSize: '11.5px', fontWeight: on ? 700 : 500, borderRadius: '999px', cursor: 'pointer',
-                      background: on ? 'rgba(25,34,77,0.92)' : '#fff', color: on ? '#fff' : '#12243f',
-                      border: on ? '1px solid #12243f' : '1px solid rgba(0,0,0,0.18)',
+                      background: on ? 'var(--gtm-text-primary)' : '#fff', color: on ? '#fff' : 'var(--gtm-text-primary)',
+                      border: on ? '1px solid var(--gtm-text-primary)' : '1px solid var(--gtm-border-strong)',
                     }}
                   >
                     <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: p.color, flexShrink: 0 }} />
@@ -288,21 +288,21 @@ function Builder({ initial, campaigns, onSaved, onCancel }: BuilderProps) {
                 )
               })}
             </div>
-            <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: 'rgba(0,0,0,0.45)' }}>Tag one or more pillars to sort and filter the library.</p>
+            <p style={{ margin: '6px 0 0 0', fontSize: '11px', color: 'var(--gtm-text-muted)' }}>Tag one or more pillars to sort and filter the library.</p>
           </div>
           <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', marginBottom: '14px' }}>
             <div>
               <label style={label}>Code Color</label>
               <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                 {QR_FG_PRESETS.map((c) => swatch(c, fg === c, () => setFg(c)))}
-                <input type="color" value={fg} onChange={(e) => setFg(e.target.value)} title="Custom color" style={{ width: '28px', height: '28px', padding: 0, border: '1px solid rgba(0,0,0,0.15)', borderRadius: '6px', cursor: 'pointer', background: '#fff' }} />
+                <input type="color" value={fg} onChange={(e) => setFg(e.target.value)} title="Custom color" style={{ width: '28px', height: '28px', padding: 0, border: '1px solid var(--gtm-border-strong)', borderRadius: '6px', cursor: 'pointer', background: '#fff' }} />
               </div>
             </div>
             <div>
               <label style={label}>Background</label>
               <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                 {QR_BG_PRESETS.map((c) => swatch(c, bg === c, () => setBg(c)))}
-                <input type="color" value={bg === 'transparent' ? '#ffffff' : bg} onChange={(e) => setBg(e.target.value)} title="Custom color" style={{ width: '28px', height: '28px', padding: 0, border: '1px solid rgba(0,0,0,0.15)', borderRadius: '6px', cursor: 'pointer', background: '#fff' }} />
+                <input type="color" value={bg === 'transparent' ? '#ffffff' : bg} onChange={(e) => setBg(e.target.value)} title="Custom color" style={{ width: '28px', height: '28px', padding: 0, border: '1px solid var(--gtm-border-strong)', borderRadius: '6px', cursor: 'pointer', background: '#fff' }} />
               </div>
             </div>
           </div>
@@ -311,12 +311,12 @@ function Builder({ initial, campaigns, onSaved, onCancel }: BuilderProps) {
           {weakContrast && !inverted && warnBox('amber', `Low contrast (ratio ${ratio.toFixed(1)}:1) — this may scan poorly in bad lighting or from a distance. Aim for a clearly dark code on a light background.`)}
           {destinationChanged && warnBox('amber', 'Destination changed: the moment you save, every existing copy of this code — including anything already printed — sends people to the new URL. Scan history is kept.')}
           {colorsChanged && warnBox('info', 'Color changes only affect files you download from now on. Already-printed codes keep their old look and keep working — the tracking link inside is unchanged.')}
-          {error && <p style={{ margin: '0 0 10px 0', fontSize: '12px', color: '#c62828' }}>{error}</p>}
+          {error && <p style={{ margin: '0 0 10px 0', fontSize: '12px', color: 'var(--gtm-danger)' }}>{error}</p>}
           <div style={{ display: 'flex', gap: '10px' }}>
-            <button onClick={save} disabled={saving} style={{ padding: '10px 22px', fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', background: '#00a651', color: '#fff', borderRadius: '6px', cursor: saving ? 'wait' : 'pointer' }}>
+            <button onClick={save} disabled={saving} style={{ padding: '10px 22px', fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', background: '#0AA891', color: '#fff', borderRadius: '6px', cursor: saving ? 'wait' : 'pointer' }}>
               {saving ? 'Saving...' : initial ? 'Save Changes' : 'Create QR Code'}
             </button>
-            <button onClick={onCancel} style={{ padding: '10px 18px', fontSize: '13px', fontWeight: 600, background: '#fff', color: '#12243f', border: '1px solid rgba(0,0,0,0.2)', borderRadius: '6px', cursor: 'pointer' }}>
+            <button onClick={onCancel} style={{ padding: '10px 18px', fontSize: '13px', fontWeight: 600, background: '#fff', color: 'var(--gtm-text-primary)', border: '1px solid var(--gtm-border-strong)', borderRadius: '6px', cursor: 'pointer' }}>
               Cancel
             </button>
           </div>
@@ -328,7 +328,7 @@ function Builder({ initial, campaigns, onSaved, onCancel }: BuilderProps) {
           <button
             onClick={() => { navigator.clipboard.writeText(shortUrl); setCopied(true); setTimeout(() => setCopied(false), 1600) }}
             title="Copy tracking link"
-            style={{ fontSize: '11.5px', color: copied ? '#00753a' : 'rgba(0,0,0,0.55)', background: 'rgba(0,0,0,0.045)', border: 'none', borderRadius: '5px', padding: '5px 10px', cursor: 'pointer', fontFamily: 'monospace' }}
+            style={{ fontSize: '11.5px', color: copied ? '#0AA891' : 'var(--gtm-text-secondary)', background: 'rgba(0,0,0,0.045)', border: 'none', borderRadius: '5px', padding: '5px 10px', cursor: 'pointer', fontFamily: 'monospace' }}
           >
             {copied ? '✓ Copied' : shortUrl.replace(/^https?:\/\//, '')}
           </button>
@@ -340,12 +340,12 @@ function Builder({ initial, campaigns, onSaved, onCancel }: BuilderProps) {
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
             {(['png', 'svg', 'jpeg'] as const).map((f) => (
-              <button key={f} onClick={() => downloadQr(draft, f, size)} style={{ padding: '8px 16px', fontSize: '12px', fontWeight: 800, letterSpacing: '0.05em', background: '#12243f', color: '#fff', borderRadius: '6px', cursor: 'pointer', textTransform: 'uppercase' }}>
+              <button key={f} onClick={() => downloadQr(draft, f, size)} style={{ padding: '8px 16px', fontSize: '12px', fontWeight: 800, letterSpacing: '0.05em', background: 'var(--gtm-text-primary)', color: '#fff', borderRadius: '6px', cursor: 'pointer', textTransform: 'uppercase' }}>
                 {f}
               </button>
             ))}
           </div>
-          {!initial && <p style={{ margin: 0, fontSize: '10.5px', color: 'rgba(0,0,0,0.4)', textAlign: 'center', lineHeight: 1.5 }}>Save before printing so the tracking link goes live.</p>}
+          {!initial && <p style={{ margin: 0, fontSize: '10.5px', color: 'var(--gtm-text-muted)', textAlign: 'center', lineHeight: 1.5 }}>Save before printing so the tracking link goes live.</p>}
         </div>
       </div>
     </div>
@@ -380,18 +380,18 @@ function ScanDetail({ detail }: { detail: QrScanDetail }) {
   const countries = breakdown((e) => e.country || '—')
 
   if (detail.events.length === 0) {
-    return <p style={{ margin: '14px 0 0 0', fontSize: '12.5px', color: 'rgba(0,0,0,0.45)' }}>No scans yet. Metrics appear the first time someone scans this code.</p>
+    return <p style={{ margin: '14px 0 0 0', fontSize: '12.5px', color: 'var(--gtm-text-muted)' }}>No scans yet. Metrics appear the first time someone scans this code.</p>
   }
 
   return (
-    <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(0,0,0,0.08)' }}>
+    <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--gtm-border)' }}>
       <p style={{ ...label, marginBottom: '10px' }}>Scans — last {days} days</p>
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: '3px', height: '54px', marginBottom: '4px' }}>
         {bars.map(([day, v]) => (
-          <div key={day} title={`${day}: ${v} scan${v === 1 ? '' : 's'}`} style={{ flex: 1, height: `${Math.max(4, (v / max) * 100)}%`, background: v ? '#1A56DB' : 'rgba(0,0,0,0.08)', borderRadius: '2px 2px 0 0' }} />
+          <div key={day} title={`${day}: ${v} scan${v === 1 ? '' : 's'}`} style={{ flex: 1, height: `${Math.max(4, (v / max) * 100)}%`, background: v ? 'var(--gtm-accent-text)' : 'rgba(0,0,0,0.08)', borderRadius: '2px 2px 0 0' }} />
         ))}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'rgba(0,0,0,0.4)', marginBottom: '14px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--gtm-text-muted)', marginBottom: '14px' }}>
         <span>{bars[0][0].slice(5)}</span>
         <span>{bars[bars.length - 1][0].slice(5)}</span>
       </div>
@@ -399,24 +399,24 @@ function ScanDetail({ detail }: { detail: QrScanDetail }) {
         <div>
           <p style={{ ...label, marginBottom: '8px' }}>Devices</p>
           {devices.map(([d, v]) => (
-            <p key={d} style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#12243f' }}>
+            <p key={d} style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'var(--gtm-text-primary)' }}>
               {DEVICE_ICONS[d] || ''} <span style={{ textTransform: 'capitalize' }}>{d}</span>
-              <span style={{ color: 'rgba(0,0,0,0.45)' }}> — {v} ({Math.round((v / detail.events.length) * 100)}%)</span>
+              <span style={{ color: 'var(--gtm-text-muted)' }}> — {v} ({Math.round((v / detail.events.length) * 100)}%)</span>
             </p>
           ))}
         </div>
         <div>
           <p style={{ ...label, marginBottom: '8px' }}>Countries</p>
           {countries.map(([c, v]) => (
-            <p key={c} style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#12243f' }}>
-              {c}<span style={{ color: 'rgba(0,0,0,0.45)' }}> — {v}</span>
+            <p key={c} style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'var(--gtm-text-primary)' }}>
+              {c}<span style={{ color: 'var(--gtm-text-muted)' }}> — {v}</span>
             </p>
           ))}
         </div>
         <div>
           <p style={{ ...label, marginBottom: '8px' }}>Recent</p>
           {detail.events.slice(0, 5).map((e, i) => (
-            <p key={i} style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'rgba(0,0,0,0.6)' }}>
+            <p key={i} style={{ margin: '0 0 4px 0', fontSize: '12px', color: 'var(--gtm-text-secondary)' }}>
               {new Date(e.at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
               {' · '}{DEVICE_ICONS[e.device] || e.device}{e.country ? ` · ${e.country}` : ''}
             </p>
@@ -492,7 +492,7 @@ export default function QrLibrary() {
           ].map(([l, v]) => (
             <div key={l}>
               <p style={{ ...label, marginBottom: '2px' }}>{l}</p>
-              <p style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: '#12243f', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v}</p>
+              <p style={{ margin: 0, fontSize: '20px', fontWeight: 800, color: 'var(--gtm-text-primary)', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v}</p>
             </div>
           ))}
         </div>
@@ -510,7 +510,7 @@ export default function QrLibrary() {
             </select>
           )}
           {!building && !editing && (
-            <button onClick={() => setBuilding(true)} style={{ padding: '10px 20px', fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', background: '#1A56DB', color: '#fff', borderRadius: '6px', cursor: 'pointer' }}>
+            <button onClick={() => setBuilding(true)} style={{ padding: '10px 20px', fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', background: 'var(--gtm-accent-text)', color: '#fff', borderRadius: '6px', cursor: 'pointer' }}>
               ＋ New QR Code
             </button>
           )}
@@ -529,13 +529,13 @@ export default function QrLibrary() {
 
       {/* Library */}
       {loading && codes.length === 0 ? (
-        <p style={{ fontSize: '13px', color: 'rgba(0,0,0,0.45)' }}>Loading QR codes...</p>
+        <p style={{ fontSize: '13px', color: 'var(--gtm-text-muted)' }}>Loading QR codes...</p>
       ) : visible.length === 0 ? (
         <div style={{ ...card, textAlign: 'center', padding: '48px 24px' }}>
-          <p style={{ margin: '0 0 6px 0', fontSize: '15px', fontWeight: 700, color: '#12243f' }}>
+          <p style={{ margin: '0 0 6px 0', fontSize: '15px', fontWeight: 700, color: 'var(--gtm-text-primary)' }}>
             {campaignFilter ? 'No codes in this campaign' : 'No QR codes yet'}
           </p>
-          <p style={{ margin: 0, fontSize: '13px', color: 'rgba(0,0,0,0.5)' }}>
+          <p style={{ margin: 0, fontSize: '13px', color: 'var(--gtm-text-muted)' }}>
             {campaignFilter ? 'Try a different campaign filter.' : 'Create your first trackable QR code — every scan is logged here.'}
           </p>
         </div>
@@ -547,7 +547,7 @@ export default function QrLibrary() {
                 <QrPreview id={c.id} fg={c.fg} bg={c.bg} px={84} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
-                    <p style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: '#12243f', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.name}</p>
+                    <p style={{ margin: 0, fontSize: '14px', fontWeight: 700, color: 'var(--gtm-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.name}</p>
                     {c.campaign && (
                       <span style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', padding: '3px 9px', borderRadius: '999px', background: 'rgba(246,138,50,0.14)', color: '#b05a10', whiteSpace: 'nowrap' }}>{c.campaign}</span>
                     )}
@@ -557,19 +557,19 @@ export default function QrLibrary() {
                       {c.pillars!.map((pid) => {
                         const p = QR_PILLARS.find((x) => x.id === pid)
                         return p ? (
-                          <span key={pid} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '9.5px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', padding: '2px 8px', borderRadius: '999px', background: 'rgba(25,34,77,0.06)', color: '#12243f', whiteSpace: 'nowrap' }}>
+                          <span key={pid} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '9.5px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', padding: '2px 8px', borderRadius: '999px', background: 'var(--gtm-surface-2)', color: 'var(--gtm-text-primary)', whiteSpace: 'nowrap' }}>
                             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: p.color }} />{p.label}
                           </span>
                         ) : null
                       })}
                     </div>
                   )}
-                  <p style={{ margin: '3px 0 8px 0', fontSize: '11.5px', color: 'rgba(0,0,0,0.5)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={c.destination}>
+                  <p style={{ margin: '3px 0 8px 0', fontSize: '11.5px', color: 'var(--gtm-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={c.destination}>
                     → {c.destination.replace(/^https?:\/\//, '')}
                   </p>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-                    <span style={{ fontSize: '24px', fontWeight: 800, color: '#12243f', lineHeight: 1 }}>{fmt(c.scans)}</span>
-                    <span style={{ fontSize: '11px', color: 'rgba(0,0,0,0.45)' }}>
+                    <span style={{ fontSize: '24px', fontWeight: 800, color: 'var(--gtm-text-primary)', lineHeight: 1 }}>{fmt(c.scans)}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--gtm-text-muted)' }}>
                       scan{c.scans === 1 ? '' : 's'}
                       {c.lastScanAt && ` · last ${new Date(c.lastScanAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
                     </span>
@@ -578,25 +578,25 @@ export default function QrLibrary() {
               </div>
 
               <div style={{ display: 'flex', gap: '6px', marginTop: '12px', flexWrap: 'wrap' }}>
-                <button onClick={() => toggleDetail(c.id)} style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 700, background: expanded === c.id ? '#12243f' : 'rgba(25,34,77,0.08)', color: expanded === c.id ? '#fff' : '#12243f', borderRadius: '5px', cursor: 'pointer' }}>
+                <button onClick={() => toggleDetail(c.id)} style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 700, background: expanded === c.id ? 'var(--gtm-text-primary)' : 'var(--gtm-surface-2)', color: expanded === c.id ? '#fff' : 'var(--gtm-text-primary)', borderRadius: '5px', cursor: 'pointer' }}>
                   {expanded === c.id ? 'Hide Metrics' : 'Metrics'}
                 </button>
-                <button onClick={() => downloadQr(c, 'png', 1024)} style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 600, background: '#fff', color: '#12243f', border: '1px solid rgba(0,0,0,0.15)', borderRadius: '5px', cursor: 'pointer' }}>
+                <button onClick={() => downloadQr(c, 'png', 1024)} style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 600, background: '#fff', color: 'var(--gtm-text-primary)', border: '1px solid var(--gtm-border-strong)', borderRadius: '5px', cursor: 'pointer' }}>
                   ↓ PNG
                 </button>
-                <button onClick={() => downloadQr(c, 'svg', 1024)} style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 600, background: '#fff', color: '#12243f', border: '1px solid rgba(0,0,0,0.15)', borderRadius: '5px', cursor: 'pointer' }}>
+                <button onClick={() => downloadQr(c, 'svg', 1024)} style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 600, background: '#fff', color: 'var(--gtm-text-primary)', border: '1px solid var(--gtm-border-strong)', borderRadius: '5px', cursor: 'pointer' }}>
                   ↓ SVG
                 </button>
                 <button
                   onClick={() => { navigator.clipboard.writeText(shortUrlFor(c.id)); setCopiedId(c.id); setTimeout(() => setCopiedId(null), 1600) }}
-                  style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 600, background: '#fff', color: copiedId === c.id ? '#00753a' : '#12243f', border: '1px solid rgba(0,0,0,0.15)', borderRadius: '5px', cursor: 'pointer' }}
+                  style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 600, background: '#fff', color: copiedId === c.id ? '#0AA891' : 'var(--gtm-text-primary)', border: '1px solid var(--gtm-border-strong)', borderRadius: '5px', cursor: 'pointer' }}
                 >
                   {copiedId === c.id ? '✓ Copied' : 'Copy Link'}
                 </button>
-                <button onClick={() => { setEditing(c); setBuilding(false); setExpanded(null) }} style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 600, background: '#fff', color: '#12243f', border: '1px solid rgba(0,0,0,0.15)', borderRadius: '5px', cursor: 'pointer' }}>
+                <button onClick={() => { setEditing(c); setBuilding(false); setExpanded(null) }} style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 600, background: '#fff', color: 'var(--gtm-text-primary)', border: '1px solid var(--gtm-border-strong)', borderRadius: '5px', cursor: 'pointer' }}>
                   Edit
                 </button>
-                <button onClick={() => setDeleting(c)} style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 600, background: '#fff', color: '#c62828', border: '1px solid rgba(198,40,40,0.3)', borderRadius: '5px', cursor: 'pointer', marginLeft: 'auto' }}>
+                <button onClick={() => setDeleting(c)} style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: 600, background: '#fff', color: 'var(--gtm-danger)', border: '1px solid var(--gtm-danger-border)', borderRadius: '5px', cursor: 'pointer', marginLeft: 'auto' }}>
                   Delete
                 </button>
               </div>
@@ -604,7 +604,7 @@ export default function QrLibrary() {
               {expanded === c.id && (
                 details[c.id]
                   ? <ScanDetail detail={details[c.id]} />
-                  : <p style={{ margin: '14px 0 0 0', fontSize: '12px', color: 'rgba(0,0,0,0.45)' }}>Loading scans...</p>
+                  : <p style={{ margin: '14px 0 0 0', fontSize: '12px', color: 'var(--gtm-text-muted)' }}>Loading scans...</p>
               )}
             </div>
           ))}
@@ -628,16 +628,16 @@ function ConfirmModal({ title, message, onConfirm, onCancel }: { title: string; 
   return (
     <div
       onClick={onCancel}
-      style={{ position: 'fixed', inset: 0, background: 'rgba(18,36,63,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, fontFamily: font }}
+      style={{ position: 'fixed', inset: 0, background: 'rgba(6,19,65,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, fontFamily: font }}
     >
       <div onClick={(e) => e.stopPropagation()} style={{ background: '#fff', borderRadius: 10, padding: 24, maxWidth: 440, width: '90%', boxShadow: '0 12px 40px rgba(0,0,0,0.25)' }}>
-        <p style={{ margin: '0 0 8px 0', fontSize: 16, fontWeight: 700, color: '#12243f' }}>{title}</p>
-        <p style={{ margin: '0 0 20px 0', fontSize: 13, color: 'rgba(0,0,0,0.65)', lineHeight: 1.55 }}>{message}</p>
+        <p style={{ margin: '0 0 8px 0', fontSize: 16, fontWeight: 700, color: 'var(--gtm-text-primary)' }}>{title}</p>
+        <p style={{ margin: '0 0 20px 0', fontSize: 13, color: 'var(--gtm-text-secondary)', lineHeight: 1.55 }}>{message}</p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button onClick={onCancel} style={{ padding: '9px 16px', fontSize: 13, fontWeight: 600, background: '#fff', color: '#12243f', border: '1px solid rgba(0,0,0,0.2)', borderRadius: 6, cursor: 'pointer' }}>
+          <button onClick={onCancel} style={{ padding: '9px 16px', fontSize: 13, fontWeight: 600, background: '#fff', color: 'var(--gtm-text-primary)', border: '1px solid var(--gtm-border-strong)', borderRadius: 6, cursor: 'pointer' }}>
             Cancel
           </button>
-          <button onClick={onConfirm} style={{ padding: '9px 16px', fontSize: 13, fontWeight: 700, background: '#c62828', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer' }}>
+          <button onClick={onConfirm} style={{ padding: '9px 16px', fontSize: 13, fontWeight: 700, background: 'var(--gtm-danger)', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer' }}>
             Delete
           </button>
         </div>

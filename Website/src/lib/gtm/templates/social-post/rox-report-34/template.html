@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <style>
   :root {
+    --bg-image:     {{BG_IMAGE}};
+    --bg-opacity:   {{BG_OPACITY}};
     --primary: {{PRIMARY}};
     --light-bg: {{LIGHT_BG}};
     --decor-pattern: {{DECOR_PATTERN}};
@@ -100,31 +102,41 @@
     font-size: 26px; font-weight: 400;
     letter-spacing: 0.04em; color: rgba(6,19,65,0.55);
   }
+  .stage .bg {
+    position: absolute; inset: 0;
+    background: var(--bg-image) center / cover no-repeat;
+    opacity: var(--bg-opacity);
+    pointer-events: none; z-index: 0;
+  }
+  .stage > *:not(.bg) {
+    position: relative; z-index: 1;
+  }
 </style>
 </head>
 <body>
 <div class="stage">
+  <div class="bg"></div>
 
   <header class="masthead">
     <span class="masthead-left">ROX Report</span>
-    <span class="masthead-right">{{LABEL}}</span>
+    <span class="masthead-right" data-slot="LABEL">{{LABEL}}</span>
   </header>
 
   <main>
-    <h1 class="headline">{{HEADLINE}}</h1>
+    <h1 class="headline" data-slot="HEADLINE">{{HEADLINE}}</h1>
 
     <div class="stats-table">
       <div class="stat-row">
-        <span class="stat-number">{{STAT1}}</span>
-        <span class="stat-label">{{LABEL1}}</span>
+        <span class="stat-number" data-slot="STAT1">{{STAT1}}</span>
+        <span class="stat-label" data-slot="LABEL1">{{LABEL1}}</span>
       </div>
       <div class="stat-row">
-        <span class="stat-number">{{STAT2}}</span>
-        <span class="stat-label">{{LABEL2}}</span>
+        <span class="stat-number" data-slot="STAT2">{{STAT2}}</span>
+        <span class="stat-label" data-slot="LABEL2">{{LABEL2}}</span>
       </div>
       <div class="stat-row">
-        <span class="stat-number">{{STAT3}}</span>
-        <span class="stat-label">{{LABEL3}}</span>
+        <span class="stat-number" data-slot="STAT3">{{STAT3}}</span>
+        <span class="stat-label" data-slot="LABEL3">{{LABEL3}}</span>
       </div>
     </div>
   </main>
