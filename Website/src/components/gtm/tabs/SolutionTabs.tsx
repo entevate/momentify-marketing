@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react"
 import { Zap } from "lucide-react"
-import ContentBuilder from "./ContentBuilder"
+import ContentBuilder from "./ContentBuilderCanonical"
 import ContentLibrary from "./ContentLibrary"
 import ContentHistory from "./ContentHistory"
 import { paletteFor } from "@/lib/gtm/pillar-palettes"

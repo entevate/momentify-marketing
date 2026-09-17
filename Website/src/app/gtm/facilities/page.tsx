@@ -13,7 +13,7 @@ import {
   entevatePositioning,
 } from "@/lib/gtm/data/facilities"
 import type { GTMLayer } from "@/lib/gtm/data/facilities"
-import ContentBuilder from "@/components/gtm/tabs/ContentBuilder"
+import ContentBuilder from "@/components/gtm/tabs/ContentBuilderCanonical"
 import ContentLibrary from "@/components/gtm/tabs/ContentLibrary"
 import ContentHistory from "@/components/gtm/tabs/ContentHistory"
 import LibraryCountBadge from "@/components/gtm/LibraryCountBadge"
