@@ -3,7 +3,7 @@
 import type { ReactNode } from "react"
 import { Mail, Users, BarChart2 } from "lucide-react"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 export type EmailTabKey = "drafts" | "audiences" | "sends"
 

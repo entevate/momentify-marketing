@@ -5,14 +5,62 @@
   "aspectRatio": "16:9",
   "description": "Landscape dark multi-stat card. Headline left-aligned, three stat blocks spanning the width. Solution gradient with polygon shapes. For LinkedIn posts and event decks.",
   "slots": [
-    { "key": "LABEL",   "label": "Eyebrow label",      "kind": "eyebrow",     "maxChars": 40,  "example": "Field Sales Results · 2025" },
-    { "key": "HEADLINE","label": "Section headline",   "kind": "headline",    "maxChars": 52,  "example": "What Happens When Reps Walk in Ready" },
-    { "key": "STAT1",   "label": "First stat value",   "kind": "stat_number", "maxChars": 8,   "example": "41%" },
-    { "key": "LABEL1",  "label": "First stat label",   "kind": "stat_label",  "maxChars": 36,  "example": "increase in close rate" },
-    { "key": "STAT2",   "label": "Second stat value",  "kind": "stat_number", "maxChars": 8,   "example": "3.2x" },
-    { "key": "LABEL2",  "label": "Second stat label",  "kind": "stat_label",  "maxChars": 36,  "example": "more pipeline from field visits" },
-    { "key": "STAT3",   "label": "Third stat value",   "kind": "stat_number", "maxChars": 8,   "example": "19 min" },
-    { "key": "LABEL3",  "label": "Third stat label",   "kind": "stat_label",  "maxChars": 36,  "example": "saved per rep per customer stop" }
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 40,
+      "example": "Field Sales Results · 2025"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Section headline",
+      "kind": "headline",
+      "maxChars": 52,
+      "example": "What Happens When Reps Walk in Ready"
+    },
+    {
+      "key": "STAT1",
+      "label": "First stat value",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "41%"
+    },
+    {
+      "key": "LABEL1",
+      "label": "First stat label",
+      "kind": "stat_label",
+      "maxChars": 36,
+      "example": "increase in close rate"
+    },
+    {
+      "key": "STAT2",
+      "label": "Second stat value",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "3.2x"
+    },
+    {
+      "key": "LABEL2",
+      "label": "Second stat label",
+      "kind": "stat_label",
+      "maxChars": 36,
+      "example": "more pipeline from field visits"
+    },
+    {
+      "key": "STAT3",
+      "label": "Third stat value",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "19 min"
+    },
+    {
+      "key": "LABEL3",
+      "label": "Third stat label",
+      "kind": "stat_label",
+      "maxChars": 36,
+      "example": "saved per rep per customer stop"
+    }
   ],
   "sampleData": {
     "LABEL": "Field Sales Results · 2025",

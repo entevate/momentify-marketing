@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react"
 import { Plus, Trash2, Users, ChevronRight, Upload } from "lucide-react"
 import type { ResendAudience, ResendContact } from "@/lib/gtm/email-types"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 export default function AudiencesTab() {
   const [audiences, setAudiences] = useState<ResendAudience[]>([])

@@ -4,7 +4,7 @@ import React from "react"
 import type { CalendarTask } from "@/lib/gtm/calendar-types"
 import DayColumn from "./DayColumn"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 

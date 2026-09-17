@@ -10,7 +10,7 @@
 
 import QrLibrary from "@/components/gtm/QrLibrary"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 export default function QrPage() {
   return (

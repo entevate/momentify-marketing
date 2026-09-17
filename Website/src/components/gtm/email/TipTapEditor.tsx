@@ -25,7 +25,7 @@ import Placeholder from "@tiptap/extension-placeholder"
 import Image from "@tiptap/extension-image"
 import { useEffect, useRef, useState } from "react"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 interface Props {
   /** Initial HTML to render. Subsequent changes via prop update do NOT replace editor content. */
@@ -221,7 +221,7 @@ const toolbarBtn: React.CSSProperties = {
   border: "1px solid var(--gtm-border)",
   borderRadius: 4,
   cursor: "pointer",
-  fontFamily: "'Inter', system-ui, sans-serif",
+  fontFamily: "var(--font-inter), 'Inter', system-ui, sans-serif",
 }
 
 const sep: React.CSSProperties = {

@@ -10,7 +10,7 @@ import { useEffect, useState } from "react"
 import { Sparkles, Plus } from "lucide-react"
 import type { ContentItem } from "@/lib/gtm/content-types"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 interface Props {
   onSeed: (libraryItemId: string, touchIndex: number) => void

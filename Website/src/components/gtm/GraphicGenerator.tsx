@@ -11,7 +11,7 @@ import {
 } from "@/components/social-toolkit/backgroundData"
 import { Download, ArrowLeft, RotateCw } from "lucide-react"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 const SOLUTION_BRAND_MAP: Record<string, string> = {
   "trade-shows": "trade-shows",

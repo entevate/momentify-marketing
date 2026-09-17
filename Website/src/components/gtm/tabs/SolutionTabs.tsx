@@ -16,7 +16,7 @@ export function dispatchLibraryChanged(solution: string) {
   }
 }
 
-const font = "'Inter', system-ui, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, sans-serif"
 
 export type VerticalOption = { id: string; label: string }
 

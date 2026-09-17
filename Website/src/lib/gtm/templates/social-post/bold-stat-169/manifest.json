@@ -5,15 +5,31 @@
   "aspectRatio": "16:9",
   "description": "Two-column landscape stat card. Eyebrow and tagline on the left, enormous number dominating the right. Solution gradient background with brand polygon shapes. For LinkedIn banners and X header images.",
   "slots": [
-    { "key": "LABEL",    "label": "Short label above the tagline", "kind": "eyebrow",     "maxChars": 40,  "example": "Badge Scan Performance · Q1 2025" },
-    { "key": "STAT",     "label": "Headline stat or number",       "kind": "stat_number", "maxChars": 8,   "example": "94%" },
-    { "key": "TAGLINE",  "label": "Tagline to the left of stat",   "kind": "stat_label",  "maxChars": 120, "example": "post-event attendee retention rate across all Momentify-powered venues." },
-    { "key": "BRAND",    "label": "Company / brand name",          "kind": "eyebrow",     "maxChars": 24,  "example": "Momentify" }
+    {
+      "key": "LABEL",
+      "label": "Short label above the tagline",
+      "kind": "eyebrow",
+      "maxChars": 40,
+      "example": "Badge Scan Performance · Q1 2025"
+    },
+    {
+      "key": "STAT",
+      "label": "Headline stat or number",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "94%"
+    },
+    {
+      "key": "TAGLINE",
+      "label": "Tagline to the left of stat",
+      "kind": "stat_label",
+      "maxChars": 120,
+      "example": "post-event attendee retention rate across all Momentify-powered venues."
+    }
   ],
   "sampleData": {
     "LABEL": "Badge Scan Performance · Q1 2025",
     "STAT": "94%",
-    "TAGLINE": "post-event attendee retention rate across all Momentify-powered venues.",
-    "BRAND": "Momentify"
+    "TAGLINE": "post-event attendee retention rate across all Momentify-powered venues."
   }
 }

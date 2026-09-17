@@ -11,7 +11,7 @@
 import { useEffect, useState } from "react"
 import type { EmailAggregateMetrics, EmailEvent } from "@/lib/gtm/email-types"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 interface Props {
   /** Optional pillar filter — narrows roll-up to one solution. */

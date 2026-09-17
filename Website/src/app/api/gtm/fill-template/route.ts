@@ -9,6 +9,22 @@ import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
 import { parseRenderMedia, filterSlots, parseHidden } from "@/lib/gtm/render-media"
+import { solutionGuidance } from "@/lib/gtm/builder-prompts"
+
+/**
+ * The social-post brief that ContentBuilder saves ships three platform
+ * sections concatenated with `---LINKEDIN---`, `---INSTAGRAM---`, and
+ * `---TWITTER---` markers. A single social-post graphic is almost always
+ * LinkedIn-shaped (long-form professional voice, headline + subhead
+ * pattern), so grounding the fill in the LinkedIn slice removes tone
+ * ambiguity. Fallback: if the brief has no markers (e.g. a legacy save
+ * or a fresh manual paste) we use the whole thing.
+ */
+function extractLinkedInBrief(brief: string): string {
+  const m = brief.match(/---\s*LINKEDIN\s*---([\s\S]*?)(?=---\s*(?:INSTAGRAM|TWITTER)\s*---|$)/i)
+  const slice = m?.[1]?.trim()
+  return slice && slice.length > 40 ? slice : brief
+}
 
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 
@@ -116,23 +132,37 @@ export async function POST(request: Request) {
         .map((s) => `- "${s.key}" (${s.kind}, max ${s.maxChars} chars): ${s.label}. Example: ${s.example}`)
         .join("\n")
 
+      // Pillar-specific reorientation. Prepended so Claude fixes the domain
+      // (trade shows vs recruiting vs field sales, etc.) BEFORE it sees the
+      // brand-voice rules and the brief. Without this the fill leans on
+      // whatever trade-show flavored slot examples happen to be in the
+      // manifest and produces off-domain copy.
+      const guidance = solutionGuidance[pillar] || ""
+
+      // Ground the fill in the LinkedIn slice of the brief when the brief
+      // is the ContentBuilder's ---PLATFORM--- multi-section output. A
+      // single social-post graphic maps to LinkedIn's voice cleanest, and
+      // fill quality collapses when Claude has to arbitrate between three
+      // conflicting tones in one blob.
+      const focusedBrief = extractLinkedInBrief(briefText).slice(0, 2400)
+
       const userPrompt = `You are writing copy for a Momentify ${manifest.aspectRatio} ${manifest.assetType} graphic.
 
 Template: ${manifest.label}
 Design intent: ${manifest.description}
 Pillar palette: ${pillar}
 
-BRAND VOICE RULES (non-negotiable):
-- Momentify is a fan engagement and event technology company. Bold, energetic, sports/events-focused tone.
+${guidance ? `${guidance}\n\n` : ""}BRAND VOICE RULES (non-negotiable):
+- Momentify is an in-person engagement operating system (ROX framework). Confident, evidence-first, sharp cadence.
 - Use hyphens (-), commas, or periods. NEVER use em-dashes ( - ) or en-dashes (-).
-- CTAs must be action-oriented and low-friction: "Book a Demo", "Reserve Your Spot", "See It Live". NEVER "Sign up", "Subscribe", "Buy now".
-- Speak to event organizers, sports teams, venues, and fan experience professionals.
+- CTAs must be action-oriented and low-friction: "Book a ROX Audit", "See a Demo", "Reserve a Spot". NEVER "Sign up", "Subscribe", "Buy now".
+- Speak to the buyer the guidance block above named. Do not drift into a different pillar's vocabulary.
 - Respect every slot's maxChars. Going over breaks the layout.
-- AVOID WIDOWS AND ORPHANS: never let the last line of a multi-line slot end with a single short word. Prefer copy whose word count divides evenly into 2-4 visual lines. If a sentence wraps to leave one word alone on a line, rewrite it (shorter words, restructured phrasing, or trim the overall length).
-- Vary word lengths so wrapping looks balanced. Long final words help anchor the last line; short throwaways at the end create widows.
+- Prefer copy whose word count divides evenly into 2-4 visual lines; vary word lengths so wrapping looks balanced.
+- DATA DISCIPLINE: any stat slot must use a number from the BRIEF or from Momentify's signature proof points ($50B measured, 10,000+ engagements, 65%+ ROX lift, $411M influenced pipeline, 92% utilization). Never fabricate percentages, dollar amounts, headcounts, or timeframes. If no honest number fits, use a descriptive label instead.
 
-BRIEF (use this as context, not verbatim copy):
-${briefText.slice(0, 2400)}
+BRIEF (context, not verbatim copy):
+${focusedBrief}
 
 SLOTS TO FILL (return JSON with these EXACT keys):
 ${slotSpec}
@@ -186,11 +216,33 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
         if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
           throw new Error("expected object")
         }
-        // Coerce all values to strings + strip em-dashes per brand voice
+        // Per-slot maxChars enforcement. Trim on a word boundary when
+        // possible so a truncated headline doesn't end mid-word; fall
+        // back to a hard slice if there's no whitespace to break at.
+        // The layout is CSS-fixed for the manifest maxChars — silent
+        // overflow was the audit's finding #8, producing cropped/broken
+        // graphics with no signal.
+        const maxByKey = new Map(manifest.slots.map((s) => [s.key, s.maxChars]))
+        const truncate = (key: string, val: string): string => {
+          const max = maxByKey.get(key)
+          if (!max || val.length <= max) return val
+          const soft = val.slice(0, max + 1)
+          const lastSpace = soft.lastIndexOf(" ")
+          const cut = lastSpace >= Math.floor(max * 0.7) ? soft.slice(0, lastSpace) : val.slice(0, max)
+          console.warn(`[fill-template] truncated ${key} from ${val.length} to ${cut.length} chars (maxChars=${max})`)
+          return cut
+        }
+
+        // Coerce all values to strings, strip em-dashes, enforce maxChars.
         slots = {}
         for (const [k, v] of Object.entries(parsed)) {
-          if (typeof v === "string") slots[k] = stripEmDashes(v)
-          else if (v !== undefined && v !== null) slots[k] = stripEmDashes(String(v))
+          if (!maxByKey.has(k)) continue  // ignore keys the manifest doesn't declare
+          const raw = typeof v === "string" ? v : v === undefined || v === null ? "" : String(v)
+          slots[k] = truncate(k, stripEmDashes(raw))
+        }
+        // Warn on missing slots — they'll render blank, which is layout-broken.
+        for (const s of manifest.slots) {
+          if (!(s.key in slots)) console.warn(`[fill-template] missing slot from Claude: ${s.key}`)
         }
       } catch (e) {
         console.error("[fill-template] JSON parse failed", e, rawText.slice(0, 300))

@@ -624,7 +624,7 @@ export default function QrLibrary() {
 }
 
 function ConfirmModal({ title, message, onConfirm, onCancel }: { title: string; message: string; onConfirm: () => void; onCancel: () => void }) {
-  const font = "'Inter', system-ui, -apple-system, sans-serif"
+  const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
   return (
     <div
       onClick={onCancel}

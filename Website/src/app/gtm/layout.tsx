@@ -113,7 +113,7 @@ const SIDEBAR_COLLAPSED_KEY = "momentify_gtm_sidebar_collapsed"
 const EXPANDED_WIDTH = 232
 const STRIP_WIDTH = 64
 
-const font = "'Inter', system-ui, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, sans-serif"
 
 function FoldChevron({ open }: { open: boolean }) {
   return (

@@ -10,7 +10,7 @@
 
 import TemplatesGallery from "@/components/gtm/calendar/TemplatesGallery"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 export default function TemplatesPage() {
   return (

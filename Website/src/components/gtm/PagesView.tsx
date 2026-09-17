@@ -11,7 +11,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { slugify, type PageEvent, type PageWithStats } from "@/lib/gtm/pages-types"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 const NAVY = "var(--gtm-text-primary)"
 const ACCENT = "var(--gtm-accent-text)"
 

@@ -9,7 +9,7 @@ import {
   Zap,
 } from "lucide-react"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 interface CalendarHeaderProps {
   currentMonth: Date

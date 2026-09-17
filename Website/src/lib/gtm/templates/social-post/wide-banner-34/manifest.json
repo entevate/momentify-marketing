@@ -5,10 +5,34 @@
   "aspectRatio": "3:4",
   "description": "Portrait dark event announcement card. Generous vertical space for eyebrow, bold headline, and supporting text. Solution gradient with brand shapes. For Instagram Stories and Pinterest.",
   "slots": [
-    { "key": "LABEL",       "label": "Eyebrow label",   "kind": "eyebrow",  "maxChars": 40,  "example": "Recruiting Season · Spring 2025" },
-    { "key": "HEADLINE",    "label": "Main headline",   "kind": "headline", "maxChars": 56,  "example": "Find Your Next Great Engineer at the Source" },
-    { "key": "SUBHEADLINE", "label": "Supporting line", "kind": "support",  "maxChars": 110, "example": "Momentify turns career fairs into qualified pipelines. Badge scan to CRM in under 60 seconds." },
-    { "key": "CTA",         "label": "CTA text",        "kind": "cta_label","maxChars": 32,  "example": "Book a Live Demo" }
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 40,
+      "example": "Recruiting Season · Spring 2025"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Main headline",
+      "kind": "headline",
+      "maxChars": 56,
+      "example": "Find Your Next Great Engineer at the Source"
+    },
+    {
+      "key": "SUBHEADLINE",
+      "label": "Supporting line",
+      "kind": "support",
+      "maxChars": 110,
+      "example": "Momentify turns career fairs into qualified pipelines. Badge scan to CRM in under 60 seconds."
+    },
+    {
+      "key": "CTA",
+      "label": "CTA text",
+      "kind": "cta_label",
+      "maxChars": 32,
+      "example": "Book a Live Demo"
+    }
   ],
   "sampleData": {
     "LABEL": "Recruiting Season · Spring 2025",

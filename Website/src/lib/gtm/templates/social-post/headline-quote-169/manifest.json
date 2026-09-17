@@ -5,17 +5,47 @@
   "aspectRatio": "16:9",
   "description": "Two-column landscape quote card. Headline and eyebrow on left, pull quote and attribution on right. White background with accent bar. For LinkedIn articles and Twitter banners.",
   "slots": [
-    { "key": "LABEL",       "label": "Eyebrow label",              "kind": "eyebrow",     "maxChars": 32,  "example": "Field Sales Insight" },
-    { "key": "HEADLINE",    "label": "Bold headline",              "kind": "headline",    "maxChars": 56,  "example": "The Rep Who Closes Walks in Informed" },
-    { "key": "QUOTE",       "label": "Pull quote",                 "kind": "quote",       "maxChars": 200, "example": "Before Momentify, our reps walked into customer visits with a brochure. Now they walk in with scan history, engagement scores, and talking points pre-loaded." },
-    { "key": "ATTRIBUTION", "label": "Attribution",                "kind": "attribution", "maxChars": 60,  "example": "— VP of Sales, Komatsu North America" },
-    { "key": "CTA",         "label": "CTA button text",            "kind": "cta_label",   "maxChars": 28,  "example": "Download the Story" }
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 32,
+      "example": "Field Sales Insight"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Bold headline",
+      "kind": "headline",
+      "maxChars": 56,
+      "example": "The Rep Who Closes Walks in Informed"
+    },
+    {
+      "key": "QUOTE",
+      "label": "Pull quote",
+      "kind": "quote",
+      "maxChars": 200,
+      "example": "Before Momentify, our reps walked into customer visits with a brochure. Now they walk in with scan history, engagement scores, and talking points pre-loaded."
+    },
+    {
+      "key": "ATTRIBUTION",
+      "label": "Attribution",
+      "kind": "attribution",
+      "maxChars": 60,
+      "example": "- VP of Sales, Komatsu North America"
+    },
+    {
+      "key": "CTA",
+      "label": "CTA button text",
+      "kind": "cta_label",
+      "maxChars": 28,
+      "example": "Download the Story"
+    }
   ],
   "sampleData": {
     "LABEL": "Field Sales Insight",
     "HEADLINE": "The Rep Who Closes Walks in Informed",
     "QUOTE": "Before Momentify, our reps walked into customer visits with a brochure. Now they walk in with scan history, engagement scores, and talking points pre-loaded.",
-    "ATTRIBUTION": "— VP of Sales, Komatsu North America",
+    "ATTRIBUTION": "- VP of Sales, Komatsu North America",
     "CTA": "Download the Story"
   }
 }

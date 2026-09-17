@@ -5,10 +5,34 @@
   "aspectRatio": "1:1",
   "description": "Square dark event announcement card. Solution gradient, eyebrow, large headline center-stage, CTA pill at bottom. Brand polygon shapes top-right. For Instagram and LinkedIn square posts.",
   "slots": [
-    { "key": "LABEL",       "label": "Eyebrow label",   "kind": "eyebrow",  "maxChars": 40,  "example": "Trade Show Season · 2025" },
-    { "key": "HEADLINE",    "label": "Main headline",   "kind": "headline", "maxChars": 52,  "example": "Your Booth Deserves Better Data" },
-    { "key": "SUBHEADLINE", "label": "Supporting line", "kind": "support",  "maxChars": 90,  "example": "Badge scanning, lead capture, and ROX scoring that proves your exhibit ROI." },
-    { "key": "CTA",         "label": "CTA text",        "kind": "cta_label","maxChars": 32,  "example": "See How It Works" }
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 40,
+      "example": "Trade Show Season · 2025"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Main headline",
+      "kind": "headline",
+      "maxChars": 52,
+      "example": "Your Booth Deserves Better Data"
+    },
+    {
+      "key": "SUBHEADLINE",
+      "label": "Supporting line",
+      "kind": "support",
+      "maxChars": 90,
+      "example": "Badge scanning, lead capture, and ROX scoring that proves your exhibit ROI."
+    },
+    {
+      "key": "CTA",
+      "label": "CTA text",
+      "kind": "cta_label",
+      "maxChars": 32,
+      "example": "See How It Works"
+    }
   ],
   "sampleData": {
     "LABEL": "Trade Show Season · 2025",

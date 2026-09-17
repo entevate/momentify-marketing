@@ -5,7 +5,7 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import type { CalendarTask } from "@/lib/gtm/calendar-types"
 import TaskCard from "./TaskCard"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 interface ListViewProps {
   tasks: CalendarTask[]

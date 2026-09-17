@@ -5,12 +5,48 @@
   "aspectRatio": "16:9",
   "description": "Landscape light feature card. Headline and eyebrow left, three feature bullets right. Solution accent bar on left edge. For LinkedIn posts and event slideshows.",
   "slots": [
-    { "key": "LABEL",   "label": "Eyebrow label",       "kind": "eyebrow",  "maxChars": 36,  "example": "Facilities Solution" },
-    { "key": "HEADLINE","label": "Feature headline",    "kind": "headline", "maxChars": 52,  "example": "Every Showroom Visit. Captured." },
-    { "key": "BULLET1", "label": "First capability",    "kind": "support",  "maxChars": 72,  "example": "Passive visitor identification with badge and device fingerprinting" },
-    { "key": "BULLET2", "label": "Second capability",   "kind": "support",  "maxChars": 72,  "example": "Dwell-time analytics and engagement heatmaps per station" },
-    { "key": "BULLET3", "label": "Third capability",    "kind": "support",  "maxChars": 72,  "example": "Automated follow-up with ROX scoring per visitor session" },
-    { "key": "CTA",     "label": "CTA text",            "kind": "cta_label","maxChars": 28,  "example": "Explore the Platform" }
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 36,
+      "example": "Facilities Solution"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Feature headline",
+      "kind": "headline",
+      "maxChars": 52,
+      "example": "Every Showroom Visit. Captured."
+    },
+    {
+      "key": "BULLET1",
+      "label": "First capability",
+      "kind": "support",
+      "maxChars": 72,
+      "example": "Passive visitor identification with badge and device fingerprinting"
+    },
+    {
+      "key": "BULLET2",
+      "label": "Second capability",
+      "kind": "support",
+      "maxChars": 72,
+      "example": "Dwell-time analytics and engagement heatmaps per station"
+    },
+    {
+      "key": "BULLET3",
+      "label": "Third capability",
+      "kind": "support",
+      "maxChars": 72,
+      "example": "Automated follow-up with ROX scoring per visitor session"
+    },
+    {
+      "key": "CTA",
+      "label": "CTA text",
+      "kind": "cta_label",
+      "maxChars": 28,
+      "example": "Explore the Platform"
+    }
   ],
   "sampleData": {
     "LABEL": "Facilities Solution",

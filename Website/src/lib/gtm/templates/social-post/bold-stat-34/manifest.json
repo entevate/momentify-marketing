@@ -5,15 +5,31 @@
   "aspectRatio": "3:4",
   "description": "Tall portrait stat card. Full-bleed solution gradient, oversized number, eyebrow label, tagline, and brand footer. For Instagram Stories-style posts and Pinterest.",
   "slots": [
-    { "key": "LABEL",    "label": "Short label above the stat",  "kind": "eyebrow",     "maxChars": 32,  "example": "Post-Event NPS · 2025" },
-    { "key": "STAT",     "label": "Headline stat or number",     "kind": "stat_number", "maxChars": 8,   "example": "+28pt" },
-    { "key": "TAGLINE",  "label": "Tagline below the stat",      "kind": "stat_label",  "maxChars": 140, "example": "average NPS lift for Momentify-powered events in a single season." },
-    { "key": "BRAND",    "label": "Company / brand name",        "kind": "eyebrow",     "maxChars": 24,  "example": "Momentify" }
+    {
+      "key": "LABEL",
+      "label": "Short label above the stat",
+      "kind": "eyebrow",
+      "maxChars": 32,
+      "example": "Post-Event NPS · 2025"
+    },
+    {
+      "key": "STAT",
+      "label": "Headline stat or number",
+      "kind": "stat_number",
+      "maxChars": 8,
+      "example": "+28pt"
+    },
+    {
+      "key": "TAGLINE",
+      "label": "Tagline below the stat",
+      "kind": "stat_label",
+      "maxChars": 140,
+      "example": "average NPS lift for Momentify-powered events in a single season."
+    }
   ],
   "sampleData": {
     "LABEL": "Post-Event NPS · 2025",
     "STAT": "+28pt",
-    "TAGLINE": "average NPS lift for Momentify-powered events in a single season.",
-    "BRAND": "Momentify"
+    "TAGLINE": "average NPS lift for Momentify-powered events in a single season."
   }
 }

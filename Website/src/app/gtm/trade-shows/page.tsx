@@ -19,7 +19,7 @@ import ContentHistory from "@/components/gtm/tabs/ContentHistory"
 import LibraryCountBadge from "@/components/gtm/LibraryCountBadge"
 import CustomerJourneyMap from "@/components/gtm/CustomerJourneyMap"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 /* ── Stat Chip ── */
 function StatChip({ label }: { label: string }) {

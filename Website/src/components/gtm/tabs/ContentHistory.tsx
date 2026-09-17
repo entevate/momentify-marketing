@@ -15,7 +15,7 @@ import { Bookmark, BookmarkCheck, Copy, Loader2 } from "lucide-react"
 import type { ContentItem } from "@/lib/gtm/content-types"
 import { dispatchLibraryChanged } from "./SolutionTabs"
 
-const font = "'Inter', system-ui, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, sans-serif"
 
 const CONTENT_TYPE_LABELS: Record<string, string> = {
   "cold-emails": "Cold Email Sequence",

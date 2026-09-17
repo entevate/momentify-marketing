@@ -18,7 +18,7 @@ import ComposePane from "./ComposePane"
 import LibrarySeedPanel from "./LibrarySeedPanel"
 import type { EmailDraft } from "@/lib/gtm/email-types"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 interface Props {
   /** Optional preselect on mount: ?draftId=X */

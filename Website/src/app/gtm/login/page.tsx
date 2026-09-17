@@ -73,7 +73,7 @@ export default function GTMLogin() {
       >
         <h1
           style={{
-            fontFamily: "'Inter', system-ui, sans-serif",
+            fontFamily: "var(--font-inter), 'Inter', system-ui, sans-serif",
             fontSize: 22,
             fontWeight: 700,
             color: "var(--gtm-text-primary)",
@@ -84,7 +84,7 @@ export default function GTMLogin() {
         </h1>
         <p
           style={{
-            fontFamily: "'Inter', system-ui, sans-serif",
+            fontFamily: "var(--font-inter), 'Inter', system-ui, sans-serif",
             fontSize: 14,
             color: "var(--gtm-text-muted)",
             margin: "8px 0 24px",
@@ -105,7 +105,7 @@ export default function GTMLogin() {
             borderRadius: 8,
             padding: "12px 16px",
             fontSize: 15,
-            fontFamily: "'Inter', system-ui, sans-serif",
+            fontFamily: "var(--font-inter), 'Inter', system-ui, sans-serif",
             outline: "none",
             boxSizing: "border-box",
             transition: "border-color 200ms ease",
@@ -123,7 +123,7 @@ export default function GTMLogin() {
             style={{
               color: "var(--gtm-danger-text)",
               fontSize: 13,
-              fontFamily: "'Inter', system-ui, sans-serif",
+              fontFamily: "var(--font-inter), 'Inter', system-ui, sans-serif",
               margin: "8px 0 0",
             }}
           >
@@ -143,7 +143,7 @@ export default function GTMLogin() {
             color: "#FFFFFF",
             fontSize: 15,
             fontWeight: 700,
-            fontFamily: "'Inter', system-ui, sans-serif",
+            fontFamily: "var(--font-inter), 'Inter', system-ui, sans-serif",
             border: "none",
             cursor: loading ? "not-allowed" : "pointer",
             opacity: loading ? 0.7 : 1,

@@ -265,7 +265,7 @@ function resolvePersona(solution: string, personaId?: string): PersonaOption | n
  * (b) name the proprietary capability the buyer is evaluating, and (c)
  * explicitly forbid the wrong domain language.
  */
-const solutionGuidance: Record<string, string> = {
+export const solutionGuidance: Record<string, string> = {
   general: `===== SOLUTION DOMAIN: GENERAL MOMENTIFY (CROSS-PILLAR) =====
 This is platform-level / cross-pillar content. Do NOT lock into a single solution domain (trade shows, recruiting, field sales, facilities, or venues). The audience is a mixed buyer who could deploy Momentify across any of those contexts.
 
