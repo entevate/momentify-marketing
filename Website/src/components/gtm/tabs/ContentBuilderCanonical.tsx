@@ -30,6 +30,10 @@ const CONTENT_TYPES: { value: string; label: string; description: string; visual
 
 const MAX_BG_BYTES = 3 * 1024 * 1024
 
+// Height of the layout's sticky mobile app bar (src/app/gtm/layout.tsx); the pinned
+// Result must sit below it or it scrolls underneath. Keep in sync with that bar.
+const MOBILE_BAR_H = 54
+
 function fileToDataUri(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const r = new FileReader()
@@ -566,27 +570,6 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
         )}
       </div>
 
-      {/* Result — mounted once so AssetPanel never remounts. On mobile it pins to the
-          top with a show/hide chevron (hidden, not unmounted); on desktop flex `order`
-          places the same node last. */}
-      {generated && (
-        <div
-          style={isMobile
-            ? { order: 0, position: "sticky", top: 0, zIndex: 30, background: "var(--gtm-bg-page)", paddingBottom: 10, borderBottom: "1px solid var(--gtm-border)" }
-            : { order: 99 }}
-        >
-          {isMobile && (
-            <button type="button" className="btn btn-secondary" style={{ width: "100%", justifyContent: "space-between", borderRadius: "var(--gtm-radius-control)" }} onClick={() => setPreviewOpen((o) => !o)} aria-expanded={previewOpen}>
-              <span>Result</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: previewOpen ? "rotate(180deg)" : "none", transition: "transform .15s ease" }}><polyline points="6 9 12 15 18 9" /></svg>
-            </button>
-          )}
-          <div hidden={isMobile && !previewOpen} style={isMobile ? { marginTop: 10, maxHeight: "52vh", overflow: "auto" } : undefined}>
-            {resultCard}
-          </div>
-        </div>
-      )}
-
       {/* 1 · Brief */}
       <div className="card" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         <span className="eyebrow">Brief</span>
@@ -699,6 +682,29 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
       {loading && (
         <div className="card" style={{ display: "flex", alignItems: "center", gap: 10, color: "var(--gtm-text-secondary)", fontSize: 13 }}>
           <Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} /> Generating content - this takes ~5-15 seconds...
+        </div>
+      )}
+
+      {/* 6 · Result — mounted once so AssetPanel never remounts. DOM-last so desktop
+          focus/reading order matches the visual order; on mobile flex `order: -1`
+          lifts the same node to the top, where it pins BELOW the layout's mobile app
+          bar (layout.tsx: sticky, top 0, z-index 500, MOBILE_BAR_H tall) with a
+          show/hide chevron that hides (not unmounts) the card. */}
+      {generated && (
+        <div
+          style={isMobile
+            ? { order: -1, position: "sticky", top: MOBILE_BAR_H, zIndex: 30, background: "var(--gtm-bg-page)", paddingBottom: 10, borderBottom: "1px solid var(--gtm-border)" }
+            : undefined}
+        >
+          {isMobile && (
+            <button type="button" className="btn btn-secondary" style={{ width: "100%", justifyContent: "space-between", borderRadius: "var(--gtm-radius-control)" }} onClick={() => setPreviewOpen((o) => !o)} aria-expanded={previewOpen}>
+              <span>Result</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: previewOpen ? "rotate(180deg)" : "none", transition: "transform .15s ease" }}><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+          )}
+          <div hidden={isMobile && !previewOpen} style={isMobile ? { marginTop: 10, maxHeight: "52vh", overflow: "auto" } : undefined}>
+            {resultCard}
+          </div>
         </div>
       )}
 
