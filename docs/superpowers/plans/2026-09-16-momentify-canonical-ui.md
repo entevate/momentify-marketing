@@ -1995,12 +1995,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
 }
 ```
 
-- [ ] **Step 2: Swap the import.** In `src/components/gtm/tabs/SolutionTabs.tsx` find the line importing the builder:
-
-Run: `grep -n 'from "./ContentBuilder"' src/components/gtm/tabs/SolutionTabs.tsx`
-Expected: one line like `import ContentBuilder from "./ContentBuilder"`.
-
-Change it to `import ContentBuilder from "./ContentBuilderCanonical"`. (The default export name differs, but the local binding `ContentBuilder` is what the JSX uses, so nothing else changes.) If the grep finds the import elsewhere, change that file instead — the builder has exactly one consumer.
+- [ ] **Step 2: Swap the imports — all seven consumers.** The builder is imported by `src/components/gtm/tabs/SolutionTabs.tsx` (`from "./ContentBuilder"`) AND rendered directly by the six solution pages (`src/app/gtm/{field-sales,general,events-venues,trade-shows,recruiting,facilities}/page.tsx`, each `from "@/components/gtm/tabs/ContentBuilder"`). Change every one of those import paths to `…/ContentBuilderCanonical` (the local binding `ContentBuilder` stays, so no JSX changes). Verify: `grep -rn 'tabs/ContentBuilder"\|from "./ContentBuilder"' src` → nothing; `grep -rn 'ContentBuilderCanonical"' src | wc -l` → `7`. *(An earlier draft assumed a single consumer; the implementer's gate caught the other six.)*
 
 - [ ] **Step 3: Verify gate + commit**
 
@@ -2130,7 +2125,7 @@ Expected: `0` for both files.
 | 142 | `background: "linear-gradient(135deg, #0CF4DF, #1A56DB)",` | `background: "linear-gradient(135deg, #00BBA5 0%, #254FE5 100%)", borderRadius: 9999,` |
 | input(s) | `border: "1px solid rgba(6, 19, 65, 0.15)"` | `border: "1px solid rgba(11, 11, 60, 0.18)", borderRadius: 8` |
 
-- [ ] **Step 4: Verify gate + commit**
+- [x] **Step 4: Verify gate + commit** *(done — commits `8b3f92d7` + `1e429e4a`; combined review approved after the data-color fixes. Deferred, non-blocking follow-ups from review: `--gtm-text-primary` used as a `background` at `QrLibrary.tsx:280/343/581` and `PagesView.tsx:202/205/442` (mirrors the pre-existing navy fills — wants a surface token); login `boxShadow` literal → `var(--gtm-shadow-hover)`; consider renaming the data constant to `ACCENT_DATA` and pinning `defaultConfig().accent === '#0CF4DF'` with a one-line test.)*
 
 Run the verification gate. Expected: tsc 0, Jest green.
 
