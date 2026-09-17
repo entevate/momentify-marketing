@@ -70,7 +70,11 @@ export default function TemplatePreviewModal({
   const boxWidth = `min(920px, 100%, calc(60vh * ${size.width} / ${size.height}))`
 
   return createPortal(
+    // data-theme: the shell sets it on a wrapper <div>, not <html>, and the
+    // theme's classes (.btn, .mono, .field-label, .section-note) are scoped to
+    // it — a portal to <body> escapes that scope unless the backdrop re-asserts it.
     <div
+      data-theme="light"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
