@@ -17,9 +17,9 @@ const ACCENT = "var(--gtm-accent-text)"
 
 // Same solution/pillar ids as the GTM sidebar nav (pillar-palettes.ts).
 const PAGE_PILLARS = [
-  { id: "general", label: "General Momentify", color: "var(--gtm-accent-text)" },
+  { id: "general", label: "General Momentify", color: "#1A56DB" },
   { id: "trade-shows", label: "Trade Shows", color: "#6B21D4" },
-  { id: "recruiting", label: "Recruiting", color: "var(--gtm-accent-text)" },
+  { id: "recruiting", label: "Recruiting", color: "#0AA891" },
   { id: "field-sales", label: "Field Sales", color: "#D4940A" },
   { id: "facilities", label: "Facilities", color: "#3A2073" },
   { id: "events-venues", label: "Events & Venues", color: "#D43D1A" },

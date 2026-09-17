@@ -20,10 +20,11 @@ import {
   type SocialId,
 } from '@/lib/gtm/link-page-types'
 
-const ACCENT = 'var(--gtm-accent)'
+const ACCENT_CSS = 'var(--gtm-accent)'   // inline styles only
+const ACCENT = '#0CF4DF'                 // DATA: defaultConfig() accent; must match the link-page route's fallback
 const INK = 'var(--gtm-text-primary)'
 // Solution accents (design-tokens.json color.solution) — brand, never normalized.
-const PILLAR_SWATCHES = ['#00BBA5', '#9B5FE8', '#F2B33D', '#5FD9C2']
+const PILLAR_SWATCHES = ['#0CF4DF', '#9B5FE8', '#F2B33D', '#5FD9C2']
 
 const SOCIAL_LABELS: Record<SocialId, string> = {
   instagram: 'Instagram',
@@ -126,14 +127,14 @@ export default function LinkInBioBuilder() {
     <div style={{ padding: '28px 40px 80px', maxWidth: 1180 }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, flexWrap: 'wrap', marginBottom: 22 }}>
         <div style={{ flex: 1, minWidth: 260 }}>
-          <p style={{ ...label, color: ACCENT }}>Distribute</p>
+          <p style={{ ...label, color: ACCENT_CSS }}>Distribute</p>
           <h1 style={{ fontSize: 30, fontWeight: 900, color: INK, margin: '4px 0 6px' }}>Link in Bio</h1>
           <p style={{ fontSize: 13.5, color: 'var(--gtm-text-secondary)', maxWidth: 560 }}>One always-live branded page at <code>/links</code> — the destination for your Instagram bio. Saving publishes immediately.</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           {dirty && <span title="Unsaved changes" style={{ width: 8, height: 8, borderRadius: '50%', background: '#F4B400' }} />}
           <a href="/links" target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: 'var(--gtm-text-secondary)' }}>View live ↗</a>
-          <button onClick={() => save(false)} disabled={saving} style={{ padding: '9px 18px', borderRadius: 6, fontSize: 13, fontWeight: 700, color: '#fff', background: dirty ? '#00A14B' : ACCENT, cursor: saving ? 'wait' : 'pointer', opacity: saving ? 0.6 : 1 }}>
+          <button onClick={() => save(false)} disabled={saving} style={{ padding: '9px 18px', borderRadius: 6, fontSize: 13, fontWeight: 700, color: '#fff', background: dirty ? '#00A14B' : ACCENT_CSS, cursor: saving ? 'wait' : 'pointer', opacity: saving ? 0.6 : 1 }}>
             {saving ? 'Saving…' : 'Save & Publish'}
           </button>
         </div>
@@ -149,7 +150,7 @@ export default function LinkInBioBuilder() {
                   <input style={input} value={config.header.logoUrl ?? ''} onChange={(e) => patchHeader({ logoUrl: e.target.value })} placeholder="https://… .svg / .png (blank = brand logo)" />
                 </Field>
                 <Field l={`Logo size — ${config.header.logoSize ?? LOGO_SIZE.default}px`}>
-                  <input type="range" min={LOGO_SIZE.min} max={LOGO_SIZE.max} value={config.header.logoSize ?? LOGO_SIZE.default} onChange={(e) => patchHeader({ logoSize: Number(e.target.value) })} style={{ width: '100%', accentColor: ACCENT }} />
+                  <input type="range" min={LOGO_SIZE.min} max={LOGO_SIZE.max} value={config.header.logoSize ?? LOGO_SIZE.default} onChange={(e) => patchHeader({ logoSize: Number(e.target.value) })} style={{ width: '100%', accentColor: ACCENT_CSS }} />
                 </Field>
               </>
             )}
@@ -170,7 +171,7 @@ export default function LinkInBioBuilder() {
                 <div key={l.id} style={{ border: '1px solid var(--gtm-border)', borderRadius: 8, padding: 12, background: 'var(--gtm-bg-page)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                     <Toggle compact label="On" on={l.enabled} onToggle={() => patchLink(i, { enabled: !l.enabled })} />
-                    <button onClick={() => patchLink(i, { featured: !l.featured })} title="Featured (large card)" style={{ fontSize: 12, padding: '3px 8px', borderRadius: 6, border: '1px solid var(--gtm-border-strong)', color: l.featured ? ACCENT : 'var(--gtm-text-muted)', fontWeight: l.featured ? 700 : 500, cursor: 'pointer', background: '#fff' }}>★ Featured</button>
+                    <button onClick={() => patchLink(i, { featured: !l.featured })} title="Featured (large card)" style={{ fontSize: 12, padding: '3px 8px', borderRadius: 6, border: '1px solid var(--gtm-border-strong)', color: l.featured ? ACCENT_CSS : 'var(--gtm-text-muted)', fontWeight: l.featured ? 700 : 500, cursor: 'pointer', background: '#fff' }}>★ Featured</button>
                     <span style={{ marginLeft: 'auto', display: 'flex', gap: 4 }}>
                       <IconBtn label="Move up" onClick={() => moveLink(i, -1)}>▲</IconBtn>
                       <IconBtn label="Move down" onClick={() => moveLink(i, 1)}>▼</IconBtn>
@@ -233,7 +234,7 @@ function Field({ l, children }: { l: string; children: React.ReactNode }) {
 function Toggle({ label: lbl, on, onToggle, compact }: { label: string; on: boolean; onToggle: () => void; compact?: boolean }) {
   return (
     <button onClick={onToggle} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: compact ? 0 : 10, cursor: 'pointer', background: 'none' }}>
-      <span style={{ width: 34, height: 20, borderRadius: 10, background: on ? ACCENT : 'rgba(0,0,0,0.2)', position: 'relative', flex: 'none', transition: 'background .15s' }}>
+      <span style={{ width: 34, height: 20, borderRadius: 10, background: on ? ACCENT_CSS : 'rgba(0,0,0,0.2)', position: 'relative', flex: 'none', transition: 'background .15s' }}>
         <span style={{ position: 'absolute', top: 2, left: on ? 16 : 2, width: 16, height: 16, borderRadius: '50%', background: '#fff', transition: 'left .15s' }} />
       </span>
       <span style={{ fontSize: 13, color: INK }}>{lbl}</span>
