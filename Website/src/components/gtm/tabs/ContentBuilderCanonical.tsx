@@ -553,12 +553,12 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
   )
 
   return (
-    <div style={{ fontFamily: "var(--gtm-font-body)", display: "flex", flexDirection: "column", gap: 16, width: "100%" }}>
+    <div style={{ fontFamily: "var(--gtm-font-body)", display: "flex", flexDirection: "column", gap: 16, width: "100%", boxSizing: "border-box", maxWidth: 1200, margin: "0 auto", padding: isMobile ? "16px 16px 64px" : "32px 48px 80px" }}>
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: 12, flexWrap: "wrap" }}>
         <div>
           <span className="eyebrow">{solutionLabel} · Content Builder</span>
-          <h2 style={{ margin: "4px 0 0", fontSize: 22, fontWeight: 600, letterSpacing: "-0.02em", color: "var(--gtm-text-primary)" }}>Turn a brief into on-brand content.</h2>
+          <h2 style={{ margin: "4px 0 0", fontSize: 24, fontWeight: 400, letterSpacing: "-0.02em", color: "var(--gtm-text-primary)" }}>Turn a brief into on-brand content.</h2>
         </div>
         {generated && (
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>

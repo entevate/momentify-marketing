@@ -45,7 +45,7 @@
   --gtm-danger-border:  rgba(229, 72, 77, 0.30);
 
   /* shape */
-  --gtm-radius-card:    12px;                    /* radius.xl */
+  --gtm-radius-card:    8px;                     /* radius.lg — between the app's 6px cards and the fleet's 12–14 */
   --gtm-radius-control: 8px;                     /* radius.lg */
   --gtm-shadow:         0 4px 12px rgba(0, 0, 0, 0.06);         /* elevation.2 */
   --gtm-shadow-hover:   0 10px 15px -3px rgba(0, 0, 0, 0.10);   /* elevation.3 */
@@ -125,9 +125,9 @@
 }
 
 [data-theme="light"] .eyebrow {
-  font-family: var(--gtm-font-mono);
-  font-size: 12px;
-  font-weight: 500;
+  font-family: var(--gtm-font-body);
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--gtm-accent-ink);
@@ -140,16 +140,18 @@
 }
 
 [data-theme="light"] .mono {
-  font-family: var(--gtm-font-mono);
+  font-family: var(--gtm-font-body);
   font-variant-numeric: tabular-nums;
 }
 
 [data-theme="light"] .field-label {
   display: block;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--gtm-accent-deep-blue);
-  margin-bottom: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gtm-text-muted);
+  margin-bottom: 6px;
 }
 
 [data-theme="light"] .input {
