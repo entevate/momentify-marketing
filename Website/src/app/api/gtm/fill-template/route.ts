@@ -8,6 +8,7 @@ import { assetBlobPath, assetKvKey } from "@/lib/gtm/asset-helpers"
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
+import { parseRenderMedia, filterSlots } from "@/lib/gtm/render-media"
 
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 
@@ -23,6 +24,9 @@ const isSafe = (v: string) => /^[a-zA-Z0-9_-]+$/.test(v)
  *   briefText:  string      // the saved Library brief - context for Claude
  *   itemId?:    string      // Library item id; scopes the rendered file so
  *                           // different items don't overwrite each other
+ *   slots?:     Record<string,string>  // re-render with these values (skips Claude)
+ *   bgImage?:   string      // data:image/(png|jpeg|webp);base64,… ≤ 4 MB
+ *   bgOpacity?: number      // 0–100
  * }
  *
  * Flow:
@@ -43,7 +47,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { templateId, assetType, pillar, briefText, itemId } = body ?? {}
+    const { templateId, assetType, pillar, briefText, itemId, slots: slotsOverride, bgImage, bgOpacity } = body ?? {}
 
     // ─── Validation ──────────────────────────────────────────────────
     if (!templateId || !assetType || !pillar || !briefText) {
@@ -75,22 +79,38 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Template HTML missing on disk" }, { status: 500 })
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: "Generation is not configured. No API key found." },
-        { status: 500 }
-      )
+    const mediaParse = parseRenderMedia({ bgImage, bgOpacity })
+    if (!mediaParse.ok) {
+      return NextResponse.json({ error: mediaParse.error }, { status: 400 })
     }
+    const media = mediaParse.media
 
-    // ─── Build the slot-fill prompt ──────────────────────────────────
-    // Compact: template's slot spec + brand-voice rules + brief. Claude
-    // returns a small JSON of slot values. No HTML, no chain-of-thought.
-    const slotSpec = manifest.slots
-      .map((s) => `- "${s.key}" (${s.kind}, max ${s.maxChars} chars): ${s.label}. Example: ${s.example}`)
-      .join("\n")
+    let slots: Record<string, string>
+    const overridden = slotsOverride !== undefined && slotsOverride !== null
+    if (overridden) {
+      // Re-render path (slot edits, opacity slider): no AI call, manifest keys only.
+      const filtered = filterSlots(slotsOverride, manifest.slots)
+      if (!filtered) {
+        return NextResponse.json({ error: "slots must be an object of slot values" }, { status: 400 })
+      }
+      slots = filtered
+    } else {
+      const apiKey = process.env.ANTHROPIC_API_KEY
+      if (!apiKey) {
+        return NextResponse.json(
+          { error: "Generation is not configured. No API key found." },
+          { status: 500 }
+        )
+      }
 
-    const userPrompt = `You are writing copy for a Momentify ${manifest.aspectRatio} ${manifest.assetType} graphic.
+      // ─── Build the slot-fill prompt ──────────────────────────────────
+      // Compact: template's slot spec + brand-voice rules + brief. Claude
+      // returns a small JSON of slot values. No HTML, no chain-of-thought.
+      const slotSpec = manifest.slots
+        .map((s) => `- "${s.key}" (${s.kind}, max ${s.maxChars} chars): ${s.label}. Example: ${s.example}`)
+        .join("\n")
+
+      const userPrompt = `You are writing copy for a Momentify ${manifest.aspectRatio} ${manifest.assetType} graphic.
 
 Template: ${manifest.label}
 Design intent: ${manifest.description}
@@ -113,71 +133,71 @@ ${slotSpec}
 
 Return ONLY a JSON object with the slot keys above. No markdown fencing, no commentary, no prose wrapping. Example: {"LABEL": "...", "STAT": "..."}`
 
-    // ─── Call Claude ─────────────────────────────────────────────────
-    const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5"
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        // Content generation needs no reasoning; disabling thinking keeps the
-        // response fast and makes the first content block the text (Sonnet 5
-        // runs adaptive thinking by default, which would otherwise be content[0]).
-        thinking: { type: "disabled" },
-        max_tokens: 800, // JSON payload only - small budget
-        messages: [{ role: "user", content: userPrompt }],
-      }),
-    })
+      // ─── Call Claude ─────────────────────────────────────────────────
+      const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5"
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          // Content generation needs no reasoning; disabling thinking keeps the
+          // response fast and makes the first content block the text (Sonnet 5
+          // runs adaptive thinking by default, which would otherwise be content[0]).
+          thinking: { type: "disabled" },
+          max_tokens: 800, // JSON payload only - small budget
+          messages: [{ role: "user", content: userPrompt }],
+        }),
+      })
 
-    if (!response.ok) {
-      const err = await response.text().catch(() => "")
-      console.error("[fill-template] Anthropic error", err)
-      let detail: string | undefined
-      try { detail = JSON.parse(err)?.error?.message } catch { /* ignore */ }
-      return NextResponse.json(
-        { error: detail || "Slot fill failed. Please try again." },
-        { status: response.status === 401 ? 401 : 500 }
-      )
-    }
-
-    const data = await response.json()
-    const rawText = (data.content?.find((b: { type?: string; text?: string }) => b.type === "text")?.text) ?? ""
-    if (!rawText) {
-      return NextResponse.json({ error: "Empty response from Claude" }, { status: 500 })
-    }
-
-    // ─── Parse slot JSON ─────────────────────────────────────────────
-    // Strip code fences if Claude wrapped despite instructions.
-    const fenced = rawText.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/)
-    const jsonText = (fenced ? fenced[1] : rawText).trim()
-
-    let slots: Record<string, string>
-    try {
-      const parsed = JSON.parse(jsonText)
-      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-        throw new Error("expected object")
+      if (!response.ok) {
+        const err = await response.text().catch(() => "")
+        console.error("[fill-template] Anthropic error", err)
+        let detail: string | undefined
+        try { detail = JSON.parse(err)?.error?.message } catch { /* ignore */ }
+        return NextResponse.json(
+          { error: detail || "Slot fill failed. Please try again." },
+          { status: response.status === 401 ? 401 : 500 }
+        )
       }
-      // Coerce all values to strings + strip em-dashes per brand voice
-      slots = {}
-      for (const [k, v] of Object.entries(parsed)) {
-        if (typeof v === "string") slots[k] = stripEmDashes(v)
-        else if (v !== undefined && v !== null) slots[k] = stripEmDashes(String(v))
+
+      const data = await response.json()
+      const rawText = (data.content?.find((b: { type?: string; text?: string }) => b.type === "text")?.text) ?? ""
+      if (!rawText) {
+        return NextResponse.json({ error: "Empty response from Claude" }, { status: 500 })
       }
-    } catch (e) {
-      console.error("[fill-template] JSON parse failed", e, rawText.slice(0, 300))
-      return NextResponse.json(
-        { error: "Claude returned invalid JSON. Try regenerating." },
-        { status: 502 }
-      )
+
+      // ─── Parse slot JSON ─────────────────────────────────────────────
+      // Strip code fences if Claude wrapped despite instructions.
+      const fenced = rawText.match(/```(?:json)?\s*\n?([\s\S]*?)\n?```/)
+      const jsonText = (fenced ? fenced[1] : rawText).trim()
+
+      try {
+        const parsed = JSON.parse(jsonText)
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+          throw new Error("expected object")
+        }
+        // Coerce all values to strings + strip em-dashes per brand voice
+        slots = {}
+        for (const [k, v] of Object.entries(parsed)) {
+          if (typeof v === "string") slots[k] = stripEmDashes(v)
+          else if (v !== undefined && v !== null) slots[k] = stripEmDashes(String(v))
+        }
+      } catch (e) {
+        console.error("[fill-template] JSON parse failed", e, rawText.slice(0, 300))
+        return NextResponse.json(
+          { error: "Claude returned invalid JSON. Try regenerating." },
+          { status: 502 }
+        )
+      }
     }
 
     // ─── Render + persist ────────────────────────────────────────────
     const palette = paletteFor(pillar)
-    const renderedHtml = renderTemplate(html, slots, palette)
+    const renderedHtml = renderTemplate(html, slots, palette, media)
 
     const blobPath = assetBlobPath(pillar, assetType, itemId)
     if (!blobPath) {

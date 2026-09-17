@@ -1,0 +1,73 @@
+import { POST } from "../fill-template/route"
+import { NextRequest } from "next/server"
+
+jest.mock("@/lib/gtm/content-types", () => ({ requireGtmAuth: jest.fn(async () => true) }))
+jest.mock("@/lib/gtm/kv-store", () => ({ kv: { set: jest.fn(async () => undefined) } }))
+jest.mock("@vercel/blob", () => ({ put: jest.fn(async (p: string) => ({ url: `https://blob.test/${p}` })) }))
+jest.mock("@/lib/gtm/templates/render", () => {
+  const actual = jest.requireActual("@/lib/gtm/templates/render")
+  return {
+    ...actual,
+    findTemplate: jest.fn(() => ({
+      id: "bold-stat-1x1", label: "Bold Stat", assetType: "social-post", aspectRatio: "1:1", description: "",
+      slots: [{ key: "STAT", label: "", kind: "stat_number", maxChars: 4, example: "" }],
+      sampleData: { STAT: "1%" },
+    })),
+    loadTemplateHtml: jest.fn(async () => `<style>:root{--bg-image:{{BG_IMAGE}};--bg-opacity:{{BG_OPACITY}}}</style><b>{{STAT}}</b>`),
+  }
+})
+
+import { put } from "@vercel/blob"
+
+const png = "data:image/png;base64," + Buffer.from("x").toString("base64")
+const base = { templateId: "bold-stat-1x1", assetType: "social-post", pillar: "trade-shows", briefText: "A brief long enough to pass validation.", itemId: "draft-1" }
+
+function req(body: unknown) {
+  return new NextRequest("http://localhost/api/gtm/fill-template", { method: "POST", body: JSON.stringify(body) })
+}
+
+describe("POST /api/gtm/fill-template", () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    process.env.ANTHROPIC_API_KEY = "test"
+    global.fetch = jest.fn(async () => ({
+      ok: true,
+      json: async () => ({ content: [{ type: "text", text: JSON.stringify({ STAT: "94%" }) }] }),
+    })) as unknown as typeof fetch
+  })
+
+  it("skips Claude when slots are supplied and renders them with media", async () => {
+    const res = await POST(req({ ...base, slots: { STAT: "12345", EVIL: "x" }, bgImage: png, bgOpacity: 62 }))
+    expect(res.status).toBe(200)
+    expect(global.fetch).not.toHaveBeenCalled()
+    const stored = (put as jest.Mock).mock.calls[0][1] as string
+    expect(stored).toContain("<b>1234</b>")
+    expect(stored).not.toContain("EVIL")
+    expect(stored).toContain(`--bg-image:url("${png}")`)
+    expect(stored).toContain("--bg-opacity:0.62")
+    const data = await res.json()
+    expect(data.slots).toEqual({ STAT: "1234" })
+  })
+
+  it("calls Claude when slots are absent and still applies media", async () => {
+    const res = await POST(req({ ...base, bgImage: png, bgOpacity: 30 }))
+    expect(res.status).toBe(200)
+    expect(global.fetch).toHaveBeenCalledTimes(1)
+    const stored = (put as jest.Mock).mock.calls[0][1] as string
+    expect(stored).toContain("<b>94%</b>")
+    expect(stored).toContain("--bg-opacity:0.3")
+  })
+
+  it("renders the designed state (none / 1) when no media is sent", async () => {
+    await POST(req(base))
+    const stored = (put as jest.Mock).mock.calls[0][1] as string
+    expect(stored).toContain("--bg-image:none")
+    expect(stored).toContain("--bg-opacity:1")
+  })
+
+  it("rejects a bad bgImage with 400", async () => {
+    const res = await POST(req({ ...base, bgImage: "https://x/y.png" }))
+    expect(res.status).toBe(400)
+    expect(put).not.toHaveBeenCalled()
+  })
+})
