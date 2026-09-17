@@ -26,7 +26,6 @@ npx jest --ci --silent --testPathIgnorePatterns '/node_modules/' 'generate-asset
 
 | File | Responsibility | Action |
 |---|---|---|
-| `jest.config.js` | test runner config | Modify: ignore nested worktrees |
 | `src/styles/gtm-theme.css` | canonical tokens + shared classes (light only) | Rewrite |
 | `src/app/gtm/layout.tsx` | GTM shell + sidebar | Modify: chrome only |
 | `src/lib/gtm/templates/render.ts` | pure template substitution | Modify: `media` param, reserved keys |
@@ -54,6 +53,15 @@ npx jest --ci --silent --testPathIgnorePatterns '/node_modules/' 'generate-asset
 - Rewrite: `src/styles/gtm-theme.css`
 
 - [ ] **Step 1: No Jest config change.** (An earlier draft added `testPathIgnorePatterns: ['/node_modules/', '/.claude/']`; that was implemented and then reverted in a follow-up commit because a bare `/.claude/` pattern matches this worktree's own path and hides every test. Leave `jest.config.js` untouched.)
+
+> **Amended after code-quality review (2026-09-16).** The block below is the original spec; the committed file is that block plus these deltas, applied in a follow-up commit so later tasks inherit them:
+> - `--gtm-accent-ink` (per solution; ≥ 4.5:1 on white — default `#067A69`, violet `#6B21D4`, recruiting `#067A69`, amber `#8F6300`, indigo `#3A2073`, crimson `#B8340F`) — `.eyebrow` and `.btn-tertiary` use it instead of the raw accent.
+> - `--gtm-accent-deep-blue: #1F3395` (form labels), `--gtm-danger-text: #b91c1c`, `--gtm-bg-input: var(--gtm-bg-card)` — no hex literals remain in the class layer.
+> - `--gtm-grad-action` moved under a "fleet-constant, deliberately NOT overridden per solution" comment.
+> - `.input`: no `outline: none`; `:focus-visible` gets a 2px `--gtm-accent-ink` outline. `.btn` / `.chip` get the same `:focus-visible` ring; `.btn:hover { opacity: .9 }`; `.btn[aria-disabled="true"]` dims like `:disabled`; the no-op `background` transition is gone.
+> - `.mono` adds `font-variant-numeric: tabular-nums`; `--gtm-font-mono` falls back to sans-serif (Space Grotesk is proportional), not monospace.
+> - All shared classes are scoped `[data-theme="light"]` (not bare `[data-theme]`).
+> - The gate gains a referenced-vs-defined token check (must print nothing): `comm -23 <(grep -rhoE 'var\(--gtm-[a-z0-9-]+' src | sed 's/var(//' | sort -u) <(grep -oE '^\s*--gtm-[a-z0-9-]+' src/styles/gtm-theme.css | tr -d ' ' | sort -u)`
 
 - [ ] **Step 2: Rewrite `src/styles/gtm-theme.css`** with exactly this content (the five light solution schemes are kept verbatim; the dark block and its five dark overrides are gone; new tokens and shared classes added):
 
@@ -2100,7 +2108,7 @@ Finally, on every top-level card container in both files (`borderRadius: 6` on a
 Run: `grep -cE '#12243f|#1A56DB|#0AA891"|rgba\(0,0,0,0\.45\)|rgba\(25,34,77' src/components/gtm/QrLibrary.tsx src/components/gtm/PagesView.tsx`
 Expected: `0` for both files.
 
-- [ ] **Step 3: Login page** — it renders outside the `[data-theme]` shell, so it keeps literal brand values but adopts the canonical shapes. Apply:
+- [ ] **Step 3: Login page** — it renders outside the `data-theme="light"` shell (`layout.tsx` early-returns children for `/gtm/login`), so the shared classes (`.card`, `.btn`, `.input`) do NOT apply there and must not be used; tokens do resolve (they live on `:root`), so use `var(--gtm-*)` in inline styles where a token exists. Apply:
 
 | line | find | replace |
 |---|---|---|
@@ -2148,6 +2156,8 @@ Expected: a `https://…vercel.app` preview URL. Open it and log in.
 7. Library / History / calendar task detail still open items and show thumbnails (lifecycle untouched).
 8. Outliers: QR Codes, Pages, Link in Bio, login page read as the same system; nothing is unstyled or invisible.
 9. Phone width: the Result pins to the top with the chevron; no horizontal scroll anywhere; inputs don't zoom on focus.
+10. Keyboard: Tab through every input and button on one solution page — each shows a clearly visible focus outline (the `:focus-visible` ring).
+11. Contrast: on the Field Sales page the amber eyebrows and tertiary buttons are legible on white (they use `--gtm-accent-ink`, not the raw accent).
 
 Record anything off; fix, commit, redeploy until the list is clean.
 

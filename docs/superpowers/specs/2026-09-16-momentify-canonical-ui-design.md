@@ -57,13 +57,23 @@ Make Momentify's GTM engine look and behave like the rest of the fleet (KINECT /
 | `--gtm-font-body` *(new)* | `var(--font-inter), system-ui, sans-serif` | `typography.font-family.primary` |
 | `--gtm-font-mono` *(new)* | `var(--font-space-grotesk), ui-monospace, monospace` | `typography.font-family.mono` |
 | `--gtm-grad-action` *(new)* | `linear-gradient(135deg, #00BBA5 0%, #254FE5 100%)` | `gradient.brand` ("softer action gradient for light backgrounds") |
-| `--gtm-danger` *(new)* | `#E5484D` | `semantic.error` |
+| `--gtm-danger` *(new)* | `#E5484D` | `semantic.error` — fills, borders, icons |
+| `--gtm-danger-text` *(new)* | `#b91c1c` | AA-safe danger for text on white |
+| `--gtm-accent-ink` *(new, per solution)* | default `#067A69`; violet `#6B21D4`; recruiting `#067A69`; amber `#8F6300`; indigo `#3A2073`; crimson `#B8340F` | AA-safe (≥ 4.5:1 on white) accent for **text**: `.eyebrow`, `.btn-tertiary`, focus rings. Added after code-quality review: the raw teal (2.4:1) and amber (2.6:1) accents fail WCAG AA as text. |
+| `--gtm-accent-deep-blue` *(new)* | `#1F3395` | `light-mode.accent` — form labels |
+| `--gtm-bg-input` *(new)* | `var(--gtm-bg-card)` | was referenced in BuilderUI.tsx but never defined |
+
+`--gtm-grad-action` is **fleet-constant** — deliberately *not* overridden per solution (primary buttons look the same on every solution page); `--gtm-accent-grad` *is* overridden per solution (hero bars). The theme file says so in a comment so no later task "fixes" it.
 
 The existing `--gtm-cyan`, `--gtm-tag-*`, `--gtm-layer-*`, `--gtm-accent-light`, `--gtm-accent-grad` stay (still referenced). The five **per-solution `[data-solution]` light schemes are kept verbatim** (violet / teal / amber / indigo / crimson) — brand-specific, never normalized.
 
 **Deleted:** the entire `[data-theme="dark"]` block and the five `[data-theme="dark"] [data-solution=…]` overrides. The layout pins `data-theme="light"` and the toggle is already gone; this CSS is dead.
 
-### Shared classes (added to `gtm-theme.css`, scoped under `[data-theme]`)
+### Shared classes (added to `gtm-theme.css`, scoped under `[data-theme="light"]`)
+
+Scoping is the exact value, not bare `[data-theme]`, so the classes can never leak app-wide if the GTM stylesheet stays loaded after a client-side navigation to the marketing site (which sets `data-theme` on `<html>`). `/gtm/login` renders outside the wrapper: it gets the tokens (on `:root`) but none of the classes — it is styled with `var()` in inline styles only.
+
+Accessibility rules baked into the classes (from code-quality review): no `outline: none` anywhere; `.input`, `.btn`, `.chip` get a 2px `--gtm-accent-ink` outline on `:focus-visible`; text-colored accents use `--gtm-accent-ink`; `.btn[aria-disabled="true"]` dims like `:disabled`; `.mono` uses tabular figures (the opacity readout must not jitter). No hex literals in the class layer — the gate includes a referenced-vs-defined token check.
 
 - `.card` — `background: var(--gtm-bg-card); border: 1px solid var(--gtm-border); border-radius: var(--gtm-radius-card); padding: 20px 22px; box-shadow: var(--gtm-shadow)`
 - `.eyebrow` — `font-family: var(--gtm-font-mono); font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--gtm-accent)` (teal, per the token file's assignment of teal to eyebrows)
