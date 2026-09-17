@@ -197,6 +197,9 @@ const pickerGrid: React.CSSProperties = {
   gridTemplateColumns: `repeat(auto-fill, ${THUMB_WIDTH}px)`,
   gap: 12,
   justifyContent: "start",
+  // Cards must not stretch to the row's tallest (3:4) card — each card's
+  // height is its own thumbnail (1:1 / 3:4 / 16:9) plus the label.
+  alignItems: "start",
 }
 
 const pickerCard: React.CSSProperties = {
