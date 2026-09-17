@@ -15,17 +15,34 @@ import type { Palette } from "@/lib/gtm/pillar-palettes"
 import type { TemplateManifest } from "./types"
 import { templateRegistry } from "./_registry"
 
+/** Optional background photo for social-post renders. `bgOpacity` is 0–100. */
+export type RenderMedia = { bgImage?: string; bgOpacity?: number }
+
+/** Reserved keys: BG_IMAGE → `url("…")` or `none`; BG_OPACITY → 0–1. */
+export function mediaMap(media?: RenderMedia): Record<string, string> {
+  const uri = (media?.bgImage ?? "").replace(/["\\]/g, "").trim()
+  const raw = Number(media?.bgOpacity)
+  const pct = Number.isFinite(raw) ? Math.min(100, Math.max(0, raw)) : 100
+  return {
+    BG_IMAGE: uri ? `url("${uri}")` : "none",
+    BG_OPACITY: String(Math.round(pct) / 100),
+  }
+}
+
 /**
  * Replace `{{KEY}}` placeholders in `html` with values from `slots`, then
  * inject palette CSS variables via an additional replacement pass on the
  * reserved palette keys: PRIMARY, PRIMARY_LIGHT, PRIMARY_DARK, HERO_GRAD,
- * LIGHT_BG. Missing keys resolve to empty strings (so an unfilled slot
- * degrades gracefully, rather than showing the literal `{{KEY}}`).
+ * LIGHT_BG, DECOR_PATTERN, DECOR_SIZE, plus the media keys BG_IMAGE and
+ * BG_OPACITY. Reserved keys always win over `slots`. Missing keys resolve to
+ * empty strings (so an unfilled slot degrades gracefully, rather than
+ * showing the literal `{{KEY}}`).
  */
 export function renderTemplate(
   html: string,
   slots: Record<string, string>,
-  palette: Palette
+  palette: Palette,
+  media?: RenderMedia
 ): string {
   const paletteMap: Record<string, string> = {
     PRIMARY: palette.primary,
@@ -35,6 +52,7 @@ export function renderTemplate(
     LIGHT_BG: palette.lightBg,
     DECOR_PATTERN: palette.decorPattern,
     DECOR_SIZE: palette.decorSize,
+    ...mediaMap(media),
   }
   return html.replace(/\{\{([A-Z0-9_]+)\}\}/g, (_m, key: string) => {
     if (key in paletteMap) return paletteMap[key]
