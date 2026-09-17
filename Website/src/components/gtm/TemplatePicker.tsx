@@ -9,40 +9,11 @@
  * (AssetPanel's own "Change template" button, which still opens this grid).
  */
 
-import React, { useCallback, useEffect, useRef } from "react"
-import { Check } from "lucide-react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import { Check, Maximize2 } from "lucide-react"
 import type { TemplateManifest } from "@/lib/gtm/templates/types"
-
-type PickerMedia = { bgImage?: string; bgOpacity?: number }
-
-/**
- * Paint the chosen background photo into a thumbnail. The preview iframes are
- * same-origin (`/api/gtm/template-preview`), and every social-post template
- * reads its photo from `--bg-image` / `--bg-opacity` declared on its root
- * (`.stage`, or `.card` for wide-banner-11), so setting those inline on the
- * root mirrors exactly what `mediaMap()` does at fill time — without shipping
- * a multi-MB data URI through a GET URL. Clearing the photo removes them again.
- */
-function applyMediaToFrame(frame: HTMLIFrameElement, media: PickerMedia | undefined) {
-  let doc: Document | null
-  try {
-    doc = frame.contentDocument
-  } catch {
-    return
-  }
-  const root = doc?.querySelector<HTMLElement>(".stage, .card")
-  if (!root) return
-  const uri = (media?.bgImage ?? "").replace(/["\\]/g, "").trim()
-  if (!uri) {
-    root.style.removeProperty("--bg-image")
-    root.style.removeProperty("--bg-opacity")
-    return
-  }
-  const raw = Number(media?.bgOpacity)
-  const pct = Number.isFinite(raw) ? Math.min(100, Math.max(0, raw)) : 100
-  root.style.setProperty("--bg-image", `url("${uri}")`)
-  root.style.setProperty("--bg-opacity", String(Math.round(pct) / 100))
-}
+import TemplatePreviewModal from "@/components/gtm/TemplatePreviewModal"
+import { applyMediaToFrame, nativeSize, templatePreviewSrc, type PickerMedia } from "@/components/gtm/template-frame"
 
 export default function TemplatePicker({
   solution,
@@ -66,6 +37,9 @@ export default function TemplatePicker({
   const frames = useRef(new Map<string, HTMLIFrameElement>())
   const mediaRef = useRef(media)
   mediaRef.current = media
+  // Enlarged preview (fleet pattern: the gallery's preview modal), opened from
+  // the corner button on a card without changing the selection.
+  const [preview, setPreview] = useState<TemplateManifest | null>(null)
 
   const registerFrame = useCallback((id: string, el: HTMLIFrameElement | null) => {
     if (el) frames.current.set(id, el)
@@ -87,21 +61,12 @@ export default function TemplatePicker({
       <div style={pickerGrid}>
         {templates.map((t) => {
           const isActive = activeId === t.id
-          // Each iframe is rendered at the template's NATIVE stage size so its
-          // clamp()-based font math hits the sizes designers tuned it for, then
-          // CSS-scaled down to fit the thumbnail box. The sizes must match the
-          // `.stage` width/height in template.html exactly — the templates
-          // center the stage in the body, so a larger viewport shows the card
-          // floating inside dead space (16:9 is 1280×720, not 1920×1080).
-          const is169 = t.aspectRatio === "16:9"
-          const nativeW = is169 ? 1280 : 1080
-          const nativeH =
-            t.aspectRatio === "1:1" ? 1080
-            : t.aspectRatio === "3:4" ? 1440
-            : 720 // 16:9
+          const { width: nativeW, height: nativeH } = nativeSize(t.aspectRatio)
           return (
+            // Wrapper so the preview control can sit over the card: a <button>
+            // can't contain another <button>.
+            <div key={t.id} style={{ position: "relative" }}>
             <button
-              key={t.id}
               type="button"
               onClick={() => onPick(t.id)}
               disabled={disabled}
@@ -127,7 +92,7 @@ export default function TemplatePicker({
                   <iframe
                     ref={(el) => registerFrame(t.id, el)}
                     onLoad={(e) => applyMediaToFrame(e.currentTarget, mediaRef.current)}
-                    src={`/api/gtm/template-preview?assetType=${encodeURIComponent(t.assetType)}&templateId=${encodeURIComponent(t.id)}&pillar=${encodeURIComponent(solution)}`}
+                    src={templatePreviewSrc(t, solution)}
                     title={`${t.label} thumbnail`}
                     style={{ width: nativeW, height: nativeH, border: "none", display: "block" }}
                   />
@@ -147,9 +112,29 @@ export default function TemplatePicker({
                 )}
               </div>
             </button>
+            <button
+              type="button"
+              onClick={() => setPreview(t)}
+              aria-label={`Preview ${t.label}`}
+              title="Preview"
+              style={previewButton}
+            >
+              <Maximize2 size={12} />
+            </button>
+            </div>
           )
         })}
       </div>
+      {preview && (
+        <TemplatePreviewModal
+          manifest={preview}
+          solution={solution}
+          media={media}
+          isActive={activeId === preview.id}
+          onUse={disabled ? undefined : () => onPick(preview.id)}
+          onClose={() => setPreview(null)}
+        />
+      )}
     </div>
   )
 }
@@ -212,6 +197,25 @@ const pickerCard: React.CSSProperties = {
   overflow: "hidden",
   fontFamily: font,
   transition: "border-color 150ms ease, box-shadow 150ms ease",
+}
+
+// Corner control over the thumbnail; sits above the card button.
+const previewButton: React.CSSProperties = {
+  position: "absolute",
+  top: 6,
+  right: 6,
+  width: 24,
+  height: 24,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: 0,
+  borderRadius: 6,
+  border: "1px solid var(--gtm-border)",
+  background: "var(--gtm-bg-card)",
+  color: "var(--gtm-text-secondary)",
+  cursor: "pointer",
+  boxShadow: "var(--gtm-shadow)",
 }
 
 function pickerThumbWrap(aspect: "1:1" | "3:4" | "16:9"): React.CSSProperties {
