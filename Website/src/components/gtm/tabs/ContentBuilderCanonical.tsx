@@ -268,7 +268,9 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
         throw new Error(body.error || "Generation failed")
       }
       const data = await res.json()
-      setGenerated(data.content || "")
+      const content: string = data.content || ""
+      setGenerated(content)
+      if (!content) setError("The model returned no content. Try a more specific brief.")
       setDraftAssetId(`draft-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`)
     } catch (e: unknown) {
       const err = e as { message?: string }
@@ -564,14 +566,24 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
         )}
       </div>
 
-      {/* Mobile: the result pins to the top with a chevron so it stays visible while editing. */}
-      {isMobile && generated && (
-        <div style={{ position: "sticky", top: 0, zIndex: 30, background: "var(--gtm-bg-page)", paddingBottom: 10, borderBottom: "1px solid var(--gtm-border)" }}>
-          <button type="button" className="btn btn-secondary" style={{ width: "100%", justifyContent: "space-between", borderRadius: 9 }} onClick={() => setPreviewOpen((o) => !o)} aria-expanded={previewOpen}>
-            <span>Result</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: previewOpen ? "rotate(180deg)" : "none", transition: "transform .15s ease" }}><polyline points="6 9 12 15 18 9" /></svg>
-          </button>
-          {previewOpen && <div style={{ marginTop: 10, maxHeight: "52vh", overflow: "auto" }}>{resultCard}</div>}
+      {/* Result — mounted once so AssetPanel never remounts. On mobile it pins to the
+          top with a show/hide chevron (hidden, not unmounted); on desktop flex `order`
+          places the same node last. */}
+      {generated && (
+        <div
+          style={isMobile
+            ? { order: 0, position: "sticky", top: 0, zIndex: 30, background: "var(--gtm-bg-page)", paddingBottom: 10, borderBottom: "1px solid var(--gtm-border)" }
+            : { order: 99 }}
+        >
+          {isMobile && (
+            <button type="button" className="btn btn-secondary" style={{ width: "100%", justifyContent: "space-between", borderRadius: "var(--gtm-radius-control)" }} onClick={() => setPreviewOpen((o) => !o)} aria-expanded={previewOpen}>
+              <span>Result</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: previewOpen ? "rotate(180deg)" : "none", transition: "transform .15s ease" }}><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+          )}
+          <div hidden={isMobile && !previewOpen} style={isMobile ? { marginTop: 10, maxHeight: "52vh", overflow: "auto" } : undefined}>
+            {resultCard}
+          </div>
         </div>
       )}
 
@@ -599,7 +611,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
           <span className="field-label">Motion</span>
           <div style={{ display: "flex", gap: 6 }}>
             {(["direct", "partner"] as const).map((m) => (
-              <button key={m} type="button" className={`chip${motion === m ? " on" : ""}`} onClick={() => setMotion(m)}>{m === "direct" ? "Direct to Enterprise" : "Channel Partners"}</button>
+              <button key={m} type="button" className={`chip${motion === m ? " on" : ""}`} aria-pressed={motion === m} onClick={() => setMotion(m)}>{m === "direct" ? "Direct to Enterprise" : "Channel Partners"}</button>
             ))}
           </div>
         </div>
@@ -624,7 +636,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
               <span className="field-label">{label}</span>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                 {CONTENT_TYPES.filter((c) => c.visual === visual).map((c) => (
-                  <button key={c.value} type="button" className={`chip${contentType === c.value ? " on" : ""}`} onClick={() => selectFormat(c.value)} title={c.description}>{c.label}</button>
+                  <button key={c.value} type="button" className={`chip${contentType === c.value ? " on" : ""}`} aria-pressed={contentType === c.value} onClick={() => selectFormat(c.value)} title={c.description}>{c.label}</button>
                 ))}
               </div>
             </div>
@@ -661,7 +673,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
                     type="range" min={0} max={100} step={1} value={sliderValue}
                     aria-label="Background image opacity"
                     onChange={(e) => setSliderValue(Number(e.target.value))}
-                    onMouseUp={commitOpacity} onTouchEnd={commitOpacity} onKeyUp={commitOpacity}
+                    onMouseUp={commitOpacity} onTouchEnd={commitOpacity} onKeyUp={commitOpacity} onPointerUp={commitOpacity} onBlur={commitOpacity}
                     style={{ flex: 1, accentColor: "var(--gtm-accent)" }}
                   />
                   <span className="mono" style={{ fontSize: 12, width: 40, textAlign: "right", color: "var(--gtm-text-primary)" }}>{sliderValue}%</span>
@@ -689,9 +701,6 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
           <Loader2 size={16} style={{ animation: "spin 1s linear infinite" }} /> Generating content - this takes ~5-15 seconds...
         </div>
       )}
-
-      {/* 6 · Result (desktop; on mobile it is pinned above) */}
-      {!isMobile && resultCard}
 
       {/* Publish-to-Microsite modal */}
       {publishOpen && (
