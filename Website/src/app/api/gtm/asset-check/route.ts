@@ -43,13 +43,22 @@ export async function GET(request: Request) {
     // iframe.
     try {
       const baseKey = assetKvKey(solution, assetType, itemId)
-      const [blobUrl, templateId] = await Promise.all([
+      const [blobUrl, templateId, slotsRaw] = await Promise.all([
         kv.get<string>(baseKey),
         kv.get<string>(`${baseKey}:template`),
+        kv.get<string>(`${baseKey}:slots`),
       ])
       if (blobUrl) {
         const proxyUrl = `/api/gtm/asset-preview?solution=${encodeURIComponent(solution)}&assetType=${encodeURIComponent(assetType)}${itemId ? `&itemId=${encodeURIComponent(itemId)}` : ""}`
-        return NextResponse.json({ exists: true, url: proxyUrl, templateId: templateId || undefined })
+        let slots: unknown
+        if (slotsRaw) {
+          try {
+            slots = JSON.parse(slotsRaw)
+          } catch {
+            /* stored value isn't valid JSON - omit slots, everything else still restores */
+          }
+        }
+        return NextResponse.json({ exists: true, url: proxyUrl, templateId: templateId || undefined, slots })
       }
     } catch {
       /* fall through to fs fallback */

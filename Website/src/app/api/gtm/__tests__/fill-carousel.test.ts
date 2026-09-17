@@ -2,7 +2,7 @@ import { POST } from "../fill-carousel/route"
 import { NextRequest } from "next/server"
 
 jest.mock("@/lib/gtm/content-types", () => ({ requireGtmAuth: jest.fn(async () => true) }))
-jest.mock("@/lib/gtm/kv-store", () => ({ kv: { set: jest.fn(async () => undefined) } }))
+jest.mock("@/lib/gtm/kv-store", () => ({ kv: { set: jest.fn(async () => undefined), get: jest.fn(async () => undefined) } }))
 jest.mock("@vercel/blob", () => ({ put: jest.fn(async (p: string) => ({ url: `https://blob.test/${p}` })) }))
 jest.mock("@/lib/gtm/templates/render", () => {
   const actual = jest.requireActual("@/lib/gtm/templates/render")
@@ -18,6 +18,7 @@ jest.mock("@/lib/gtm/templates/render", () => {
 })
 
 import { put } from "@vercel/blob"
+import { kv } from "@/lib/gtm/kv-store"
 
 const png = "data:image/png;base64," + Buffer.from("x").toString("base64")
 const base = { templateId: "bold-stat-1x1", pillar: "trade-shows", briefText: "A brief long enough to pass validation.", itemId: "draft-1" }
@@ -85,5 +86,15 @@ describe("POST /api/gtm/fill-carousel", () => {
     const res = await POST(req({ ...base, bgImage: "https://x/y.png" }))
     expect(res.status).toBe(400)
     expect(put).not.toHaveBeenCalled()
+  })
+
+  it("caches the raw filtered cards in KV alongside the template id", async () => {
+    const cards = Array.from({ length: CARD_COUNT }, (_, i) => ({ TXT: `card${i}` }))
+    await POST(req({ ...base, cards }))
+    const calls = (kv.set as jest.Mock).mock.calls.map((c) => c[0] as string)
+    const slotsKey = calls.find((k) => k.endsWith(":slots"))
+    expect(slotsKey).toBeDefined()
+    const stored = (kv.set as jest.Mock).mock.calls.find((c) => c[0] === slotsKey)![1]
+    expect(JSON.parse(stored)).toEqual(cards)   // raw array of 6, not escaped
   })
 })

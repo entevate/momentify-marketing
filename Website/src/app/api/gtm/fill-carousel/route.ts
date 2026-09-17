@@ -249,6 +249,9 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
         // Cache the per-card URLs so the zip-download endpoint can pull
         // each card without re-running Claude.
         kv.set(`${baseKey}:cards`, JSON.stringify(cardUrls)),
+        // Cache the raw filtered card slot values, so a restored carousel
+        // can populate the slot editor + media re-render.
+        kv.set(`${baseKey}:slots`, JSON.stringify(cards)),
       ])
     } catch {
       /* KV cache is best-effort */

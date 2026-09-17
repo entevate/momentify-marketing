@@ -236,11 +236,14 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
     // iframe can restore aspect-ratio sizing on reload. Key pattern:
     //   <assetKvKey>           = blob URL (existing)
     //   <assetKvKey>:template  = templateId (new)
+    //   <assetKvKey>:slots     = raw filtered slots, so a restored graphic
+    //                            can populate the slot editor + re-render
     try {
       const baseKey = assetKvKey(pillar, assetType, itemId)
       await Promise.all([
         kv.set(baseKey, blobUrl),
         kv.set(`${baseKey}:template`, templateId),
+        kv.set(`${baseKey}:slots`, JSON.stringify(slots)),
       ])
     } catch {
       /* KV cache is best-effort */

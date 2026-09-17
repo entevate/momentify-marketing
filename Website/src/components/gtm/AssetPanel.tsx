@@ -123,6 +123,8 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
           // Restore templateId if the server cached it - lets the preview
           // iframe size itself by the template's actual aspect ratio.
           if (d?.templateId) setActiveTemplateId(d.templateId)
+          if (isCarousel && Array.isArray(d?.slots)) setCards(d.slots as Record<string, string>[])
+          else if (!isCarousel && d?.slots && typeof d.slots === "object" && !Array.isArray(d.slots)) { setSlots(d.slots as Record<string, string>); setDraftSlots(d.slots as Record<string, string>) }
         } else if (isSocialPost) {
           setPickerOpen(true)
         }

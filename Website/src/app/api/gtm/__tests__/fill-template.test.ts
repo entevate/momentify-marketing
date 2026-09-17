@@ -2,7 +2,7 @@ import { POST } from "../fill-template/route"
 import { NextRequest } from "next/server"
 
 jest.mock("@/lib/gtm/content-types", () => ({ requireGtmAuth: jest.fn(async () => true) }))
-jest.mock("@/lib/gtm/kv-store", () => ({ kv: { set: jest.fn(async () => undefined) } }))
+jest.mock("@/lib/gtm/kv-store", () => ({ kv: { set: jest.fn(async () => undefined), get: jest.fn(async () => undefined) } }))
 jest.mock("@vercel/blob", () => ({ put: jest.fn(async (p: string) => ({ url: `https://blob.test/${p}` })) }))
 jest.mock("@/lib/gtm/templates/render", () => {
   const actual = jest.requireActual("@/lib/gtm/templates/render")
@@ -21,6 +21,7 @@ jest.mock("@/lib/gtm/templates/render", () => {
 })
 
 import { put } from "@vercel/blob"
+import { kv } from "@/lib/gtm/kv-store"
 
 const png = "data:image/png;base64," + Buffer.from("x").toString("base64")
 const base = { templateId: "bold-stat-1x1", assetType: "social-post", pillar: "trade-shows", briefText: "A brief long enough to pass validation.", itemId: "draft-1" }
@@ -96,5 +97,14 @@ describe("POST /api/gtm/fill-template", () => {
     await POST(req({ ...base, bgImage: png, bgOpacity: 0 }))
     const stored = (put as jest.Mock).mock.calls[0][1] as string
     expect(stored).toContain("--bg-opacity:0}")
+  })
+
+  it("caches the raw filtered slots in KV alongside the template id", async () => {
+    await POST(req({ ...base, slots: { STAT: "12345" } }))
+    const calls = (kv.set as jest.Mock).mock.calls.map((c) => c[0] as string)
+    const slotsKey = calls.find((k) => k.endsWith(":slots"))
+    expect(slotsKey).toBeDefined()
+    const stored = (kv.set as jest.Mock).mock.calls.find((c) => c[0] === slotsKey)![1]
+    expect(JSON.parse(stored)).toEqual({ STAT: "1234" })   // raw + truncated, not escaped
   })
 })
