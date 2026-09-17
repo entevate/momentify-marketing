@@ -253,11 +253,11 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
   useEffect(() => {
     if (!autoFill || !initialTemplateId) return
     if (initialTemplateId === activeTemplateId) return   // already showing it (incl. the echo from onTemplateChange)
-    if (busy) return
+    if (busy) return                                     // retried when busy clears (deps below)
     if (!mountedCheckDoneRef.current) return             // mount effect owns the first fill
     fillRef.current(initialTemplateId)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialTemplateId])
+  }, [initialTemplateId, busy])
 
   // ─── Re-render without Claude (slot edits, opacity slider) ───────────
   const rerender = useCallback(
