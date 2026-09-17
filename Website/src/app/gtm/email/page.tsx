@@ -8,7 +8,7 @@ import DraftsTab from "@/components/gtm/email/DraftsTab"
 import AudiencesTab from "@/components/gtm/email/AudiencesTab"
 import SendsTab from "@/components/gtm/email/SendsTab"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 /**
  * /gtm/email - Email module landing page.

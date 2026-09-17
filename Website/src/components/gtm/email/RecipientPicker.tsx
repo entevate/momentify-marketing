@@ -16,7 +16,7 @@ import { useEffect, useState } from "react"
 import { Plus, X } from "lucide-react"
 import type { EmailRecipient, ResendAudience, ResendContact } from "@/lib/gtm/email-types"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 interface Props {
   recipients: EmailRecipient[]

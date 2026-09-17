@@ -3,7 +3,7 @@
 import React from "react"
 import { taskCategories, solutionMeta } from "@/lib/gtm/calendar-categories"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 interface FilterBarProps {
   selectedSolutions: string[]

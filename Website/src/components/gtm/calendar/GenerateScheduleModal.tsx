@@ -30,7 +30,7 @@ import {
 } from "@/lib/gtm/schedule-modal-data"
 import { assetTypeForContentType } from "@/lib/gtm/asset-type-map"
 
-const font = "'Inter', system-ui, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, sans-serif"
 
 /** IDs created by a single Generate run - used by the Calendar to offer Undo. */
 export interface GeneratedBatch {

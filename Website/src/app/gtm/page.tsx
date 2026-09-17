@@ -7,7 +7,7 @@ import { SolutionIcon } from "@/components/gtm/SolutionIcon"
 import SolutionTabs from "@/components/gtm/tabs/SolutionTabs"
 import type { VerticalOption } from "@/components/gtm/tabs/SolutionTabs"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 const solutions = [
   {

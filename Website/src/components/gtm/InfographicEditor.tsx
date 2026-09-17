@@ -29,7 +29,7 @@ export default function InfographicEditor({
     onClose()
   }
 
-  const font = "'Inter', system-ui, -apple-system, sans-serif"
+  const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
   return (
     <div

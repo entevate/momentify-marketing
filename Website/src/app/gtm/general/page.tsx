@@ -24,7 +24,7 @@ import ContentLibrary from "@/components/gtm/tabs/ContentLibrary"
 import ContentHistory from "@/components/gtm/tabs/ContentHistory"
 import LibraryCountBadge from "@/components/gtm/LibraryCountBadge"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 // ─── Static framework content ──────────────────────────────────────────
 // Sourced from public site: momentifyapp.com homepage + /platform/how-it-works + /what-is-rox

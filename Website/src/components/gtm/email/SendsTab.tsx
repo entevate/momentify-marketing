@@ -10,7 +10,7 @@ import { useEffect, useState } from "react"
 import MetricsDashboard from "./MetricsDashboard"
 import type { EmailDraft, EmailDraftMetrics, EmailEvent } from "@/lib/gtm/email-types"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 export default function SendsTab() {
   const [drafts, setDrafts] = useState<EmailDraft[]>([])

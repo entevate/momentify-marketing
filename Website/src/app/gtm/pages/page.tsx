@@ -9,7 +9,7 @@
 
 import PagesView from "@/components/gtm/PagesView"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 export default function PagesPage() {
   return (

@@ -17,7 +17,7 @@ import RecipientPicker from "./RecipientPicker"
 import ScheduleDialog from "./ScheduleDialog"
 import type { EmailDraft, EmailRecipient } from "@/lib/gtm/email-types"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 interface Props {
   draft: EmailDraft

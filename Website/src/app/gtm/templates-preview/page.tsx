@@ -3,7 +3,7 @@
 import CanvasEditor from "@/components/social-toolkit/CanvasEditor"
 import { brands, type AspectRatio } from "@/components/social-toolkit/backgroundData"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 const solutionBrands = [
   { brandId: "trade-shows", label: "Trade Shows & Exhibits", accent: "#6B21D4" },

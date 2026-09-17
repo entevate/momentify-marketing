@@ -109,7 +109,7 @@ export function normalizeUrl(v: string): string {
 }
 
 // ─── Style tokens for form primitives ───────────────────────────────────
-const font = "'Inter', system-ui, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, sans-serif"
 
 const cardStyle: CSSProperties = {
   background: "var(--gtm-bg-card)",

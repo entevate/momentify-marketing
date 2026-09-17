@@ -29,7 +29,7 @@ import GenerateScheduleModal, { type GeneratedBatch } from "@/components/gtm/cal
 import RecurringSchedulesPanel from "@/components/gtm/calendar/RecurringSchedulesPanel"
 import { Undo2, X as XIcon } from "lucide-react"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 /**
  * Load tasks from the API. Trust whatever the server returns — never

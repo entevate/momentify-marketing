@@ -21,7 +21,7 @@ import {
 } from "lucide-react"
 import type { ContentItem, MicrositeRecord } from "@/lib/gtm/content-types"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 const solutionTabs = [
   { key: "all", label: "All" },

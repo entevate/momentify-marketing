@@ -8,7 +8,7 @@ import AssetPanel from "@/components/gtm/AssetPanel"
 import EmailActivityPanel from "@/components/gtm/email/EmailActivityPanel"
 import { isVisualContentType } from "@/lib/gtm/visual-content"
 
-const font = "'Inter', system-ui, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, sans-serif"
 
 interface LibraryItem {
   id: string

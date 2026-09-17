@@ -28,7 +28,7 @@ import { dispatchLibraryChanged } from "../tabs/SolutionTabs"
 import { assetTypeForContentType } from "@/lib/gtm/asset-type-map"
 import { isVisualContentType } from "@/lib/gtm/visual-content"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 // Map icon names to components
 const iconMap: Record<string, React.ElementType> = {

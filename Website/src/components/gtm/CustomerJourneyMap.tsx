@@ -2,7 +2,7 @@
 
 import { ChevronRight } from "lucide-react"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif" as const
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif" as const
 
 interface JourneyStage {
   stage: string

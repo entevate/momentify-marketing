@@ -8,7 +8,7 @@
 import { useState } from "react"
 import { CalendarPlus, X } from "lucide-react"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 interface Props {
   defaultDate?: string

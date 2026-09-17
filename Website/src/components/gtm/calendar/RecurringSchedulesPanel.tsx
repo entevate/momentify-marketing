@@ -14,7 +14,7 @@ import React, { useEffect, useState, useCallback } from "react"
 import { Repeat, Trash2, Power } from "lucide-react"
 import { pillarMeta, pillarLabel } from "@/lib/gtm/schedule-modal-data"
 
-const font = "'Inter', system-ui, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, sans-serif"
 
 interface RecurringSchedule {
   id: string

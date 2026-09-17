@@ -11,7 +11,7 @@ import Link from "next/link"
 import { Mail } from "lucide-react"
 import type { EmailAggregateMetrics, EmailDraft } from "@/lib/gtm/email-types"
 
-const font = "'Inter', system-ui, -apple-system, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif"
 
 interface Props {
   solution: string

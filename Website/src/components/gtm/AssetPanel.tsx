@@ -26,7 +26,7 @@ import TemplatePicker from "@/components/gtm/TemplatePicker"
 import { nativeSize } from "@/components/gtm/template-frame"
 import SlotEditor from "@/components/gtm/SlotEditor"
 
-const font = "'Inter', system-ui, sans-serif"
+const font = "var(--font-inter), 'Inter', system-ui, sans-serif"
 
 export interface AssetPanelProps {
   /** Momentify solution id (trade-shows / recruiting / field-sales / facilities / events-venues) */
