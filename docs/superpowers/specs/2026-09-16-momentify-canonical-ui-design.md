@@ -154,7 +154,7 @@ Same 6-line hook in each, fleet-consistent naming:
 .stage .bg { position:absolute; inset:0; background: var(--bg-image) center/cover no-repeat;
              opacity: var(--bg-opacity); pointer-events:none; z-index:0; }
 ```
-and `<div class="bg"></div>` as the **first child** of `.stage`. Layer order (bottom → top): `.stage` hero gradient → `.bg` photo → `::before` decor pattern → `::after` darkening overlay → `.body-area` (z-index 1). The existing overlay keeps text legible over any photo. **With nothing set (`none` / `1`) the output is byte-for-byte what it is today.**
+and `<div class="bg"></div>` as the **first child** of `.stage`. Layer order (bottom → top): `.stage` hero gradient → `::before` decor pattern (a pseudo-element always paints before real children at equal z-index) → `.bg` photo → `.geo` shapes → `::after` darkening overlay → `.body-area` / `footer` (z-index 1). A supplied photo covers the subtle decor polygons — the intended result — while the existing overlay keeps text legible over any photo. **With nothing set (`none` / `1`) the output is byte-for-byte what it is today.**
 
 ### Transport
 Client converts the file with `fileToDataUri` (AUTIX pattern); accepts `image/png`, `image/jpeg`, `image/webp`; **rejects > 4 MB** with an inline error (keeps the stored HTML blob sane). The data URI is substituted into the HTML **before** the blob `put`, so the preview iframe and `render-png` load the identical document. The content item schema is unchanged — it still self-carries the graphic via `blobUrl`.
