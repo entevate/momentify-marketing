@@ -46,3 +46,34 @@ export function filterSlots(input: unknown, spec: SlotSpec[]): Record<string, st
   }
   return out
 }
+
+/**
+ * Slot keys the user toggled off, filtered to the manifest's own keys and
+ * deduped. Anything that is not an array of strings (absent body field,
+ * object, string, number) yields `[]`, i.e. nothing hidden - the contract's
+ * default, which renders byte-identically to before the feature existed.
+ *
+ * Filtering against the spec is what keeps a caller from injecting an
+ * arbitrary attribute selector into the rendered style tag.
+ */
+export function parseHidden(input: unknown, spec: SlotSpec[]): string[] {
+  if (!Array.isArray(input)) return []
+  const allowed = new Set(spec.map((s) => s.key))
+  const out = new Set<string>()
+  for (const v of input) {
+    if (typeof v === "string" && allowed.has(v)) out.add(v)
+  }
+  return [...out]
+}
+
+/**
+ * Per-card variant for carousels: exactly `count` arrays, each parsed by
+ * `parseHidden`. A wrong shape (not an array, or the wrong length) yields
+ * `count` independent empty arrays rather than a partial result, so a
+ * malformed field can never desynchronise the hidden lists from the cards.
+ */
+export function parseHiddenCards(input: unknown, spec: SlotSpec[], count: number): string[][] {
+  const empty = () => Array.from({ length: count }, () => [] as string[])
+  if (!Array.isArray(input) || input.length !== count) return empty()
+  return input.map((c) => parseHidden(c, spec))
+}

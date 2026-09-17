@@ -52,3 +52,56 @@ describe("renderTemplate media", () => {
     expect(out).toContain("--primary:#111111")                               // reserved: raw
   })
 })
+
+describe("renderTemplate hidden slots", () => {
+  const doc = `<html><head><title>t</title></head><body><h1>{{HEADLINE}}</h1><p>{{SUB}}</p></body></html>`
+
+  it("renders a hidden key as empty text and adds one display:none rule", () => {
+    const out = renderTemplate(doc, { HEADLINE: "Visible", SUB: "Gone" }, palette, undefined, ["SUB"])
+    expect(out).toContain("<h1>Visible</h1>")
+    expect(out).toContain("<p></p>")
+    expect(out).not.toContain("Gone")
+    expect(out).toContain('[data-slot="SUB"]{display:none !important}')
+  })
+
+  it("hides a key even when a slot value is supplied for it", () => {
+    const out = renderTemplate(doc, { HEADLINE: "A", SUB: "B" }, palette, undefined, ["HEADLINE", "SUB"])
+    expect(out).toContain("<h1></h1>")
+    expect(out).toContain("<p></p>")
+    expect(out).toContain('[data-slot="HEADLINE"]{display:none !important}')
+    expect(out).toContain('[data-slot="SUB"]{display:none !important}')
+  })
+
+  it("emits one style tag holding a rule per hidden key", () => {
+    const out = renderTemplate(doc, {}, palette, undefined, ["HEADLINE", "SUB"])
+    const styleTags = out.match(/<style>\[data-slot=/g) ?? []
+    expect(styleTags).toHaveLength(1)
+  })
+
+  it("injects the style tag immediately before </head>", () => {
+    const out = renderTemplate(doc, { HEADLINE: "x" }, palette, undefined, ["SUB"])
+    expect(out).toContain('<style>[data-slot="SUB"]{display:none !important}</style></head>')
+  })
+
+  it("prepends the style tag when the document has no </head>", () => {
+    const out = renderTemplate(`<div>{{HEADLINE}}</div>`, {}, palette, undefined, ["HEADLINE"])
+    expect(out.startsWith('<style>[data-slot="HEADLINE"]{display:none !important}</style>')).toBe(true)
+  })
+
+  it("drops keys that are not plain [A-Z0-9_] so nothing unescaped reaches the style tag", () => {
+    const out = renderTemplate(doc, { HEADLINE: "Hi" }, palette, undefined, ['"]{}</style><script>evil', "sub", "OK_1"])
+    expect(out).not.toContain("<script>")
+    expect(out).not.toContain("evil")
+    expect(out).not.toContain("</style><script")
+    expect(out).toContain('<style>[data-slot="OK_1"]{display:none !important}</style>')
+  })
+
+  it("injects nothing when hidden is absent or empty - byte-identical to no arg", () => {
+    const withoutArg = renderTemplate(doc, { HEADLINE: "A", SUB: "B" }, palette)
+    expect(renderTemplate(doc, { HEADLINE: "A", SUB: "B" }, palette, undefined, [])).toBe(withoutArg)
+    expect(renderTemplate(doc, { HEADLINE: "A", SUB: "B" }, palette, undefined, undefined)).toBe(withoutArg)
+    expect(withoutArg).not.toContain("display:none")
+    // only invalid keys -> still nothing injected
+    expect(renderTemplate(doc, { HEADLINE: "A", SUB: "B" }, palette, undefined, ["nope!"])).toBe(withoutArg)
+  })
+})

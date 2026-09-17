@@ -41,13 +41,31 @@ export function mediaMap(media?: RenderMedia): Record<string, string> {
  *
  * Caller slot values are HTML-escaped (they are text nodes in every
  * template); reserved palette/media keys are raw CSS values.
+ *
+ * `hidden` lists slot keys the user toggled off. A hidden key renders as an
+ * empty string whatever `slots` holds, AND gets a
+ * `[data-slot="KEY"]{display:none !important}` rule so its element (tagged by
+ * scripts/add-slot-tags.mjs) collapses rather than leaving a gap - emptying
+ * the text alone still leaves the element's padding, border, and flex/grid
+ * track behind. Every rule goes in ONE style tag injected immediately before
+ * `</head>`, or prepended when the document has no head.
+ *
+ * An absent or empty `hidden` injects nothing at all, so existing output stays
+ * byte-identical. Keys that are not plain `[A-Z0-9_]+` are dropped rather than
+ * escaped: nothing caller-controlled should reach a raw style tag.
  */
 export function renderTemplate(
   html: string,
   slots: Record<string, string>,
   palette: Palette,
-  media?: RenderMedia
+  media?: RenderMedia,
+  hidden?: string[]
 ): string {
+  // Dedupe so a repeated key never yields a repeated rule.
+  const hiddenSet = new Set(
+    (hidden ?? []).filter((k) => typeof k === "string" && /^[A-Z0-9_]+$/.test(k))
+  )
+  const hiddenKeys = [...hiddenSet]
   const paletteMap: Record<string, string> = {
     PRIMARY: palette.primary,
     PRIMARY_LIGHT: palette.light,
@@ -58,11 +76,20 @@ export function renderTemplate(
     DECOR_SIZE: palette.decorSize,
     ...mediaMap(media),
   }
-  return html.replace(/\{\{([A-Z0-9_]+)\}\}/g, (_m, key: string) => {
+  const filled = html.replace(/\{\{([A-Z0-9_]+)\}\}/g, (_m, key: string) => {
     if (key in paletteMap) return paletteMap[key]
+    if (hiddenSet.has(key)) return ""
     if (key in slots) return escapeHtml(slots[key])
     return ""
   })
+  if (hiddenKeys.length === 0) return filled
+
+  const rules = hiddenKeys.map((k) => `[data-slot="${k}"]{display:none !important}`).join("")
+  const styleTag = `<style>${rules}</style>`
+  const headClose = filled.indexOf("</head>")
+  return headClose < 0
+    ? styleTag + filled
+    : filled.slice(0, headClose) + styleTag + filled.slice(headClose)
 }
 
 /**
