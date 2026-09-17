@@ -1239,7 +1239,7 @@ and add `media` to the `useCallback` deps: `[solution, briefText, itemId, isCaro
 Run: `grep -nE '#00BBA5|#181818|#6b6b6b|#f6f8fb|#ffffff"' src/components/gtm/AssetPanel.tsx`
 Expected: no output.
 
-- [ ] **Step 6: Verify gate + commit**
+- [x] **Step 6: Verify gate + commit** *(done — commits `4279eb7d` + `dc79d569`; combined review approved after fixes: three missed token swaps, a busy-aware deferred re-render so a media change mid-fill never races the blob path, abort/timeout on `rerender`, content-sensitive `mediaKey`, `data.slots` shape guard. Deferred follow-up: an asset restored from KV on mount has no `slots`, so the slot editor and media re-render are unavailable until the user re-fills — fix belongs in `fill-*`/`asset-check` caching `slots`/`cards` in KV. The plan's Step-5 grep was narrower than the acceptance rule; use the widened one: `#00BBA5|#181818|#6b6b6b|#f6f8fb|#b91c1c|rgba\(36,123,150|rgba\(239, 68, 68|rgba\(0, 187, 165`.)*
 
 Run the verification gate. Expected: tsc 0, Jest green.
 
