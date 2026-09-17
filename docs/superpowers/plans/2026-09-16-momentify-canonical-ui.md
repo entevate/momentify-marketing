@@ -2221,3 +2221,11 @@ EOF
 ```
 
 > **Done (2026-09-17):** old `ContentBuilder.tsx` removed (`6850d446`); final whole-branch review APPROVED, its should-fix items landed as `d4d79754` + `0c7c975d` (dead code, shared `MAX_BG_BYTES`, 16:9 result size via `nativeSize()`, publish-modal z-index, login focus token, four unused theme tokens dropped, `template-preview` 401 test — Jest 44). PR: https://github.com/entevate/momentify-marketing/pull/7. Deferred, not in this PR: modal focus trap/scroll lock, mobile Schedule popover clipping, remaining QrLibrary/PagesView chrome literals.
+
+### Task 10: Per-slot editing with on/off toggles (spec Section 8)
+
+Two implementers in parallel on disjoint files. Contract: `hidden` is `string[]` (social) / `string[][]` (carousel, 6 entries); hidden keys render empty + `[data-slot="KEY"]{display:none !important}`; KV `${baseKey}:hidden`; `asset-check` returns `hidden`.
+
+- [ ] **Server:** `scripts/add-slot-tags.mjs` + 15 templates tagged; `render.ts` `hidden` param + tests; `render-media.ts` `parseHidden`; `fill-template` / `fill-carousel` / `asset-check` + tests; parity script green.
+- [ ] **Client:** `AssetPanel.tsx` (+ new `SlotEditor.tsx`): two-column result, per-slot switch rows, carousel card selector, hidden state seeded from fill/asset-check, Update preview sends `hidden`.
+- [ ] Gate, review, preview deploy, push to PR #7.

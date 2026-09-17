@@ -228,3 +228,17 @@ Body gains three optional fields: `bgImage?: string` (data URI), `bgOpacity?: nu
 3. Social Post / Carousel: upload a photo → slider → preview updates on release → Save to Library stores a blob whose PNG shows the photo at that opacity; Clear resets to the designed gradient at 100%.
 4. A template with no bg set renders pixel-identical to the pre-change output.
 5. `tsc` clean; Jest green; no change to any route's auth; no change to nav structure or routing.
+
+---
+
+## Section 8 — Per-slot editing with on/off (added 2026-09-17)
+
+User: "once a graphic is generated, each slot fill needs to be editable and on/off toggle with a button to regenerate preview once changes are made" — for all templated content types (social post + carousel) in one pass.
+
+**Result panel.** Desktop: preview at left (fixed column), **Edit copy** at right; mobile: stacked under the sticky preview. One row per manifest slot: **switch (on/off) · label · max N · text field**. Off disables the field but keeps its text so toggling back restores it. **Update preview** re-renders from the edits with no AI call, enabled when anything changed. Carousel: a card selector (1–6) above the rows; edits and toggles are per card; one Update preview re-renders all six.
+
+**Hiding a slot removes its element.** A one-shot patcher (`scripts/add-slot-tags.mjs`) adds `data-slot="KEY"` to the element whose text is the `{{KEY}}` placeholder in all 15 templates (56 slots; idempotent; the parity script proves no-change renders stay byte-identical since attributes only appear on tagged elements and nothing styles them). `renderTemplate(html, slots, palette, media?, hidden?: string[])` renders hidden keys as empty AND injects `<style>[data-slot="KEY"]{display:none !important}</style>` before `</head>`, so the pill / stat / quote disappears and the layout reflows.
+
+**API.** `fill-template` accepts `hidden?: string[]`; `fill-carousel` accepts `hidden?: string[][]` (one array per card, length 6). Both filter to manifest keys, pass through to render, store `${baseKey}:hidden` in KV beside `:slots`, and return `hidden` in the response. `asset-check` returns `hidden` (array, or array of arrays for carousel). Absent `hidden` = nothing hidden = today's output.
+
+**Out of scope.** Non-templated types (infographic, microsite, one-pager, pitch deck) are Claude-generated HTML with no slots.
