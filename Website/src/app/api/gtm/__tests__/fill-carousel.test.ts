@@ -98,3 +98,74 @@ describe("POST /api/gtm/fill-carousel", () => {
     expect(JSON.parse(stored)).toEqual(cards)   // raw array of 6, not escaped
   })
 })
+
+describe("POST /api/gtm/fill-carousel hidden slots", () => {
+  const cards = Array.from({ length: CARD_COUNT }, (_, i) => ({ TXT: `card${i}` }))
+  const noneHidden = Array.from({ length: CARD_COUNT }, () => [] as string[])
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    process.env.ANTHROPIC_API_KEY = "test"
+    global.fetch = jest.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        content: [{ type: "text", text: JSON.stringify({ cards: Array.from({ length: CARD_COUNT }, (_, i) => ({ TXT: `ai${i}` })) }) }],
+      }),
+    })) as unknown as typeof fetch
+  })
+
+  it("hides a slot on the one card that asked for it, leaving the others intact", async () => {
+    const hidden = noneHidden.map((_, i) => (i === 2 ? ["TXT"] : []))
+    const res = await POST(req({ ...base, cards, hidden }))
+    expect(res.status).toBe(200)
+    const htmls = cardHtmls()
+    expect(htmls[2]).toContain("<b></b>")
+    expect(htmls[2]).not.toContain("card2")
+    expect(htmls[2]).toContain('[data-slot="TXT"]{display:none !important}')
+    expect(htmls[0]).toContain("<b>card0</b>")
+    expect(htmls[0]).not.toContain("display:none")
+  })
+
+  it("applies per-card hidden on the Claude path too", async () => {
+    const hidden = noneHidden.map((_, i) => (i === 0 ? ["TXT"] : []))
+    const res = await POST(req({ ...base, hidden }))
+    expect(res.status).toBe(200)
+    expect(global.fetch).toHaveBeenCalledTimes(1)
+    const htmls = cardHtmls()
+    expect(htmls[0]).not.toContain("ai0")
+    expect(htmls[0]).toContain('[data-slot="TXT"]{display:none !important}')
+    expect(htmls[1]).toContain("<b>ai1</b>")
+  })
+
+  it("drops non-manifest keys per card", async () => {
+    const hidden = noneHidden.map((_, i) => (i === 1 ? ["EVIL", "TXT"] : ["EVIL"]))
+    const res = await POST(req({ ...base, cards, hidden }))
+    const data = await res.json()
+    expect(data.hidden).toEqual(noneHidden.map((_, i) => (i === 1 ? ["TXT"] : [])))
+    for (const html of cardHtmls()) expect(html).not.toContain("EVIL")
+  })
+
+  it("echoes hidden in the response and writes it to KV", async () => {
+    const hidden = noneHidden.map((_, i) => (i === 5 ? ["TXT"] : []))
+    const res = await POST(req({ ...base, cards, hidden }))
+    expect((await res.json()).hidden).toEqual(hidden)
+    const call = (kv.set as jest.Mock).mock.calls.find((c) => (c[0] as string).endsWith(":hidden"))
+    expect(call).toBeDefined()
+    expect(JSON.parse(call![1])).toEqual(hidden)
+  })
+
+  it("treats a wrong-shaped hidden as nothing hidden, byte-identically", async () => {
+    await POST(req({ ...base, cards }))
+    const withoutHidden = cardHtmls()
+    jest.clearAllMocks()
+    const res = await POST(req({ ...base, cards, hidden: ["TXT"] }))   // wrong length
+    expect(cardHtmls()).toEqual(withoutHidden)
+    expect(withoutHidden[0]).not.toContain("display:none")
+    expect((await res.json()).hidden).toEqual(noneHidden)
+  })
+
+  it("defaults to six empty arrays when hidden is absent", async () => {
+    const res = await POST(req({ ...base, cards }))
+    expect((await res.json()).hidden).toEqual(noneHidden)
+  })
+})

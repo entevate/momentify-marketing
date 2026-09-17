@@ -108,3 +108,68 @@ describe("POST /api/gtm/fill-template", () => {
     expect(JSON.parse(stored)).toEqual({ STAT: "1234" })   // raw + truncated, not escaped
   })
 })
+
+describe("POST /api/gtm/fill-template hidden slots", () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+    process.env.ANTHROPIC_API_KEY = "test"
+    global.fetch = jest.fn(async () => ({
+      ok: true,
+      json: async () => ({ content: [{ type: "text", text: JSON.stringify({ STAT: "94%", LABEL: "Claude label" }) }] }),
+    })) as unknown as typeof fetch
+  })
+
+  it("renders a hidden slot as empty text and adds its display:none rule (override path)", async () => {
+    const res = await POST(req({ ...base, slots: { STAT: "94%", LABEL: "Gone" }, hidden: ["LABEL"] }))
+    expect(res.status).toBe(200)
+    const stored = (put as jest.Mock).mock.calls[0][1] as string
+    expect(stored).toContain("<b>94%</b>")
+    expect(stored).toContain("<i></i>")
+    expect(stored).not.toContain("Gone")
+    expect(stored).toContain('[data-slot="LABEL"]{display:none !important}')
+  })
+
+  it("applies hidden on the Claude path too", async () => {
+    const res = await POST(req({ ...base, hidden: ["LABEL"] }))
+    expect(res.status).toBe(200)
+    expect(global.fetch).toHaveBeenCalledTimes(1)
+    const stored = (put as jest.Mock).mock.calls[0][1] as string
+    expect(stored).toContain("<b>94%</b>")
+    expect(stored).not.toContain("Claude label")
+    expect(stored).toContain('[data-slot="LABEL"]{display:none !important}')
+  })
+
+  it("drops keys that are not in the manifest", async () => {
+    const res = await POST(req({ ...base, slots: { STAT: "1%" }, hidden: ["EVIL", "LABEL"] }))
+    const data = await res.json()
+    expect(data.hidden).toEqual(["LABEL"])
+    const stored = (put as jest.Mock).mock.calls[0][1] as string
+    expect(stored).not.toContain("EVIL")
+  })
+
+  it("echoes hidden in the response and writes it to KV", async () => {
+    const res = await POST(req({ ...base, slots: { STAT: "1%" }, hidden: ["LABEL"] }))
+    const data = await res.json()
+    expect(data.hidden).toEqual(["LABEL"])
+    const call = (kv.set as jest.Mock).mock.calls.find((c) => (c[0] as string).endsWith(":hidden"))
+    expect(call).toBeDefined()
+    expect(JSON.parse(call![1])).toEqual(["LABEL"])
+  })
+
+  it("defaults to nothing hidden - byte-identical HTML and an empty echo", async () => {
+    await POST(req({ ...base, slots: { STAT: "1%", LABEL: "Keep" } }))
+    const withoutHidden = (put as jest.Mock).mock.calls[0][1] as string
+    jest.clearAllMocks()
+    const res = await POST(req({ ...base, slots: { STAT: "1%", LABEL: "Keep" }, hidden: [] }))
+    expect((put as jest.Mock).mock.calls[0][1]).toBe(withoutHidden)
+    expect(withoutHidden).toContain("<i>Keep</i>")
+    expect(withoutHidden).not.toContain("display:none")
+    expect((await res.json()).hidden).toEqual([])
+  })
+
+  it("ignores a hidden value of the wrong shape rather than failing", async () => {
+    const res = await POST(req({ ...base, slots: { STAT: "1%" }, hidden: "LABEL" }))
+    expect(res.status).toBe(200)
+    expect((await res.json()).hidden).toEqual([])
+  })
+})

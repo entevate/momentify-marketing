@@ -8,7 +8,7 @@ import { assetBlobPath, assetKvKey } from "@/lib/gtm/asset-helpers"
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
-import { parseRenderMedia, filterSlots } from "@/lib/gtm/render-media"
+import { parseRenderMedia, filterSlots, parseHidden } from "@/lib/gtm/render-media"
 
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 
@@ -27,6 +27,8 @@ const isSafe = (v: string) => /^[a-zA-Z0-9_-]+$/.test(v)
  *   slots?:     Record<string,string>  // re-render with these values (skips Claude)
  *   bgImage?:   string      // data:image/(png|jpeg|webp);base64,… ≤ 4 MB
  *   bgOpacity?: number      // 0–100
+ *   hidden?:    string[]    // manifest slot keys toggled off; they render
+ *                           // empty and get a display:none rule
  * }
  *
  * Flow:
@@ -47,7 +49,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { templateId, assetType, pillar, briefText, itemId, slots: slotsOverride, bgImage, bgOpacity } = body ?? {}
+    const { templateId, assetType, pillar, briefText, itemId, slots: slotsOverride, bgImage, bgOpacity, hidden: hiddenInput } = body ?? {}
 
     // ─── Validation ──────────────────────────────────────────────────
     if (!templateId || !assetType || !pillar || !briefText) {
@@ -84,6 +86,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: mediaParse.error }, { status: 400 })
     }
     const media = mediaParse.media
+
+    // Slot keys toggled off in the editor. Filtered to the manifest's own
+    // keys, so a rendered style tag can only ever name a real slot.
+    const hidden = parseHidden(hiddenInput, manifest.slots)
 
     let slots: Record<string, string>
     const overridden = slotsOverride !== undefined && slotsOverride !== null
@@ -197,7 +203,7 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
 
     // ─── Render + persist ────────────────────────────────────────────
     const palette = paletteFor(pillar)
-    const renderedHtml = renderTemplate(html, slots, palette, media)
+    const renderedHtml = renderTemplate(html, slots, palette, media, hidden)
 
     const blobPath = assetBlobPath(pillar, assetType, itemId)
     if (!blobPath) {
@@ -238,12 +244,15 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
     //   <assetKvKey>:template  = templateId (new)
     //   <assetKvKey>:slots     = raw filtered slots, so a restored graphic
     //                            can populate the slot editor + re-render
+    //   <assetKvKey>:hidden    = the hidden slot keys, so the editor's
+    //                            toggles restore in the same state
     try {
       const baseKey = assetKvKey(pillar, assetType, itemId)
       await Promise.all([
         kv.set(baseKey, blobUrl),
         kv.set(`${baseKey}:template`, templateId),
         kv.set(`${baseKey}:slots`, JSON.stringify(slots)),
+        kv.set(`${baseKey}:hidden`, JSON.stringify(hidden)),
       ])
     } catch {
       /* KV cache is best-effort */
@@ -260,6 +269,7 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
       filename,
       templateId,
       slots,
+      hidden,
     })
   } catch (error) {
     console.error("[fill-template] error", error)

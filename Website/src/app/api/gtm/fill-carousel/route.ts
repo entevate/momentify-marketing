@@ -8,7 +8,7 @@ import { assetBlobPath, assetKvKey, assetFilename } from "@/lib/gtm/asset-helper
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
-import { parseRenderMedia, filterSlots } from "@/lib/gtm/render-media"
+import { parseRenderMedia, filterSlots, parseHiddenCards } from "@/lib/gtm/render-media"
 
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 const ASSET_TYPE = "carousel"
@@ -32,7 +32,12 @@ const ALLOWED_TEMPLATES = new Set<string>([
 /**
  * POST /api/gtm/fill-carousel
  *
- * Body: { templateId, pillar, briefText, itemId }
+ * Body: { templateId, pillar, briefText, itemId, cards?, bgImage?, bgOpacity?,
+ *         hidden? }
+ *
+ * `hidden` is per card: an array of exactly 6 arrays of manifest slot keys.
+ * Each card's keys render empty and get a display:none rule on that card
+ * only, so one card can drop a slot the others keep.
  *
  * Generates a 6-card carousel using one social-post template, where each
  * card is a distinct slot-fill of the same template. One Claude call
@@ -52,7 +57,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
-    const { templateId, pillar, briefText, itemId, cards: cardsOverride, bgImage, bgOpacity } = body ?? {}
+    const { templateId, pillar, briefText, itemId, cards: cardsOverride, bgImage, bgOpacity, hidden: hiddenInput } = body ?? {}
 
     // ─── Validation ─────────────────────────────────────────────────────
     if (!templateId || !pillar || !briefText) {
@@ -96,6 +101,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: mediaParse.error }, { status: 400 })
     }
     const media = mediaParse.media
+
+    // Per-card hidden slot keys. A wrong shape degrades to 6 empty arrays
+    // rather than an error, so hidden can never desynchronise from cards.
+    const hidden = parseHiddenCards(hiddenInput, manifest.slots, CARD_COUNT)
 
     const overridden = cardsOverride !== undefined && cardsOverride !== null
     let cards: Record<string, string>[]
@@ -223,7 +232,7 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
     const cardUrls: string[] = []
     for (let i = 0; i < CARD_COUNT; i++) {
       const cardItemId = `${baseItemId}_c${i + 1}`
-      const cardHtml = renderTemplate(templateHtml, cards[i], palette, media)
+      const cardHtml = renderTemplate(templateHtml, cards[i], palette, media, hidden[i])
       const cardBlobPath = assetBlobPath(pillar, ASSET_TYPE, cardItemId)
       if (!cardBlobPath) {
         return NextResponse.json({ error: `Could not build blob path for card ${i + 1}` }, { status: 500 })
@@ -252,6 +261,8 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
         // Cache the raw filtered card slot values, so a restored carousel
         // can populate the slot editor + media re-render.
         kv.set(`${baseKey}:slots`, JSON.stringify(cards)),
+        // ...and which slots each card hides, so the toggles restore too.
+        kv.set(`${baseKey}:hidden`, JSON.stringify(hidden)),
       ])
     } catch {
       /* KV cache is best-effort */
@@ -268,6 +279,7 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
       templateId,
       cardCount: CARD_COUNT,
       cards,
+      hidden,
     })
   } catch (error) {
     console.error("[fill-carousel] error", error)
