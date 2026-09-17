@@ -34,6 +34,8 @@ export interface AssetPanelProps {
   itemId: string
   /** The saved brief text - passed to Claude as fill context */
   briefText: string
+  /** Optional background photo (data URI) + opacity 0-100, applied to template renders */
+  media?: { bgImage?: string; bgOpacity?: number }
   /** Optional caller-controlled class for layout tweaks */
   className?: string
 }
@@ -76,7 +78,7 @@ function iframeHeightFor(contentType: string): number {
   return 600
 }
 
-export default function AssetPanel({ solution, assetType, itemId, briefText, className }: AssetPanelProps) {
+export default function AssetPanel({ solution, assetType, itemId, briefText, media, className }: AssetPanelProps) {
   const [assetUrl, setAssetUrl] = useState<string | null>(null)
   const [generating, setGenerating] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -84,7 +86,12 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
   const [activeTemplateId, setActiveTemplateId] = useState<string | null>(null)
   const [pickerOpen, setPickerOpen] = useState(false)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const busy = generating || uploading
+  // Last filled values, so slot edits and media changes re-render without Claude.
+  const [slots, setSlots] = useState<Record<string, string> | null>(null)
+  const [cards, setCards] = useState<Record<string, string>[] | null>(null)
+  const [draftSlots, setDraftSlots] = useState<Record<string, string>>({})
+  const [rerendering, setRerendering] = useState(false)
+  const busy = generating || uploading || rerendering
 
   const isCarousel = assetType === "carousel"
   // "Templated" mode = template picker + slot-fill flow. Both social-post
@@ -144,9 +151,10 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
       const timeoutId = setTimeout(() => abortCtrl.abort(), timeoutMs)
       try {
         const endpoint = isCarousel ? "/api/gtm/fill-carousel" : "/api/gtm/fill-template"
+        const mediaFields = media?.bgImage ? { bgImage: media.bgImage, bgOpacity: media.bgOpacity ?? 100 } : {}
         const payload = isCarousel
-          ? { templateId, pillar: solution, briefText, itemId }
-          : { templateId, assetType: "social-post", pillar: solution, briefText, itemId }
+          ? { templateId, pillar: solution, briefText, itemId, ...mediaFields }
+          : { templateId, assetType: "social-post", pillar: solution, briefText, itemId, ...mediaFields }
         const res = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -159,6 +167,8 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
         }
         const data = await res.json()
         setAssetUrl(withCacheBust(data.url))
+        if (isCarousel) { setCards(Array.isArray(data.cards) ? data.cards : null); setSlots(null) }
+        else { setSlots(data.slots ?? null); setDraftSlots(data.slots ?? {}); setCards(null) }
         setPickerOpen(false)
         stampGraphicRef(itemId, { blobUrl: data.url, assetType, templateId })
       } catch (e: unknown) {
@@ -172,8 +182,53 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
         setGenerating(false)
       }
     },
-    [solution, briefText, itemId, isCarousel]
+    [solution, briefText, itemId, isCarousel, media]
   )
+
+  // ─── Re-render without Claude (slot edits, opacity slider) ───────────
+  const rerender = useCallback(
+    async (nextSlots: Record<string, string> | null, nextCards: Record<string, string>[] | null) => {
+      if (!activeTemplateId) return
+      if (!isCarousel && !nextSlots) return
+      if (isCarousel && !nextCards) return
+      setRerendering(true)
+      setError(null)
+      try {
+        const mediaFields = media?.bgImage ? { bgImage: media.bgImage, bgOpacity: media.bgOpacity ?? 100 } : {}
+        const endpoint = isCarousel ? "/api/gtm/fill-carousel" : "/api/gtm/fill-template"
+        const payload = isCarousel
+          ? { templateId: activeTemplateId, pillar: solution, briefText, itemId, cards: nextCards, ...mediaFields }
+          : { templateId: activeTemplateId, assetType: "social-post", pillar: solution, briefText, itemId, slots: nextSlots, ...mediaFields }
+        const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) })
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}))
+          throw new Error(body.error || "Re-render failed")
+        }
+        const data = await res.json()
+        setAssetUrl(withCacheBust(data.url))
+        if (!isCarousel && data.slots) { setSlots(data.slots); setDraftSlots(data.slots) }
+        if (isCarousel && Array.isArray(data.cards)) setCards(data.cards)
+        stampGraphicRef(itemId, { blobUrl: data.url, assetType, templateId: activeTemplateId })
+      } catch (e: unknown) {
+        const err = e as { message?: string }
+        setError(err?.message || "Re-render failed.")
+      } finally {
+        setRerendering(false)
+      }
+    },
+    [activeTemplateId, isCarousel, media, solution, briefText, itemId, assetType]
+  )
+
+  // Media changed after a fill (photo picked/cleared, slider released) → re-render.
+  const mediaKey = `${media?.bgImage ? media.bgImage.length : 0}:${media?.bgOpacity ?? ""}`
+  const lastMediaKey = useRef(mediaKey)
+  useEffect(() => {
+    if (lastMediaKey.current === mediaKey) return
+    lastMediaKey.current = mediaKey
+    if (!assetUrl || !activeTemplateId) return
+    void rerender(slots, cards)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mediaKey])
 
   // ─── Claude full-HTML generation (non-social-post asset types) ──────
   const handleGenerate = useCallback(async () => {
@@ -296,7 +351,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
               disabled={busy}
               style={{
                 ...smallBtn,
-                background: busy ? "var(--gtm-text-faint)" : "#00BBA5",
+                background: busy ? "var(--gtm-text-faint)" : "var(--gtm-accent)",
                 color: "#fff",
                 borderColor: "transparent",
                 cursor: busy ? "not-allowed" : "pointer",
@@ -311,7 +366,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
               disabled={busy}
               style={{
                 ...smallBtn,
-                background: busy ? "var(--gtm-text-faint)" : "#00BBA5",
+                background: busy ? "var(--gtm-text-faint)" : "var(--gtm-accent)",
                 color: "#fff",
                 borderColor: "transparent",
                 cursor: busy ? "not-allowed" : "pointer",
@@ -417,7 +472,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
                   onClick={() => handleFillTemplate(t.id)}
                   style={{
                     ...pickerCard,
-                    borderColor: isActive ? "#00BBA5" : "var(--gtm-border)",
+                    borderColor: isActive ? "var(--gtm-accent)" : "var(--gtm-border)",
                     boxShadow: isActive ? "0 0 0 2px rgba(36,123,150,0.16)" : "none",
                   }}
                 >
@@ -442,14 +497,14 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
                     </div>
                   </div>
                   <div style={{ padding: "8px 10px" }}>
-                    <div style={{ fontSize: 11, fontWeight: 600, color: "#181818", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: "var(--gtm-text-primary)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 6 }}>
                       <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.label}</span>
-                      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "#6b6b6b", background: "#f6f8fb", padding: "2px 6px", borderRadius: 100 }}>
+                      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color: "var(--gtm-text-secondary)", background: "var(--gtm-surface-2)", padding: "2px 6px", borderRadius: 100 }}>
                         {t.aspectRatio}
                       </span>
                     </div>
                     {isActive && (
-                      <div style={{ fontSize: 10, color: "#00BBA5", marginTop: 4, display: "inline-flex", alignItems: "center", gap: 4 }}>
+                      <div style={{ fontSize: 10, color: "var(--gtm-accent)", marginTop: 4, display: "inline-flex", alignItems: "center", gap: 4 }}>
                         <Check size={10} /> Last used
                       </div>
                     )}
@@ -485,6 +540,33 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
           </div>
         )
       })()}
+
+      {assetUrl && !isCarousel && slots && activeTemplateId && (() => {
+        const manifest = socialTemplates.find((t) => t.id === activeTemplateId)
+        if (!manifest) return null
+        const dirty = manifest.slots.some((s) => (draftSlots[s.key] ?? "") !== (slots[s.key] ?? ""))
+        return (
+          <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 10 }}>
+            <span className="eyebrow">Edit copy</span>
+            {manifest.slots.map((s) => (
+              <label key={s.key} style={{ display: "block" }}>
+                <span className="field-label">{s.label} <span style={{ fontWeight: 400, color: "var(--gtm-text-faint)" }}>· max {s.maxChars}</span></span>
+                <input
+                  className="input"
+                  value={draftSlots[s.key] ?? ""}
+                  maxLength={s.maxChars}
+                  onChange={(e) => setDraftSlots((d) => ({ ...d, [s.key]: e.target.value }))}
+                />
+              </label>
+            ))}
+            <div>
+              <button className="btn btn-secondary btn-sm" disabled={!dirty || busy} onClick={() => void rerender(draftSlots, null)}>
+                {rerendering ? "Updating…" : "Update preview"}
+              </button>
+            </div>
+          </div>
+        )
+      })()}
     </div>
   )
 }
@@ -493,9 +575,9 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, cla
 
 const panel: React.CSSProperties = {
   border: "1px solid var(--gtm-border)",
-  borderRadius: 6,
+  borderRadius: "var(--gtm-radius-card)",
   padding: 14,
-  background: "#ffffff",
+  background: "var(--gtm-bg-card)",
 }
 
 const smallBtn: React.CSSProperties = {
@@ -580,7 +662,7 @@ function SocialPostPreview({ assetUrl, aspect }: { assetUrl: string; aspect: "1:
 }
 
 const errBanner: React.CSSProperties = {
-  background: "rgba(239, 68, 68, 0.08)",
+  background: "var(--gtm-danger-bg)",
   border: "1px solid rgba(239, 68, 68, 0.3)",
   borderRadius: 6,
   padding: 12,
@@ -595,12 +677,12 @@ const progressBanner: React.CSSProperties = {
   alignItems: "center",
   gap: 8,
   padding: 12,
-  background: "rgba(0, 187, 165, 0.06)",
+  background: "var(--gtm-accent-bg)",
   border: "1px solid rgba(0, 187, 165, 0.2)",
   borderRadius: 6,
   fontSize: 12,
   fontWeight: 500,
-  color: "#00BBA5",
+  color: "var(--gtm-accent)",
   fontFamily: font,
   marginBottom: 12,
 }
@@ -626,7 +708,7 @@ const pickerLabel: React.CSSProperties = {
   fontWeight: 700,
   letterSpacing: "0.08em",
   textTransform: "uppercase",
-  color: "#6b6b6b",
+  color: "var(--gtm-text-secondary)",
   fontFamily: font,
 }
 
@@ -666,7 +748,7 @@ function pickerThumbWrap(aspect: "1:1" | "3:4" | "16:9"): React.CSSProperties {
   return {
     width: THUMB_WIDTH,
     height,
-    background: "#f6f8fb",
+    background: "var(--gtm-surface-2)",
     borderBottom: "1px solid var(--gtm-border)",
     overflow: "hidden",
     position: "relative",
