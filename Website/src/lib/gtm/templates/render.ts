@@ -11,6 +11,7 @@
 
 import fs from "fs/promises"
 import path from "path"
+import { escapeHtml } from "@/lib/gtm/link-page-types"
 import type { Palette } from "@/lib/gtm/pillar-palettes"
 import type { TemplateManifest } from "./types"
 import { templateRegistry } from "./_registry"
@@ -37,6 +38,9 @@ export function mediaMap(media?: RenderMedia): Record<string, string> {
  * BG_OPACITY. Reserved keys always win over `slots`. Missing keys resolve to
  * empty strings (so an unfilled slot degrades gracefully, rather than
  * showing the literal `{{KEY}}`).
+ *
+ * Caller slot values are HTML-escaped (they are text nodes in every
+ * template); reserved palette/media keys are raw CSS values.
  */
 export function renderTemplate(
   html: string,
@@ -56,7 +60,7 @@ export function renderTemplate(
   }
   return html.replace(/\{\{([A-Z0-9_]+)\}\}/g, (_m, key: string) => {
     if (key in paletteMap) return paletteMap[key]
-    if (key in slots) return slots[key]
+    if (key in slots) return escapeHtml(slots[key])
     return ""
   })
 }

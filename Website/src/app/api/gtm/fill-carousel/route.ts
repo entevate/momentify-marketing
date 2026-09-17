@@ -8,7 +8,7 @@ import { assetBlobPath, assetKvKey, assetFilename } from "@/lib/gtm/asset-helper
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
-import { parseRenderMedia, filterSlots, escapeSlotValues } from "@/lib/gtm/render-media"
+import { parseRenderMedia, filterSlots } from "@/lib/gtm/render-media"
 
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 const ASSET_TYPE = "carousel"
@@ -223,7 +223,7 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
     const cardUrls: string[] = []
     for (let i = 0; i < CARD_COUNT; i++) {
       const cardItemId = `${baseItemId}_c${i + 1}`
-      const cardHtml = renderTemplate(templateHtml, overridden ? escapeSlotValues(cards[i]) : cards[i], palette, media)
+      const cardHtml = renderTemplate(templateHtml, cards[i], palette, media)
       const cardBlobPath = assetBlobPath(pillar, ASSET_TYPE, cardItemId)
       if (!cardBlobPath) {
         return NextResponse.json({ error: `Could not build blob path for card ${i + 1}` }, { status: 500 })

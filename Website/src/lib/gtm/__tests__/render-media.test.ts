@@ -1,4 +1,4 @@
-import { parseRenderMedia, filterSlots, MAX_BG_BYTES, escapeSlotValues } from "../render-media"
+import { parseRenderMedia, filterSlots, MAX_BG_BYTES } from "../render-media"
 import type { SlotSpec } from "@/lib/gtm/templates/types"
 
 const png = "data:image/png;base64," + Buffer.from("hello").toString("base64")
@@ -32,9 +32,6 @@ describe("parseRenderMedia", () => {
     expect(parseRenderMedia({ bgOpacity: "" }).ok).toBe(false)
     expect(parseRenderMedia({ bgOpacity: [] as unknown }).ok).toBe(false)
     expect(parseRenderMedia({ bgOpacity: [50] as unknown }).ok).toBe(false)
-  })
-  it("escapeSlotValues HTML-escapes every value", () => {
-    expect(escapeSlotValues({ A: '<img src=x onerror=1>', B: "Tom & Jerry" })).toEqual({ A: "&lt;img src=x onerror=1&gt;", B: "Tom &amp; Jerry" })
   })
 })
 

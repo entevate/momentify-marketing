@@ -1,5 +1,4 @@
 import { stripEmDashes } from "@/lib/gtm/sanitize"
-import { escapeHtml } from "@/lib/gtm/link-page-types"
 import type { SlotSpec } from "@/lib/gtm/templates/types"
 import type { RenderMedia } from "@/lib/gtm/templates/render"
 
@@ -45,12 +44,5 @@ export function filterSlots(input: unknown, spec: SlotSpec[]): Record<string, st
     if (v === undefined || v === null) continue
     out[s.key] = stripEmDashes(String(v)).slice(0, s.maxChars)
   }
-  return out
-}
-
-/** HTML-escape slot values for rendering. Override-path only: Claude-path output must stay byte-identical. */
-export function escapeSlotValues(slots: Record<string, string>): Record<string, string> {
-  const out: Record<string, string> = {}
-  for (const [k, v] of Object.entries(slots)) out[k] = escapeHtml(v)
   return out
 }

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
+import { requireGtmAuth } from "@/lib/gtm/content-types"
 
 /**
  * GET /api/gtm/template-preview?templateId=<id>&pillar=<trade-shows|recruiting|field-sales|facilities|events-venues>[&assetType=social-post][&data=<url-encoded-json>]
@@ -19,6 +20,10 @@ import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
  * manifest's sampleData.
  */
 export async function GET(request: Request) {
+  if (!(await requireGtmAuth())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
   try {
     const { searchParams } = new URL(request.url)
     const templateId = searchParams.get("templateId") ?? ""

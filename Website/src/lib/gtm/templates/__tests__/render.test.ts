@@ -43,4 +43,12 @@ describe("renderTemplate media", () => {
     expect(out).toContain("--bg-image:none;")
     expect(out).toContain("--bg-opacity:1;")
   })
+
+  it("HTML-escapes caller slot values but leaves reserved keys raw", () => {
+    const out = renderTemplate(html, { HEADLINE: '<img src=x onerror=1> & "q" \'s\'' }, palette, { bgImage: "data:image/png;base64,AA" })
+    expect(out).toContain("<h1>&lt;img src=x onerror=1&gt; &amp; &quot;q&quot; &#39;s&#39;</h1>")
+    expect(out).not.toContain("<img src=x")
+    expect(out).toContain('--bg-image:url("data:image/png;base64,AA");')   // reserved: raw
+    expect(out).toContain("--primary:#111111")                               // reserved: raw
+  })
 })

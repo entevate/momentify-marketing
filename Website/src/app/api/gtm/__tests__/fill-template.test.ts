@@ -84,11 +84,12 @@ describe("POST /api/gtm/fill-template", () => {
     expect(data.slots.LABEL).toBe('<img src=x onerror=1>')
   })
 
-  it("does not escape Claude-path values (output unchanged)", async () => {
+  it("escapes Claude-path values too (entities render as the same glyphs)", async () => {
     global.fetch = jest.fn(async () => ({ ok: true, json: async () => ({ content: [{ type: "text", text: JSON.stringify({ STAT: "9%", LABEL: "Tom & Jerry" }) }] }) })) as unknown as typeof fetch
     await POST(req(base))
     const stored = (put as jest.Mock).mock.calls[0][1] as string
-    expect(stored).toContain("<i>Tom & Jerry</i>")
+    expect(stored).toContain("<i>Tom &amp; Jerry</i>")
+    expect(stored).not.toContain("<i>Tom & Jerry</i>")
   })
 
   it("renders bgOpacity 0 as 0, not the default", async () => {
