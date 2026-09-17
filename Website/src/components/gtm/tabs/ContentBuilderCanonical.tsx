@@ -28,7 +28,7 @@ const CONTENT_TYPES: { value: string; label: string; description: string; visual
   { value: "battle-card", label: "Battle Card", description: "Competitive positioning one-pager", visual: false },
 ]
 
-const MAX_BG_BYTES = 4 * 1024 * 1024
+const MAX_BG_BYTES = 3 * 1024 * 1024
 
 function fileToDataUri(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -431,7 +431,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
     if (!file) return
     setBgError(null)
     if (!["image/png", "image/jpeg", "image/webp"].includes(file.type)) { setBgError("Use a PNG, JPEG, or WebP image."); return }
-    if (file.size > MAX_BG_BYTES) { setBgError("Image is larger than 4 MB. Resize it and try again."); return }
+    if (file.size > MAX_BG_BYTES) { setBgError("Image is larger than 3 MB. Resize it and try again."); return }
     try {
       setBgImage(await fileToDataUri(file))
       setBgOpacity(100)
@@ -668,7 +668,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
                 </div>
               )}
               {bgError && <span style={{ fontSize: 12, color: "var(--gtm-danger-text)" }}>{bgError}</span>}
-              <span className="section-note">PNG, JPEG, or WebP up to 4 MB. The photo is embedded in the render, so the preview and the PNG export always match. Changes re-render when you release the slider.</span>
+              <span className="section-note">PNG, JPEG, or WebP up to 3 MB. The photo is embedded in the render, so the preview and the PNG export always match. Changes re-render when you release the slider.</span>
             </div>
           </div>
         </div>
