@@ -10,10 +10,13 @@ jest.mock("@/lib/gtm/templates/render", () => {
     ...actual,
     findTemplate: jest.fn(() => ({
       id: "bold-stat-1x1", label: "Bold Stat", assetType: "social-post", aspectRatio: "1:1", description: "",
-      slots: [{ key: "STAT", label: "", kind: "stat_number", maxChars: 4, example: "" }],
+      slots: [
+        { key: "STAT", label: "", kind: "stat_number", maxChars: 4, example: "" },
+        { key: "LABEL", label: "", kind: "eyebrow", maxChars: 40, example: "" },
+      ],
       sampleData: { STAT: "1%" },
     })),
-    loadTemplateHtml: jest.fn(async () => `<style>:root{--bg-image:{{BG_IMAGE}};--bg-opacity:{{BG_OPACITY}}}</style><b>{{STAT}}</b>`),
+    loadTemplateHtml: jest.fn(async () => `<style>:root{--bg-image:{{BG_IMAGE}};--bg-opacity:{{BG_OPACITY}}}</style><b>{{STAT}}</b><i>{{LABEL}}</i>`),
   }
 })
 
@@ -69,5 +72,28 @@ describe("POST /api/gtm/fill-template", () => {
     const res = await POST(req({ ...base, bgImage: "https://x/y.png" }))
     expect(res.status).toBe(400)
     expect(put).not.toHaveBeenCalled()
+  })
+
+  it("escapes override slot values in the stored HTML but returns them raw", async () => {
+    const res = await POST(req({ ...base, slots: { STAT: "1%", LABEL: '<img src=x onerror=1>' } }))
+    expect(res.status).toBe(200)
+    const stored = (put as jest.Mock).mock.calls[0][1] as string
+    expect(stored).not.toContain("<img")
+    expect(stored).toContain("&lt;img")
+    const data = await res.json()
+    expect(data.slots.LABEL).toBe('<img src=x onerror=1>')
+  })
+
+  it("does not escape Claude-path values (output unchanged)", async () => {
+    global.fetch = jest.fn(async () => ({ ok: true, json: async () => ({ content: [{ type: "text", text: JSON.stringify({ STAT: "9%", LABEL: "Tom & Jerry" }) }] }) })) as unknown as typeof fetch
+    await POST(req(base))
+    const stored = (put as jest.Mock).mock.calls[0][1] as string
+    expect(stored).toContain("<i>Tom & Jerry</i>")
+  })
+
+  it("renders bgOpacity 0 as 0, not the default", async () => {
+    await POST(req({ ...base, bgImage: png, bgOpacity: 0 }))
+    const stored = (put as jest.Mock).mock.calls[0][1] as string
+    expect(stored).toContain("--bg-opacity:0}")
   })
 })

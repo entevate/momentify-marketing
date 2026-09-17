@@ -8,7 +8,7 @@ import { assetBlobPath, assetKvKey } from "@/lib/gtm/asset-helpers"
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
-import { parseRenderMedia, filterSlots } from "@/lib/gtm/render-media"
+import { parseRenderMedia, filterSlots, escapeSlotValues } from "@/lib/gtm/render-media"
 
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 
@@ -197,7 +197,7 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
 
     // ─── Render + persist ────────────────────────────────────────────
     const palette = paletteFor(pillar)
-    const renderedHtml = renderTemplate(html, slots, palette, media)
+    const renderedHtml = renderTemplate(html, overridden ? escapeSlotValues(slots) : slots, palette, media)
 
     const blobPath = assetBlobPath(pillar, assetType, itemId)
     if (!blobPath) {

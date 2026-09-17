@@ -1,14 +1,15 @@
 import { stripEmDashes } from "@/lib/gtm/sanitize"
+import { escapeHtml } from "@/lib/gtm/link-page-types"
 import type { SlotSpec } from "@/lib/gtm/templates/types"
 import type { RenderMedia } from "@/lib/gtm/templates/render"
 
 /** Data-URI images are inlined into the stored HTML, so cap them. */
-export const MAX_BG_BYTES = 4 * 1024 * 1024
+export const MAX_BG_BYTES = 3 * 1024 * 1024
 const DATA_URI = /^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/=]+)$/
 
 export type MediaParse = { ok: true; media: RenderMedia | undefined } | { ok: false; error: string }
 
-/** Validate optional `bgImage` (inline data URI ≤ 4 MB) and `bgOpacity` (0–100). */
+/** Validate optional `bgImage` (inline data URI ≤ 3 MB) and `bgOpacity` (0–100). */
 export function parseRenderMedia(body: { bgImage?: unknown; bgOpacity?: unknown }): MediaParse {
   const media: RenderMedia = {}
   if (body.bgImage !== undefined && body.bgImage !== null && body.bgImage !== "") {
@@ -16,12 +17,15 @@ export function parseRenderMedia(body: { bgImage?: unknown; bgOpacity?: unknown 
     const m = body.bgImage.match(DATA_URI)
     if (!m) return { ok: false, error: "bgImage must be a base64 data URI of type image/png, image/jpeg or image/webp" }
     const bytes = Math.floor((m[2].length * 3) / 4)
-    if (bytes > MAX_BG_BYTES) return { ok: false, error: "Background image is larger than 4 MB" }
+    if (bytes > MAX_BG_BYTES) return { ok: false, error: "Background image is larger than 3 MB" }
     media.bgImage = body.bgImage
   }
   if (body.bgOpacity !== undefined && body.bgOpacity !== null) {
-    const n = typeof body.bgOpacity === "number" ? body.bgOpacity : Number(body.bgOpacity)
-    if (!Number.isFinite(n) || n < 0 || n > 100 || typeof body.bgOpacity === "boolean") {
+    const raw = body.bgOpacity
+    const isNum = typeof raw === "number"
+    const isNumericString = typeof raw === "string" && /^\d+(\.\d+)?$/.test(raw.trim())
+    const n = isNum ? raw : isNumericString ? Number(raw) : NaN
+    if (!Number.isFinite(n) || n < 0 || n > 100) {
       return { ok: false, error: "bgOpacity must be a number from 0 to 100" }
     }
     media.bgOpacity = n
@@ -41,5 +45,12 @@ export function filterSlots(input: unknown, spec: SlotSpec[]): Record<string, st
     if (v === undefined || v === null) continue
     out[s.key] = stripEmDashes(String(v)).slice(0, s.maxChars)
   }
+  return out
+}
+
+/** HTML-escape slot values for rendering. Override-path only: Claude-path output must stay byte-identical. */
+export function escapeSlotValues(slots: Record<string, string>): Record<string, string> {
+  const out: Record<string, string> = {}
+  for (const [k, v] of Object.entries(slots)) out[k] = escapeHtml(v)
   return out
 }
