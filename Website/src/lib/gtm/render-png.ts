@@ -112,22 +112,52 @@ export async function launchBrowser(): Promise<Browser> {
 }
 
 /**
+ * Output dimensions per aspect ratio. Values match each template's own
+ * declared canvas size (the `html, body { width; height }` at the top of
+ * each template.html), so puppeteer's viewport and the template's own
+ * layout agree pixel-for-pixel:
+ *   - 1:1  square:    1080 x 1080 (Instagram / LinkedIn / X universal)
+ *   - 3:4  portrait:  1080 x 1440 (LinkedIn document / portrait feed)
+ *   - 16:9 landscape: 1280 x  720 (LinkedIn / X in-feed landscape)
+ * All three exceed the platforms' minimum recommended dimensions. Unknown
+ * aspect ratios fall back to 1080x1080 so behavior stays stable.
+ * If a template's canvas size ever changes, update this map in lockstep.
+ */
+export function dimensionsForAspect(aspectRatio: string): { width: number; height: number } {
+  switch (aspectRatio) {
+    case "1:1":  return { width: 1080, height: 1080 }
+    case "3:4":  return { width: 1080, height: 1440 }
+    case "16:9": return { width: 1280, height:  720 }
+    default:     return { width: RENDER_WIDTH, height: RENDER_HEIGHT }
+  }
+}
+
+/**
  * Render a single HTML string to a PNG buffer.
  *
  * The HTML is loaded via setContent (so no extra HTTP fetch is needed).
  * `networkidle0` ensures Google Fonts / external assets load before
  * screenshot. fullPage=false keeps the capture exactly viewport-sized.
+ *
+ * Accepts an optional {width, height} to render at any aspect ratio.
+ * Defaults to 1080x1080 so callers that render 1:1 social-post cards
+ * don't need to change.
  */
-export async function renderHtmlToPng(html: string): Promise<Buffer> {
+export async function renderHtmlToPng(
+  html: string,
+  opts?: { width?: number; height?: number }
+): Promise<Buffer> {
+  const width = opts?.width ?? RENDER_WIDTH
+  const height = opts?.height ?? RENDER_HEIGHT
   const browser = await launchBrowser()
   try {
     const page = await browser.newPage()
-    await page.setViewport({ width: RENDER_WIDTH, height: RENDER_HEIGHT, deviceScaleFactor: 1 })
+    await page.setViewport({ width, height, deviceScaleFactor: 1 })
     await page.setContent(html, { waitUntil: "networkidle0", timeout: 25_000 })
     const buf = await page.screenshot({
       type: "png",
       omitBackground: false,
-      clip: { x: 0, y: 0, width: RENDER_WIDTH, height: RENDER_HEIGHT },
+      clip: { x: 0, y: 0, width, height },
     })
     return Buffer.from(buf as Uint8Array)
   } finally {
