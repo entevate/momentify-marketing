@@ -657,7 +657,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
         const activeTemplate = isSocialPost && activeTemplateId
           ? socialTemplates.find((t) => t.id === activeTemplateId)
           : null
-        const socialAspect: "1:1" | "3:4" | "16:9" | null = isSocialPost
+        const socialAspect: "1:1" | "4:5" | "16:9" | null = isSocialPost
           ? (activeTemplate?.aspectRatio ?? "1:1")
           : null
         const previewNode = !showPreview ? null : socialAspect ? (
@@ -790,13 +790,13 @@ const smallBtn: React.CSSProperties = {
  * Renders a filled social-post asset at its native design viewport, then
  * CSS-scales the iframe to fit the parent width.
  */
-function SocialPostPreview({ assetUrl, aspect }: { assetUrl: string; aspect: "1:1" | "3:4" | "16:9" }) {
+function SocialPostPreview({ assetUrl, aspect }: { assetUrl: string; aspect: "1:1" | "4:5" | "16:9" }) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
 
   const { width: nativeW, height: nativeH } = nativeSize(aspect)
 
-  const maxW = aspect === "1:1" ? 540 : aspect === "3:4" ? 480 : 720
+  const maxW = aspect === "1:1" ? 540 : aspect === "4:5" ? 480 : 720
 
   useEffect(() => {
     const el = wrapRef.current
@@ -811,7 +811,7 @@ function SocialPostPreview({ assetUrl, aspect }: { assetUrl: string; aspect: "1:
     return () => ro.disconnect()
   }, [nativeW])
 
-  const cssAspect = aspect === "1:1" ? "1 / 1" : aspect === "3:4" ? "3 / 4" : "16 / 9"
+  const cssAspect = aspect === "1:1" ? "1 / 1" : aspect === "4:5" ? "4 / 5" : "16 / 9"
 
   return (
     <div
