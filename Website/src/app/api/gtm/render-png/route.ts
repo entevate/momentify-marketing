@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server"
-import { isValidAssetParam } from "@/lib/gtm/asset-helpers"
+import { kv } from "@/lib/gtm/kv-store"
+import { assetKvKey, isValidAssetParam } from "@/lib/gtm/asset-helpers"
 import { resolveAssetUrl } from "@/lib/gtm/blob-url"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
-import { renderHtmlToPng } from "@/lib/gtm/render-png"
+import { renderHtmlToPng, dimensionsForAspect } from "@/lib/gtm/render-png"
+import { findTemplate } from "@/lib/gtm/templates/render"
 
 // Force the Node.js runtime - puppeteer-core + @sparticuz/chromium are
 // not compatible with the Edge runtime.
@@ -63,9 +65,24 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Could not fetch rendered HTML" }, { status: 502 })
   }
 
+  // Look up which template was used so we can render at its native
+  // aspect ratio. fill-template caches the templateId under baseKey:template
+  // whenever it fills. Missing entry (legacy assets or in-flight cache miss)
+  // falls back to 1080x1080 — the historical behavior, matching 1:1 templates.
+  let dims = { width: 1080, height: 1080 }
+  try {
+    const tplId = await kv.get<string>(`${assetKvKey(solution, assetType, itemId)}:template`)
+    if (tplId) {
+      const manifest = findTemplate(assetType, tplId)
+      if (manifest?.aspectRatio) dims = dimensionsForAspect(manifest.aspectRatio)
+    }
+  } catch {
+    // KV lookup is best-effort; fall through to defaults.
+  }
+
   let png: Buffer
   try {
-    png = await renderHtmlToPng(html)
+    png = await renderHtmlToPng(html, dims)
   } catch (e) {
     console.error("[render-png] render failed", e)
     const msg = e instanceof Error ? e.message : "Render failed"
