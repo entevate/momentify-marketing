@@ -27,7 +27,7 @@
 
   .stage {
     position: relative;
-    width: 1080px; height: 1440px;
+    width: 1080px; height: 1350px;
     flex-shrink: 0; transform-origin: center center;
     background: #ffffff;
     display: grid;
@@ -166,7 +166,7 @@
 </div>
 <script>
 (function(){
-  var W=1080,H=1440,el=document.querySelector('.stage');
+  var W=1080,H=1350,el=document.querySelector('.stage');
   function sc(){el.style.transform='scale('+Math.min(innerWidth/W,innerHeight/H)+')';}
   sc(); window.addEventListener('resize',sc);
 })();

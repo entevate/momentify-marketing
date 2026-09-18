@@ -6,7 +6,7 @@
  *
  * Controls:
  *   - Solution selector (Momentify's five GTM pillars)
- *   - Aspect filter (All / 1:1 / 3:4 / 16:9)
+ *   - Aspect filter (All / 1:1 / 4:5 / 16:9)
  *   - Reload-all (cache-bust every iframe)
  *   - Preview per card (the enlarged TemplatePreviewModal, as in the fleet's
  *     galleries). This replaced "Copy link": template-preview now requires the
@@ -22,7 +22,7 @@ import TemplatePreviewModal from "@/components/gtm/TemplatePreviewModal"
 
 const font = "var(--gtm-font-body)"
 
-type AspectFilter = "all" | "1:1" | "3:4" | "16:9"
+type AspectFilter = "all" | "1:1" | "4:5" | "16:9"
 
 export interface TemplatesGalleryProps {
   /** Initial pillar for the selector (default "trade-shows"). */
@@ -86,7 +86,7 @@ export default function TemplatesGallery({
         <div style={controlGroupStyle}>
           <span style={controlLabelStyle}>Aspect</span>
           <div style={chipRowStyle}>
-            {(["all", "1:1", "3:4", "16:9"] as AspectFilter[]).map((a) => {
+            {(["all", "1:1", "4:5", "16:9"] as AspectFilter[]).map((a) => {
               const active = aspectFilter === a
               return (
                 <button
@@ -221,10 +221,10 @@ const aspectPillStyle: React.CSSProperties = {
   color: "var(--gtm-text-secondary)",
 }
 
-function iframeWrapStyle(aspect: "1:1" | "3:4" | "16:9"): React.CSSProperties {
+function iframeWrapStyle(aspect: "1:1" | "4:5" | "16:9"): React.CSSProperties {
   const aspectRatio =
     aspect === "1:1" ? "1 / 1"
-    : aspect === "3:4" ? "3 / 4"
+    : aspect === "4:5" ? "4 / 5"
     : "16 / 9"
   return {
     width: "100%",

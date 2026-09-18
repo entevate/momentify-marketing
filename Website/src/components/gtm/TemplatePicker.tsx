@@ -218,10 +218,10 @@ const previewButton: React.CSSProperties = {
   boxShadow: "var(--gtm-shadow)",
 }
 
-function pickerThumbWrap(aspect: "1:1" | "3:4" | "16:9"): React.CSSProperties {
+function pickerThumbWrap(aspect: "1:1" | "4:5" | "16:9"): React.CSSProperties {
   let height: number
   if (aspect === "1:1") height = THUMB_WIDTH
-  else if (aspect === "3:4") height = Math.round((THUMB_WIDTH * 4) / 3)
+  else if (aspect === "4:5") height = Math.round((THUMB_WIDTH * 5) / 4)
   else height = Math.round((THUMB_WIDTH * 9) / 16) // 16:9 landscape
   return {
     width: THUMB_WIDTH,

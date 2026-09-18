@@ -36,8 +36,8 @@ export interface TemplateManifest {
   label: string
   /** Asset type (currently always "social-post") */
   assetType: "social-post"
-  /** "1:1" (square), "3:4" (portrait), or "16:9" (landscape) */
-  aspectRatio: "1:1" | "3:4" | "16:9"
+  /** "1:1" (square), "4:5" (portrait), or "16:9" (landscape) */
+  aspectRatio: "1:1" | "4:5" | "16:9"
   /** One-line description for the gallery card */
   description: string
   slots: SlotSpec[]

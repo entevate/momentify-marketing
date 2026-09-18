@@ -17,7 +17,7 @@ export type PickerMedia = { bgImage?: string; bgOpacity?: number }
  */
 export function nativeSize(aspect: TemplateManifest["aspectRatio"]): { width: number; height: number } {
   if (aspect === "16:9") return { width: 1280, height: 720 }
-  if (aspect === "3:4") return { width: 1080, height: 1440 }
+  if (aspect === "4:5") return { width: 1080, height: 1350 }
   return { width: 1080, height: 1080 }
 }
 

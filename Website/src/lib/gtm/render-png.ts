@@ -117,7 +117,7 @@ export async function launchBrowser(): Promise<Browser> {
  * each template.html), so puppeteer's viewport and the template's own
  * layout agree pixel-for-pixel:
  *   - 1:1  square:    1080 x 1080 (Instagram / LinkedIn / X universal)
- *   - 3:4  portrait:  1080 x 1440 (LinkedIn document / portrait feed)
+ *   - 4:5  portrait:  1080 x 1350 (LinkedIn document / portrait feed)
  *   - 16:9 landscape: 1280 x  720 (LinkedIn / X in-feed landscape)
  * All three exceed the platforms' minimum recommended dimensions. Unknown
  * aspect ratios fall back to 1080x1080 so behavior stays stable.
@@ -126,7 +126,7 @@ export async function launchBrowser(): Promise<Browser> {
 export function dimensionsForAspect(aspectRatio: string): { width: number; height: number } {
   switch (aspectRatio) {
     case "1:1":  return { width: 1080, height: 1080 }
-    case "3:4":  return { width: 1080, height: 1440 }
+    case "4:5":  return { width: 1080, height: 1350 }
     case "16:9": return { width: 1280, height:  720 }
     default:     return { width: RENDER_WIDTH, height: RENDER_HEIGHT }
   }
