@@ -4,6 +4,7 @@ import path from "path"
 import { put } from "@vercel/blob"
 import { kv } from "@/lib/gtm/kv-store"
 import { stripEmDashes } from "@/lib/gtm/sanitize"
+import { plainLength, truncateVisible } from "@/lib/gtm/rich-text"
 import { assetBlobPath, assetKvKey } from "@/lib/gtm/asset-helpers"
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/render"
@@ -219,7 +220,8 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
         if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
           throw new Error("expected object")
         }
-        // Per-slot maxChars enforcement. Trim on a word boundary when
+        // Per-slot maxChars enforcement, counted in VISIBLE characters
+        // (rich-text markers ride free). Trim on a word boundary when
         // possible so a truncated headline doesn't end mid-word; fall
         // back to a hard slice if there's no whitespace to break at.
         // The layout is CSS-fixed for the manifest maxChars — silent
@@ -228,11 +230,18 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
         const maxByKey = new Map(manifest.slots.map((s) => [s.key, s.maxChars]))
         const truncate = (key: string, val: string): string => {
           const max = maxByKey.get(key)
-          if (!max || val.length <= max) return val
-          const soft = val.slice(0, max + 1)
+          if (!max || plainLength(val) <= max) return val
+          const soft = truncateVisible(val, max + 1)
           const lastSpace = soft.lastIndexOf(" ")
-          const cut = lastSpace >= Math.floor(max * 0.7) ? soft.slice(0, lastSpace) : val.slice(0, max)
-          console.warn(`[fill-template] truncated ${key} from ${val.length} to ${cut.length} chars (maxChars=${max})`)
+          // Measure the word boundary in VISIBLE characters so a rich-text
+          // marker in the copy can't shift where the break lands - with no
+          // markers this is the same index the old .slice used.
+          const visibleBeforeSpace = lastSpace < 0 ? -1 : plainLength(soft.slice(0, lastSpace))
+          const cut =
+            visibleBeforeSpace >= Math.floor(max * 0.7)
+              ? truncateVisible(val, visibleBeforeSpace)
+              : truncateVisible(val, max)
+          console.warn(`[fill-template] truncated ${key} from ${plainLength(val)} to ${plainLength(cut)} visible chars (maxChars=${max})`)
           return cut
         }
 

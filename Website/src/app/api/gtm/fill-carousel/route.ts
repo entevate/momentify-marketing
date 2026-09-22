@@ -4,6 +4,7 @@ import path from "path"
 import { put } from "@vercel/blob"
 import { kv } from "@/lib/gtm/kv-store"
 import { stripEmDashes } from "@/lib/gtm/sanitize"
+import { plainLength, truncateVisible } from "@/lib/gtm/rich-text"
 import { assetBlobPath, assetKvKey, assetFilename } from "@/lib/gtm/asset-helpers"
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/render"
@@ -226,17 +227,23 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
         if (!arr || arr.length !== CARD_COUNT) {
           throw new Error(`expected cards array of length ${CARD_COUNT}, got ${arr ? arr.length : "n/a"}`)
         }
-        // Per-slot maxChars enforcement. Same rationale as fill-template:
+        // Per-slot maxChars enforcement in VISIBLE characters. Same
+        // rationale as fill-template:
         // a slot longer than the manifest allows silently breaks the CSS-
         // fixed layout; trim on a word boundary when possible.
         const maxByKey = new Map(manifest.slots.map((s) => [s.key, s.maxChars]))
         const truncateSlot = (cardIdx: number, key: string, val: string): string => {
           const max = maxByKey.get(key)
-          if (!max || val.length <= max) return val
-          const soft = val.slice(0, max + 1)
+          if (!max || plainLength(val) <= max) return val
+          const soft = truncateVisible(val, max + 1)
           const lastSpace = soft.lastIndexOf(" ")
-          const cut = lastSpace >= Math.floor(max * 0.7) ? soft.slice(0, lastSpace) : val.slice(0, max)
-          console.warn(`[fill-carousel] card ${cardIdx + 1} truncated ${key} from ${val.length} to ${cut.length} chars (maxChars=${max})`)
+          // Visible-character word boundary; see fill-template for the why.
+          const visibleBeforeSpace = lastSpace < 0 ? -1 : plainLength(soft.slice(0, lastSpace))
+          const cut =
+            visibleBeforeSpace >= Math.floor(max * 0.7)
+              ? truncateVisible(val, visibleBeforeSpace)
+              : truncateVisible(val, max)
+          console.warn(`[fill-carousel] card ${cardIdx + 1} truncated ${key} from ${plainLength(val)} to ${plainLength(cut)} visible chars (maxChars=${max})`)
           return cut
         }
         cards = arr.map((card: unknown, i: number) => {
