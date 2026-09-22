@@ -24,22 +24,11 @@ import React, { useRef, useState } from "react"
 import type { SlotKind, SlotSpec } from "@/lib/gtm/templates/types"
 // cta-icons is fs-free; render.ts imports fs/promises and would break the client bundle.
 import { CTA_ICONS, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/cta-icons"
-
-/**
- * Visible character count: markers don't count, newlines don't count.
- *
- * Local twin of `plainLength` in `src/lib/gtm/rich-text.ts` (server-owned).
- * Swap this for the import once that module lands - the semantics must stay
- * identical or the editor's count will disagree with the server's truncation.
- */
-function plainLength(raw: string): number {
-  if (!raw) return 0
-  return raw
-    .replace(/\*\*/g, "")
-    .replace(/__/g, "")
-    .replace(/\*/g, "")
-    .replace(/\r?\n/g, "").length
-}
+// The same visible-character count the server truncates by - rich-text.ts is
+// pure (no DOM, no fs), so it is safe in the client bundle. Sharing it is the
+// point: a local re-implementation would drift from the server's parser on
+// half-typed markers (`**bold` counts its `**` because the pair never closed).
+import { plainLength } from "@/lib/gtm/rich-text"
 
 /** Slot kinds that hold prose: multi-line, marker-aware. */
 const MULTILINE_KINDS: readonly SlotKind[] = [
