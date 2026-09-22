@@ -22,6 +22,8 @@ jest.mock("@/lib/gtm/templates/render", () => {
 
 import { put } from "@vercel/blob"
 import { kv } from "@/lib/gtm/kv-store"
+import { plainLength, renderRichText } from "@/lib/gtm/rich-text"
+import { escapeHtml } from "@/lib/gtm/link-page-types"
 
 const png = "data:image/png;base64," + Buffer.from("x").toString("base64")
 const base = { templateId: "bold-stat-1x1", assetType: "social-post", pillar: "trade-shows", briefText: "A brief long enough to pass validation.", itemId: "draft-1" }
@@ -171,5 +173,70 @@ describe("POST /api/gtm/fill-template hidden slots", () => {
     const res = await POST(req({ ...base, slots: { STAT: "1%" }, hidden: "LABEL" }))
     expect(res.status).toBe(200)
     expect((await res.json()).hidden).toEqual([])
+  })
+})
+
+// ─────────────────────────────────────────────────────────────────────────
+// Rich-text: the route's own per-slot truncation counts VISIBLE characters,
+// so a marker pair is never split and the cap still means what the layout
+// was built for. LABEL's maxChars is 40 in the mocked manifest above.
+// ─────────────────────────────────────────────────────────────────────────
+
+describe("POST /api/gtm/fill-template slot truncation", () => {
+  const LONG = "The quick brown fox jumps over the lazy dog today" // 49 chars
+  const CUT = "The quick brown fox jumps over the lazy"            // word boundary, 39
+
+  function claudeReturns(label: string) {
+    global.fetch = jest.fn(async () => ({
+      ok: true,
+      json: async () => ({ content: [{ type: "text", text: JSON.stringify({ STAT: "94%", LABEL: label }) }] }),
+    })) as unknown as typeof fetch
+  }
+
+  function storedSlots(): Record<string, string> {
+    const call = (kv.set as jest.Mock).mock.calls.find((c) => String(c[0]).endsWith(":slots"))
+    return JSON.parse(call![1] as string)
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    process.env.ANTHROPIC_API_KEY = "test"
+  })
+
+  it("keeps the pre-rich-text word-boundary cut for marker-free copy", async () => {
+    claudeReturns(LONG)
+    await POST(req(base))
+    expect(storedSlots().LABEL).toBe(CUT)
+  })
+
+  it("spends the budget on visible characters, not on markers", async () => {
+    claudeReturns(`**${LONG}**`)
+    await POST(req(base))
+    // Same copy, same cut point: the two stars did not eat into the 40.
+    expect(storedSlots().LABEL).toBe(CUT)
+  })
+
+  it("keeps the markers of a span that survives the cut", async () => {
+    claudeReturns("**Bold bit** and a tail long enough to blow past the forty cap")
+    await POST(req(base))
+    expect(storedSlots().LABEL).toBe("**Bold bit** and a tail long enough to blow")
+    expect(plainLength(storedSlots().LABEL)).toBeLessThanOrEqual(40)
+  })
+
+  it("never leaves a dangling opener for the renderer to print literally", async () => {
+    claudeReturns("__Under__ *it* and a tail long enough to blow past the forty cap")
+    await POST(req(base))
+    const label = storedSlots().LABEL
+    expect(plainLength(label)).toBeLessThanOrEqual(40)
+    const html = renderRichText(escapeHtml(label))
+    expect((html.match(/<(strong|u|em)>/g) ?? []).length).toBe((html.match(/<\/(strong|u|em)>/g) ?? []).length)
+    const stored = (put as jest.Mock).mock.calls[0][1] as string
+    expect(stored).toContain("<i><u>Under</u> <em>it</em> and a tail long enough to blow</i>")
+  })
+
+  it("leaves copy that already fits completely untouched, markers and all", async () => {
+    claudeReturns("**Short** and __sweet__")
+    await POST(req(base))
+    expect(storedSlots().LABEL).toBe("**Short** and __sweet__")
   })
 })

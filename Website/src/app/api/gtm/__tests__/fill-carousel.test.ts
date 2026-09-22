@@ -169,3 +169,49 @@ describe("POST /api/gtm/fill-carousel hidden slots", () => {
     expect((await res.json()).hidden).toEqual(noneHidden)
   })
 })
+
+// Rich text: per-card truncation counts VISIBLE characters too, so a marker
+// pair is never split across the 60-char cap of the mocked TXT slot.
+describe("POST /api/gtm/fill-carousel slot truncation", () => {
+  const LONG = "Bold headline that runs well past the sixty character cap for this slot"
+
+  function claudeReturnsTxt(txt: string) {
+    global.fetch = jest.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        content: [{ type: "text", text: JSON.stringify({ cards: Array.from({ length: CARD_COUNT }, () => ({ TXT: txt })) }) }],
+      }),
+    })) as unknown as typeof fetch
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    process.env.ANTHROPIC_API_KEY = "test"
+  })
+
+  it("cuts marker-free copy exactly where it did before rich text", async () => {
+    claudeReturnsTxt(LONG)
+    await POST(req(base))
+    const soft = LONG.slice(0, 61)
+    const expected = soft.slice(0, soft.lastIndexOf(" "))
+    for (const html of cardHtmls()) expect(html).toBe(`<b>${expected}</b>`)
+  })
+
+  it("does not charge the budget for markers and keeps every pair balanced", async () => {
+    claudeReturnsTxt(`**${LONG}**`)
+    await POST(req(base))
+    for (const html of cardHtmls()) {
+      expect((html.match(/<(strong|u|em)>/g) ?? []).length).toBe((html.match(/<\/(strong|u|em)>/g) ?? []).length)
+      expect(html).not.toContain("**")
+    }
+  })
+
+  it("renders a surviving span as a tag rather than literal stars", async () => {
+    claudeReturnsTxt("**Bold bit** plus a tail that is long enough to cross the sixty cap")
+    await POST(req(base))
+    for (const html of cardHtmls()) {
+      expect(html).toContain("<b><strong>Bold bit</strong> plus a tail")
+      expect(html).not.toContain("**")
+    }
+  })
+})
