@@ -46,6 +46,13 @@
       "kind": "cta_label",
       "maxChars": 28,
       "example": "Explore the Platform"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
     }
   ],
   "sampleData": {
@@ -54,6 +61,7 @@
     "BULLET1": "Passive visitor identification with badge and device fingerprinting",
     "BULLET2": "Dwell-time analytics and engagement heatmaps per station",
     "BULLET3": "Automated follow-up with ROX scoring per visitor session",
-    "CTA": "Explore the Platform"
+    "CTA": "Explore the Platform",
+    "CTA_ICON": "arrow-right"
   }
 }

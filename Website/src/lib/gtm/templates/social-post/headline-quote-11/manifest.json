@@ -39,6 +39,13 @@
       "kind": "cta_label",
       "maxChars": 28,
       "example": "See the Results"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
     }
   ],
   "sampleData": {
@@ -46,6 +53,7 @@
     "HEADLINE": "When Every Scan Counts",
     "QUOTE": "Our team captured 340 qualified leads in 3 days. The ROX data changed how we allocate trade show budget.",
     "ATTRIBUTION": "- Director of Field Marketing, Caterpillar",
-    "CTA": "See the Results"
+    "CTA": "See the Results",
+    "CTA_ICON": "arrow-right"
   }
 }

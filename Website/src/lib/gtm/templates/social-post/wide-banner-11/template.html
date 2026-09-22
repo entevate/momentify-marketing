@@ -118,6 +118,9 @@
     padding: 40px 64px 72px;
   }
   .cta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     font-size: 20px;
     font-weight: 600;
     letter-spacing: 0.03em;
@@ -127,6 +130,7 @@
     padding: 18px 38px;
     white-space: nowrap;
   }
+  .cta-icon { width: 1.05em; height: 1.05em; flex: none; }
   .domain {
     font-size: 26px;
     font-weight: 300;
@@ -173,7 +177,7 @@
   </main>
 
   <footer class="footer">
-    <span class="cta-pill" data-slot="CTA">{{CTA}}</span>
+    <span class="cta-pill" data-slot="CTA">{{CTA}}{{CTA_ICON}}</span>
     <span class="domain">momentifyapp.com</span>
   </footer>
 </div>

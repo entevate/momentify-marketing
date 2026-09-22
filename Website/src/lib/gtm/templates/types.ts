@@ -16,6 +16,7 @@ export type SlotKind =
   | "attribution"    // quote source (name + role)
   | "cta_label"      // e.g. "Schedule a Discovery Call"
   | "bullet"         // one short bullet point
+  | "icon"           // an icon id (see CTA_ICONS in render.ts), not copy - never sent to Claude
 
 export interface SlotSpec {
   /** Placeholder key WITHOUT the `{{` `}}` wrappers - e.g. "HEADLINE" */

@@ -46,6 +46,13 @@
       "kind": "cta_label",
       "maxChars": 28,
       "example": "Book a Demo"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
     }
   ],
   "sampleData": {
@@ -54,6 +61,7 @@
     "BULLET1": "Real-time badge scanning at 300+ touchpoints per hour",
     "BULLET2": "AI-powered lead enrichment and intent scoring on the floor",
     "BULLET3": "ROX attribution from booth scan to closed deal",
-    "CTA": "Book a Demo"
+    "CTA": "Book a Demo",
+    "CTA_ICON": "arrow-right"
   }
 }

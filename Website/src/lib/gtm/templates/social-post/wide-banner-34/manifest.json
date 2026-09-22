@@ -32,12 +32,20 @@
       "kind": "cta_label",
       "maxChars": 32,
       "example": "Book a Live Demo"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
     }
   ],
   "sampleData": {
     "LABEL": "Recruiting Season · Spring 2025",
     "HEADLINE": "Find Your Next Great Engineer at the Source",
     "SUBHEADLINE": "Momentify turns career fairs into qualified pipelines. Badge scan to CRM in under 60 seconds.",
-    "CTA": "Book a Live Demo"
+    "CTA": "Book a Live Demo",
+    "CTA_ICON": "arrow-right"
   }
 }

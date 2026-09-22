@@ -39,6 +39,13 @@
       "kind": "cta_label",
       "maxChars": 36,
       "example": "Book a Demo"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
     }
   ],
   "sampleData": {
@@ -46,6 +53,7 @@
     "HEADLINE": "Every Great Moment Deserves to Be Remembered",
     "QUOTE": "Momentify transformed how we engage fans. Our post-event NPS jumped 28 points in one season.",
     "ATTRIBUTION": "- Sarah Chen, VP Fan Experience, Pacific FC",
-    "CTA": "Book a Demo"
+    "CTA": "Book a Demo",
+    "CTA_ICON": "arrow-right"
   }
 }

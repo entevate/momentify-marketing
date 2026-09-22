@@ -46,6 +46,13 @@
       "kind": "cta_label",
       "maxChars": 28,
       "example": "See How It Works"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
     }
   ],
   "sampleData": {
@@ -54,6 +61,7 @@
     "BULLET1": "On-site badge scanning syncs directly to your ATS in real time",
     "BULLET2": "Automated follow-up sequences triggered by candidate scan profile",
     "BULLET3": "Recruiter performance scoring and pipeline attribution dashboard",
-    "CTA": "See How It Works"
+    "CTA": "See How It Works",
+    "CTA_ICON": "arrow-right"
   }
 }

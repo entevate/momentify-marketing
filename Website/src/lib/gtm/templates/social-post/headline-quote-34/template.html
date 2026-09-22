@@ -112,6 +112,7 @@
     letter-spacing: 0.02em;
     white-space: nowrap;
   }
+  .cta-icon { width: 1.05em; height: 1.05em; flex: none; }
   .stage .bg {
     position: absolute; inset: 0;
     background: var(--bg-image) center / cover no-repeat;
@@ -160,7 +161,7 @@
         </linearGradient>
       </defs>
     </svg>
-    <span class="cta" data-slot="CTA">{{CTA}} &rarr;</span>
+    <span class="cta" data-slot="CTA">{{CTA}}{{CTA_ICON}}</span>
   </footer>
 
 </div>
