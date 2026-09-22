@@ -13,6 +13,8 @@
 
 import React, { useState } from "react"
 import type { SlotSpec } from "@/lib/gtm/templates/types"
+// cta-icons is fs-free; render.ts imports fs/promises and would break the client bundle.
+import { CTA_ICONS, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/cta-icons"
 
 export interface SlotEditorProps {
   slots: SlotSpec[]
@@ -41,16 +43,34 @@ export default function SlotEditor({ slots, values, hidden, onChange, disabled }
               <SlotSwitch checked={!isHidden} disabled={disabled} onToggle={() => toggle(s.key)} label={`Toggle ${s.label}`} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <span className="field-label">
-                {s.label} <span style={{ fontWeight: 400, color: "var(--gtm-text-faint)" }}>· max {s.maxChars}</span>
-              </span>
-              <input
-                className="input"
-                value={values[s.key] ?? ""}
-                maxLength={s.maxChars}
-                disabled={disabled || isHidden}
-                onChange={(e) => setValue(s.key, e.target.value)}
-              />
+              {s.kind === "icon" ? (
+                <>
+                  <span className="field-label">{s.label}</span>
+                  <select
+                    className="input"
+                    value={values[s.key] || DEFAULT_CTA_ICON}
+                    disabled={disabled || isHidden}
+                    onChange={(e) => setValue(s.key, e.target.value)}
+                  >
+                    {Object.entries(CTA_ICONS).map(([id, icon]) => (
+                      <option key={id} value={id}>{icon.label}</option>
+                    ))}
+                  </select>
+                </>
+              ) : (
+                <>
+                  <span className="field-label">
+                    {s.label} <span style={{ fontWeight: 400, color: "var(--gtm-text-faint)" }}>· max {s.maxChars}</span>
+                  </span>
+                  <input
+                    className="input"
+                    value={values[s.key] ?? ""}
+                    maxLength={s.maxChars}
+                    disabled={disabled || isHidden}
+                    onChange={(e) => setValue(s.key, e.target.value)}
+                  />
+                </>
+              )}
             </div>
           </div>
         )

@@ -31,6 +31,9 @@ const RESERVED = new Set([
   "DECOR_SIZE",
   "BG_IMAGE",
   "BG_OPACITY",
+  // Expanded by renderTemplate to an <svg data-slot="CTA_ICON"> - never
+  // element text, so it is not a copy slot and must not be tagged/counted.
+  "CTA_ICON",
 ])
 
 /** Expected copy-slot count per template family - the assertion's ground truth. */

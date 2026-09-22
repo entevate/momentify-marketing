@@ -100,6 +100,9 @@
   .logo { width: 240px; height: auto; }
 
   .cta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     font-size: 20px;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -109,6 +112,7 @@
     padding: 14px 32px;
     white-space: nowrap;
   }
+  .cta-icon { width: 1.05em; height: 1.05em; flex: none; }
   .stage .bg {
     position: absolute; inset: 0;
     background: var(--bg-image) center / cover no-repeat;
@@ -157,7 +161,7 @@
         </linearGradient>
       </defs>
     </svg>
-    <span class="cta-pill" data-slot="CTA">{{CTA}}</span>
+    <span class="cta-pill" data-slot="CTA">{{CTA}}{{CTA_ICON}}</span>
   </footer>
 
 </div>

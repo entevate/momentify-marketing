@@ -6,7 +6,7 @@ import { kv } from "@/lib/gtm/kv-store"
 import { stripEmDashes } from "@/lib/gtm/sanitize"
 import { assetBlobPath, assetKvKey, assetFilename } from "@/lib/gtm/asset-helpers"
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
-import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
+import { findTemplate, loadTemplateHtml, renderTemplate, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
 import { parseRenderMedia, filterSlots, parseHiddenCards } from "@/lib/gtm/render-media"
 import { solutionGuidance } from "@/lib/gtm/builder-prompts"
@@ -130,7 +130,10 @@ export async function POST(request: Request) {
       }
 
       // ─── Build prompt asking for 6 slot-fill variants in one call ───────
+      // Icon slots hold an editor-chosen icon id, not copy - keep them out
+      // of the prompt so Claude never sees or invents a value.
       const slotSpec = manifest.slots
+        .filter((s) => s.kind !== "icon")
         .map((s) => `- "${s.key}" (${s.kind}, max ${s.maxChars} chars): ${s.label}. Example: ${s.example}`)
         .join("\n")
 
@@ -247,6 +250,8 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
             out[k] = truncateSlot(i, k, stripEmDashes(raw))
           }
           for (const s of manifest.slots) {
+            // Icon slots are never asked of Claude - seed the default.
+            if (s.kind === "icon" && !out[s.key]) out[s.key] = DEFAULT_CTA_ICON
             if (!(s.key in out)) console.warn(`[fill-carousel] card ${i + 1} missing slot: ${s.key}`)
           }
           return out

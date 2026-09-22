@@ -32,12 +32,20 @@
       "kind": "cta_label",
       "maxChars": 36,
       "example": "Reserve Your Spot"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
     }
   ],
   "sampleData": {
     "LABEL": "Sports Innovation Summit · June 2025",
     "HEADLINE": "The Future of Fan Engagement Is Here",
     "SUBHEADLINE": "Real-time badge scanning, lead capture, and ROX scoring on the floor.",
-    "CTA": "Reserve Your Spot"
+    "CTA": "Reserve Your Spot",
+    "CTA_ICON": "arrow-right"
   }
 }

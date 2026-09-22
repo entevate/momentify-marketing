@@ -6,7 +6,7 @@ import { kv } from "@/lib/gtm/kv-store"
 import { stripEmDashes } from "@/lib/gtm/sanitize"
 import { assetBlobPath, assetKvKey } from "@/lib/gtm/asset-helpers"
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
-import { findTemplate, loadTemplateHtml, renderTemplate } from "@/lib/gtm/templates/render"
+import { findTemplate, loadTemplateHtml, renderTemplate, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/render"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
 import { parseRenderMedia, filterSlots, parseHidden } from "@/lib/gtm/render-media"
 import { solutionGuidance } from "@/lib/gtm/builder-prompts"
@@ -128,7 +128,10 @@ export async function POST(request: Request) {
       // ─── Build the slot-fill prompt ──────────────────────────────────
       // Compact: template's slot spec + brand-voice rules + brief. Claude
       // returns a small JSON of slot values. No HTML, no chain-of-thought.
+      // Icon slots hold an icon id chosen in the editor, not copy - keep
+      // them out of the prompt so Claude never sees or invents a value.
       const slotSpec = manifest.slots
+        .filter((s) => s.kind !== "icon")
         .map((s) => `- "${s.key}" (${s.kind}, max ${s.maxChars} chars): ${s.label}. Example: ${s.example}`)
         .join("\n")
 
@@ -239,6 +242,11 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
           if (!maxByKey.has(k)) continue  // ignore keys the manifest doesn't declare
           const raw = typeof v === "string" ? v : v === undefined || v === null ? "" : String(v)
           slots[k] = truncate(k, stripEmDashes(raw))
+        }
+        // Icon slots are never asked of Claude - seed the default so the
+        // first render carries an icon and the editor's select has a value.
+        for (const s of manifest.slots) {
+          if (s.kind === "icon" && !slots[s.key]) slots[s.key] = DEFAULT_CTA_ICON
         }
         // Warn on missing slots — they'll render blank, which is layout-broken.
         for (const s of manifest.slots) {

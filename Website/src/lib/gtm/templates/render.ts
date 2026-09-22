@@ -19,6 +19,12 @@ import { templateRegistry } from "./_registry"
 /** Optional background photo for social-post renders. `bgOpacity` is 0–100. */
 export type RenderMedia = { bgImage?: string; bgOpacity?: number }
 
+// The icon map lives in its own fs-free module so client components can
+// import it without dragging this file's `fs/promises` into the browser
+// bundle. Re-exported here so server callers keep a single import site.
+import { ctaIconSvg } from "./cta-icons"
+export { CTA_ICONS, CTA_ICON_IDS, DEFAULT_CTA_ICON, ctaIconSvg } from "./cta-icons"
+
 /** Reserved keys: BG_IMAGE → `url("…")` or `none`; BG_OPACITY → 0–1. */
 export function mediaMap(media?: RenderMedia): Record<string, string> {
   const uri = (media?.bgImage ?? "").replace(/["\\]/g, "").trim()
@@ -79,6 +85,9 @@ export function renderTemplate(
   const filled = html.replace(/\{\{([A-Z0-9_]+)\}\}/g, (_m, key: string) => {
     if (key in paletteMap) return paletteMap[key]
     if (hiddenSet.has(key)) return ""
+    // CTA_ICON holds an icon id, not copy: expand to raw SVG rather than
+    // escaped text. Unknown ids and "none" resolve to nothing.
+    if (key === "CTA_ICON") return ctaIconSvg(slots[key])
     if (key in slots) return escapeHtml(slots[key])
     return ""
   })

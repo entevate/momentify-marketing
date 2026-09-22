@@ -32,12 +32,20 @@
       "kind": "cta_label",
       "maxChars": 32,
       "example": "See How It Works"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
     }
   ],
   "sampleData": {
     "LABEL": "Trade Show Season · 2025",
     "HEADLINE": "Your Booth Deserves Better Data",
     "SUBHEADLINE": "Badge scanning, lead capture, and ROX scoring that proves your exhibit ROI.",
-    "CTA": "See How It Works"
+    "CTA": "See How It Works",
+    "CTA_ICON": "arrow-right"
   }
 }

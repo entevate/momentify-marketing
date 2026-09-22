@@ -39,6 +39,13 @@
       "kind": "cta_label",
       "maxChars": 28,
       "example": "Download the Story"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
     }
   ],
   "sampleData": {
@@ -46,6 +53,7 @@
     "HEADLINE": "The Rep Who Closes Walks in Informed",
     "QUOTE": "Before Momentify, our reps walked into customer visits with a brochure. Now they walk in with scan history, engagement scores, and talking points pre-loaded.",
     "ATTRIBUTION": "- VP of Sales, Komatsu North America",
-    "CTA": "Download the Story"
+    "CTA": "Download the Story",
+    "CTA_ICON": "arrow-right"
   }
 }

@@ -1,4 +1,4 @@
-import { renderTemplate } from "../render"
+import { renderTemplate, CTA_ICONS, DEFAULT_CTA_ICON } from "../render"
 import type { Palette } from "@/lib/gtm/pillar-palettes"
 
 const palette: Palette = {
@@ -94,6 +94,30 @@ describe("renderTemplate hidden slots", () => {
     expect(out).not.toContain("evil")
     expect(out).not.toContain("</style><script")
     expect(out).toContain('<style>[data-slot="OK_1"]{display:none !important}</style>')
+  })
+
+  it("expands CTA_ICON to a thin-stroke svg tagged for the hidden rule, never escaped", () => {
+    const pill = `<span data-slot="CTA">{{CTA}}{{CTA_ICON}}</span>`
+    const out = renderTemplate(pill, { CTA: "Book a Demo", CTA_ICON: "calendar" }, palette)
+    expect(out).toContain('<svg class="cta-icon" data-slot="CTA_ICON"')
+    expect(out).toContain('stroke-width="1.75"')
+    expect(out).toContain(CTA_ICONS.calendar.path)
+    expect(out).not.toContain("&lt;svg")
+  })
+
+  it("renders no icon for an unknown id, 'none', or a missing value", () => {
+    const pill = `<span data-slot="CTA">{{CTA}}{{CTA_ICON}}</span>`
+    for (const v of [{ CTA_ICON: "not-an-icon" }, { CTA_ICON: "none" }, {}]) {
+      const out = renderTemplate(pill, { CTA: "Go", ...v }, palette)
+      expect(out).toBe(`<span data-slot="CTA">Go</span>`)
+    }
+  })
+
+  it("hidden CTA_ICON emits neither the svg nor its markup, plus the display:none rule", () => {
+    const pill = `<span data-slot="CTA">{{CTA}}{{CTA_ICON}}</span>`
+    const out = renderTemplate(pill, { CTA: "Go", CTA_ICON: DEFAULT_CTA_ICON }, palette, undefined, ["CTA_ICON"])
+    expect(out).not.toContain("<svg")
+    expect(out).toContain('[data-slot="CTA_ICON"]{display:none !important}')
   })
 
   it("injects nothing when hidden is absent or empty - byte-identical to no arg", () => {
