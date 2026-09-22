@@ -13,7 +13,8 @@
 
 import React, { useState } from "react"
 import type { SlotSpec } from "@/lib/gtm/templates/types"
-import { CTA_ICONS, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/render"
+// cta-icons is fs-free; render.ts imports fs/promises and would break the client bundle.
+import { CTA_ICONS, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/cta-icons"
 
 export interface SlotEditorProps {
   slots: SlotSpec[]
