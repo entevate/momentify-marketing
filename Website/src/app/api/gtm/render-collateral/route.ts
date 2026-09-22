@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
-import { launchBrowser } from "@/lib/gtm/render-png"
+import { launchBrowser, waitForFonts } from "@/lib/gtm/render-png"
 
 export const runtime = "nodejs"
 export const maxDuration = 60
@@ -85,6 +85,7 @@ export async function POST(request: Request) {
     if (format === "pdf") {
       await page.setViewport({ width: cssWidth, height: cssHeight, deviceScaleFactor: 1 })
       await page.setContent(html, { waitUntil: "networkidle0", timeout: 30_000 })
+      await waitForFonts(page)
       const buf = await page.pdf({
         width: `${widthIn}in`,
         height: `${heightIn}in`,
@@ -108,6 +109,7 @@ export async function POST(request: Request) {
     const deviceScaleFactor = resolvedDpi / 96
     await page.setViewport({ width: cssWidth, height: cssHeight, deviceScaleFactor })
     await page.setContent(html, { waitUntil: "networkidle0", timeout: 30_000 })
+      await waitForFonts(page)
     const buf = await page.screenshot({
       type: "jpeg",
       quality: 92,

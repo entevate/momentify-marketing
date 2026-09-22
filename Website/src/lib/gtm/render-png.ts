@@ -11,7 +11,7 @@
  * scale-down or letterbox.
  */
 
-import type { Browser, LaunchOptions } from "puppeteer-core"
+import type { Browser, LaunchOptions, Page } from "puppeteer-core"
 
 const RENDER_WIDTH = 1080
 const RENDER_HEIGHT = 1080
@@ -133,11 +133,37 @@ export function dimensionsForAspect(aspectRatio: string): { width: number; heigh
 }
 
 /**
+ * Block until the page's webfonts are actually usable.
+ *
+ * `networkidle0` only says the network went quiet - the font files can still
+ * be parsing, and Chromium paints the fallback until a face is ready. That
+ * used to cost a little letterfit; now that slots can emit <em>, a late face
+ * means the capture shows a sheared faux-oblique instead of real Inter
+ * Italic. `document.fonts.ready` resolves once every face used by the page
+ * has loaded (or failed).
+ *
+ * Passed as a string, not an arrow function: the one-shot `tsx` scripts that
+ * drive this renderer compile with esbuild's keepNames, which injects a
+ * `__name` call into serialized page functions and blows up inside the page.
+ *
+ * Best-effort - a page without the Font Loading API, or a font host that
+ * never answers, must not fail the render.
+ */
+export async function waitForFonts(page: Page): Promise<void> {
+  try {
+    await page.evaluate("document.fonts ? document.fonts.ready.then(() => true) : true")
+  } catch {
+    /* ignore - render with whatever is loaded */
+  }
+}
+
+/**
  * Render a single HTML string to a PNG buffer.
  *
  * The HTML is loaded via setContent (so no extra HTTP fetch is needed).
- * `networkidle0` ensures Google Fonts / external assets load before
- * screenshot. fullPage=false keeps the capture exactly viewport-sized.
+ * `networkidle0` plus `waitForFonts` ensures Google Fonts / external assets
+ * are loaded AND usable before the screenshot. fullPage=false keeps the
+ * capture exactly viewport-sized.
  *
  * Accepts an optional {width, height} to render at any aspect ratio.
  * Defaults to 1080x1080 so callers that render 1:1 social-post cards
@@ -154,6 +180,7 @@ export async function renderHtmlToPng(
     const page = await browser.newPage()
     await page.setViewport({ width, height, deviceScaleFactor: 1 })
     await page.setContent(html, { waitUntil: "networkidle0", timeout: 25_000 })
+    await waitForFonts(page)
     const buf = await page.screenshot({
       type: "png",
       omitBackground: false,
@@ -179,6 +206,7 @@ export async function renderManyHtmlToPng(htmls: string[]): Promise<Buffer[]> {
       try {
         await page.setViewport({ width: RENDER_WIDTH, height: RENDER_HEIGHT, deviceScaleFactor: 1 })
         await page.setContent(html, { waitUntil: "networkidle0", timeout: 25_000 })
+        await waitForFonts(page)
         const buf = await page.screenshot({
           type: "png",
           omitBackground: false,
@@ -211,6 +239,7 @@ export async function renderSizedHtmlBatch(
       try {
         await page.setViewport({ width: job.width, height: job.height, deviceScaleFactor: 1 })
         await page.setContent(job.html, { waitUntil: "networkidle0", timeout: 25_000 })
+        await waitForFonts(page)
         const buf = await page.screenshot({
           type: "png",
           omitBackground: false,

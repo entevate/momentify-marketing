@@ -18,13 +18,44 @@
  * entity. The only tags this module can ever emit are `<br>`, `<strong>`,
  * `<u>` and `<em>`.
  *
- * Pure: no DOM, no fs. Safe to import from client components (the slot
- * editor needs `plainLength` / `truncateVisible` for its counters).
+ * Pure: no DOM, no fs, and bounded in both nesting depth and input length
+ * (see MAX_DEPTH / MAX_INPUT) so no pasted string can throw or hang. Safe to
+ * import from client components (the slot editor needs `plainLength` /
+ * `truncateVisible` for its counters, on every keystroke).
  *
  * A value containing none of `*`, `_` or a newline renders byte-identically
  * to the pre-rich-text substitution - that guarantee is pinned by a test in
  * `templates/__tests__/render.test.ts`.
  */
+
+/**
+ * Two bounds keep the parser from being a denial-of-service surface. Real
+ * slot copy is a headline: `maxChars` tops out in the low hundreds, and no
+ * human nests bold inside italic inside underline more than three deep.
+ *
+ * MAX_DEPTH: an opener found deeper than this is treated as literal text, so
+ * a run of `*` cannot drive one recursion level per star. Without it, ~15k
+ * consecutive stars blew the JS stack - and the slot editor calls
+ * `plainLength` on every keystroke, so a paste could take the editor down.
+ *
+ * MAX_INPUT: past this length markers are not interpreted at all. The value
+ * comes back as literal text through a single linear pass - no parse, no
+ * recursion, no quadratic scan.
+ *
+ * MAX_STEPS: an unmatched opener costs a scan to the end of the string, so a
+ * long string of them (`*a *a *a …`) is quadratic even inside the other two
+ * bounds. The parser counts its own steps and gives up past this budget; the
+ * caller then falls back to the same linear literal pass. Real copy never
+ * comes close - a 300-character headline costs a few hundred steps.
+ */
+const MAX_DEPTH = 8
+const MAX_INPUT = 20_000
+const MAX_STEPS = 250_000
+
+/** Thrown by the parser when it blows MAX_STEPS; never escapes this module. */
+class ParseBudgetExceeded extends Error {}
+
+let steps = 0
 
 /** Markers, longest first: `**` must be tried before `*`. */
 const MARKERS = [
@@ -67,7 +98,8 @@ function hasVisibleText(nodes: RichNode[]): boolean {
 function parseNodes(
   src: string,
   start: number,
-  closer: string | null
+  closer: string | null,
+  depth: number
 ): { nodes: RichNode[]; next: number } | null {
   const nodes: RichNode[] = []
   let buf = ""
@@ -79,6 +111,7 @@ function parseNodes(
     }
   }
   while (i < src.length) {
+    if (++steps > MAX_STEPS) throw new ParseBudgetExceeded()
     // A closer only counts when it hugs the content: `**bold **` is literal,
     // the way it is in every markdown dialect.
     if (closer && src.startsWith(closer, i) && i > start && !isSpace(src[i - 1])) {
@@ -96,14 +129,17 @@ function parseNodes(
     // is what keeps `5 * 3` and `* *` literal. A single `*` additionally
     // refuses to open in front of another `*`: `**` was already tried at this
     // position and did not match, so both stars are literal (`** **`).
-    const m = MARKERS.find(
-      (x) =>
-        src.startsWith(x.marker, i) &&
-        !isSpace(src[i + x.marker.length]) &&
-        !(x.marker === "*" && src[i + 1] === "*")
-    )
+    const m =
+      depth >= MAX_DEPTH
+        ? undefined
+        : MARKERS.find(
+            (x) =>
+              src.startsWith(x.marker, i) &&
+              !isSpace(src[i + x.marker.length]) &&
+              !(x.marker === "*" && src[i + 1] === "*")
+          )
     if (m) {
-      const inner = parseNodes(src, i + m.marker.length, m.marker)
+      const inner = parseNodes(src, i + m.marker.length, m.marker, depth + 1)
       if (inner && hasVisibleText(inner.nodes)) {
         flush()
         nodes.push({ kind: "span", marker: m.marker, tag: m.tag, children: inner.nodes })
@@ -126,8 +162,36 @@ function parseNodes(
 /** Anything with no marker characters and no newlines parses to itself. */
 const HAS_MARKUP = /[*_\r\n]/
 
-function parse(src: string): RichNode[] {
-  return parseNodes(src, 0, null)!.nodes
+/** Parsed nodes, or null when the input blew the step budget. */
+function tryParse(src: string): RichNode[] | null {
+  steps = 0
+  try {
+    return parseNodes(src, 0, null, 0)!.nodes
+  } catch (e) {
+    if (e instanceof ParseBudgetExceeded) return null
+    throw e
+  }
+}
+
+/** Newlines only, no marker parsing. Linear, for over-long values. */
+function brOnly(src: string): string {
+  return src.replace(/\r\n|\r|\n/g, "<br>")
+}
+
+/** Every character except newlines. Linear, for over-long values. */
+function literalVisibleLen(src: string): number {
+  let n = 0
+  for (let i = 0; i < src.length; i++) if (src[i] !== "\n" && src[i] !== "\r") n++
+  return n
+}
+
+/** Cut by non-newline characters. Linear, for over-long values. */
+function literalTruncate(src: string, max: number): string {
+  let n = 0
+  for (let i = 0; i < src.length; i++) {
+    if (src[i] !== "\n" && src[i] !== "\r" && ++n > max) return src.slice(0, i)
+  }
+  return src
 }
 
 function toHtml(nodes: RichNode[]): string {
@@ -157,7 +221,10 @@ function visibleLen(nodes: RichNode[]): number {
 export function renderRichText(escaped: string): string {
   const s = String(escaped ?? "")
   if (!HAS_MARKUP.test(s)) return s
-  return toHtml(parse(s))
+  // Over a bound: line breaks still render, markers stay literal.
+  if (s.length > MAX_INPUT) return brOnly(s)
+  const nodes = tryParse(s)
+  return nodes === null ? brOnly(s) : toHtml(nodes)
 }
 
 /**
@@ -169,7 +236,9 @@ export function renderRichText(escaped: string): string {
 export function plainLength(raw: string): number {
   const s = String(raw ?? "")
   if (!HAS_MARKUP.test(s)) return s.length
-  return visibleLen(parse(s))
+  if (s.length > MAX_INPUT) return literalVisibleLen(s)
+  const nodes = tryParse(s)
+  return nodes === null ? literalVisibleLen(s) : visibleLen(nodes)
 }
 
 function cutNodes(nodes: RichNode[], budget: number): { text: string; used: number } {
@@ -208,7 +277,9 @@ export function truncateVisible(raw: string, max: number): string {
   const s = String(raw ?? "")
   if (!Number.isFinite(max) || max <= 0) return ""
   if (!HAS_MARKUP.test(s)) return s.length <= max ? s : s.slice(0, max)
-  const nodes = parse(s)
+  if (s.length > MAX_INPUT) return literalTruncate(s, max)
+  const nodes = tryParse(s)
+  if (nodes === null) return literalTruncate(s, max)
   if (visibleLen(nodes) <= max) return s
   return cutNodes(nodes, max).text
 }

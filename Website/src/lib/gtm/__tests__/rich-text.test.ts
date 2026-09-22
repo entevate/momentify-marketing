@@ -115,3 +115,71 @@ describe("truncateVisible", () => {
     }
   })
 })
+
+// ─────────────────────────────────────────────────────────────────────────
+// Bounds. SlotEditor calls plainLength on every keystroke, so a pasted blob
+// must never throw or hang - an unbounded recursive parser overflowed the
+// stack at ~15k consecutive markers.
+// ─────────────────────────────────────────────────────────────────────────
+
+describe("rich-text bounds", () => {
+  const within = (ms: number, fn: () => void) => {
+    const t = Date.now()
+    fn()
+    const took = Date.now() - t
+    expect(took).toBeLessThan(ms)
+  }
+
+  const blobs: [name: string, value: string][] = [
+    ["50k stars", "*".repeat(50_000)],
+    ["50k underscores", "_".repeat(50_000)],
+    ["50k alternating bold markers", "**".repeat(25_000)],
+    ["20k unclosed italic openers", "*a ".repeat(6_633)],
+    ["20k unclosed bold openers", "**a ".repeat(4_975)],
+    ["20k unclosed underline openers", "__a ".repeat(4_975)],
+    ["20k mixed unmatched markers", "*a __b c** ".repeat(1_800)],
+  ]
+
+  it.each(blobs)("%s: renders, measures and truncates under 100ms without throwing", (_name, value) => {
+    within(100, () => {
+      expect(() => renderRichText(value)).not.toThrow()
+      expect(() => plainLength(value)).not.toThrow()
+      expect(() => truncateVisible(value, 40)).not.toThrow()
+    })
+  })
+
+  it("hands back an over-long marker blob as literal text", () => {
+    const stars = "*".repeat(50_000)
+    expect(renderRichText(stars)).toBe(stars)
+    expect(plainLength(stars)).toBe(50_000)
+    expect(truncateVisible(stars, 40)).toBe("*".repeat(40))
+  })
+
+  it("still renders line breaks in an over-long value", () => {
+    const long = "a".repeat(20_001) + "\n" + "*b*"
+    const out = renderRichText(long)
+    expect(out).toContain("<br>")
+    expect(out).toContain("*b*") // markers are literal past the ceiling
+    expect(plainLength(long)).toBe(20_001 + 3)
+  })
+
+  it("caps nesting rather than recursing once per opener", () => {
+    const deep = "**".repeat(20) + "x" + "**".repeat(20)
+    const out = renderRichText(deep)
+    let depth = 0
+    let max = 0
+    for (const tag of out.match(/<\/?strong>/g) ?? []) {
+      depth += tag === "<strong>" ? 1 : -1
+      max = Math.max(max, depth)
+    }
+    expect(max).toBeLessThanOrEqual(8)
+    expect(depth).toBe(0) // balanced
+  })
+
+  it("keeps ordinary copy on the parsed path", () => {
+    const copy = "Bold **headline** with *italic* and __under__. ".repeat(420)
+    expect(renderRichText(copy)).toContain("<strong>headline</strong>")
+    // 10 marker characters per sentence: **…** + *…* + __…__
+    expect(plainLength(copy)).toBe(copy.length - 420 * 10)
+  })
+})
