@@ -244,3 +244,17 @@ User: "once a graphic is generated, each slot fill needs to be editable and on/o
 **Out of scope.** Non-templated types (infographic, microsite, one-pager, pitch deck) are Claude-generated HTML with no slots.
 
 **Granularity.** Only the slot's own element collapses, not its container: hiding both `STAT1` and `LABEL1` in a rox-report empties the two spans but the `.stat` cell keeps its flex share, so a gap remains. Container-level hiding would be a per-template design decision, not a rule.
+
+---
+
+## Section 9 — Rich-text slots (added 2026-09-22)
+
+**Storage.** A slot value stays plain text with four light markers and is never HTML: a newline is a line break, `**bold**`, `__underline__`, `*italic*`. That is what the editor writes, what KV caches under `${baseKey}:slots`, and what the fill routes hand back — nothing downstream has to trust or sanitise stored markup.
+
+**Conversion order.** `renderTemplate` substitutes a caller slot as `renderRichText(escapeHtml(value))`: escape first, convert second. By the time `src/lib/gtm/rich-text.ts` sees the string every `<`, `>`, `&`, `"` and `'` is already an entity, so a user's typed tag can never open an element, and the only tags that can be emitted are `<br>`, `<strong>`, `<u>`, `<em>`. Markers are resolved newline → `**` → `__` → `*`; a pair converts only when it hugs its content (opener followed, closer preceded, by a non-blank character), so `**`, `* *`, `5 * 3` and an unclosed `**oops` all stay literal, and `**__x__**` nests naturally. Reserved palette/media keys and `CTA_ICON` are unaffected.
+
+**Byte identity.** A value containing none of `*`, `_` or a newline renders byte-for-byte as it did before this feature — pinned by a test in `templates/__tests__/render.test.ts` that diffs against a copy of the pre-change substitution across every shipped template's `sampleData`.
+
+**Truncation.** `maxChars` is now a **visible**-character budget: matched marker pairs cost nothing, newlines cost nothing, unmatched markers cost the characters they are. `plainLength(raw)` measures it and `truncateVisible(raw, max)` applies it, in `filterSlots` and in both fill routes' own per-slot trim (the word-boundary index is measured in visible characters too, so a marker-free value is cut exactly where `.slice` cut it). A span that survives whole keeps its markers; a span cut mid-pair loses them rather than leaving a dangling opener for the renderer to print literally. Claude's prompts are unchanged — it is still never asked for markers; the routes just stop corrupting the ones a user typed.
+
+**Fonts.** `<em>` needs a real italic face or Chromium shears the upright glyphs. `scripts/add-italic-axis.mjs` (idempotent, 15/15) rewrites each template's Inter link to the two-axis form `ital,wght@0,300;…;1,700` (plus `800` where that template used it) and adds `u { text-decoration-thickness: .06em; text-underline-offset: .08em; }` beside the `:root` vars. Measured in the render pipeline's own headless Chromium at 100px: italic 564.27 vs upright 559.67 with the new link (a real face), italic 559.67 — identical to upright — with the old one; upright and bold are unchanged by the swap, and `render-parity.ts compare` is byte-identical on all five families.
