@@ -1,4 +1,5 @@
 import { stripEmDashes } from "@/lib/gtm/sanitize"
+import { truncateVisible } from "@/lib/gtm/rich-text"
 import type { SlotSpec } from "@/lib/gtm/templates/types"
 import type { RenderMedia } from "@/lib/gtm/templates/render"
 
@@ -34,7 +35,8 @@ export function parseRenderMedia(body: { bgImage?: unknown; bgOpacity?: unknown 
 
 /**
  * Keep only the manifest's slot keys, coerce to strings, strip em-dashes,
- * truncate to each slot's maxChars. Null when the input is not an object.
+ * truncate to each slot's maxChars measured in VISIBLE characters (rich-text
+ * markers are free). Null when the input is not an object.
  */
 export function filterSlots(input: unknown, spec: SlotSpec[]): Record<string, string> | null {
   if (!input || typeof input !== "object" || Array.isArray(input)) return null
@@ -42,7 +44,9 @@ export function filterSlots(input: unknown, spec: SlotSpec[]): Record<string, st
   for (const s of spec) {
     const v = (input as Record<string, unknown>)[s.key]
     if (v === undefined || v === null) continue
-    out[s.key] = stripEmDashes(String(v)).slice(0, s.maxChars)
+    // Visible-character truncation: a slot's rich-text markers are free and
+    // stay balanced, so a hard cut can't leave a dangling `**`.
+    out[s.key] = truncateVisible(stripEmDashes(String(v)), s.maxChars)
   }
   return out
 }
