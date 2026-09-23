@@ -1,0 +1,75 @@
+{
+  "id": "rox-dimensions-11",
+  "label": "ROX Dimensions · Square",
+  "assetType": "social-post",
+  "aspectRatio": "1:1",
+  "description": "Dark square card explaining the four ROX categories from momentifyapp.com/what-is-rox as a 2x2 grid: numeral 01-04 in each category's accent, the category name, and a one-line blurb per category. Names and accents are fixed brand facts; only the blurbs are editable. General pillar.",
+  "slots": [
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 40,
+      "example": "How ROX Is Scored"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Headline",
+      "kind": "headline",
+      "maxChars": 48,
+      "example": "Four categories. One score."
+    },
+    {
+      "key": "DIM1",
+      "label": "Lead Capture Efficiency blurb",
+      "kind": "support",
+      "maxChars": 96,
+      "example": "A scan is not a lead. How many real visitors were captured with enough context to act on?"
+    },
+    {
+      "key": "DIM2",
+      "label": "Engagement Quality blurb",
+      "kind": "support",
+      "maxChars": 96,
+      "example": "Who lingered, explored, and asked questions, versus who grabbed a brochure and moved on?"
+    },
+    {
+      "key": "DIM3",
+      "label": "Follow-Up Speed blurb",
+      "kind": "support",
+      "maxChars": 96,
+      "example": "Intent fades fast. Best-in-class teams follow up same day. The average is five to seven."
+    },
+    {
+      "key": "DIM4",
+      "label": "Conversion Effectiveness blurb",
+      "kind": "support",
+      "maxChars": 96,
+      "example": "The bottom line. How many captured leads became a meeting, a hire, or a closed opportunity?"
+    },
+    {
+      "key": "CTA",
+      "label": "CTA button text",
+      "kind": "cta_label",
+      "maxChars": 28,
+      "example": "See How It Works"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
+    }
+  ],
+  "sampleData": {
+    "LABEL": "How ROX Is Scored",
+    "HEADLINE": "Four categories. One score.",
+    "DIM1": "A scan is not a lead. How many real visitors were captured with enough context to act on?",
+    "DIM2": "Who lingered, explored, and asked questions, versus who grabbed a brochure and moved on?",
+    "DIM3": "Intent fades fast. Best-in-class teams follow up same day. The average is five to seven.",
+    "DIM4": "The bottom line. How many captured leads became a meeting, a hire, or a closed opportunity?",
+    "CTA": "See How It Works",
+    "CTA_ICON": "arrow-right"
+  }
+}

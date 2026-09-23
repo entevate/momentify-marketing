@@ -1,0 +1,59 @@
+{
+  "id": "rox-gauge-45",
+  "label": "ROX Gauge · Portrait",
+  "assetType": "social-post",
+  "aspectRatio": "4:5",
+  "description": "Dark 4:5 portrait card (Instagram feed) built around the ROX score gauge from momentifyapp.com/what-is-rox: the four-tier arc (Critical, Optimize, High ROX, Elite), a needle driven by the SCORE slot, the tier label in its tier color, and a four-tier legend. For explaining ROX and sharing a score. General pillar.",
+  "slots": [
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 40,
+      "example": "Return on Experience (ROX)"
+    },
+    {
+      "key": "SCORE",
+      "label": "ROX score (0-100)",
+      "kind": "stat_number",
+      "maxChars": 3,
+      "example": "78"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Headline",
+      "kind": "headline",
+      "maxChars": 64,
+      "example": "ROI tells you what you spent. ROX tells you whether it worked."
+    },
+    {
+      "key": "SUBHEAD",
+      "label": "Supporting line",
+      "kind": "support",
+      "maxChars": 120,
+      "example": "One score across lead capture, engagement, follow-up speed, and conversion. Every event measured the same way."
+    },
+    {
+      "key": "CTA",
+      "label": "CTA button text",
+      "kind": "cta_label",
+      "maxChars": 28,
+      "example": "Get Your ROX Score"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
+    }
+  ],
+  "sampleData": {
+    "LABEL": "Return on Experience (ROX)",
+    "SCORE": "78",
+    "HEADLINE": "ROI tells you what you spent. ROX tells you whether it worked.",
+    "SUBHEAD": "One score across lead capture, engagement, follow-up speed, and conversion. Every event measured the same way.",
+    "CTA": "Get Your ROX Score",
+    "CTA_ICON": "arrow-right"
+  }
+}
