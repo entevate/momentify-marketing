@@ -12,6 +12,7 @@
 import fs from "fs/promises"
 import path from "path"
 import { escapeHtml } from "@/lib/gtm/link-page-types"
+import { renderRichText } from "@/lib/gtm/rich-text"
 import type { Palette } from "@/lib/gtm/pillar-palettes"
 import type { TemplateManifest } from "./types"
 import { templateRegistry } from "./_registry"
@@ -45,8 +46,12 @@ export function mediaMap(media?: RenderMedia): Record<string, string> {
  * empty strings (so an unfilled slot degrades gracefully, rather than
  * showing the literal `{{KEY}}`).
  *
- * Caller slot values are HTML-escaped (they are text nodes in every
- * template); reserved palette/media keys are raw CSS values.
+ * Caller slot values are HTML-escaped and then run through
+ * `renderRichText`, which turns the stored plain-text markers (newline,
+ * `**bold**`, `__underline__`, `*italic*`) into `<br>`/`<strong>`/`<u>`/`<em>`
+ * (they are text nodes in every template - no slot sits inside an
+ * attribute). A value with no markers is substituted byte-identically to
+ * before. Reserved palette/media keys are raw CSS values.
  *
  * `hidden` lists slot keys the user toggled off. A hidden key renders as an
  * empty string whatever `slots` holds, AND gets a
@@ -88,7 +93,10 @@ export function renderTemplate(
     // CTA_ICON holds an icon id, not copy: expand to raw SVG rather than
     // escaped text. Unknown ids and "none" resolve to nothing.
     if (key === "CTA_ICON") return ctaIconSvg(slots[key])
-    if (key in slots) return escapeHtml(slots[key])
+    // Escape FIRST, then convert the light markers (**bold**, __underline__,
+    // *italic*, newline) to tags: a user's `<` can never open an element,
+    // because by the time renderRichText sees it, it is already `&lt;`.
+    if (key in slots) return renderRichText(escapeHtml(slots[key]))
     return ""
   })
   if (hiddenKeys.length === 0) return filled

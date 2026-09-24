@@ -47,6 +47,29 @@ describe("filterSlots", () => {
     expect(filterSlots("nope", spec)).toBeNull()
     expect(filterSlots({ STAT: 5 }, spec)).toEqual({ STAT: "5" })
   })
+
+  // Rich text: maxChars is a VISIBLE character budget, so markers ride free
+  // and a cut never leaves a dangling `**` for the renderer to show literally.
+  it("does not spend the budget on rich-text markers", () => {
+    expect(filterSlots({ STAT: "**123**" }, spec)).toEqual({ STAT: "**123**" })
+    expect(filterSlots({ LABEL: "__abcdefghij__" }, spec)).toEqual({ LABEL: "__abcdefghij__" })
+  })
+
+  it("drops the dangling opener when a span is cut mid-pair", () => {
+    expect(filterSlots({ STAT: "**12345**" }, spec)).toEqual({ STAT: "123" })
+    expect(filterSlots({ LABEL: "*one* two three" }, spec)).toEqual({ LABEL: "*one* two th" })
+  })
+
+  it("counts unmatched markers as the literal characters they are", () => {
+    expect(filterSlots({ STAT: "5 * 3" }, spec)).toEqual({ STAT: "5 *" })
+  })
+
+  it("still hard-truncates marker-free copy exactly as a slice would", () => {
+    expect(filterSlots({ STAT: "12345", LABEL: "abcdefghijkl" }, spec)).toEqual({
+      STAT: "12345".slice(0, 3),
+      LABEL: "abcdefghijkl".slice(0, 10),
+    })
+  })
 })
 
 const hiddenSpec: SlotSpec[] = [
