@@ -89,8 +89,10 @@ if (bad.length) {
   for (const b of bad) console.error("FAIL " + b)
   process.exit(1)
 }
-if (files.length !== 15) {
-  console.error(`FAIL expected 15 templates, found ${files.length}`)
+// Keep in lockstep with scripts/add-slot-tags.mjs and template-fonts.test.ts.
+const EXPECTED_TEMPLATES = 21
+if (files.length !== EXPECTED_TEMPLATES) {
+  console.error(`FAIL expected ${EXPECTED_TEMPLATES} templates, found ${files.length}`)
   process.exit(1)
 }
-console.log(changedLink + changedRule === 0 ? "OK 15/15 already patched (no-op)" : "OK 15/15 patched")
+console.log(changedLink + changedRule === 0 ? `OK ${EXPECTED_TEMPLATES}/${EXPECTED_TEMPLATES} already patched (no-op)` : `OK ${EXPECTED_TEMPLATES}/${EXPECTED_TEMPLATES} patched`)
