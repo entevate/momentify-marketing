@@ -14,8 +14,9 @@ const ROOT = path.join(process.cwd(), "src", "lib", "gtm", "templates", "social-
 const dirs = fs.readdirSync(ROOT, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)
 
 describe("social-post template fonts", () => {
-  it("ships the 15 templates the italic-axis script expects", () => {
-    expect(dirs).toHaveLength(15)
+  it("ships the 21 templates the italic-axis script expects", () => {
+    // Keep in lockstep with scripts/add-italic-axis.mjs and scripts/add-slot-tags.mjs.
+    expect(dirs).toHaveLength(21)
   })
 
   it.each(dirs)("%s loads Inter with an italic axis and styles <u>", (dir) => {

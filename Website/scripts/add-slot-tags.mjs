@@ -43,6 +43,10 @@ const EXPECTED = {
   "rox-report": 8,
   "solution-feature": 6,
   "wide-banner": 4,
+  // ROX family (General pillar). CTA_ICON is reserved, so it is not counted.
+  "rox-gauge": 5,      // LABEL, SCORE, HEADLINE, SUBHEAD, CTA
+  "rox-tiers": 7,      // LABEL, HEADLINE, TIER1-4, CTA
+  "rox-dimensions": 7, // LABEL, HEADLINE, DIM1-4, CTA
 }
 
 const familyOf = (dir) => Object.keys(EXPECTED).find((f) => dir.startsWith(`${f}-`))
@@ -102,7 +106,7 @@ for (const dir of fs.readdirSync(ROOT).sort()) {
 
 console.log(`\n${dirs} templates, ${total} data-slot attributes`)
 
-if (dirs !== 15) failures.push(`expected 15 templates, saw ${dirs}`)
+if (dirs !== 21) failures.push(`expected 21 templates, saw ${dirs}`)
 if (failures.length) {
   for (const f of failures) console.error(`FAIL ${f}`)
   process.exit(1)

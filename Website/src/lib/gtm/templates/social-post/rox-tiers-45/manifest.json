@@ -1,0 +1,75 @@
+{
+  "id": "rox-tiers-45",
+  "label": "ROX Tiers · Portrait",
+  "assetType": "social-post",
+  "aspectRatio": "4:5",
+  "description": "Dark 4:5 portrait card (Instagram feed) laying out the four ROX score tiers from momentifyapp.com/what-is-rox as a ladder: colored range chip, tier name, and a one-line headline per tier. Tier names, ranges, and colors are fixed brand facts; only the per-tier headline copy is editable. General pillar.",
+  "slots": [
+    {
+      "key": "LABEL",
+      "label": "Eyebrow label",
+      "kind": "eyebrow",
+      "maxChars": 40,
+      "example": "The ROX Score"
+    },
+    {
+      "key": "HEADLINE",
+      "label": "Headline",
+      "kind": "headline",
+      "maxChars": 44,
+      "example": "Where does your score land?"
+    },
+    {
+      "key": "TIER1",
+      "label": "Critical Gap (0-39) line",
+      "kind": "support",
+      "maxChars": 64,
+      "example": "Events are costing more than they are delivering."
+    },
+    {
+      "key": "TIER2",
+      "label": "Needs Optimization (40-69) line",
+      "kind": "support",
+      "maxChars": 64,
+      "example": "Capturing some value, but leaving ROI on the table."
+    },
+    {
+      "key": "TIER3",
+      "label": "High ROX (70-84) line",
+      "kind": "support",
+      "maxChars": 64,
+      "example": "Above average. Now prove it with real data."
+    },
+    {
+      "key": "TIER4",
+      "label": "Elite ROX (85-100) line",
+      "kind": "support",
+      "maxChars": 64,
+      "example": "Highly optimized across every category."
+    },
+    {
+      "key": "CTA",
+      "label": "CTA button text",
+      "kind": "cta_label",
+      "maxChars": 28,
+      "example": "Find Your Score"
+    },
+    {
+      "key": "CTA_ICON",
+      "label": "CTA icon",
+      "kind": "icon",
+      "maxChars": 24,
+      "example": "arrow-right"
+    }
+  ],
+  "sampleData": {
+    "LABEL": "The ROX Score",
+    "HEADLINE": "Where does your score land?",
+    "TIER1": "Events are costing more than they are delivering.",
+    "TIER2": "Capturing some value, but leaving ROI on the table.",
+    "TIER3": "Above average. Now prove it with real data.",
+    "TIER4": "Highly optimized across every category.",
+    "CTA": "Find Your Score",
+    "CTA_ICON": "arrow-right"
+  }
+}

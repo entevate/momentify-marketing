@@ -22,6 +22,13 @@ import roxReport169 from "./social-post/rox-report-169/manifest.json"
 import solutionFeature11 from "./social-post/solution-feature-11/manifest.json"
 import solutionFeature34 from "./social-post/solution-feature-34/manifest.json"
 import solutionFeature169 from "./social-post/solution-feature-169/manifest.json"
+// ROX family (General pillar): gauge / tiers / dimensions, square + 4:5 portrait.
+import roxGauge11 from "./social-post/rox-gauge-11/manifest.json"
+import roxGauge45 from "./social-post/rox-gauge-45/manifest.json"
+import roxTiers11 from "./social-post/rox-tiers-11/manifest.json"
+import roxTiers45 from "./social-post/rox-tiers-45/manifest.json"
+import roxDimensions11 from "./social-post/rox-dimensions-11/manifest.json"
+import roxDimensions45 from "./social-post/rox-dimensions-45/manifest.json"
 import type { TemplateManifest } from "./types"
 
 // Cast via unknown - the JSON type-inferred shape is narrower (literal
@@ -43,6 +50,12 @@ const socialPost: TemplateManifest[] = [
   solutionFeature11,
   solutionFeature34,
   solutionFeature169,
+  roxGauge11,
+  roxGauge45,
+  roxTiers11,
+  roxTiers45,
+  roxDimensions11,
+  roxDimensions45,
 ].map((m) => m as unknown as TemplateManifest)
 
 export const templateRegistry: Record<string, TemplateManifest[]> = {
