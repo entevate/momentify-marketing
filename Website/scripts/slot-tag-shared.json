@@ -1,0 +1,26 @@
+{
+  "reserved": [
+    "PRIMARY",
+    "PRIMARY_LIGHT",
+    "PRIMARY_DARK",
+    "HERO_GRAD",
+    "LIGHT_BG",
+    "DECOR_PATTERN",
+    "DECOR_SIZE",
+    "BG_IMAGE",
+    "BG_OPACITY",
+    "CTA_ICON"
+  ],
+  "expectedTemplates": 21,
+  "expectedDataSlotAttributes": 116,
+  "expectedByFamily": {
+    "bold-stat": 3,
+    "headline-quote": 5,
+    "rox-report": 8,
+    "solution-feature": 6,
+    "wide-banner": 4,
+    "rox-gauge": 5,
+    "rox-tiers": 7,
+    "rox-dimensions": 7
+  }
+}

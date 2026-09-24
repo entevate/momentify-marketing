@@ -20,34 +20,24 @@ import path from "path"
 
 const ROOT = path.join(process.cwd(), "src/lib/gtm/templates/social-post")
 
-/** Palette + media keys: CSS values, never element text. */
-const RESERVED = new Set([
-  "PRIMARY",
-  "PRIMARY_LIGHT",
-  "PRIMARY_DARK",
-  "HERO_GRAD",
-  "LIGHT_BG",
-  "DECOR_PATTERN",
-  "DECOR_SIZE",
-  "BG_IMAGE",
-  "BG_OPACITY",
-  // Expanded by renderTemplate to an <svg data-slot="CTA_ICON"> - never
-  // element text, so it is not a copy slot and must not be tagged/counted.
-  "CTA_ICON",
-])
+/**
+ * Reserved keys, the expected template count, the expected corpus-wide tag
+ * total, and the per-family slot count are the shared ground truth for this
+ * script AND for src/lib/gtm/templates/__tests__/template-tags.test.ts. Both
+ * read the same JSON file (plain fs.readFileSync + JSON.parse) so the two
+ * can never drift.
+ */
+const SHARED = JSON.parse(fs.readFileSync(path.join(process.cwd(), "scripts", "slot-tag-shared.json"), "utf8"))
+
+/**
+ * Palette + media keys: CSS values, never element text. CTA_ICON is
+ * expanded by renderTemplate to an <svg data-slot="CTA_ICON"> - never
+ * element text, so it is not a copy slot and must not be tagged/counted.
+ */
+const RESERVED = new Set(SHARED.reserved)
 
 /** Expected copy-slot count per template family - the assertion's ground truth. */
-const EXPECTED = {
-  "bold-stat": 3,
-  "headline-quote": 5,
-  "rox-report": 8,
-  "solution-feature": 6,
-  "wide-banner": 4,
-  // ROX family (General pillar). CTA_ICON is reserved, so it is not counted.
-  "rox-gauge": 5,      // LABEL, SCORE, HEADLINE, SUBHEAD, CTA
-  "rox-tiers": 7,      // LABEL, HEADLINE, TIER1-4, CTA
-  "rox-dimensions": 7, // LABEL, HEADLINE, DIM1-4, CTA
-}
+const EXPECTED = SHARED.expectedByFamily
 
 const familyOf = (dir) => Object.keys(EXPECTED).find((f) => dir.startsWith(`${f}-`))
 
@@ -106,7 +96,10 @@ for (const dir of fs.readdirSync(ROOT).sort()) {
 
 console.log(`\n${dirs} templates, ${total} data-slot attributes`)
 
-if (dirs !== 21) failures.push(`expected 21 templates, saw ${dirs}`)
+if (dirs !== SHARED.expectedTemplates) failures.push(`expected ${SHARED.expectedTemplates} templates, saw ${dirs}`)
+if (total !== SHARED.expectedDataSlotAttributes) {
+  failures.push(`expected ${SHARED.expectedDataSlotAttributes} data-slot attributes total, tagged ${total}`)
+}
 if (failures.length) {
   for (const f of failures) console.error(`FAIL ${f}`)
   process.exit(1)
