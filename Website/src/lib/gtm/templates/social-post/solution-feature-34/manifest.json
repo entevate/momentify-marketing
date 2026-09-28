@@ -58,9 +58,9 @@
   "sampleData": {
     "LABEL": "Recruiting Solution",
     "HEADLINE": "Turn Career Fairs Into Qualified Pipelines",
-    "BULLET1": "On-site badge scanning syncs directly to your ATS in real time",
-    "BULLET2": "Automated follow-up sequences triggered by candidate scan profile",
-    "BULLET3": "Recruiter performance scoring and pipeline attribution dashboard",
+    "BULLET1": "Badge scans sync straight to your ATS in real time",
+    "BULLET2": "Follow-up sequences triggered by each candidate scan",
+    "BULLET3": "Recruiter scoring and pipeline attribution dashboard",
     "CTA": "See How It Works",
     "CTA_ICON": "arrow-right"
   }
