@@ -16,29 +16,29 @@
       "key": "HEADLINE",
       "label": "Feature headline",
       "kind": "headline",
-      "maxChars": 60,
+      "maxChars": 52,
       "example": "Turn Career Fairs Into Qualified Pipelines"
     },
     {
       "key": "BULLET1",
       "label": "First capability",
       "kind": "support",
-      "maxChars": 88,
-      "example": "On-site badge scanning syncs directly to your ATS in real time"
+      "maxChars": 56,
+      "example": "Badge scans sync straight to your ATS in real time"
     },
     {
       "key": "BULLET2",
       "label": "Second capability",
       "kind": "support",
-      "maxChars": 88,
-      "example": "Automated follow-up sequences triggered by candidate scan profile"
+      "maxChars": 56,
+      "example": "Follow-up sequences triggered by each candidate scan"
     },
     {
       "key": "BULLET3",
       "label": "Third capability",
       "kind": "support",
-      "maxChars": 88,
-      "example": "Recruiter performance scoring and pipeline attribution dashboard"
+      "maxChars": 56,
+      "example": "Recruiter scoring and pipeline attribution dashboard"
     },
     {
       "key": "CTA",

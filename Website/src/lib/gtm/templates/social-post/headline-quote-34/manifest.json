@@ -23,15 +23,15 @@
       "key": "QUOTE",
       "label": "Pull quote or supporting text",
       "kind": "quote",
-      "maxChars": 220,
+      "maxChars": 140,
       "example": "Momentify transformed how we engage fans. Our post-event NPS jumped 28 points in one season."
     },
     {
       "key": "ATTRIBUTION",
       "label": "Attribution or date",
       "kind": "attribution",
-      "maxChars": 60,
-      "example": "- Sarah Chen, VP Fan Experience, Pacific FC"
+      "maxChars": 40,
+      "example": "- Sarah Chen, VP Fans, Pacific FC"
     },
     {
       "key": "CTA",
