@@ -237,6 +237,17 @@ describe("renderTemplate byte-identity for marker-free values", () => {
     }
   )
 
+  it("every shipped template's sampleData fits its own maxChars (thumbnails show producible copy)", () => {
+    const over: string[] = []
+    for (const t of templateRegistry["social-post"]) {
+      for (const s of t.slots) {
+        const v = t.sampleData[s.key]
+        if (typeof v === "string" && s.maxChars && v.length > s.maxChars) over.push(`${t.id}.${s.key} ${v.length}>${s.maxChars}`)
+      }
+    }
+    expect(over).toEqual([])
+  })
+
   it("every shipped template's sampleData is marker-free and renders byte-identically", () => {
     for (const t of templateRegistry["social-post"]) {
       expect(Object.values(t.sampleData).join("\u0000")).not.toMatch(/[*_\r\n]/)

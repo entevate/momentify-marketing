@@ -23,6 +23,7 @@ export default function TemplatePicker({
   disabled,
   activeLabel = "Selected",
   media,
+  carousel,
 }: {
   solution: string
   templates: TemplateManifest[]
@@ -33,6 +34,8 @@ export default function TemplatePicker({
   activeLabel?: string
   /** background photo + opacity to show inside every thumbnail (same values sent on fill) */
   media?: PickerMedia
+  /** picking cards for a 6-card carousel (the preview modal states the export size) */
+  carousel?: boolean
 }) {
   const frames = useRef(new Map<string, HTMLIFrameElement>())
   const mediaRef = useRef(media)
@@ -133,6 +136,7 @@ export default function TemplatePicker({
           isActive={activeId === preview.id}
           onUse={disabled ? undefined : () => onPick(preview.id)}
           onClose={() => setPreview(null)}
+          carousel={carousel}
         />
       )}
     </div>
@@ -182,8 +186,8 @@ const pickerGrid: React.CSSProperties = {
   gridTemplateColumns: `repeat(auto-fill, ${THUMB_WIDTH}px)`,
   gap: 12,
   justifyContent: "start",
-  // Cards must not stretch to the row's tallest (3:4) card — each card's
-  // height is its own thumbnail (1:1 / 3:4 / 16:9) plus the label.
+  // Cards must not stretch to the row's tallest (4:5) card — each card's
+  // height is its own thumbnail (1:1 / 4:5 / 16:9) plus the label.
   alignItems: "start",
 }
 

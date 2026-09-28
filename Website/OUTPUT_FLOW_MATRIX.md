@@ -108,7 +108,7 @@ Pitch-deck currently renders as a one-click HTML asset (same as infographic/micr
 - Move pitch-deck to `MANUAL_HTML_ASSETS` and populate the manual prompt panel (matches ENTEVATE; user generates via Claude Code, then attaches the file)
 
 ### 5. Carousel template family (longer-term)
-Carousel currently uses the same 15 social-post templates as a fallback (one template per carousel save). A native carousel format would be 6 cards with their own layouts. If pursued, requires:
+Carousel currently fills one social-post template six times (one template per carousel save). Eligibility is manifest-driven (`isCarouselEligible` in `src/lib/gtm/carousel.ts`: social-post, 4:5 or 1:1, minus the fixed-content ROX gauge/tiers/dimensions families), with 4:5 (1080x1350, the Instagram portrait carousel) listed first and preselected; 1:1 stays selectable and legacy items with no recorded aspect export at 1:1. A native carousel format would be 6 cards with their own layouts. If pursued, requires:
 - New template family registered under `carousel` asset type
 - AssetPanel updated to support multi-card render flow
 - fill-template route can already accept any `assetType` namespace; just needs templates to exist

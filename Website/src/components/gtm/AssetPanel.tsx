@@ -25,6 +25,7 @@ import type { TemplateManifest } from "@/lib/gtm/templates/types"
 import TemplatePicker from "@/components/gtm/TemplatePicker"
 import { nativeSize } from "@/components/gtm/template-frame"
 import SlotEditor from "@/components/gtm/SlotEditor"
+import { carouselAspectFor, carouselShellSize, carouselTemplates, type CarouselAspect } from "@/lib/gtm/carousel"
 
 const font = "var(--font-inter), 'Inter', system-ui, sans-serif"
 
@@ -136,6 +137,11 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
   const [draftCardsHidden, setDraftCardsHidden] = useState<string[][]>(() => emptyCardHidden())
   const [activeCard, setActiveCard] = useState(0)
   const [rerendering, setRerendering] = useState(false)
+  // Carousel aspect as recorded by fill-carousel (asset-check / fill
+  // response). Null for social posts and for carousels saved before the
+  // aspect was recorded; carouselAspectFor() then falls back to the
+  // template's manifest, then 1:1.
+  const [storedAspect, setStoredAspect] = useState<string | null>(null)
   const busy = generating || uploading || rerendering
 
   // Result layout: two columns (preview | editor) at >=900px, stacked below.
@@ -150,15 +156,20 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
   const isCarousel = assetType === "carousel"
   // "Templated" mode = template picker + slot-fill flow. Both social-post
   // and carousel render through social-post template families; carousel
-  // restricts to 1:1 templates and routes to /api/gtm/fill-carousel.
+  // restricts to carousel-eligible templates (4:5 first, then 1:1; see
+  // lib/gtm/carousel) and routes to /api/gtm/fill-carousel.
   const isSocialPost = assetType === "social-post" || isCarousel
   const socialTemplates: TemplateManifest[] = useMemo(
-    () =>
-      allTemplates
-        .filter((t) => t.assetType === "social-post")
-        .filter((t) => (isCarousel ? t.aspectRatio === "1:1" : true)),
+    () => {
+      const social = allTemplates.filter((t) => t.assetType === "social-post")
+      return isCarousel ? carouselTemplates(social) : social
+    },
     [isCarousel]
   )
+  const activeManifest = activeTemplateId ? socialTemplates.find((t) => t.id === activeTemplateId) : undefined
+  // Every carousel surface (preview frame, zip label) follows this.
+  const carouselAspect: CarouselAspect | null = isCarousel ? carouselAspectFor(activeTemplateId, storedAspect) : null
+  const exportSize = nativeSize(carouselAspect ?? activeManifest?.aspectRatio ?? "1:1")
 
   // Latest-value refs so the mount effect below (keyed only on solution/assetType/
   // itemId/isSocialPost) can read the current autoFill / initialTemplateId props
@@ -203,6 +214,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
     setDraftCards(emptyCardValues())
     setDraftCardsHidden(emptyCardHidden())
     setActiveCard(0)
+    setStoredAspect(null)
     fetch(
       `/api/gtm/asset-check?solution=${encodeURIComponent(solution)}&assetType=${encodeURIComponent(assetType)}&itemId=${encodeURIComponent(itemId)}`
     )
@@ -220,6 +232,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
           // Restore templateId if the server cached it - lets the preview
           // iframe size itself by the template's actual aspect ratio.
           if (d?.templateId) setActiveTemplateId(d.templateId)
+          if (typeof d?.aspect === "string") setStoredAspect(d.aspect)
           if (isCarousel && Array.isArray(d?.slots)) {
             const c = normCards(d.slots)
             setCards(c)
@@ -251,7 +264,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
 
   // ─── Template fill (social-post + carousel) ─────────────────────────
   // Carousel routes through /api/gtm/fill-carousel, which fans the chosen
-  // 1:1 template into 6 slot-filled variants and assembles a swipeable
+  // 4:5 or 1:1 template into 6 slot-filled variants and assembles a swipeable
   // shell. Social-post stays on /api/gtm/fill-template (single render).
   const handleFillTemplate = useCallback(
     async (templateId: string) => {
@@ -279,9 +292,10 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
           const body = await res.json().catch(() => ({}))
           throw new Error(body.error || "Template fill failed")
         }
-        const data = await res.json() as { url: string; slots?: unknown; cards?: unknown; hidden?: unknown }
+        const data = await res.json() as { url: string; slots?: unknown; cards?: unknown; hidden?: unknown; aspect?: unknown }
         setAssetUrl(withCacheBust(data.url))
         if (isCarousel) {
+          setStoredAspect(typeof data.aspect === "string" ? data.aspect : null)
           const c = Array.isArray(data.cards) ? normCards(data.cards) : null
           setCards(c); setSlots(null)
           const h = normCardHidden(data.hidden)
@@ -528,12 +542,12 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
                 : "Uploading..."
               : assetUrl
                 ? isCarousel
-                  ? "Preview below. Pick a different 1:1 template to regenerate the 6 cards."
+                  ? "Preview below. Pick a different template (4:5 portrait or 1:1 square) to regenerate the 6 cards."
                   : isSocialPost
                     ? "Preview below. Pick a different template or upload a replacement any time."
                     : "Preview below. Regenerate or upload a replacement any time."
                 : isCarousel
-                  ? "Pick a 1:1 template below - Claude fills 6 distinct cards using this brief."
+                  ? "Pick a template below (4:5 portrait is the Instagram carousel size) - Claude fills 6 distinct cards using this brief."
                   : isSocialPost
                     ? "Pick a template below - Claude fills the slots with copy from this brief."
                     : "Generate a rendered graphic from this brief, or upload your own HTML."}
@@ -611,7 +625,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
             <a
               href={`/api/gtm/render-png?solution=${encodeURIComponent(solution)}&assetType=${encodeURIComponent(assetType)}&itemId=${encodeURIComponent(itemId)}`}
               style={{ ...smallBtn, textDecoration: "none" }}
-              title="Render this graphic as a 1080x1080 PNG"
+              title={`Render this graphic as a ${exportSize.width}x${exportSize.height} PNG`}
             >
               <Download size={12} />
               Download .png
@@ -622,7 +636,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
             <a
               href={`/api/gtm/carousel-download?solution=${encodeURIComponent(solution)}&itemId=${encodeURIComponent(itemId)}&format=both`}
               style={{ ...smallBtn, textDecoration: "none" }}
-              title="Download a zip with 6 PNG cards, the source HTMLs, and the swipeable carousel"
+              title={`Download a zip with 6 PNG cards (${exportSize.width}x${exportSize.height}), the source HTMLs, and the swipeable carousel`}
             >
               <Download size={12} />
               Download .zip
@@ -644,7 +658,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
 
       {/* Template picker (social-post only) */}
       {isSocialPost && pickerOpen && !busy && (
-        <TemplatePicker solution={solution} templates={socialTemplates} activeId={activeTemplateId} onPick={handleFillTemplate} disabled={busy} activeLabel="Last used" media={media} />
+        <TemplatePicker solution={solution} templates={socialTemplates} activeId={activeTemplateId} onPick={handleFillTemplate} disabled={busy} activeLabel="Last used" media={media} carousel={isCarousel} />
       )}
 
       {(() => {
@@ -654,13 +668,14 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
 
         // Default to 1:1 when social-post has no known templateId (e.g., a
         // previously-filled asset from before we started persisting templateId).
-        const activeTemplate = isSocialPost && activeTemplateId
-          ? socialTemplates.find((t) => t.id === activeTemplateId)
-          : null
+        // A carousel previews its swipe shell at the shell's natural size for
+        // the carousel's aspect, so a 4:5 carousel shows a portrait card.
         const socialAspect: "1:1" | "4:5" | "16:9" | null = isSocialPost
-          ? (activeTemplate?.aspectRatio ?? "1:1")
+          ? (activeManifest?.aspectRatio ?? "1:1")
           : null
-        const previewNode = !showPreview ? null : socialAspect ? (
+        const previewNode = !showPreview ? null : carouselAspect ? (
+          <SocialPostPreview assetUrl={assetUrl!} aspect={carouselAspect} frame={carouselShellSize(carouselAspect)} title="Carousel preview" />
+        ) : socialAspect ? (
           <SocialPostPreview assetUrl={assetUrl!} aspect={socialAspect} />
         ) : (
           <div style={{ background: "var(--gtm-bg-page)", border: "1px solid var(--gtm-border)", borderRadius: 6, overflow: "hidden" }}>
@@ -674,7 +689,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
         )
 
         let editorNode: React.ReactNode = null
-        const manifest = showEditor ? socialTemplates.find((t) => t.id === activeTemplateId) : undefined
+        const manifest = showEditor ? activeManifest : undefined
         if (manifest) {
           if (isCarousel) {
             const dirty = draftCards.some((card, i) => {
@@ -789,14 +804,28 @@ const smallBtn: React.CSSProperties = {
 /**
  * Renders a filled social-post asset at its native design viewport, then
  * CSS-scales the iframe to fit the parent width.
+ *
+ * `frame` overrides the native viewport: a carousel passes its swipe
+ * shell's natural size (card + stage padding, see carouselShellSize), so
+ * the preview box takes the shell's proportions and never scales it up.
  */
-function SocialPostPreview({ assetUrl, aspect }: { assetUrl: string; aspect: "1:1" | "4:5" | "16:9" }) {
+function SocialPostPreview({
+  assetUrl,
+  aspect,
+  frame,
+  title = "Social post preview",
+}: {
+  assetUrl: string
+  aspect: "1:1" | "4:5" | "16:9"
+  frame?: { width: number; height: number }
+  title?: string
+}) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const [scale, setScale] = useState(1)
 
-  const { width: nativeW, height: nativeH } = nativeSize(aspect)
+  const { width: nativeW, height: nativeH } = frame ?? nativeSize(aspect)
 
-  const maxW = aspect === "1:1" ? 540 : aspect === "4:5" ? 480 : 720
+  const maxW = frame ? frame.width : aspect === "1:1" ? 540 : aspect === "4:5" ? 480 : 720
 
   useEffect(() => {
     const el = wrapRef.current
@@ -811,7 +840,7 @@ function SocialPostPreview({ assetUrl, aspect }: { assetUrl: string; aspect: "1:
     return () => ro.disconnect()
   }, [nativeW])
 
-  const cssAspect = aspect === "1:1" ? "1 / 1" : aspect === "4:5" ? "4 / 5" : "16 / 9"
+  const cssAspect = frame ? `${frame.width} / ${frame.height}` : aspect === "1:1" ? "1 / 1" : aspect === "4:5" ? "4 / 5" : "16 / 9"
 
   return (
     <div
@@ -842,7 +871,7 @@ function SocialPostPreview({ assetUrl, aspect }: { assetUrl: string; aspect: "1:
         <iframe
           key={assetUrl}
           src={assetUrl}
-          title="Social post preview"
+          title={title}
           style={{ width: nativeW, height: nativeH, border: "none", display: "block", background: "#fff" }}
         />
       </div>

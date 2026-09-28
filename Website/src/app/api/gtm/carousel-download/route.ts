@@ -4,7 +4,8 @@ import { kv } from "@/lib/gtm/kv-store"
 import { assetKvKey, isValidAssetParam } from "@/lib/gtm/asset-helpers"
 import { resolveAssetUrl, deterministicAssetUrl } from "@/lib/gtm/blob-url"
 import { requireGtmAuth } from "@/lib/gtm/content-types"
-import { renderManyHtmlToPng } from "@/lib/gtm/render-png"
+import { renderManyHtmlToPng, dimensionsForAspect } from "@/lib/gtm/render-png"
+import { carouselAspectFor } from "@/lib/gtm/carousel"
 
 // PNG rendering needs Node + a longer budget than the default 10s.
 export const runtime = "nodejs"
@@ -14,7 +15,8 @@ export const maxDuration = 120
  * GET /api/gtm/carousel-download?solution=<pillar>&itemId=<id>&format=<png|html|both>
  *
  * Returns a .zip of the carousel assets. Default format=both:
- *   - card-1.png through card-6.png   (rasterized 1080x1080)
+ *   - card-1.png through card-6.png   (rasterized at the carousel's aspect:
+ *                                      1080x1350 for 4:5, 1080x1080 for 1:1)
  *   - card-1.html through card-6.html (source rendered HTML)
  *   - carousel.html (swipeable shell with all 6 cards)
  *
@@ -22,6 +24,9 @@ export const maxDuration = 120
  * format=html -> only the 7 HTMLs (legacy behavior)
  *
  * Card + shell URLs come from KV (populated by /api/gtm/fill-carousel).
+ * The aspect comes from the same record: `:aspect` if fill-carousel wrote
+ * it, else the `:template` manifest's aspect, else 1:1 (carousels saved
+ * before 4:5 existed have neither and were all square).
  * Each HTML is fetched fresh from blob storage; PNGs are produced via
  * headless Chromium (one tab at a time to bound memory).
  */
@@ -89,6 +94,22 @@ export async function GET(request: Request) {
     kv.set(`${baseKey}:cards`, JSON.stringify(cardUrls)).catch(() => { /* ignore */ })
   }
 
+  // Resolve the PNG size from what fill-carousel persisted. A KV failure
+  // degrades to the legacy 1:1 size rather than failing the download.
+  let storedAspect: string | null = null
+  let storedTemplateId: string | null = null
+  try {
+    const [a, t] = await Promise.all([
+      kv.get<string>(`${baseKey}:aspect`),
+      kv.get<string>(`${baseKey}:template`),
+    ])
+    storedAspect = a ?? null
+    storedTemplateId = t ?? null
+  } catch {
+    /* fall through to 1:1 */
+  }
+  const pngSize = dimensionsForAspect(carouselAspectFor(storedTemplateId, storedAspect))
+
   // Fetch every card + the shell in parallel. If a card URL is a
   // same-origin /gtm/... fallback path, prefix with the request origin
   // so server-side fetch resolves it.
@@ -127,7 +148,7 @@ export async function GET(request: Request) {
   if (format === "png" || format === "both") {
     let pngs: Buffer[]
     try {
-      pngs = await renderManyHtmlToPng(cardHtmls)
+      pngs = await renderManyHtmlToPng(cardHtmls, pngSize)
     } catch (e) {
       console.error("[carousel-download] png render failed", e)
       const msg = e instanceof Error ? e.message : "PNG render failed"

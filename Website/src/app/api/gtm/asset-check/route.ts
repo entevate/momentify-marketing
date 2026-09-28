@@ -7,7 +7,7 @@ import { assetFilename, assetKvKey, isValidAssetParam } from "@/lib/gtm/asset-he
 
 /**
  * GET /api/gtm/asset-check?solution=X&assetType=Y[&itemId=Z]
- * Returns { exists: boolean, url?: string, templateId?, slots?, hidden? }.
+ * Returns { exists: boolean, url?: string, templateId?, aspect?, slots?, hidden? }.
  * Looks up the blob URL cached in KV by the generate + upload routes.
  * Falls back to the legacy public/gtm path on local dev so existing files
  * keep rendering.
@@ -43,11 +43,13 @@ export async function GET(request: Request) {
     // iframe.
     try {
       const baseKey = assetKvKey(solution, assetType, itemId)
-      const [blobUrl, templateId, slotsRaw, hiddenRaw] = await Promise.all([
+      const [blobUrl, templateId, slotsRaw, hiddenRaw, aspect] = await Promise.all([
         kv.get<string>(baseKey),
         kv.get<string>(`${baseKey}:template`),
         kv.get<string>(`${baseKey}:slots`),
         kv.get<string>(`${baseKey}:hidden`),
+        // Carousels only: the aspect fill-carousel built the cards at.
+        kv.get<string>(`${baseKey}:aspect`),
       ])
       if (blobUrl) {
         const proxyUrl = `/api/gtm/asset-preview?solution=${encodeURIComponent(solution)}&assetType=${encodeURIComponent(assetType)}${itemId ? `&itemId=${encodeURIComponent(itemId)}` : ""}`
@@ -69,7 +71,7 @@ export async function GET(request: Request) {
             /* same defensive read as slots - omit hidden, the rest restores */
           }
         }
-        return NextResponse.json({ exists: true, url: proxyUrl, templateId: templateId || undefined, slots, hidden })
+        return NextResponse.json({ exists: true, url: proxyUrl, templateId: templateId || undefined, aspect: aspect || undefined, slots, hidden })
       }
     } catch {
       /* fall through to fs fallback */

@@ -6,9 +6,10 @@
  *     designed to fit serverless 50MB unzipped budgets.
  *   - Local dev: use a developer's system Chrome (Mac/Linux/Windows).
  *
- * Pages are rendered at 1080x1080 (DPR 1) by default. Templates are
- * 1080x1080 1:1 graphics; this matches the design viewport so we don't
- * scale-down or letterbox.
+ * Pages are rendered at 1080x1080 (DPR 1) by default, the 1:1 design
+ * viewport. Callers rendering another aspect pass its size from
+ * dimensionsForAspect() (4:5 -> 1080x1350) so the capture matches the
+ * template's own canvas and nothing is scaled down or letterboxed.
  */
 
 import type { Browser, LaunchOptions, Page } from "puppeteer-core"
@@ -117,7 +118,7 @@ export async function launchBrowser(): Promise<Browser> {
  * each template.html), so puppeteer's viewport and the template's own
  * layout agree pixel-for-pixel:
  *   - 1:1  square:    1080 x 1080 (Instagram / LinkedIn / X universal)
- *   - 4:5  portrait:  1080 x 1350 (LinkedIn document / portrait feed)
+ *   - 4:5  portrait:  1080 x 1350 (Instagram portrait carousel / feed)
  *   - 16:9 landscape: 1280 x  720 (LinkedIn / X in-feed landscape)
  * All three exceed the platforms' minimum recommended dimensions. Unknown
  * aspect ratios fall back to 1080x1080 so behavior stays stable.
@@ -196,21 +197,29 @@ export async function renderHtmlToPng(
  * Render a list of HTML strings to PNGs sequentially. Sequential keeps
  * memory bounded on Vercel (one Chromium tab at a time). Total time is
  * roughly N * single-render-time.
+ *
+ * Every page shares one size: pass {width, height} (e.g. a 4:5 carousel's
+ * dimensionsForAspect("4:5")). Defaults to 1080x1080.
  */
-export async function renderManyHtmlToPng(htmls: string[]): Promise<Buffer[]> {
+export async function renderManyHtmlToPng(
+  htmls: string[],
+  opts?: { width?: number; height?: number }
+): Promise<Buffer[]> {
+  const width = opts?.width ?? RENDER_WIDTH
+  const height = opts?.height ?? RENDER_HEIGHT
   const browser = await launchBrowser()
   try {
     const out: Buffer[] = []
     for (const html of htmls) {
       const page = await browser.newPage()
       try {
-        await page.setViewport({ width: RENDER_WIDTH, height: RENDER_HEIGHT, deviceScaleFactor: 1 })
+        await page.setViewport({ width, height, deviceScaleFactor: 1 })
         await page.setContent(html, { waitUntil: "networkidle0", timeout: 25_000 })
         await waitForFonts(page)
         const buf = await page.screenshot({
           type: "png",
           omitBackground: false,
-          clip: { x: 0, y: 0, width: RENDER_WIDTH, height: RENDER_HEIGHT },
+          clip: { x: 0, y: 0, width, height },
         })
         out.push(Buffer.from(buf as Uint8Array))
       } finally {
