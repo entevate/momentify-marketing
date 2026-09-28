@@ -11,6 +11,7 @@ import { solutionPersonas } from "@/lib/gtm/builder-prompts"
 import { allTemplates } from "@/lib/gtm/templates/_registry"
 import type { TemplateManifest } from "@/lib/gtm/templates/types"
 import { MAX_BG_BYTES } from "@/lib/gtm/render-media"
+import { carouselTemplates, preferredCarouselTemplateId } from "@/lib/gtm/carousel"
 
 // ─── HTML-asset generation contract ───────────────────────────────────────
 // Content types that have a one-click HTML asset pipeline (calls /api/gtm/generate-asset-html).
@@ -19,7 +20,7 @@ const ONE_CLICK_HTML_ASSETS = new Set(["infographic", "microsite", "one-pager", 
 
 const CONTENT_TYPES: { value: string; label: string; description: string; visual: boolean }[] = [
   { value: "social-post", label: "Social Post", description: "LinkedIn, Instagram, and X versions", visual: true },
-  { value: "carousel", label: "Social Carousel", description: "6-card LinkedIn/Instagram carousel", visual: true },
+  { value: "carousel", label: "Social Carousel", description: "6-card LinkedIn/Instagram carousel, 4:5 portrait by default (1:1 available)", visual: true },
   { value: "infographic", label: "Infographic", description: "6-panel data-driven asset", visual: true },
   { value: "microsite", label: "Microsite", description: "Landing page structure + palette", visual: true },
   { value: "one-pager", label: "Sales One-Pager", description: "Leave-behind PDF content", visual: true },
@@ -162,10 +163,11 @@ export default function ContentBuilderCanonical({ solution, solutionLabel, verti
   const isSocialPost = contentType === "social-post" || contentType === "carousel"
   const isOneClickHtmlAsset = ONE_CLICK_HTML_ASSETS.has(contentType)
   const currentType = CONTENT_TYPES.find((c) => c.value === contentType)
-  const socialTemplates = useMemo<TemplateManifest[]>(
-    () => allTemplates.filter((t) => t.assetType === "social-post").filter((t) => (contentType === "carousel" ? t.aspectRatio === "1:1" : true)),
-    [contentType]
-  )
+  // Carousel lists only carousel-eligible templates, 4:5 first (lib/gtm/carousel).
+  const socialTemplates = useMemo<TemplateManifest[]>(() => {
+    const social = allTemplates.filter((t) => t.assetType === "social-post")
+    return contentType === "carousel" ? carouselTemplates(social) : social
+  }, [contentType])
 
   // ─── HTML asset generation state ─────────────────────────────────────────
   const [generatingAsset, setGeneratingAsset] = useState<string | null>(null)
@@ -224,7 +226,10 @@ export default function ContentBuilderCanonical({ solution, solutionLabel, verti
     setBgOpacity(100)
     setSliderValue(100)
     setBgError(null)
-    if (value === "carousel" && templateId && !allTemplates.some((t) => t.id === templateId && t.aspectRatio === "1:1")) setTemplateId(null)
+    // Choosing Carousel preselects a 4:5 template: the current pick if it is
+    // already a 4:5 carousel template, else its family's 4:5 twin, else the
+    // first 4:5 one. The user can still switch to a 1:1 template.
+    if (value === "carousel") setTemplateId(preferredCarouselTemplateId(templateId))
   }
 
   const rawContent = useMemo(() => {
@@ -649,7 +654,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
             <span className="eyebrow">Template · {socialTemplates.length} available</span>
             <span className="section-note">{draftAssetId ? "Pick a different design and the graphic re-renders with your copy." : templateId ? "The graphic renders with this template when you generate. Change it any time from the result." : "Pick one now and the graphic renders automatically when you generate — or leave it and choose after."}</span>
           </div>
-          <TemplatePicker solution={solution} templates={socialTemplates} activeId={templateId} onPick={setTemplateId} media={media} />
+          <TemplatePicker solution={solution} templates={socialTemplates} activeId={templateId} onPick={setTemplateId} media={media} carousel={contentType === "carousel"} />
         </div>
       )}
 

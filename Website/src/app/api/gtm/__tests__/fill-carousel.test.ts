@@ -215,3 +215,76 @@ describe("POST /api/gtm/fill-carousel slot truncation", () => {
     }
   })
 })
+
+// Aspect: eligibility comes from the manifest, and a 4:5 template builds a
+// portrait shell and records its aspect for carousel-download.
+describe("POST /api/gtm/fill-carousel aspect", () => {
+  const { findTemplate } = jest.requireMock("@/lib/gtm/templates/render") as { findTemplate: jest.Mock }
+  const cards = Array.from({ length: CARD_COUNT }, (_, i) => ({ TXT: `card${i}` }))
+  const manifest = (id: string, aspectRatio: string, assetType = "social-post") => ({
+    id, label: id, assetType, aspectRatio, description: "",
+    slots: [{ key: "TXT", label: "", kind: "headline", maxChars: 60, example: "" }],
+    sampleData: { TXT: "x" },
+  })
+  const shellHtml = () => (put as jest.Mock).mock.calls[CARD_COUNT][1] as string
+  const kvValue = (suffix: string) =>
+    (kv.set as jest.Mock).mock.calls.find((c) => (c[0] as string).endsWith(suffix))?.[1]
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    process.env.ANTHROPIC_API_KEY = "test"
+    global.fetch = jest.fn(async () => ({
+      ok: true,
+      json: async () => ({
+        content: [{ type: "text", text: JSON.stringify({ cards: Array.from({ length: CARD_COUNT }, (_, i) => ({ TXT: `ai${i}` })) }) }],
+      }),
+    })) as unknown as typeof fetch
+  })
+
+  it("accepts a 4:5 template, builds a portrait shell, and records the aspect", async () => {
+    findTemplate.mockReturnValueOnce(manifest("bold-stat-34", "4:5"))
+    const res = await POST(req({ ...base, templateId: "bold-stat-34", cards }))
+    expect(res.status).toBe(200)
+    const data = await res.json()
+    expect(data.aspect).toBe("4:5")
+    expect(put).toHaveBeenCalledTimes(CARD_COUNT + 1)
+    expect(shellHtml()).toContain("aspect-ratio: 4 / 5")
+    expect(shellHtml()).not.toContain("aspect-ratio: 1 / 1")
+    expect(kvValue(":aspect")).toBe("4:5")
+    expect(kvValue(":template")).toBe("bold-stat-34")
+  })
+
+  it("puts the 4:5 aspect in the Claude copy prompt", async () => {
+    findTemplate.mockReturnValueOnce(manifest("bold-stat-34", "4:5"))
+    await POST(req({ ...base, templateId: "bold-stat-34" }))
+    const body = JSON.parse(((global.fetch as jest.Mock).mock.calls[0][1] as { body: string }).body)
+    expect(body.messages[0].content).toContain("Momentify 4:5 carousel")
+  })
+
+  it("keeps a 1:1 template square and records 1:1", async () => {
+    const res = await POST(req({ ...base, cards }))
+    expect(res.status).toBe(200)
+    expect(shellHtml()).toContain("aspect-ratio: 1 / 1")
+    expect(kvValue(":aspect")).toBe("1:1")
+  })
+
+  it("rejects a 16:9 template with a clear message and writes nothing", async () => {
+    findTemplate.mockReturnValueOnce(manifest("bold-stat-169", "16:9"))
+    const res = await POST(req({ ...base, templateId: "bold-stat-169", cards }))
+    expect(res.status).toBe(400)
+    expect((await res.json()).error).toBe(
+      "Template bold-stat-169 is 16:9. Carousels need a 4:5 (portrait) or 1:1 (square) template."
+    )
+    expect(put).not.toHaveBeenCalled()
+    expect(kv.set).not.toHaveBeenCalled()
+    expect(global.fetch).not.toHaveBeenCalled()
+  })
+
+  it("rejects an excluded family even at 4:5", async () => {
+    findTemplate.mockReturnValueOnce(manifest("rox-gauge-45", "4:5"))
+    const res = await POST(req({ ...base, templateId: "rox-gauge-45", cards }))
+    expect(res.status).toBe(400)
+    expect((await res.json()).error).toMatch(/rox-gauge-45 can't be a carousel card/)
+    expect(put).not.toHaveBeenCalled()
+  })
+})

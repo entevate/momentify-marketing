@@ -23,11 +23,14 @@ export default function TemplatePreviewModal({
   isActive,
   onUse,
   onClose,
+  carousel,
 }: {
   manifest: TemplateManifest
   solution: string
   media?: PickerMedia
   isActive: boolean
+  /** Opened from a carousel picker: also state what the carousel exports. */
+  carousel?: boolean
   /** Omitted while the picker is disabled (a fill is in flight). */
   onUse?: () => void
   onClose: () => void
@@ -113,6 +116,9 @@ export default function TemplatePreviewModal({
             <Meta label="Aspect" value={manifest.aspectRatio} />
             <Meta label="Layout viewport" value={`${size.width}×${size.height}`} />
             <Meta label="Slots" value={String(manifest.slots.length)} />
+            {/* A carousel is 6 fills of this template, exported at its own
+                aspect (carousel-download: dimensionsForAspect). */}
+            {carousel && <Meta label="Carousel export" value={`6 cards · ${size.width}×${size.height} PNG`} />}
           </div>
 
           <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
