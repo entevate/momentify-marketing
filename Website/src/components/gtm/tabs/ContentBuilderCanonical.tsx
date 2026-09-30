@@ -393,7 +393,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
     setGeneratingAsset(contentType)
     setAssetError(null)
     setAssetUrl(null)
-    const timeoutMs = contentType === "pitch-deck" ? 240_000 : 150_000
+    const timeoutMs = 280_000
     const abortCtrl = new AbortController()
     const timeoutId = setTimeout(() => abortCtrl.abort(), timeoutMs)
     try {
@@ -412,7 +412,7 @@ ${rawContent || "[Generate the text brief in Content Builder first, then paste i
       setAssetUrl(`${data.url}${sep}t=${Date.now()}`)
     } catch (e: unknown) {
       const err = e as { name?: string; message?: string }
-      if (err?.name === "AbortError") setAssetError("Generation took longer than 150s and was cancelled. Try a shorter brief.")
+      if (err?.name === "AbortError") setAssetError(`Generation took longer than ${timeoutMs / 1000}s and was cancelled. Try a shorter brief.`)
       else setAssetError(err.message || "HTML generation failed. Please try again.")
     } finally {
       clearTimeout(timeoutId)

@@ -443,7 +443,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
   const handleGenerate = useCallback(async () => {
     setGenerating(true)
     setError(null)
-    const timeoutMs = assetType === "pitch-deck" ? 240_000 : 150_000
+    const timeoutMs = 280_000
     const abortCtrl = new AbortController()
     const timeoutId = setTimeout(() => abortCtrl.abort(), timeoutMs)
     try {
