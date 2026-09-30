@@ -7,13 +7,18 @@ import path from "path"
 jest.mock("fs")
 jest.mock("path")
 
+// The route is login-gated; cookies() has no request scope under jest.
+jest.mock("@/lib/gtm/content-types", () => ({ requireGtmAuth: async () => true }))
+
 // Mock fetch globally
 global.fetch = jest.fn()
 
 describe("POST /api/gtm/generate-asset-html", () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    ;(fetch as jest.Mock).mockClear()
+    // mockReset, not mockClear: a test that returns before calling Claude leaves its
+    // queued reply behind, and mockClear would hand it to the next test.
+    ;(fetch as jest.Mock).mockReset()
     // Mock path.join to return a predictable path
     ;(path.join as jest.Mock).mockImplementation((...args) => args.join("/"))
     // Mock process.cwd
@@ -372,6 +377,60 @@ describe("POST /api/gtm/generate-asset-html", () => {
       expect(response.status).toBe(400)
       const data = await response.json()
       expect(data.error).toContain("Invalid HTML")
+    })
+
+    it("reports a cut-off page plainly when the reply hit the output cap", async () => {
+      process.env.ANTHROPIC_API_KEY = "test-key"
+      ;(fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          stop_reason: "max_tokens",
+          content: [{ type: "text", text: "<!DOCTYPE html><html><body><section>" }],
+        }),
+      })
+      const request = new NextRequest("http://localhost:3000/api/gtm/generate-asset-html", {
+        method: "POST",
+        body: JSON.stringify({ brief: "Test brief", assetType: "infographic", solution: "trade-shows" }),
+      })
+      const response = await POST(request)
+      expect(response.status).toBe(502)
+      expect((await response.json()).error).toContain("cut off")
+    })
+
+    it("stores only the document when the reply is wrapped in a code fence", async () => {
+      process.env.ANTHROPIC_API_KEY = "test-key"
+      ;(fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          content: [{ type: "text", text: "Here is the page:\n```html\n<!DOCTYPE html><html><body></body></html>\n```\nDone." }],
+        }),
+      })
+      ;(fs.existsSync as jest.Mock).mockReturnValue(true)
+      ;(fs.writeFileSync as jest.Mock).mockImplementation(() => {})
+      const request = new NextRequest("http://localhost:3000/api/gtm/generate-asset-html", {
+        method: "POST",
+        body: JSON.stringify({ brief: "Test brief", assetType: "infographic", solution: "trade-shows" }),
+      })
+      const response = await POST(request)
+      expect(response.status).toBe(200)
+      expect((fs.writeFileSync as jest.Mock).mock.calls[0][1]).toBe("<!DOCTYPE html><html><body></body></html>")
+    })
+
+    it("asks for enough output tokens to hold a full page", async () => {
+      process.env.ANTHROPIC_API_KEY = "test-key"
+      ;(fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ content: [{ type: "text", text: "<!DOCTYPE html><html></html>" }] }),
+      })
+      ;(fs.existsSync as jest.Mock).mockReturnValue(true)
+      ;(fs.writeFileSync as jest.Mock).mockImplementation(() => {})
+      const request = new NextRequest("http://localhost:3000/api/gtm/generate-asset-html", {
+        method: "POST",
+        body: JSON.stringify({ brief: "Test brief", assetType: "infographic", solution: "trade-shows" }),
+      })
+      await POST(request)
+      const sent = JSON.parse((fetch as jest.Mock).mock.calls[0][1].body)
+      expect(sent.max_tokens).toBeGreaterThanOrEqual(16000)
     })
 
     it("should return 400 when HTML is missing closing html tag", async () => {

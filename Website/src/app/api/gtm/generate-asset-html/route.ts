@@ -8,6 +8,34 @@ import { assetBlobPath, assetKvKey } from "@/lib/gtm/asset-helpers"
 
 const BLOB_TOKEN = process.env.GTM_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN || ""
 
+export const runtime = "nodejs"
+// A full page takes 1-3 minutes to generate; the platform default is too short.
+export const maxDuration = 300
+
+// A self-contained page with inline CSS runs 6-10k tokens. The old 4096 cap
+// cut every infographic off before </html>.
+const MAX_OUTPUT_TOKENS = 16000
+
+// Claude cannot open the reference files the prompts name, and tends to wrap
+// its reply in a code fence or a sentence of preamble.
+const OUTPUT_CONTRACT = `
+
+OUTPUT RULES:
+- Reply with the complete HTML document only. Start with <!DOCTYPE html> and end with </html>.
+- No markdown code fences and no commentary before or after the document.
+- You cannot open the reference files named above; follow the structure described instead.
+- Keep the CSS compact so the whole document fits in one reply.`
+
+/** The document itself, without any code fence or prose around it. Null when it has no start or no </html>. */
+function extractHtmlDocument(text: string): string | null {
+  const lower = text.toLowerCase()
+  const doctype = lower.indexOf("<!doctype")
+  const start = doctype >= 0 ? doctype : lower.indexOf("<html")
+  const end = lower.lastIndexOf("</html>")
+  if (start < 0 || end < start) return null
+  return text.slice(start, end + "</html>".length)
+}
+
 // Parameter sanitization: solution/assetType must be safe for filesystem + URLs
 const isValidParameter = (param: string): boolean => /^[a-zA-Z0-9_-]+$/.test(param)
 
@@ -66,7 +94,7 @@ export async function POST(request: Request) {
     // Fix #3: Hardcoded model name - use environment variable with fallback
     const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-5"
 
-    const prompt = assetPrompts[assetType](brief, solution)
+    const prompt = assetPrompts[assetType](brief, solution) + OUTPUT_CONTRACT
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -81,7 +109,7 @@ export async function POST(request: Request) {
         // response fast and makes the first content block the text (Sonnet 5
         // runs adaptive thinking by default, which would otherwise be content[0]).
         thinking: { type: "disabled" },
-        max_tokens: 4096,
+        max_tokens: MAX_OUTPUT_TOKENS,
         messages: [{ role: "user", content: prompt }],
       }),
     })
@@ -113,16 +141,24 @@ export async function POST(request: Request) {
       )
     }
 
-    const htmlContent: string = content.text
+    const rawText: string = content.text
 
     // Fix #5: Weak HTML validation - upgrade validation checks
-    if (!htmlContent.includes("<!DOCTYPE") && !htmlContent.includes("<html")) {
+    if (!rawText.includes("<!DOCTYPE") && !rawText.includes("<html")) {
       return NextResponse.json(
         { error: "Invalid HTML: missing DOCTYPE or html tag" },
         { status: 400 }
       )
     }
-    if (!htmlContent.includes("</html>")) {
+    const htmlContent = extractHtmlDocument(rawText)
+    if (!htmlContent) {
+      if (data.stop_reason === "max_tokens") {
+        console.error(`[generate-asset-html] ${assetType} hit the ${MAX_OUTPUT_TOKENS}-token output cap`)
+        return NextResponse.json(
+          { error: "The page was too long to generate in one pass and was cut off. Shorten the brief and try again." },
+          { status: 502 }
+        )
+      }
       return NextResponse.json(
         { error: "Invalid HTML: missing closing html tag" },
         { status: 400 }
