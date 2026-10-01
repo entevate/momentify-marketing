@@ -24,6 +24,10 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import type { SlotKind, SlotSpec } from "@/lib/gtm/templates/types"
 // cta-icons is fs-free; render.ts imports fs/promises and would break the client bundle.
 import { CTA_ICONS, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/cta-icons"
+import {
+  hasTypeControls, normStyleValue, SIZE_SUFFIX, LEADING_SUFFIX,
+  SIZE_MIN, SIZE_MAX, SIZE_STEP, LEADING_MIN, LEADING_MAX, LEADING_STEP, LEADING_DEFAULT_POS,
+} from "@/lib/gtm/templates/slot-style"
 // The same visible-character count the server truncates by - rich-text.ts is
 // pure (no DOM, no fs), so it is safe in the client bundle. Sharing it is the
 // point: a local re-implementation would drift from the server's parser on
@@ -131,6 +135,8 @@ export interface SlotEditorProps {
   values: Record<string, string>
   hidden: string[]
   onChange: (values: Record<string, string>, hidden: string[]) => void
+  /** A headline size / line-spacing slider was released: re-render with these values. */
+  onCommit?: (values: Record<string, string>, hidden: string[]) => void
   disabled?: boolean
 }
 
@@ -153,7 +159,7 @@ function fitHeight(el: HTMLTextAreaElement) {
   el.style.overflowY = want > max ? "auto" : "hidden"
 }
 
-export default function SlotEditor({ slots, values, hidden, onChange, disabled }: SlotEditorProps) {
+export default function SlotEditor({ slots, values, hidden, onChange, onCommit, disabled }: SlotEditorProps) {
   const areas = useRef<Record<string, HTMLTextAreaElement | null>>({})
   const anyMultiline = slots.some((s) => isMultiline(s.kind))
 
@@ -292,6 +298,16 @@ export default function SlotEditor({ slots, values, hidden, onChange, disabled }
                     onChange={(e) => setValue(s.key, e.target.value)}
                     style={{ resize: "none", whiteSpace: "pre-wrap", lineHeight: 1.45, display: "block" }}
                   />
+                  {hasTypeControls(s) && (
+                    <TypeControls
+                      slotKey={s.key}
+                      label={s.label}
+                      values={values}
+                      disabled={disabled || isHidden}
+                      onChange={(next) => onChange(next, hidden)}
+                      onCommit={onCommit ? (next) => onCommit(next, hidden) : undefined}
+                    />
+                  )}
                 </>
               ) : (
                 <>
@@ -314,6 +330,95 @@ export default function SlotEditor({ slots, values, hidden, onChange, disabled }
       {anyMultiline && (
         <span className="section-note">Enter for a line break · **bold** · *italic* · __underline__</span>
       )}
+    </div>
+  )
+}
+
+/**
+ * Size (percent of the template's own size) and line spacing for a headline.
+ * Values live in the slot values under KEY__SIZE / KEY__LEADING; an unset
+ * value means the template default. Releasing a slider calls onCommit so the
+ * preview updates without pressing "Update preview".
+ */
+function TypeControls({
+  slotKey, label, values, disabled, onChange, onCommit,
+}: {
+  slotKey: string
+  label: string
+  values: Record<string, string>
+  disabled?: boolean
+  onChange: (values: Record<string, string>) => void
+  onCommit?: (values: Record<string, string>) => void
+}) {
+  const sizeKey = slotKey + SIZE_SUFFIX
+  const leadKey = slotKey + LEADING_SUFFIX
+  const size = Number(normStyleValue(sizeKey, values[sizeKey]) || 100)
+  const leadSet = normStyleValue(leadKey, values[leadKey])
+  const lead = leadSet ? Number(leadSet) : LEADING_DEFAULT_POS
+  const isDefault = size === 100 && !leadSet
+
+  // The latest values, so a commit fired on release sees the final drag position.
+  const latest = useRef(values)
+  latest.current = values
+  const set = (key: string, v: string) => {
+    const next = { ...latest.current }
+    if (v) next[key] = v
+    else delete next[key]
+    latest.current = next
+    onChange(next)
+  }
+  const commit = () => onCommit?.(latest.current)
+  const commitProps = { onPointerUp: commit, onKeyUp: commit }
+
+  const row: React.CSSProperties = { display: "grid", gridTemplateColumns: "88px 1fr 48px", alignItems: "center", gap: 8 }
+  const name: React.CSSProperties = { fontSize: 12, color: "var(--gtm-text-secondary)" }
+  const readout: React.CSSProperties = { fontSize: 12, textAlign: "right", color: "var(--gtm-text-primary)" }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 8 }}>
+      <div style={row}>
+        <span style={name}>Size</span>
+        <input
+          type="range" min={SIZE_MIN} max={SIZE_MAX} step={SIZE_STEP} value={size}
+          aria-label={`${label} size`}
+          disabled={disabled}
+          onChange={(e) => set(sizeKey, normStyleValue(sizeKey, e.target.value))}
+          {...commitProps}
+          style={{ accentColor: "var(--gtm-accent)", minWidth: 0 }}
+        />
+        <span className="mono" style={readout}>{size}%</span>
+      </div>
+      <div style={row}>
+        <span style={name}>Line spacing</span>
+        <input
+          type="range" min={LEADING_MIN} max={LEADING_MAX} step={LEADING_STEP} value={lead}
+          aria-label={`${label} line spacing`}
+          disabled={disabled}
+          onChange={(e) => set(leadKey, normStyleValue(leadKey, e.target.value))}
+          {...commitProps}
+          style={{ accentColor: "var(--gtm-accent)", minWidth: 0 }}
+        />
+        <span className="mono" style={{ ...readout, color: leadSet ? readout.color : "var(--gtm-text-faint)" }}>
+          {leadSet ? lead.toFixed(2) : "Auto"}
+        </span>
+      </div>
+      <div>
+        <button
+          type="button"
+          className="btn btn-tertiary btn-sm"
+          disabled={disabled || isDefault}
+          onClick={() => {
+            const next = { ...latest.current }
+            delete next[sizeKey]
+            delete next[leadKey]
+            latest.current = next
+            onChange(next)
+            onCommit?.(next)
+          }}
+        >
+          Reset size and spacing
+        </button>
+      </div>
     </div>
   )
 }

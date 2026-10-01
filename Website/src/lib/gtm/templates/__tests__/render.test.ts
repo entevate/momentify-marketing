@@ -1,6 +1,7 @@
 import { renderTemplate, mediaMap, ctaIconSvg, CTA_ICONS, DEFAULT_CTA_ICON } from "../render"
 import type { RenderMedia } from "../render"
 import { templateRegistry } from "../_registry"
+import { slotStyleRules } from "../slot-style"
 import { escapeHtml } from "@/lib/gtm/link-page-types"
 import type { Palette } from "@/lib/gtm/pillar-palettes"
 
@@ -253,5 +254,42 @@ describe("renderTemplate byte-identity for marker-free values", () => {
       expect(Object.values(t.sampleData).join("\u0000")).not.toMatch(/[*_\r\n]/)
       expect(renderTemplate(doc, t.sampleData, palette)).toBe(renderTemplateBefore(doc, t.sampleData, palette))
     }
+  })
+})
+
+describe("headline type controls", () => {
+  const html = "<html><head></head><body><h1 data-slot=\"HEADLINE\">{{HEADLINE}}</h1></body></html>"
+
+  it("injects scale and line-height rules for set values", () => {
+    const out = renderTemplate(html, { HEADLINE: "Hi", HEADLINE__SIZE: "120", HEADLINE__LEADING: "1.3" }, palette)
+    expect(out).toContain('<style>[data-slot="HEADLINE"]{--slot-scale:1.2;line-height:1.3 !important}</style></head>')
+  })
+
+  it("clamps out-of-range values and ignores junk", () => {
+    expect(slotStyleRules({ HEADLINE__SIZE: "999", HEADLINE__LEADING: "abc" })).toBe('[data-slot="HEADLINE"]{--slot-scale:1.6}')
+    expect(slotStyleRules({ HEADLINE__LEADING: "0.1" })).toBe('[data-slot="HEADLINE"]{line-height:0.8 !important}')
+  })
+
+  it("renders byte-identically when nothing is set or size is 100", () => {
+    const plain = renderTemplate(html, { HEADLINE: "Hi" }, palette)
+    expect(plain).not.toContain("<style>")
+    expect(renderTemplate(html, { HEADLINE: "Hi", HEADLINE__SIZE: "100" }, palette)).toBe(plain)
+  })
+
+  it("shares one style tag with hidden-slot rules", () => {
+    const out = renderTemplate(html, { HEADLINE: "Hi", HEADLINE__SIZE: "80" }, palette, undefined, ["CTA"])
+    expect(out.match(/<style>/g)).toHaveLength(1)
+    expect(out).toContain('[data-slot="CTA"]{display:none !important}[data-slot="HEADLINE"]{--slot-scale:0.8}')
+  })
+
+  it("every headline template scales its font size", async () => {
+    const fs = await import("fs")
+    const path = await import("path")
+    const root = path.join(process.cwd(), "src/lib/gtm/templates/social-post")
+    const withHeadline = fs.readdirSync(root)
+      .map((d) => fs.readFileSync(path.join(root, d, "template.html"), "utf8"))
+      .filter((t) => t.includes('data-slot="HEADLINE"'))
+    expect(withHeadline).toHaveLength(18)
+    for (const t of withHeadline) expect(t).toMatch(/\.headline\s*\{[^}]*font-size: calc\(\d+px \* var\(--slot-scale, 1\)\)/)
   })
 })

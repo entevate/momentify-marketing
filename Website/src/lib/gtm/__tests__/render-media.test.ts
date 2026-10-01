@@ -118,3 +118,17 @@ describe("parseHiddenCards", () => {
     expect(out[1]).toEqual([])
   })
 })
+
+describe("filterSlots headline type settings", () => {
+  const spec = [
+    { key: "HEADLINE", label: "Headline", kind: "headline" as const, maxChars: 80, example: "" },
+    { key: "CTA", label: "CTA", kind: "cta_label" as const, maxChars: 30, example: "" },
+  ]
+  it("keeps headline settings, clamped, and drops others", () => {
+    const out = filterSlots({ HEADLINE: "Hi", HEADLINE__SIZE: 200, HEADLINE__LEADING: "1.234", CTA__SIZE: "120", HEADLINE__COLOR: "red" }, spec)
+    expect(out).toEqual({ HEADLINE: "Hi", HEADLINE__SIZE: "160", HEADLINE__LEADING: "1.23" })
+  })
+  it("drops the default size and junk", () => {
+    expect(filterSlots({ HEADLINE: "Hi", HEADLINE__SIZE: "100", HEADLINE__LEADING: "x" }, spec)).toEqual({ HEADLINE: "Hi" })
+  })
+})

@@ -24,6 +24,7 @@ import { allTemplates } from "@/lib/gtm/templates/_registry"
 import type { TemplateManifest } from "@/lib/gtm/templates/types"
 import TemplatePicker from "@/components/gtm/TemplatePicker"
 import { nativeSize } from "@/components/gtm/template-frame"
+import { styleKeysFor } from "@/lib/gtm/templates/slot-style"
 import SlotEditor from "@/components/gtm/SlotEditor"
 import { carouselAspectFor, carouselShellSize, carouselTemplates, type CarouselAspect } from "@/lib/gtm/carousel"
 
@@ -702,10 +703,12 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
         let editorNode: React.ReactNode = null
         const manifest = showEditor ? activeManifest : undefined
         if (manifest) {
+          // Slot copy plus the headline size / line-spacing settings.
+          const valueKeys = [...manifest.slots.map((s) => s.key), ...styleKeysFor(manifest.slots)]
           if (isCarousel) {
             const dirty = draftCards.some((card, i) => {
               const committed = cards?.[i] ?? {}
-              const valueDiff = manifest.slots.some((s) => (card[s.key] ?? "") !== (committed[s.key] ?? ""))
+              const valueDiff = valueKeys.some((k) => (card[k] ?? "") !== (committed[k] ?? ""))
               const hiddenDiff = !sameKeySet(draftCardsHidden[i] ?? [], cardsHidden[i] ?? [])
               return valueDiff || hiddenDiff
             })
@@ -734,6 +737,11 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
                     setDraftCards((d) => d.map((c, i) => (i === activeCard ? values : c)))
                     setDraftCardsHidden((h) => h.map((arr, i) => (i === activeCard ? nextHidden : arr)))
                   }}
+                  onCommit={(values, nextHidden) => {
+                    const nextCards = draftCards.map((c, i) => (i === activeCard ? values : c))
+                    const nextCardsHidden = draftCardsHidden.map((arr, i) => (i === activeCard ? nextHidden : arr))
+                    void rerender(null, nextCards, nextCardsHidden)
+                  }}
                 />
                 <div>
                   <button className="btn btn-secondary btn-sm" disabled={!dirty || busy} onClick={() => void rerender(null, draftCards, draftCardsHidden)}>
@@ -745,7 +753,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
             )
           } else {
             const dirty =
-              manifest.slots.some((s) => (draftSlots[s.key] ?? "") !== (slots?.[s.key] ?? "")) ||
+              valueKeys.some((k) => (draftSlots[k] ?? "") !== (slots?.[k] ?? "")) ||
               !sameKeySet(draftHidden, hidden)
             editorNode = (
               <div className="card" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -756,6 +764,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
                   hidden={draftHidden}
                   disabled={busy}
                   onChange={(values, nextHidden) => { setDraftSlots(values); setDraftHidden(nextHidden) }}
+                  onCommit={(values, nextHidden) => void rerender(values, null, nextHidden)}
                 />
                 <div>
                   <button className="btn btn-secondary btn-sm" disabled={!dirty || busy} onClick={() => void rerender(draftSlots, null, draftHidden)}>
