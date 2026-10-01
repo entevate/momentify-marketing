@@ -144,13 +144,24 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
   const [storedAspect, setStoredAspect] = useState<string | null>(null)
   const busy = generating || uploading || rerendering
 
-  // Result layout: two columns (preview | editor) at >=900px, stacked below.
+  // Result layout: preview | editor side by side only when the PANEL is wide
+  // enough for both, otherwise stacked. Measured on the panel, not the window:
+  // the panel sits beside the app sidebar, so a 1024px window left the editor
+  // column about 75px wide.
+  const panelRef = useRef<HTMLDivElement | null>(null)
   const [isDesktopResult, setIsDesktopResult] = useState(false)
   useEffect(() => {
-    const check = () => setIsDesktopResult(window.innerWidth >= 900)
+    const el = panelRef.current
+    if (!el) return
+    const check = () => {
+      const cs = getComputedStyle(el)
+      const inner = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)
+      setIsDesktopResult(inner >= SIDE_BY_SIDE_MIN_WIDTH)
+    }
     check()
-    window.addEventListener("resize", check)
-    return () => window.removeEventListener("resize", check)
+    const ro = new ResizeObserver(check)
+    ro.observe(el)
+    return () => ro.disconnect()
   }, [])
 
   const isCarousel = assetType === "carousel"
@@ -516,7 +527,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
 
   // ─── Render ────────────────────────────────────────────────────────
   return (
-    <div className={className} style={panel}>
+    <div ref={panelRef} className={className} style={panel}>
       <div
         style={{
           display: "flex",
@@ -763,7 +774,7 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
           <div
             style={
               isDesktopResult
-                ? { display: "grid", gridTemplateColumns: "minmax(0, 420px) minmax(0, 1fr)", gap: 16, alignItems: "start", marginTop: 14 }
+                ? { display: "grid", gridTemplateColumns: `minmax(0, ${PREVIEW_COL}px) minmax(${EDITOR_MIN_COL}px, 1fr)`, gap: 16, alignItems: "start", marginTop: 14 }
                 : { display: "flex", flexDirection: "column", gap: 16, marginTop: 14 }
             }
           >
@@ -777,6 +788,11 @@ export default function AssetPanel({ solution, assetType, itemId, briefText, med
 }
 
 // ─── Styles ──────────────────────────────────────────────────────────
+
+// Result layout. Below PREVIEW + gap + EDITOR_MIN the editor stacks under the preview.
+const PREVIEW_COL = 420
+const EDITOR_MIN_COL = 320
+const SIDE_BY_SIDE_MIN_WIDTH = PREVIEW_COL + 16 + EDITOR_MIN_COL
 
 const panel: React.CSSProperties = {
   border: "1px solid var(--gtm-border)",
