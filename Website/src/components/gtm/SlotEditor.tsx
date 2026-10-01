@@ -20,7 +20,7 @@
  * carry no markers and keep their hard maxLength.
  */
 
-import React, { useRef, useState } from "react"
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import type { SlotKind, SlotSpec } from "@/lib/gtm/templates/types"
 // cta-icons is fs-free; render.ts imports fs/promises and would break the client bundle.
 import { CTA_ICONS, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/cta-icons"
@@ -134,9 +134,51 @@ export interface SlotEditorProps {
   disabled?: boolean
 }
 
+/** Tallest a multi-line field grows before it scrolls instead. */
+const MAX_AUTO_LINES = 8
+
+/**
+ * Size a textarea to its wrapped content (not its newline count), capped at
+ * MAX_AUTO_LINES. Without this a long value with no line breaks sat in a
+ * one-row box and its wrapped lines were clipped out of view.
+ */
+function fitHeight(el: HTMLTextAreaElement) {
+  const cs = getComputedStyle(el)
+  const borders = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth)
+  const padding = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom)
+  const max = (parseFloat(cs.lineHeight) || 20) * MAX_AUTO_LINES + padding + borders
+  el.style.height = "auto"
+  const want = el.scrollHeight + borders
+  el.style.height = `${Math.min(want, max)}px`
+  el.style.overflowY = want > max ? "auto" : "hidden"
+}
+
 export default function SlotEditor({ slots, values, hidden, onChange, disabled }: SlotEditorProps) {
   const areas = useRef<Record<string, HTMLTextAreaElement | null>>({})
   const anyMultiline = slots.some((s) => isMultiline(s.kind))
+
+  // Re-fit after every value change (typing, markers, a fresh fill)...
+  useLayoutEffect(() => {
+    for (const el of Object.values(areas.current)) if (el) fitHeight(el)
+  }, [values, slots])
+
+  // ...and when a field's width changes, since a narrower column wraps into
+  // more lines. Width only: reacting to our own height writes would loop.
+  const widths = useRef(new WeakMap<Element, number>())
+  const resizeObs = useRef<ResizeObserver | null>(null)
+  useEffect(() => {
+    const ro = new ResizeObserver((entries) => {
+      for (const e of entries) {
+        const w = Math.round(e.contentRect.width)
+        if (widths.current.get(e.target) === w) continue
+        widths.current.set(e.target, w)
+        fitHeight(e.target as HTMLTextAreaElement)
+      }
+    })
+    resizeObs.current = ro
+    for (const el of Object.values(areas.current)) if (el) ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
 
   function toggle(key: string) {
     const next = hidden.includes(key) ? hidden.filter((k) => k !== key) : [...hidden, key]
@@ -178,7 +220,6 @@ export default function SlotEditor({ slots, values, hidden, onChange, disabled }
         const used = multiline ? plainLength(value) : 0
         const over = multiline && used > s.maxChars
         const countId = `slot-count-${s.key}`
-        const rows = Math.min(6, Math.max(1, value.split("\n").length))
         return (
           <div key={s.key} style={{ display: "flex", alignItems: "flex-start", gap: 10, opacity: isHidden ? 0.55 : 1 }}>
             <div style={{ paddingTop: 2, flex: "none" }}>
@@ -235,10 +276,15 @@ export default function SlotEditor({ slots, values, hidden, onChange, disabled }
                     ))}
                   </div>
                   <textarea
-                    ref={(el) => { areas.current[s.key] = el }}
+                    ref={(el) => {
+                      const prev = areas.current[s.key]
+                      if (prev && prev !== el) resizeObs.current?.unobserve(prev)
+                      areas.current[s.key] = el
+                      if (el) resizeObs.current?.observe(el)
+                    }}
                     className="input"
                     value={value}
-                    rows={rows}
+                    rows={1}
                     disabled={disabled || isHidden}
                     aria-invalid={over || undefined}
                     aria-describedby={countId}
