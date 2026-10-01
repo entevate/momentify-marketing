@@ -24,6 +24,7 @@ export type RenderMedia = { bgImage?: string; bgOpacity?: number }
 // import it without dragging this file's `fs/promises` into the browser
 // bundle. Re-exported here so server callers keep a single import site.
 import { ctaIconSvg } from "./cta-icons"
+import { slotStyleRules } from "./slot-style"
 export { CTA_ICONS, CTA_ICON_IDS, DEFAULT_CTA_ICON, ctaIconSvg } from "./cta-icons"
 
 /** Reserved keys: BG_IMAGE → `url("…")` or `none`; BG_OPACITY → 0–1. */
@@ -61,7 +62,10 @@ export function mediaMap(media?: RenderMedia): Record<string, string> {
  * track behind. Every rule goes in ONE style tag injected immediately before
  * `</head>`, or prepended when the document has no head.
  *
- * An absent or empty `hidden` injects nothing at all, so existing output stays
+ * The same style tag carries any headline size / line-spacing settings found
+ * in `slots` under `KEY__SIZE` / `KEY__LEADING` (see slot-style.ts).
+ *
+ * An absent or empty `hidden` with no settings injects nothing at all, so existing output stays
  * byte-identical. Keys that are not plain `[A-Z0-9_]+` are dropped rather than
  * escaped: nothing caller-controlled should reach a raw style tag.
  */
@@ -99,9 +103,12 @@ export function renderTemplate(
     if (key in slots) return renderRichText(escapeHtml(slots[key]))
     return ""
   })
-  if (hiddenKeys.length === 0) return filled
+  // Headline size / line-spacing settings ride in `slots` (see slot-style.ts).
+  const rules =
+    hiddenKeys.map((k) => `[data-slot="${k}"]{display:none !important}`).join("") +
+    slotStyleRules(slots)
+  if (!rules) return filled
 
-  const rules = hiddenKeys.map((k) => `[data-slot="${k}"]{display:none !important}`).join("")
   const styleTag = `<style>${rules}</style>`
   const headClose = filled.indexOf("</head>")
   return headClose < 0

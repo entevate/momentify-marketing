@@ -282,10 +282,13 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
 
     let blobUrl: string
     try {
+      // A fresh URL per render: an overwritten path can be served stale by
+      // the Blob CDN for up to a minute, so a quick second edit showed the
+      // first one. KV points at the newest version. Old versions are kept
+      // on purpose: a Library item saved from this draft shares its URL.
       const blob = await put(blobPath, renderedHtml, {
         access: "public",
-        addRandomSuffix: false,
-        allowOverwrite: true,
+        addRandomSuffix: true,
         contentType: "text/html; charset=utf-8",
         token: BLOB_TOKEN || undefined,
       })

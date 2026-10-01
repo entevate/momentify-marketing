@@ -2,6 +2,7 @@ import { stripEmDashes } from "@/lib/gtm/sanitize"
 import { truncateVisible } from "@/lib/gtm/rich-text"
 import type { SlotSpec } from "@/lib/gtm/templates/types"
 import type { RenderMedia } from "@/lib/gtm/templates/render"
+import { normStyleValue, styleKeysFor } from "@/lib/gtm/templates/slot-style"
 
 /** Data-URI images are inlined into the stored HTML, so cap them. */
 export const MAX_BG_BYTES = 3 * 1024 * 1024
@@ -47,6 +48,11 @@ export function filterSlots(input: unknown, spec: SlotSpec[]): Record<string, st
     // Visible-character truncation: a slot's rich-text markers are free and
     // stay balanced, so a hard cut can't leave a dangling `**`.
     out[s.key] = truncateVisible(stripEmDashes(String(v)), s.maxChars)
+  }
+  // Headline size / line-spacing settings: numeric, clamped, dropped when unset.
+  for (const key of styleKeysFor(spec)) {
+    const v = normStyleValue(key, (input as Record<string, unknown>)[key])
+    if (v) out[key] = v
   }
   return out
 }
