@@ -1,0 +1,598 @@
+// Explorer Config — Foo For Thought (Event Services)
+// Booking kiosk for a Dallas–Fort Worth 90's rock cover, party, and
+// wedding band (established in McKinney). Routes couples, planners,
+// venue owners, party hosts, and fans to the setlist, the band, the
+// event types they play, and the reservation form.
+// Brand: red #C8382B + red-dark #9E2A20 (intake + site CSS), charcoal
+// #1A1A1A and parchment #F4EFEB from the site. The site's restaurant
+// "menu" voice (courses, chefs, seatings) carries into the copy.
+// Site fonts are Bebas Neue / Oswald / Special Elite, none of which
+// are in the curated loadable set; Montserrat is the closest bold
+// sans that Momentify Web can load.
+// Content sourced from fooforthought.band (menu, recipe, chefs, shows,
+// watch, reservations).
+
+import type { ExplorerConfig, ThemeColors } from '../types';
+
+const FFT_DARK: ThemeColors = {
+  // Warm charcoal near-black so dialogs read like the site, not
+  // generic dark mode.
+  bg: '#120F0E',
+  bgGradient: 'linear-gradient(135deg, #2A1512 0%, #1A1413 55%, #120F0E 100%)',
+  surface: 'rgba(255,255,255,0.06)',
+  surfaceHover: 'rgba(255,255,255,0.10)',
+  border: 'rgba(255,255,255,0.12)',
+  borderFocus: '#E5574A',
+  text1: '#F4EFEB',
+  text2: 'rgba(244,239,235,0.78)',
+  text3: 'rgba(244,239,235,0.52)',
+  inputBg: 'rgba(255,255,255,0.08)',
+  inputText: '#F4EFEB',
+  inputPlaceholder: 'rgba(244,239,235,0.40)',
+  logoText: '#F4EFEB',
+  focusRing: 'rgba(229,87,74,0.25)',
+};
+
+const FFT_LIGHT: ThemeColors = {
+  // Parchment-tinted off-white from the site; red carries the brand.
+  bg: '#F6F3F0',
+  bgGradient: 'linear-gradient(180deg, #F8F5F2 0%, #F2EEEA 100%)',
+  surface: 'rgba(255,255,255,0.90)',
+  surfaceHover: 'rgba(255,255,255,1.00)',
+  border: 'rgba(26,26,26,0.10)',
+  borderFocus: '#9E2A20',
+  text1: '#1A1A1A',
+  text2: 'rgba(26,26,26,0.68)',
+  text3: 'rgba(26,26,26,0.46)',
+  inputBg: '#FFFFFF',
+  inputText: '#1A1A1A',
+  inputPlaceholder: 'rgba(26,26,26,0.36)',
+  logoText: '#1A1A1A',
+  focusRing: 'rgba(158,42,32,0.15)',
+};
+
+export const FOO_FOR_THOUGHT_CONFIG: ExplorerConfig = {
+  id: 'foo-for-thought',
+  name: 'Foo For Thought Explorer',
+  version: 1,
+  createdAt: '2026-10-07T00:00:00.000Z',
+  updatedAt: '2026-10-07T00:00:00.000Z',
+
+  branding: {
+    logo: {
+      dark: '/brand/assets/foo-for-thought-dark.png',   // parchment-to-red wordmark for dark bg
+      light: '/brand/assets/foo-for-thought-light.png', // wordmark for light bg
+    },
+    // Wordmark is 2728x564 (~4.8:1); 30px keeps it inside the top bar.
+    logoHeight: 30,
+    icon: '/brand/assets/foo-for-thought-icon.png',
+    colors: {
+      primary: '#E5574A',   // lifted brand red, legible accent on charcoal
+      secondary: '#C8382B', // brand red
+      teal: '#E5574A',      // accent doubles as hover/focus/selection
+      blue: '#9E2A20',      // brand red-dark
+      deepBlue: '#4A4540',  // site muted brown-gray
+      navy: '#1F1817',
+      midnight: '#120F0E',
+      plum: '#9E2A20',
+      bgDark: '#120F0E',
+      dark: FFT_DARK,
+      light: FFT_LIGHT,
+    },
+    font: 'Montserrat',
+    backgroundPattern: 'none',
+    auroraOrbs: {
+      orb1: 'rgba(200,56,43,0.18)',
+      orb2: 'rgba(229,87,74,0.12)',
+      orb3: 'rgba(244,239,235,0.08)',
+    },
+    // CTA = brand red → red-dark; parchment text
+    ctaGradient: 'linear-gradient(135deg, #C8382B, #9E2A20)',
+    ctaTextColor: '#FFFFFF',
+    // Mirrors the logo's parchment-to-red fade
+    gradientWord: 'linear-gradient(90deg, #F4EFEB 0%, #E8A39B 45%, #C8382B 100%)',
+    roleBackgrounds: {
+      'couple': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(200,56,43,0.18) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 15% 15%, rgba(244,239,235,0.08) 0%, transparent 55%)',
+      'planner': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(158,42,32,0.20) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 85% 15%, rgba(229,87,74,0.10) 0%, transparent 55%)',
+      'corporate': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(229,87,74,0.14) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 25% 15%, rgba(158,42,32,0.12) 0%, transparent 55%)',
+      'venue': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(200,56,43,0.16) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 85% 25%, rgba(244,239,235,0.08) 0%, transparent 55%)',
+      'host': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(158,42,32,0.18) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 15% 25%, rgba(229,87,74,0.10) 0%, transparent 55%)',
+      'fan': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(229,87,74,0.16) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 75% 15%, rgba(200,56,43,0.10) 0%, transparent 55%)',
+      'browsing': 'radial-gradient(ellipse 90% 70% at 50% 70%, rgba(200,56,43,0.12) 0%, transparent 65%), radial-gradient(ellipse 70% 60% at 85% 25%, rgba(244,239,235,0.06) 0%, transparent 55%)',
+    },
+  },
+
+  registration: {
+    modes: ['form', 'scan', 'search'],
+    defaultMode: 'form',
+    formTitle: 'Grab a Seat at the Table',
+    formSubtitle: 'Share your info and the band will follow up with the songs, dates, and details you pick.',
+    scanLabel: 'Scan Your QR Code',
+    scanHint: 'Hold the QR code in front of the camera',
+    searchPlaceholder: 'Search by last name...',
+    optInText: 'By sharing your information you consent to Foo For Thought processing your data to fulfill your request and send relevant follow-up communications about bookings and shows.',
+    showLocaleButton: false,
+    idleTimeoutMs: 10000,
+    skipEnabled: true,
+    fields: [
+      { id: 'firstName', label: 'First Name', type: 'text', placeholder: 'First name', required: true, halfWidth: true },
+      { id: 'lastName', label: 'Last Name', type: 'text', placeholder: 'Last name', required: true, halfWidth: true },
+      { id: 'email', label: 'Email', type: 'email', placeholder: 'name@example.com', required: true, halfWidth: true },
+      { id: 'phone', label: 'Phone', type: 'tel', placeholder: '(555) 555-5555', required: false, halfWidth: true },
+      { id: 'company', label: 'Venue / Company', type: 'text', placeholder: 'Venue, company, or event (optional)', required: false, halfWidth: true },
+      { id: 'title', label: 'Event Date', type: 'text', placeholder: 'Event date if you have one (optional)', required: false, halfWidth: true },
+    ],
+  },
+
+  steps: [
+    {
+      type: 'splash',
+      id: 'welcome',
+      title: 'Tasty Tunes,',
+      gradientWord: 'Served Loud.',
+      subtitle: 'Foo For Thought is a Dallas–Fort Worth cover band serving mostly 90\'s rock, seasoned delicately with other delicious decades. Weddings, corporate nights, breweries, bars, and backyards. Tap to see the menu.',
+      buttonText: 'Tap to Begin',
+    },
+    {
+      type: 'registration',
+      id: 'registration',
+    },
+    {
+      type: 'trait-selection',
+      id: 'role',
+      selectionMode: 'single',
+      title: 'Who\'s ordering tonight?',
+      subtitle: 'Select the option that fits you best.',
+      showGreeting: true,
+      showSelectAll: false,
+      options: [
+        { value: 'couple', label: 'Engaged Couple', icon: 'heart', iconType: 'lucide' },
+        { value: 'planner', label: 'Wedding / Event Planner', icon: 'list-checks', iconType: 'lucide' },
+        { value: 'corporate', label: 'Corporate Event Organizer', icon: 'briefcase', iconType: 'lucide' },
+        { value: 'venue', label: 'Brewery / Bar / Venue', icon: 'store', iconType: 'lucide' },
+        { value: 'host', label: 'Private Party Host', icon: 'gift', iconType: 'lucide' },
+        { value: 'fan', label: '90\'s Rock Fan', icon: 'headphones', iconType: 'lucide' },
+        { value: 'browsing', label: 'Just Browsing', icon: 'compass', iconType: 'lucide' },
+      ],
+    },
+    {
+      type: 'trait-selection',
+      id: 'interests',
+      selectionMode: 'multi',
+      title: 'What\'s on your plate?',
+      subtitle: 'Select all that apply.',
+      showGreeting: false,
+      showSelectAll: true,
+      options: [
+        { value: 'weddings', label: 'Weddings', icon: 'heart', iconType: 'lucide',
+          relevantRoles: ['couple', 'planner', 'browsing'] },
+        { value: 'corporate', label: 'Corporate Events', icon: 'building-2', iconType: 'lucide',
+          relevantRoles: ['corporate', 'planner', 'browsing'] },
+        { value: 'venues', label: 'Breweries & Bars', icon: 'store', iconType: 'lucide',
+          relevantRoles: ['venue', 'fan', 'browsing'] },
+        { value: 'parties', label: 'Private Parties & Backyards', icon: 'sparkles', iconType: 'lucide',
+          relevantRoles: ['host', 'planner', 'browsing'] },
+        { value: 'setlist', label: 'The Setlist', icon: 'list-checks', iconType: 'lucide',
+          relevantRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'fan', 'browsing'] },
+        { value: 'shows', label: 'Upcoming Shows', icon: 'calendar', iconType: 'lucide',
+          relevantRoles: ['fan', 'venue', 'browsing'] },
+        { value: 'band', label: 'Meet the Band', icon: 'users', iconType: 'lucide',
+          relevantRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'fan', 'browsing'] },
+        { value: 'browsing', label: 'Just Browsing', icon: 'compass', iconType: 'lucide',
+          relevantRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'fan', 'browsing'] },
+      ],
+    },
+    {
+      type: 'results',
+      id: 'results',
+      title: 'Your Order, Up',
+      subtitle: 'Songs, shows, and booking options matched to your event.',
+      tabs: [
+        { id: 'outcomes', label: 'The Specials', icon: 'flame' },
+        {
+          id: 'learn',
+          label: 'Taste Test',
+          icon: 'play-circle',
+          filters: [
+            { label: 'All', value: 'all' },
+            { label: 'Video', value: 'video' },
+            { label: 'Website', value: 'website' },
+          ],
+        },
+        { id: 'solutions', label: 'Book the Band', icon: 'calendar' },
+      ],
+      cardsPerPage: 6,
+      defaultView: 'small',
+    },
+    {
+      type: 'summary',
+      id: 'summary',
+      title: 'Your Order',
+      subtitle: 'Review your picks and the band will follow up.',
+    },
+    {
+      type: 'content-library',
+      id: 'library',
+      title: 'The Full Menu',
+      subtitle: 'Browse everything Foo For Thought serves up.',
+    },
+    {
+      type: 'thank-you',
+      id: 'thanks',
+      title: 'Order Up!',
+      subtitle: 'Request received. The band will be in touch soon. Come hungry, leave hoarse.',
+      showNewSessionButton: true,
+      showAddNotesButton: true,
+    },
+  ],
+
+  content: [
+    // ─────────────────────────────────────────────────────────────────
+    // Trait-mapping graph (mirrored on each interest's relevantRoles)
+    //   couple    : weddings, setlist, band, browsing
+    //   planner   : weddings, corporate, parties, setlist, band, browsing
+    //   corporate : corporate, setlist, band, browsing
+    //   venue     : venues, setlist, shows, band, browsing
+    //   host      : parties, setlist, band, browsing
+    //   fan       : venues, setlist, shows, band, browsing
+    //   browsing  : all
+    // Facts come only from fooforthought.band; no pricing, set length,
+    // or production details are published there, so none are claimed.
+    // ─────────────────────────────────────────────────────────────────
+
+    // ── Outcomes / The Specials (6) ──────────────────────────────────
+    {
+      id: 'o1',
+      title: '38 Songs on the Menu',
+      cardType: 'outcome',
+      icon: 'list-checks',
+      iconType: 'lucide',
+      stat: '38',
+      url: 'https://fooforthought.band/#menu',
+      description: {
+        small: 'A 38-song menu across grunge, alt rock, and classic rock.',
+        medium: 'The published menu runs 38 songs: 7 grunge appetizers, 16 alt-rock mains, and 15 classic-rock encores.',
+        large: 'Three courses, 38 songs: 7 grunge appetizers, 16 alt-rock main courses, and 15 classic-rock encores, plus daily specials from the 70\'s, 80\'s, and 2000\'s.',
+        overlay: 'The Foo For Thought menu is built like a three-course meal: 7 grunge appetizers (Alice In Chains, Nirvana, Stone Temple Pilots), 16 alt-rock main courses (Foo Fighters, Green Day, Jimmy Eat World, Rage Against The Machine), and 15 classic-rock encores (Tom Petty, Lynyrd Skynyrd, Garth Brooks, Prince). Daily specials from the 70\'s, 80\'s, and 2000\'s fill in the gaps, and requests are welcome.',
+      },
+      tags: ['setlist'],
+      targetRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'fan', 'browsing'],
+      targetInterests: ['setlist', 'browsing'],
+    },
+    {
+      id: 'o2',
+      title: '60 Years of Hits, One Night',
+      cardType: 'outcome',
+      icon: 'clock',
+      iconType: 'lucide',
+      stat: '60',
+      url: 'https://fooforthought.band/#menu',
+      description: {
+        small: 'From Folsom Prison Blues (1955) to Tennessee Whiskey (2015).',
+        medium: 'Mostly 90\'s rock, but the menu reaches from Johnny Cash in 1955 to Chris Stapleton in 2015.',
+        large: 'The core is 90\'s rock, but the menu spans 60 years: Folsom Prison Blues (1955), Twist & Shout (1963), Summer Of \'69 (1984), Everlong (1997), and Tennessee Whiskey (2015).',
+        overlay: 'A wedding or company party has a room full of ages, and the menu is built for it. The heart is 90\'s grunge and alt rock, but the encore course stretches back to Johnny Cash\'s Folsom Prison Blues (1955) and The Beatles\' Twist & Shout (1963), through Bryan Adams and Prince, and forward to Chris Stapleton\'s Tennessee Whiskey (2015). Grandparents and college friends both get a song.',
+      },
+      tags: ['setlist', 'weddings'],
+      targetRoles: ['couple', 'planner', 'corporate', 'host', 'browsing'],
+      targetInterests: ['setlist', 'weddings', 'corporate', 'parties'],
+    },
+    {
+      id: 'o3',
+      title: '4 Chefs, 1 Loud Kitchen',
+      cardType: 'outcome',
+      icon: 'users',
+      iconType: 'lucide',
+      stat: '4',
+      url: 'https://fooforthought.band/#chefs',
+      description: {
+        small: 'Four players: vocals and lead guitar, guitar, bass, and drums.',
+        medium: 'Robzilla, Sharx, Syed, and Jake: two guitars, bass, and drums, with three of the four singing.',
+        large: 'The kitchen crew: Robzilla on lead vocals and lead guitar, Sharx on guitar and vocals, Syed on bass, and Jake on drums and vocals. Three voices for the harmonies 90\'s rock demands.',
+        overlay: 'Meet the chefs. Robzilla runs the pass and the mic, then sears the solo. Sharx plates the harmonies and owns more pedals than pans. Syed keeps the low end thick and the groove plenty saucy. Jake cooks the backbeat low and slow until it isn\'t, then hollers a garnish over the top. Four players, three singers, one very loud kitchen.',
+      },
+      tags: ['band'],
+      targetRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'fan', 'browsing'],
+      targetInterests: ['band', 'browsing'],
+    },
+    {
+      id: 'o4',
+      title: '5 Kinds of Rooms Served',
+      cardType: 'outcome',
+      icon: 'map-pin',
+      iconType: 'lucide',
+      stat: '5',
+      url: 'https://fooforthought.band/#reservations',
+      description: {
+        small: 'Weddings, corporate events, breweries, bars, and backyards.',
+        medium: 'The band plays weddings, corporate events, breweries, bars, and backyards across the DFW metroplex.',
+        large: 'You bring the room, they bring the noise: weddings, corporate nights, breweries, dive bars, and backyard parties, anywhere across the Dallas–Fort Worth metroplex.',
+        overlay: 'Foo For Thought is built to travel between very different rooms. A wedding reception needs the dance floor full and the first-dance moment right. A corporate night needs a crowd-pleaser that stays the right side of loud. A brewery or bar wants a reason for people to stay another round. A backyard party just wants the 90\'s back. Established in McKinney and serving the whole metroplex.',
+      },
+      tags: ['weddings', 'corporate', 'venues', 'parties'],
+      targetRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'browsing'],
+      targetInterests: ['weddings', 'corporate', 'venues', 'parties'],
+    },
+    {
+      id: 'o5',
+      title: 'Requests Welcome',
+      cardType: 'outcome',
+      icon: 'mic',
+      iconType: 'lucide',
+      stat: 'Ask',
+      url: 'https://fooforthought.band/#menu',
+      description: {
+        small: 'Substitutions encouraged. Don\'t see your jam? Just ask.',
+        medium: 'The menu is a starting point. Requests are welcome and substitutions encouraged for your event.',
+        large: 'Your event, your order: requests are welcome, substitutions are encouraged, and daily specials from the 70\'s, 80\'s, and 2000\'s are on the table. Don\'t see your jam? Just ask your server.',
+        overlay: 'The setlist is a menu, not a contract. Couples can ask for the first-dance song, companies can steer the vibe, and venues can lean harder into grunge or classic rock depending on the crowd. Requests are welcome, substitutions are encouraged, and the daily specials pull from the 70\'s, 80\'s, and 2000\'s. Put your must-play songs in the reservation request.',
+      },
+      tags: ['setlist', 'weddings'],
+      targetRoles: ['couple', 'planner', 'corporate', 'host', 'browsing'],
+      targetInterests: ['setlist', 'weddings', 'parties', 'corporate'],
+    },
+    {
+      id: 'o6',
+      title: 'First Public Show: Oct 10',
+      cardType: 'outcome',
+      icon: 'calendar',
+      iconType: 'lucide',
+      stat: '10/10',
+      url: 'https://www.facebook.com/share/1C78fF7UW5/',
+      description: {
+        small: 'Saturday, Oct 10 at 7:30 PM in Celina, TX.',
+        medium: 'The first public tasting: Saturday, October 10 at 7:30 PM, 212 N Oklahoma Dr, Celina, TX.',
+        large: 'See the band before you book: the first public show is Saturday, October 10 at 7:30 PM at 212 N Oklahoma Dr in Celina, TX. RSVP on Facebook.',
+        overlay: 'The best way to decide is to hear it. Foo For Thought\'s first public tasting is Saturday, October 10 at 7:30 PM at 212 N Oklahoma Dr, Celina, TX 75009. Bring the planner, bring the fiance, bring the venue manager. RSVP on Facebook, and save this card to get the event link in your follow-up email.',
+      },
+      tags: ['shows'],
+      targetRoles: ['fan', 'venue', 'couple', 'planner', 'browsing'],
+      targetInterests: ['shows', 'browsing'],
+    },
+
+    // ── Learn / Taste Test (6) ───────────────────────────────────────
+    {
+      id: 'l1',
+      title: 'Foo For Thought Promo',
+      cardType: 'learn',
+      mediaType: 'video',
+      icon: 'play-circle',
+      iconType: 'lucide',
+      url: 'https://youtu.be/o36WzpbbeWo',
+      description: {
+        small: 'The official promo video, a taste before the main event.',
+        medium: 'The band\'s promo video on YouTube: a quick taste of the sound before you book.',
+        large: 'Hear it before you book: the official Foo For Thought promo video, the amuse-bouche before the main event.',
+        overlay: 'A little taste before the main event. The Foo For Thought promo video shows the band and the sound in a couple of minutes, the fastest way for a couple, a planner, or a venue manager to decide if this is the right fit. Scan to watch, or save the card and the link arrives in your follow-up email.',
+      },
+      tags: ['band', 'browsing'],
+      targetRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'fan', 'browsing'],
+      targetInterests: ['band', 'browsing', 'weddings', 'corporate', 'venues', 'parties'],
+    },
+    {
+      id: 'l2',
+      title: 'YouTube Channel',
+      cardType: 'learn',
+      mediaType: 'video',
+      icon: 'video',
+      iconType: 'lucide',
+      url: 'https://www.youtube.com/@FooForThoughtBand',
+      description: {
+        small: 'Every Foo For Thought video in one place.',
+        medium: 'Subscribe to @FooForThoughtBand for live clips and new videos as the calendar fills.',
+        large: 'The full video feed: @FooForThoughtBand on YouTube collects the promo and live clips, with more added as the band plays new rooms around DFW.',
+        overlay: 'Follow for seconds. The @FooForThoughtBand YouTube channel is where live clips and new videos land as the band plays weddings, breweries, and parties across the metroplex. A good place to send the rest of the wedding party or the venue owner when they ask what the band sounds like.',
+      },
+      tags: ['band', 'shows'],
+      targetRoles: ['fan', 'couple', 'planner', 'venue', 'browsing'],
+      targetInterests: ['band', 'shows', 'browsing'],
+    },
+    {
+      id: 'l3',
+      title: 'The Menu (Full Setlist)',
+      cardType: 'learn',
+      mediaType: 'website',
+      icon: 'list-checks',
+      iconType: 'lucide',
+      url: 'https://fooforthought.band/#menu',
+      description: {
+        small: 'All three courses, every song, with the year it came out.',
+        medium: 'The full bill of fare: grunge appetizers, alt-rock mains, and classic-rock encores, each song with its year.',
+        large: 'The full setlist as a three-course menu: Grunge (Man In The Box, Plush), Alt Rock (Everlong, The Middle, Killing In The Name), and Classic Rock (Simple Man, Purple Rain), with every song\'s year.',
+        overlay: 'Tonight\'s bill of fare. Appetizers are grunge: Man In The Box, Heart-Shaped Box, In Bloom, Plush, and more. The main course is alt rock: Are You Gonna Go My Way, Everlong, Learn To Fly, My Hero, Hey Jealousy, The Middle, What I Got. The encore is classic rock: Mary Jane\'s Last Dance, Friends In Low Places, Sweet Home Alabama, Summer Of \'69, Purple Rain. Save the card to get the full menu link.',
+      },
+      tags: ['setlist'],
+      targetRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'fan', 'browsing'],
+      targetInterests: ['setlist', 'browsing'],
+    },
+    {
+      id: 'l4',
+      title: 'Meet the Chefs',
+      cardType: 'learn',
+      mediaType: 'website',
+      icon: 'users',
+      iconType: 'lucide',
+      url: 'https://fooforthought.band/#chefs',
+      description: {
+        small: 'Robzilla, Sharx, Syed, and Jake.',
+        medium: 'The four members of Foo For Thought and what each one brings to the kitchen.',
+        large: 'The kitchen crew, one by one: Robzilla (head chef, vocals and lead guitar), Sharx (grill master, guitar and vocals), Syed (saucier, bass), and Jake (pit master, drums and vocals).',
+        overlay: 'Four cooks, one very loud kitchen. Robzilla is the head chef on vocals and lead guitar. Sharx is the grill master on guitar and vocals. Syed is the saucier holding down the bass. Jake is the pit master on drums and vocals. The band page has photos and the full kitchen bios.',
+      },
+      tags: ['band'],
+      targetRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'fan', 'browsing'],
+      targetInterests: ['band'],
+    },
+    {
+      id: 'l5',
+      title: 'Our Recipe',
+      cardType: 'learn',
+      mediaType: 'website',
+      icon: 'book-open',
+      iconType: 'lucide',
+      url: 'https://fooforthought.band/#note',
+      description: {
+        small: 'The band\'s thesis: the 90\'s rocked, and the party shouldn\'t stop.',
+        medium: 'Three parts grunge, two parts alt rock, a heavy pour of post-grunge. Flannel optional, volume mandatory.',
+        large: 'The recipe: three parts grunge, two parts alt rock, a heavy pour of post-grunge, seasoned with 70\'s swagger, 80\'s shine, and 2000\'s crunch. Flannel optional, volume mandatory.',
+        overlay: 'Foo For Thought has one simple thesis: the 90\'s rocked, and the party shouldn\'t stop. Take three parts grunge, two parts alt rock, a heavy pour of post-grunge, then season delicately with a little 70\'s swagger, 80\'s shine, and 2000\'s crunch. Served loud at weddings, corporate events, breweries, bars, and backyards. Come hungry, leave hoarse.',
+      },
+      tags: ['band', 'browsing'],
+      targetRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'fan', 'browsing'],
+      targetInterests: ['band', 'browsing'],
+    },
+    {
+      id: 'l6',
+      title: 'Follow on Instagram',
+      cardType: 'learn',
+      mediaType: 'website',
+      icon: 'camera',
+      iconType: 'lucide',
+      url: 'https://www.instagram.com/fooforthoughtband',
+      description: {
+        small: 'Photos, clips, and show announcements on Instagram.',
+        medium: 'Follow @fooforthoughtband for photos, short clips, and new show dates as they\'re added.',
+        large: 'The fastest way to catch the next public show: @fooforthoughtband on Instagram posts photos, clips, and new dates around DFW.',
+        overlay: 'Follow for seconds. @fooforthoughtband on Instagram is where new show dates, photos, and short clips land first. The band is also on Facebook, where public shows are listed as events you can RSVP to. Save the card and both links arrive in your follow-up email.',
+      },
+      tags: ['shows'],
+      targetRoles: ['fan', 'venue', 'couple', 'browsing'],
+      targetInterests: ['shows', 'band', 'browsing'],
+    },
+
+    // ── Solutions / Book the Band (7) ────────────────────────────────
+    {
+      id: 's1',
+      title: 'Wedding Receptions',
+      cardType: 'solution',
+      icon: 'heart',
+      iconType: 'lucide',
+      url: 'https://fooforthought.band/#reservations',
+      description: {
+        small: 'A reception band built to keep every generation dancing.',
+        medium: 'From the first dance to the last call, a setlist that spans 1955 to 2015 so every guest gets a song.',
+        large: 'A reception band for couples who grew up on the 90\'s: alt-rock anthems for the friends, Garth and Tom Petty for the family, and requests welcome for the moments that matter.',
+        overlay: 'Weddings are a main course for Foo For Thought. The menu is built for a mixed room: 90\'s anthems for the wedding party, Friends In Low Places and Sweet Home Alabama for the relatives, and Wonderful Tonight or Tennessee Whiskey when the floor slows down. Share your date and must-play songs in a reservation request and the band will cook up something loud.',
+      },
+      tags: ['weddings'],
+      targetRoles: ['couple', 'planner', 'browsing'],
+      targetInterests: ['weddings', 'setlist'],
+    },
+    {
+      id: 's2',
+      title: 'Corporate Events',
+      cardType: 'solution',
+      icon: 'building-2',
+      iconType: 'lucide',
+      url: 'https://fooforthought.band/#reservations',
+      description: {
+        small: 'Company parties, client nights, and holiday events.',
+        medium: 'A live band for company parties, holiday events, and client appreciation nights across DFW.',
+        large: 'Corporate nights get a crowd-pleasing set the whole team already knows the words to, with the setlist tuned to your crowd and your volume level.',
+        overlay: 'A corporate event needs a band that gets the room singing without losing it. Foo For Thought plays company parties, holiday events, and client nights across the metroplex, drawing from a menu of songs everyone knows. Requests are welcome, so you can steer the set toward your crowd. Send a reservation request with your date and venue.',
+      },
+      tags: ['corporate'],
+      targetRoles: ['corporate', 'planner', 'browsing'],
+      targetInterests: ['corporate', 'setlist'],
+    },
+    {
+      id: 's3',
+      title: 'Brewery & Bar Nights',
+      cardType: 'solution',
+      icon: 'store',
+      iconType: 'lucide',
+      url: 'https://fooforthought.band/#reservations',
+      description: {
+        small: 'A 90\'s rock night that keeps the crowd for another round.',
+        medium: 'Breweries and bars book Foo For Thought for a 90\'s rock night that fills the room and keeps it there.',
+        large: 'For breweries, bars, and dive bars: a full-volume 90\'s rock night with songs the whole patio knows, from Everlong to Killing In The Name.',
+        overlay: 'Breweries and bars are home turf. A 90\'s rock night pulls a crowd that grew up on these songs and gives them a reason to stay another round. The band plays across the DFW metroplex and brings the noise; you bring the room. Venue owners and talent buyers can send a reservation request with open dates.',
+      },
+      tags: ['venues'],
+      targetRoles: ['venue', 'fan', 'browsing'],
+      targetInterests: ['venues', 'shows'],
+    },
+    {
+      id: 's4',
+      title: 'Private Parties & Backyards',
+      cardType: 'solution',
+      icon: 'sparkles',
+      iconType: 'lucide',
+      url: 'https://fooforthought.band/#reservations',
+      description: {
+        small: 'Birthdays, reunions, and backyard parties, served loud.',
+        medium: 'Bring the 90\'s home: birthdays, reunions, anniversaries, and backyard parties anywhere in DFW.',
+        large: 'The backyard party you\'d have thrown in 1997, with a live band: birthdays, reunions, and anniversaries, with the setlist built around your guests.',
+        overlay: 'Some of the best rooms are backyards. Foo For Thought plays private parties across the metroplex: milestone birthdays, reunions, anniversaries, and any night that deserves a live band. Flannel optional, volume mandatory. Send a reservation request with your date and the songs your crowd can\'t live without.',
+      },
+      tags: ['parties'],
+      targetRoles: ['host', 'planner', 'browsing'],
+      targetInterests: ['parties', 'setlist'],
+    },
+    {
+      id: 's5',
+      title: 'Build Your Setlist',
+      cardType: 'solution',
+      icon: 'list-checks',
+      iconType: 'lucide',
+      url: 'https://fooforthought.band/#menu',
+      description: {
+        small: 'Pick from the menu and add your must-play requests.',
+        medium: 'Start from the three-course menu, then add requests and specials from the 70\'s, 80\'s, and 2000\'s.',
+        large: 'Your event, your order: choose the courses that fit your crowd, flag your must-plays, and ask for anything not on the menu. Substitutions encouraged.',
+        overlay: 'Every booking starts from the same menu and ends with your order. Lean into grunge, go heavy on alt-rock mains, or save room for classic-rock encores. Add first-dance or walk-out songs, and ask about anything not listed: daily specials pull from the 70\'s, 80\'s, and 2000\'s. Include your list in the reservation request.',
+      },
+      tags: ['setlist'],
+      targetRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'browsing'],
+      targetInterests: ['setlist', 'weddings', 'corporate', 'parties'],
+    },
+    {
+      id: 's6',
+      title: 'RSVP: First Public Tasting',
+      cardType: 'solution',
+      icon: 'calendar',
+      iconType: 'lucide',
+      url: 'https://www.facebook.com/share/1C78fF7UW5/',
+      description: {
+        small: 'Sat, Oct 10, 7:30 PM, 212 N Oklahoma Dr, Celina, TX.',
+        medium: 'RSVP on Facebook for the first public show: Saturday, October 10 at 7:30 PM in Celina, TX.',
+        large: 'Catch the band live before you book: the first public tasting is Saturday, October 10 at 7:30 PM at 212 N Oklahoma Dr, Celina, TX 75009.',
+        overlay: 'Now serving: Foo For Thought\'s first public tasting, Saturday, October 10 at 7:30 PM, 212 N Oklahoma Dr, Celina, TX 75009. It\'s the easiest way for a couple, planner, or venue owner to hear the band in a real room. RSVP on Facebook, and save this card so the event link lands in your follow-up email.',
+      },
+      tags: ['shows'],
+      targetRoles: ['fan', 'venue', 'couple', 'planner', 'browsing'],
+      targetInterests: ['shows'],
+    },
+    {
+      id: 's7',
+      title: 'Reserve a Date',
+      cardType: 'solution',
+      icon: 'mail',
+      iconType: 'lucide',
+      url: 'https://fooforthought.band/#reservations',
+      description: {
+        small: 'Name your date and the band will cook up something loud.',
+        medium: 'Send a reservation request with your date and event details, or email fooforthoughtband@gmail.com.',
+        large: 'Want a private seating? Send your name, email, event date, and a few details through the reservation form, or email fooforthoughtband@gmail.com directly.',
+        overlay: 'Booking starts with a reservation request: your name, email, event date, company or venue, and a few words about the event. The band follows up to talk details. Prefer email? Write to fooforthoughtband@gmail.com. Save this card and the reservation link arrives in your follow-up email.',
+      },
+      tags: ['weddings', 'corporate', 'venues', 'parties'],
+      targetRoles: ['couple', 'planner', 'corporate', 'venue', 'host', 'browsing'],
+      targetInterests: ['weddings', 'corporate', 'venues', 'parties', 'browsing'],
+    },
+  ],
+
+  features: {
+    screensaver: false,
+    darkMode: true,
+    lightMode: true,
+    defaultTheme: 'dark',
+    briefcase: true,
+    share: { email: true, text: true, qr: true },
+    notes: true,
+    voiceCapture: true,
+    mediaCapture: true,
+    calculator: false,
+    captureInfo: true,
+  },
+};

@@ -27,6 +27,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "foo-for-thought",
+    name: "Foo For Thought Explorer",
+    company: "Foo For Thought",
+    industry: "Event Services",
+    prototypeFile: "/explorer/foo-for-thought",
+    logo: "/brand/assets/foo-for-thought-icon.png",
+    gateLogo: "/brand/assets/foo-for-thought-dark.png",
+    accentColor: "#C8382B",
+    createdAt: "2026-10-07",
+    password: "fft",
+  },
+  {
     slug: "texas-legends",
     name: "Texas Legends Explorer",
     company: "Texas Legends",
