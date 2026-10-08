@@ -167,7 +167,7 @@ Each `it` block is a single test case.
 Tests use these environment variables (can be mocked):
 - `ANTHROPIC_API_KEY` - API key for Claude
 - `GTM_ANTHROPIC_KEY` - Alternative API key (takes precedence)
-- `CLAUDE_MODEL` - Model name (defaults to "claude-opus-4-1")
+- `CLAUDE_MODEL` - Model name (defaults to "claude-sonnet-5")
 
 Tests mock the API key, so no real key needed for unit tests.
 
