@@ -66,3 +66,29 @@ export async function requireGtmAuth(): Promise<boolean> {
   const cookieStore = await cookies()
   return verifyGtmAuthToken(cookieStore.get("gtm_auth")?.value)
 }
+
+export type ThinkingOff = { type: "disabled" } | { type: "between_tools" }
+
+/**
+ * The `thinking` value that turns extended thinking off for `model`, or
+ * `undefined` when the model has no off switch (omit the field: JSON.stringify
+ * drops it). Use as `thinking: thinkingOff(model)` at every call site, so a
+ * model bump is one edit here instead of six routes.
+ *
+ * The API rejects the wrong shape with a 400, so every row below was checked
+ * against the live API (2026-10-01). Models not listed get `undefined`, the
+ * one shape every model accepted. The unit test pins this table.
+ */
+export function thinkingOff(model: string): ThinkingOff | undefined {
+  // Sonnet 5.5 400s on "disabled"; "between_tools" is its off switch.
+  if (/^claude-sonnet-5-5$/.test(model)) return { type: "between_tools" }
+  // Accept "disabled". Dated snapshots (-YYYYMMDD) are the same model.
+  if (
+    /^claude-(?:sonnet-5|sonnet-4-[56]|haiku-4-5|opus-4-[678]|opus-5)(?:-\d{8})?$/.test(model)
+  ) {
+    return { type: "disabled" }
+  }
+  // Opus 5.5 and Fable 5/5.1 400 on both "disabled" and "between_tools": thinking
+  // can't be turned off there. Anything unverified falls through to the same.
+  return undefined
+}

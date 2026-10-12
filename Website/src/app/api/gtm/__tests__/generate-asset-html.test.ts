@@ -8,7 +8,8 @@ jest.mock("fs")
 jest.mock("path")
 
 // The route is login-gated; cookies() has no request scope under jest.
-jest.mock("@/lib/gtm/content-types", () => ({ requireGtmAuth: async () => true }))
+// Keep the real thinkingOff(); the route calls it while building the request.
+jest.mock("@/lib/gtm/content-types", () => ({ ...jest.requireActual("@/lib/gtm/content-types"), requireGtmAuth: async () => true }))
 
 // Mock fetch globally
 global.fetch = jest.fn()
