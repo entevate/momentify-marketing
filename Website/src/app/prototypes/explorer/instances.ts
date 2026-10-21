@@ -27,6 +27,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "realm-health",
+    name: "Realm Health Explorer",
+    company: "Realm Health",
+    industry: "Healthcare",
+    prototypeFile: "/explorer/realm-health",
+    logo: "/brand/assets/realm-health-icon.png",
+    gateLogo: "/brand/assets/realm-health-logo-reverse.png",
+    accentColor: "#3DAE2B",
+    createdAt: "2026-10-21",
+    password: "realm2026",
+  },
+  {
     slug: "foo-for-thought",
     name: "Foo For Thought Explorer",
     company: "Foo For Thought",
