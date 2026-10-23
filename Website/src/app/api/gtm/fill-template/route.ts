@@ -8,7 +8,7 @@ import { plainLength, truncateVisible } from "@/lib/gtm/rich-text"
 import { assetBlobPath, assetKvKey } from "@/lib/gtm/asset-helpers"
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/render"
-import { requireGtmAuth } from "@/lib/gtm/content-types"
+import { requireGtmAuth, thinkingOff } from "@/lib/gtm/content-types"
 import { parseRenderMedia, filterSlots, parseHidden } from "@/lib/gtm/render-media"
 import { solutionGuidance } from "@/lib/gtm/builder-prompts"
 
@@ -184,10 +184,9 @@ Return ONLY a JSON object with the slot keys above. No markdown fencing, no comm
         },
         body: JSON.stringify({
           model: MODEL,
-          // Content generation needs no reasoning; disabling thinking keeps the
-          // response fast and makes the first content block the text (Sonnet 5
-          // runs adaptive thinking by default, which would otherwise be content[0]).
-          thinking: { type: "disabled" },
+          // Content generation needs no reasoning. thinkingOff() returns the shape
+          // this model accepts (or omits the field where thinking can't be turned off).
+          thinking: thinkingOff(MODEL),
           max_tokens: 800, // JSON payload only - small budget
           messages: [{ role: "user", content: userPrompt }],
         }),
