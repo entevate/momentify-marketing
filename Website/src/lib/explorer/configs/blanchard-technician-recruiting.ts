@@ -27,7 +27,7 @@ export const BLANCHARD_TECHNICIAN_RECRUITING_CONFIG: ExplorerConfig = {
   branding: { ...BLANCHARD_BRANDING, roleBackgrounds: blanchardRoleBackgrounds(ROLES) },
   registration: {
     ...BLANCHARD_REGISTRATION,
-    formTitle: 'Are You Ready to Be a Blanchard Tech?',
+    formTitle: 'Are You Ready to Become a Blanchard Tech?',
   },
 
   steps: [
@@ -281,7 +281,7 @@ export const BLANCHARD_TECHNICIAN_RECRUITING_CONFIG: ExplorerConfig = {
     // ── Learn / Discover (8) ─────────────────────────────────────────
     {
       id: 'l1',
-      title: 'Are You Ready to Be a Blanchard Tech?',
+      title: 'Are You Ready to Become a Blanchard Tech?',
       cardType: 'learn',
       mediaType: 'video',
       icon: 'play-circle',
