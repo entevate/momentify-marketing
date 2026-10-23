@@ -27,6 +27,32 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "blanchard-technician-recruiting",
+    name: "Blanchard Machinery Technician Recruiter",
+    company: "Blanchard Machinery",
+    industry: "Construction / Recruiting",
+    prototypeFile: "/explorer/blanchard-technician-recruiting",
+    logo: "/brand/assets/blanchard-machinery-icon.svg",
+    gateLogo: "/brand/assets/blanchard-machinery-logo.svg",
+    accentColor: "#FFC820",
+    createdAt: "2026-10-23",
+    password: "blanchard2026",
+    kind: "recruiter",
+  },
+  {
+    slug: "blanchard-job-fairs",
+    name: "Blanchard Machinery Job Fairs Recruiter",
+    company: "Blanchard Machinery",
+    industry: "Construction / Recruiting",
+    prototypeFile: "/explorer/blanchard-job-fairs",
+    logo: "/brand/assets/blanchard-machinery-icon.svg",
+    gateLogo: "/brand/assets/blanchard-machinery-logo.svg",
+    accentColor: "#FFC820",
+    createdAt: "2026-10-23",
+    password: "blanchard2026",
+    kind: "recruiter",
+  },
+  {
     slug: "realm-health",
     name: "Realm Health Explorer",
     company: "Realm Health",
