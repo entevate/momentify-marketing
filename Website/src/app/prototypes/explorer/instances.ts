@@ -27,6 +27,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "aldridge",
+    name: "Aldridge Explorer",
+    company: "Aldridge",
+    industry: "Technology",
+    prototypeFile: "/explorer/aldridge",
+    logo: "/brand/assets/aldridge-icon.png",
+    gateLogo: "/brand/assets/aldridge-logo-reverse.png",
+    accentColor: "#FF7A00",
+    createdAt: "2026-10-26",
+    password: "aldridge2026",
+  },
+  {
     slug: "blanchard-technician-recruiting",
     name: "Blanchard Machinery Technician Recruiter",
     company: "Blanchard Machinery",

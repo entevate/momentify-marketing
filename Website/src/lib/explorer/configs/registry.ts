@@ -50,6 +50,7 @@ import { FOO_FOR_THOUGHT_CONFIG } from './foo-for-thought';
 import { REALM_HEALTH_CONFIG } from './realm-health';
 import { BLANCHARD_JOB_FAIRS_CONFIG } from './blanchard-job-fairs';
 import { BLANCHARD_TECHNICIAN_RECRUITING_CONFIG } from './blanchard-technician-recruiting';
+import { ALDRIDGE_CONFIG } from './aldridge';
 // Phase 12 — `-mobile` companion files dropped. Form factor is now a
 // property of the moment (set at moment-creation time in Momentify
 // Web), not the template. Each prototype ships ONE canonical config.
@@ -95,6 +96,7 @@ export const PROTOTYPE_CONFIGS: Record<string, ExplorerConfig> = {
   'realm-health': REALM_HEALTH_CONFIG,
   'blanchard-job-fairs': BLANCHARD_JOB_FAIRS_CONFIG,
   'blanchard-technician-recruiting': BLANCHARD_TECHNICIAN_RECRUITING_CONFIG,
+  'aldridge': ALDRIDGE_CONFIG,
 };
 
 export interface PrototypeMetadata {
