@@ -104,10 +104,10 @@ async function submitToHubSpot(data: DemoFormData) {
       body: JSON.stringify({
         // "0-1" is the contact object; required by the secure endpoint.
         fields: contactFields.map(([name, value]) => ({ objectTypeId: "0-1", name, value })),
-        context: {
-          pageUri: "https://momentifyapp.com/demo",
-          pageName: "Demo Request",
-        },
+        // No pageUri: HubSpot checks it against registered site domains and
+        // filed every submission as "Unregistered Site Domain" spam, even on
+        // the authenticated endpoint. The source page travels in source_page.
+        context: { pageName: "Demo Request" },
       }),
     }
   );
