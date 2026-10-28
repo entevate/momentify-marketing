@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { requireGtmAuth } from "@/lib/gtm/content-types"
+import { requireGtmAuth, thinkingOff } from "@/lib/gtm/content-types"
 import fs from "fs"
 import path from "path"
 import { put } from "@vercel/blob"
@@ -105,10 +105,9 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         model: MODEL,
-        // Content generation needs no reasoning; disabling thinking keeps the
-        // response fast and makes the first content block the text (Sonnet 5
-        // runs adaptive thinking by default, which would otherwise be content[0]).
-        thinking: { type: "disabled" },
+        // Content generation needs no reasoning. thinkingOff() returns the shape
+        // this model accepts (or omits the field where thinking can't be turned off).
+        thinking: thinkingOff(MODEL),
         max_tokens: MAX_OUTPUT_TOKENS,
         messages: [{ role: "user", content: prompt }],
       }),
