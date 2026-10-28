@@ -283,6 +283,7 @@ export default function EditorControls({
         <input
           type="text"
           value={headline}
+          maxLength={200}
           onChange={(e) => setHeadline(e.target.value)}
           placeholder="Your headline here"
           className="w-full px-3 py-2 rounded-lg border border-charcoal/10 bg-white text-charcoal text-[14px] placeholder:text-charcoal/25 focus:outline-none focus:border-teal/40 focus:ring-2 focus:ring-teal/10 transition-all"
@@ -303,6 +304,7 @@ export default function EditorControls({
         <input
           type="text"
           value={subhead}
+          maxLength={300}
           onChange={(e) => setSubhead(e.target.value)}
           placeholder="Supporting text"
           className="w-full px-3 py-2 rounded-lg border border-charcoal/10 bg-white text-charcoal text-[14px] placeholder:text-charcoal/25 focus:outline-none focus:border-teal/40 focus:ring-2 focus:ring-teal/10 transition-all"
@@ -322,6 +324,7 @@ export default function EditorControls({
         <SectionLabel>Body Copy</SectionLabel>
         <textarea
           value={bodyCopy}
+          maxLength={1000}
           onChange={(e) => setBodyCopy(e.target.value)}
           placeholder="Additional details or call to action"
           rows={3}

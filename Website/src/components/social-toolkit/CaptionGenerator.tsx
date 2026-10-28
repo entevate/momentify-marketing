@@ -25,6 +25,7 @@ export default function CaptionGenerator({
 }: CaptionGeneratorProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [needsSignIn, setNeedsSignIn] = useState(false);
   const [captionCopied, setCaptionCopied] = useState(false);
   const [hashtagsCopied, setHashtagsCopied] = useState(false);
 
@@ -34,6 +35,7 @@ export default function CaptionGenerator({
     if (!hasContent) return;
     setLoading(true);
     setError("");
+    setNeedsSignIn(false);
 
     try {
       const res = await fetch("/api/social-toolkit/caption", {
@@ -44,6 +46,7 @@ export default function CaptionGenerator({
 
       const data = await res.json();
       if (!res.ok) {
+        setNeedsSignIn(res.status === 401);
         setError(data.error || "Failed to generate caption.");
         return;
       }
@@ -87,7 +90,18 @@ export default function CaptionGenerator({
       </div>
 
       {error && (
-        <p className="text-[13px] text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
+        <p className="text-[13px] text-red-500 bg-red-50 px-3 py-2 rounded-lg">
+          {error}
+          {needsSignIn && (
+            <>
+              {" "}
+              <a href="/gtm/login" target="_blank" rel="noopener" className="underline font-medium">
+                Sign in
+              </a>
+              , then try again.
+            </>
+          )}
+        </p>
       )}
 
       {/* Caption */}

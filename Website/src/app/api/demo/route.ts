@@ -67,25 +67,43 @@ async function submitToHubSpot(data: DemoFormData) {
     throw new Error("HubSpot credentials not configured.");
   }
 
+  // HubSpot's form spam filter blocked unauthenticated submissions from this
+  // route as "Unregistered Site Domain", even with momentifyapp.com registered.
+  // The authenticated endpoint (private app token, `forms` scope) is a direct
+  // integration rather than a page submission.
+  const token = process.env.HUBSPOT_ACCESS_TOKEN;
+  if (!token) {
+    console.warn("HUBSPOT_ACCESS_TOKEN not set; HubSpot may file this submission as spam.");
+  }
+  const endpoint = token
+    ? `https://api.hsforms.com/submissions/v3/integration/secure/submit/${portalId}/${formGuid}`
+    : `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formGuid}`;
+
+  const contactFields: [string, string][] = [
+    ["firstname", data.firstName],
+    ["lastname", data.lastName],
+    ["email", data.email],
+    ["company", data.company],
+    ["jobtitle", data.jobTitle],
+    ["solution_interest", data.solution],
+    ["company_size", data.companySize],
+    ["events_per_year", data.eventsPerYear],
+    ["referral_source", data.referral],
+    ["source_page", data.sourcePage],
+    ["message", data.message],
+  ];
+
   const response = await fetch(
-    `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formGuid}`,
+    endpoint,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
       body: JSON.stringify({
-        fields: [
-          { name: "firstname", value: data.firstName },
-          { name: "lastname", value: data.lastName },
-          { name: "email", value: data.email },
-          { name: "company", value: data.company },
-          { name: "jobtitle", value: data.jobTitle },
-          { name: "solution_interest", value: data.solution },
-          { name: "company_size", value: data.companySize },
-          { name: "events_per_year", value: data.eventsPerYear },
-          { name: "referral_source", value: data.referral },
-          { name: "source_page", value: data.sourcePage },
-          { name: "message", value: data.message },
-        ],
+        // "0-1" is the contact object; required by the secure endpoint.
+        fields: contactFields.map(([name, value]) => ({ objectTypeId: "0-1", name, value })),
         context: {
           pageUri: "https://momentifyapp.com/demo",
           pageName: "Demo Request",

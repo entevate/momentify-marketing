@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { submitRoxConsultation } from "@/lib/rox/consultation";
 
 /* ── Tier helpers ─────────────────────────────────────── */
 
@@ -446,6 +447,8 @@ export default function EventsVenuesROXCalculator() {
   // Calculator vs Results state
   const [showResults, setShowResults] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formSending, setFormSending] = useState(false);
+  const [formError, setFormError] = useState("");
 
   // Engagement quality toggle: false = Option B (default), true = Option A
   const [engagementOptionA, setEngagementOptionA] = useState(false);
@@ -585,13 +588,34 @@ export default function EventsVenuesROXCalculator() {
   const handleRecalculate = () => {
     setShowResults(false);
     setFormSubmitted(false);
+    setFormError("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // <!-- On submit: POST to HubSpot Forms API. Also trigger booking link redirect or modal (Superhuman or Google Calendar). Replace action URL when HubSpot form ID is available. -->
-    setFormSubmitted(true);
+    if (formSending) return;
+    setFormSending(true);
+    setFormError("");
+    try {
+      await submitRoxConsultation({
+        solution: "venues-events",
+        calculatorName: "Venues & Events ROX",
+        contact: formData,
+        volume: { question: "Events per year:", answer: formData.eventsPerYear },
+        totalScore,
+        tierName: totalScore !== null ? getTierName(Math.round(totalScore)) : null,
+        categories: categoryNames.map((name, i) => ({ name, score: categoryScores[i] })),
+        extras: {
+          "Potential Value Generated": bonusValue ? `$${bonusValue.toLocaleString()}` : null,
+        },
+      });
+      setFormSubmitted(true);
+    } catch {
+      setFormError("We couldn't send your request. Please try again.");
+    } finally {
+      setFormSending(false);
+    }
   };
 
   /* ── Shared field input renderer ───────────────────── */
@@ -1023,7 +1047,8 @@ export default function EventsVenuesROXCalculator() {
                   </div>
                   <button
                     type="submit"
-                    className="w-full transition-all duration-200 hover:opacity-90 hover:-translate-y-[1px] cursor-pointer"
+                    disabled={formSending}
+                    className="w-full transition-all duration-200 hover:opacity-90 hover:-translate-y-[1px] cursor-pointer disabled:opacity-60 disabled:cursor-wait disabled:hover:translate-y-0"
                     style={{
                       background: "linear-gradient(135deg, #D4421A, #F25E3D)",
                       color: "#FFFFFF",
@@ -1035,10 +1060,15 @@ export default function EventsVenuesROXCalculator() {
                       border: "none",
                     }}
                   >
-                    Book My Free Consultation
+                    {formSending ? "Sending..." : "Book My Free Consultation"}
                   </button>
+                  {formError && (
+                    <p role="alert" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#E5484D", marginTop: "12px", textAlign: "center" }}>
+                      {formError}
+                    </p>
+                  )}
                   <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "12px", color: "rgba(6,19,65,0.35)", marginTop: "12px", textAlign: "center" }}>
-                    No commitment. No sales pressure. Just your data and a conversation.
+                    No commitment. No sales pressure. Your ROX results are sent with your request so we can prepare for the call.
                   </p>
                 </form>
               </motion.div>
@@ -1470,7 +1500,8 @@ export default function EventsVenuesROXCalculator() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4 }}
               >
-                <ResultsScreen />
+                {/* Called, not <ResultsScreen />: an inner component remounts every render and drops form focus */}
+                {ResultsScreen()}
               </motion.div>
             )}
           </AnimatePresence>
