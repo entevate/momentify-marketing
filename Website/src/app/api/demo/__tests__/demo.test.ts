@@ -59,6 +59,13 @@ describe("POST /api/demo HubSpot submission", () => {
     expect(body.fields).toHaveLength(11)
   })
 
+  it("sends no page address, so HubSpot's site-domain spam check has nothing to reject", async () => {
+    process.env.HUBSPOT_ACCESS_TOKEN = "pat-test"
+    await POST(req(lead))
+    const body = JSON.parse(hubspotCall()![1].body)
+    expect(body.context?.pageUri).toBeUndefined()
+  })
+
   it("falls back to the public endpoint without a token", async () => {
     const res = await POST(req(lead))
     expect(res.status).toBe(200)
