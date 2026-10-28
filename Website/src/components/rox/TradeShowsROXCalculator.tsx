@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { submitRoxConsultation } from "@/lib/rox/consultation";
 
 /* ── Tier helpers ─────────────────────────────────────── */
 
@@ -450,6 +451,8 @@ export default function TradeShowsROXCalculator() {
   // Calculator vs Results state
   const [showResults, setShowResults] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formSending, setFormSending] = useState(false);
+  const [formError, setFormError] = useState("");
 
   // Engagement quality toggle: false = Option B (default), true = Option A
   const [engagementOptionA, setEngagementOptionA] = useState(false);
@@ -648,13 +651,35 @@ export default function TradeShowsROXCalculator() {
   const handleRecalculate = () => {
     setShowResults(false);
     setFormSubmitted(false);
+    setFormError("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // <!-- On submit: POST to HubSpot Forms API. Also trigger booking link redirect or modal (Superhuman or Google Calendar). Replace action URL when HubSpot form ID is available. -->
-    setFormSubmitted(true);
+    if (formSending) return;
+    setFormSending(true);
+    setFormError("");
+    try {
+      await submitRoxConsultation({
+        solution: "trade-shows",
+        calculatorName: "Trade Show ROX",
+        contact: formData,
+        volume: { question: "Trade shows per year:", answer: formData.showsPerYear },
+        totalScore,
+        tierName: totalScore !== null ? getTierName(Math.round(totalScore)) : null,
+        categories: categoryNames.map((name, i) => ({ name, score: categoryScores[i] })),
+        extras: {
+          "Cost Per Lead": perLeadCost !== null ? `$${perLeadCost.toLocaleString()}` : null,
+          "Potential Value Generated": bonusValue ? `$${bonusValue.toLocaleString()}` : null,
+        },
+      });
+      setFormSubmitted(true);
+    } catch {
+      setFormError("We couldn't send your request. Please try again.");
+    } finally {
+      setFormSending(false);
+    }
   };
 
   /* ── Shared field input renderer ───────────────────── */
@@ -1069,14 +1094,6 @@ export default function TradeShowsROXCalculator() {
                   We&apos;ll walk through your results and show you exactly where Momentify moves the needle on your lowest-scoring categories.
                 </p>
 
-                {/* Hidden fields: passes ROX Score to HubSpot on form submission */}
-                {/* Hidden field: passes ROX Tier to HubSpot on form submission */}
-                {/* Hidden field: passes Category 1 Score to HubSpot on form submission */}
-                {/* Hidden field: passes Category 2 Score to HubSpot on form submission */}
-                {/* Hidden field: passes Category 3 Score to HubSpot on form submission */}
-                {/* Hidden field: passes Category 4 Score to HubSpot on form submission */}
-                {/* Hidden field: passes Source Page to HubSpot on form submission */}
-
                 <form onSubmit={handleFormSubmit}>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                     {[
@@ -1122,7 +1139,8 @@ export default function TradeShowsROXCalculator() {
                   </div>
                   <button
                     type="submit"
-                    className="w-full transition-all duration-200 hover:opacity-90 hover:-translate-y-[1px] cursor-pointer"
+                    disabled={formSending}
+                    className="w-full transition-all duration-200 hover:opacity-90 hover:-translate-y-[1px] cursor-pointer disabled:opacity-60 disabled:cursor-wait disabled:hover:translate-y-0"
                     style={{
                       background: "linear-gradient(135deg, #6B21D4, #9B5FE8)",
                       color: "#FFFFFF",
@@ -1134,11 +1152,15 @@ export default function TradeShowsROXCalculator() {
                       border: "none",
                     }}
                   >
-                    Book My Free Consultation
+                    {formSending ? "Sending..." : "Book My Free Consultation"}
                   </button>
-                  {/* On submit: POST to HubSpot Forms API. Also trigger booking link redirect or modal (Superhuman or Google Calendar). Replace action URL when HubSpot form ID is available. */}
+                  {formError && (
+                    <p role="alert" style={{ fontFamily: "var(--font-inter)", fontWeight: 500, fontSize: "13px", color: "#E5484D", marginTop: "12px", textAlign: "center" }}>
+                      {formError}
+                    </p>
+                  )}
                   <p style={{ fontFamily: "var(--font-inter)", fontWeight: 400, fontSize: "12px", color: "rgba(6,19,65,0.35)", marginTop: "12px", textAlign: "center" }}>
-                    No commitment. No sales pressure. Just your data and a conversation.
+                    No commitment. No sales pressure. Your ROX results are sent with your request so we can prepare for the call.
                   </p>
                 </form>
               </motion.div>
@@ -1612,7 +1634,8 @@ export default function TradeShowsROXCalculator() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4 }}
               >
-                <ResultsScreen />
+                {/* Called, not <ResultsScreen />: an inner component remounts every render and drops form focus */}
+                {ResultsScreen()}
               </motion.div>
             )}
           </AnimatePresence>
