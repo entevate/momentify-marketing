@@ -1184,7 +1184,7 @@ export default function FanGalleryContent({ config = DEFAULT_CONFIG }: { config?
                     <strong style={{ color: t.text }}>Privacy.</strong> Your contact information (email and phone number) will only be used to send you your gallery link and will not be shared with third parties for marketing purposes.
                   </p>
                   <p style={{ margin: 0 }}>
-                    <strong style={{ color: t.text }}>Removal.</strong> You may request removal of your photo at any time by contacting the event organizer or emailing support@momentify.com.
+                    <strong style={{ color: t.text }}>Removal.</strong> You may request removal of your photo at any time by contacting the event organizer or emailing hello@entevate.com.
                   </p>
                   <p style={{ margin: 0 }}>
                     <strong style={{ color: t.text }}>Age Requirement.</strong> You must be at least 13 years of age, or have a parent or guardian&apos;s consent, to submit a photo.
