@@ -27,6 +27,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "lgnova",
+    name: "LG NOVA Explorer",
+    company: "LG NOVA",
+    industry: "Technology",
+    prototypeFile: "/explorer/lgnova",
+    logo: "/brand/assets/lgnova-icon.png",
+    gateLogo: "/brand/assets/lgnova-logo-reverse.svg",
+    accentColor: "#A50034",
+    createdAt: "2026-11-12",
+    password: "lgnova2026",
+  },
+  {
     slug: "aldridge",
     name: "Aldridge Explorer",
     company: "Aldridge",
