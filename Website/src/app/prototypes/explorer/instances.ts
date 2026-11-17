@@ -27,6 +27,18 @@ export interface ExplorerInstance {
 
 export const instances: ExplorerInstance[] = [
   {
+    slug: "dassault",
+    name: "Dassault Systèmes Explorer",
+    company: "Dassault Systèmes",
+    industry: "Technology",
+    prototypeFile: "/explorer/dassault",
+    logo: "/brand/assets/dassault-icon.png",
+    gateLogo: "/brand/assets/dassault-logo-reverse.png",
+    accentColor: "#005686",
+    createdAt: "2026-11-17",
+    password: "dassault2026",
+  },
+  {
     slug: "lgnova",
     name: "LG NOVA Explorer",
     company: "LG NOVA",
