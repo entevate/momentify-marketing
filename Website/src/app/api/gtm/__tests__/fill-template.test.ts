@@ -1,7 +1,8 @@
 import { POST } from "../fill-template/route"
 import { NextRequest } from "next/server"
 
-jest.mock("@/lib/gtm/content-types", () => ({ requireGtmAuth: jest.fn(async () => true) }))
+// Keep the real thinkingOff(); the route calls it while building the request.
+jest.mock("@/lib/gtm/content-types", () => ({ ...jest.requireActual("@/lib/gtm/content-types"), requireGtmAuth: jest.fn(async () => true) }))
 jest.mock("@/lib/gtm/kv-store", () => ({ kv: { set: jest.fn(async () => undefined), get: jest.fn(async () => undefined) } }))
 jest.mock("@vercel/blob", () => ({ put: jest.fn(async (p: string) => ({ url: `https://blob.test/${p}` })) }))
 jest.mock("@/lib/gtm/templates/render", () => {

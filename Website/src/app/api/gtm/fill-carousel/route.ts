@@ -8,7 +8,7 @@ import { plainLength, truncateVisible } from "@/lib/gtm/rich-text"
 import { assetBlobPath, assetKvKey, assetFilename } from "@/lib/gtm/asset-helpers"
 import { paletteFor, isPillarId } from "@/lib/gtm/pillar-palettes"
 import { findTemplate, loadTemplateHtml, renderTemplate, DEFAULT_CTA_ICON } from "@/lib/gtm/templates/render"
-import { requireGtmAuth } from "@/lib/gtm/content-types"
+import { requireGtmAuth, thinkingOff } from "@/lib/gtm/content-types"
 import { parseRenderMedia, filterSlots, parseHiddenCards } from "@/lib/gtm/render-media"
 import { solutionGuidance } from "@/lib/gtm/builder-prompts"
 import { buildCarouselShell, carouselIneligibleReason, type CarouselAspect } from "@/lib/gtm/carousel"
@@ -182,10 +182,9 @@ Return ONLY a JSON object of the shape: {"cards": [<card1>, <card2>, ..., <card$
         },
         body: JSON.stringify({
           model: MODEL,
-          // Content generation needs no reasoning; disabling thinking keeps the
-          // response fast and makes the first content block the text (Sonnet 5
-          // runs adaptive thinking by default, which would otherwise be content[0]).
-          thinking: { type: "disabled" },
+          // Content generation needs no reasoning. thinkingOff() returns the shape
+          // this model accepts (or omits the field where thinking can't be turned off).
+          thinking: thinkingOff(MODEL),
           max_tokens: 3000, // 6 cards * ~400 chars JSON each, with margin
           messages: [{ role: "user", content: userPrompt }],
         }),
